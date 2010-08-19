@@ -1,0 +1,11 @@
+<library name="ForwardAnalysisUtilities_plugins" file="*.cc">
+  <flags EDM_PLUGIN="1"/>
+  <use name="FWCore/Framework"/>
+  <use name="FWCore/ParameterSet"/>
+  <use name="DataFormats/CaloTowers"/>
+  <use name="Geometry/CaloTopology"/>
+  <use name="Geometry/CaloGeometry"/>
+  <use name="CommonTools/UtilAlgos"/>
+  <use name="CommonTools/RecoAlgos"/> 
+  <use name="root"/>
+</library>
