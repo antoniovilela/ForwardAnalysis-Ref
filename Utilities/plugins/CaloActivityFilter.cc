@@ -212,10 +212,15 @@ bool CaloActivityFilter::filter(edm::Event& event, edm::EventSetup const& setup)
 
      int zside = calotower->zside();
      double caloTowerEnergy = calotower->energy();
+     double caloTowerEmEnergy = calotower->emEnergy();
+     double caloTowerHadEnergy = calotower->hadEnergy();
+
      // FIXME
      //double caloTowerET = calotower->et(primVtx.position());
      //double caloTowerET = calotower->et(primVtx.z());
-     double caloTowerET = calotower->et();
+     double caloTowerEt = calotower->et();
+     double caloTowerEmEt = calotower->emEt();
+     double caloTowerHadEt = calotower->hadEt();
 
      // HCAL: Towers made of at least one component from HB,HE,HF
      if( hasHF && !hasHE ){
@@ -223,35 +228,35 @@ bool CaloActivityFilter::filter(edm::Event& event, edm::EventSetup const& setup)
            if(zside >= 0){
               ++nTowersHF_plus;
               sumEHF_plus += caloTowerEnergy; 
-              sumETHF_plus += caloTowerET;
+              sumETHF_plus += caloTowerEt;
            } else{
               ++nTowersHF_minus;
               sumEHF_minus += caloTowerEnergy;
-              sumETHF_minus += caloTowerET;
+              sumETHF_minus += caloTowerEt;
            } 
         }
      } else if( hasHE && !hasHF && !hasHB ){
         if( caloTowerEnergy >= energyThresholdHE_ ){
            if(zside >= 0){
               ++nTowersHE_plus;
-              sumEHE_plus += caloTowerEnergy;
-              sumETHE_plus += caloTowerET;
+              sumEHE_plus += caloTowerHadEnergy;
+              sumETHE_plus += caloTowerHadEt;
            } else{
               ++nTowersHE_minus;
-              sumEHE_minus += caloTowerEnergy;
-              sumETHE_minus += caloTowerET;
+              sumEHE_minus += caloTowerHadEnergy;
+              sumETHE_minus += caloTowerHadEt;
            }
         }
      } else if( hasHB && !hasHE ){
         if( caloTowerEnergy >= energyThresholdHB_ ){
            if(zside >= 0){
               ++nTowersHB_plus;
-              sumEHB_plus += caloTowerEnergy;
-              sumETHB_plus += caloTowerET;
+              sumEHB_plus += caloTowerHadEnergy;
+              sumETHB_plus += caloTowerHadEt;
            } else{
               ++nTowersHB_minus;
-              sumEHB_minus += caloTowerEnergy;
-              sumETHB_minus += caloTowerET;
+              sumEHB_minus += caloTowerHadEnergy;
+              sumETHB_minus += caloTowerHadEt;
            }
         }
      }
@@ -261,24 +266,24 @@ bool CaloActivityFilter::filter(edm::Event& event, edm::EventSetup const& setup)
         if( caloTowerEnergy >= energyThresholdEE_ ){
            if(zside >= 0){
               ++nTowersEE_plus;
-              sumEEE_plus += caloTowerEnergy;
-              sumETEE_plus += caloTowerET;
+              sumEEE_plus += caloTowerEmEnergy;
+              sumETEE_plus += caloTowerEmEt;
            } else{
               ++nTowersEE_minus;
-              sumEEE_minus += caloTowerEnergy;
-              sumETEE_minus += caloTowerET;
+              sumEEE_minus += caloTowerEmEnergy;
+              sumETEE_minus += caloTowerEmEt;
            }
         }
      } else if( hasEB && !hasEE ){
         if( caloTowerEnergy >= energyThresholdEB_ ){
            if(zside >= 0){
               ++nTowersEB_plus;
-              sumEEB_plus += caloTowerEnergy;
-              sumETEB_plus += caloTowerET;
+              sumEEB_plus += caloTowerEmEnergy;
+              sumETEB_plus += caloTowerEmEt;
            } else{
               ++nTowersEB_minus;
-              sumEEB_minus += caloTowerEnergy;
-              sumETEB_minus += caloTowerET;
+              sumEEB_minus += caloTowerEmEnergy;
+              sumETEB_minus += caloTowerEmEt;
            }
         }
      }
