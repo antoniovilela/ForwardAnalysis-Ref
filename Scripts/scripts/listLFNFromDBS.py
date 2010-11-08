@@ -22,6 +22,7 @@ def listLFN(api,dataset):
     return fileNames
 
 if __name__ == '__main__':
+    """
     import optparse
     parser = optparse.OptionParser(usage="usage: %prog [options]")
     parser.add_option("-d","--dataset", dest="dataset", metavar="DATASET", help="list LFN's from DATASET")
@@ -29,15 +30,22 @@ if __name__ == '__main__':
     (input, args) = parser.parse_args()
 
     if not input.dataset: parser.error('must set dataset option')
+    """
 
-    print "Finding LFN's from",input.dataset
+    import optparse
+    optManager  = DbsOptionParser()
+    group_local = optparse.OptionGroup(optManager.parser,"Script options")
+    group_local.add_option("-d","--dataset", dest="dataset", metavar="DATASET", help="list LFN's from DATASET")
+    optManager.parser.add_option_group(group_local)
+    (opts,args) = optManager.getOpt()
+    api = DbsApi(opts.__dict__)
+    #api = DbsApi()
 
-    #optManager  = DbsOptionParser()
-    #(opts,args) = optManager.getOpt()
-    #api = DbsApi(opts.__dict__)
-    api = DbsApi()
+    if not opts.dataset: optManager.parser.error('must set dataset option')
+
+    print "Finding LFN's from",opts.dataset
      
-    files = listLFN(api=api,dataset=input.dataset)
+    files = listLFN(api=api,dataset=opts.dataset)
 
     """
     dataset = '/ZeroBias/Commissioning10-Sep17ReReco_v2/RECO'
