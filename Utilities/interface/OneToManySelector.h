@@ -17,7 +17,7 @@ class OneToManySelector {
 
       ~OneToManySelector() {}
 
-      bool operator() (edm::Event const& event, Object const& obj){
+      bool operator() (Object const& obj, edm::Event const& event){
          edm::Handle<Coll> source;
          event.getByLabel(src_,source);
          typename Coll::const_iterator cand = source->begin(), source_end = source->end();

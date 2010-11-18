@@ -21,7 +21,7 @@ class DefaultCaloTowerSelector {
       DefaultCaloTowerSelector(edm::ParameterSet const& pset) {}
       ~DefaultCaloTowerSelector() {}
 
-      bool operator() (edm::Event const& event, CaloTower const&){ return true; }
+      bool operator() (CaloTower const& calotower, edm::Event const& event){ return true; }
 };
 
 template <class Selector=DefaultCaloTowerSelector>
@@ -156,7 +156,7 @@ bool CaloActivityFilter<Selector>::filter(edm::Event& event, edm::EventSetup con
   for(; calotower != calotowers_end; ++calotower) {
 
      // Accept tower following policy
-     if( !selector_(event,*calotower) ) continue;    
+     if( !selector_(*calotower,event) ) continue;    
 
      bool hasHCAL = false;
      bool hasHF = false;
