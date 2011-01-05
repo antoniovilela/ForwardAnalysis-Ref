@@ -7,8 +7,6 @@
  * 
  */
 
-namespace forwardAnalysis {
-
 template<typename T>
 struct LessByEta {
   typedef T first_argument_type;
@@ -27,5 +25,4 @@ struct GreaterByEta {
   }
 };
 
-} // namespace
 #endif

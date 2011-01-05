@@ -7,14 +7,14 @@
 typedef ObjectSelector<
           SortCollectionSelector<
             reco::CandidateView,
-            forwardAnalysis::GreaterByEta<reco::Candidate>
+            GreaterByEta<reco::Candidate>
           >
         > EtaMaxCandViewSelector;
 
 typedef ObjectSelector<
           SortCollectionSelector<
             reco::CandidateView,
-            forwardAnalysis::LessByEta<reco::Candidate>
+            LessByEta<reco::Candidate>
           >
         > EtaMinCandViewSelector;
 
