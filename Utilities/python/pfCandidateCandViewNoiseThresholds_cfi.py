@@ -1,5 +1,0 @@
-import FWCore.ParameterSet.Config as cms
-from ForwardAnalysis.Utilities.pfCandidateCandViewSelector_cfi import pfCandidateCandViewSelector as pfCandidateCandViewNoiseThresholds
-from ForwardAnalysis.Utilities.PFCandidateNoiseStringCut import PFCandidateNoiseStringCut
-from ForwardAnalysis.Utilities.pfThresholds_cfi import pfThresholds
-pfCandidateCandViewNoiseThresholds.cut = PFCandidateNoiseStringCut(pfThresholds).cut()
