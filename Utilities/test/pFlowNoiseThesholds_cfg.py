@@ -36,6 +36,7 @@ process.etaMinCandViewSelector.src = "pfCandidateNoiseThresholds"
 process.etaMaxCandViewSelectorNoThresholds = process.etaMaxCandViewSelector.clone(src = "particleFlow")
 process.etaMinCandViewSelectorNoThresholds = process.etaMinCandViewSelector.clone(src = "particleFlow")
 
+###########
 etaHistogram = cms.PSet(
     min = cms.untracked.double(-5.0),
     max = cms.untracked.double(5.0),
@@ -62,12 +63,45 @@ process.etaHistoAnalyzerNoThresholds = process.etaHistoAnalyzer.clone(src = "par
 process.etaMaxHistoAnalyzerNoThresholds = process.etaMaxHistoAnalyzer.clone(src = "etaMaxCandViewSelectorNoThresholds")
 process.etaMinHistoAnalyzerNoThresholds = process.etaMinHistoAnalyzer.clone(src = "etaMinCandViewSelectorNoThresholds")
 
+###########
+process.edmNtupleEtaMax = cms.EDProducer("CandViewNtpProducer", 
+    src = cms.InputTag("etaMaxCandViewSelector"),
+    lazyParser = cms.untracked.bool(True),
+    prefix = cms.untracked.string(""),
+    eventInfo = cms.untracked.bool(True),
+    variables = cms.VPSet(
+        cms.PSet(
+            tag = cms.untracked.string("etaMax"),
+            quantity = cms.untracked.string("eta")
+        )
+    )  
+)
+process.edmNtupleEtaMin = cms.EDProducer("CandViewNtpProducer", 
+    src = cms.InputTag("etaMinCandViewSelector"),
+    lazyParser = cms.untracked.bool(True),
+    prefix = cms.untracked.string(""),
+    eventInfo = cms.untracked.bool(True),
+    variables = cms.VPSet(
+        cms.PSet(
+            tag = cms.untracked.string("etaMin"),
+            quantity = cms.untracked.string("eta")
+        )
+    )
+)
+process.edmNtupleEtaMaxNoThresholds = process.edmNtupleEtaMax.clone(src = "etaMaxCandViewSelectorNoThresholds")
+process.edmNtupleEtaMinNoThresholds = process.edmNtupleEtaMin.clone(src = "etaMinCandViewSelectorNoThresholds") 
+
+###########
 process.selection_step = cms.Path(process.eventSelectionBscMinBiasOR)
 process.reco_step = cms.Path(process.etaMaxCandViewSelectorNoThresholds+
                              process.etaMinCandViewSelectorNoThresholds+
                              process.pfCandidateNoiseThresholds*
                              process.etaMaxCandViewSelector+process.etaMinCandViewSelector)
-                             
+process.edmDump_step = cms.Path(process.edmNtupleEtaMax+
+                                process.edmNtupleEtaMin+
+                                process.edmNtupleEtaMaxNoThresholds+
+                                process.edmNtupleEtaMinNoThresholds) 
+                            
 process.analysis_step = cms.Path(process.eventSelectionBscMinBiasOR+
                                  process.etaHistoAnalyzer+
                                  process.etaMaxHistoAnalyzer+process.etaMinHistoAnalyzer+
