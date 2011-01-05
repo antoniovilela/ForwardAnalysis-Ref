@@ -44,7 +44,7 @@ class PFCandidateNoiseStringCut:
         for region in self.thresholdPSets:
             if cutStr: cutStr += " ) | ( "
             else: cutStr += "( "
-            cutStr += "(eta >= %f & eta < %f)" % (self.ranges[region][0],self.ranges[region][1])
+            cutStr += "(abs(eta) >= %f & abs(eta) < %f)" % (self.ranges[region][0],self.ranges[region][1])
 
             regionPSet = self.thresholdPSets[region]
             typePSetNames = regionPSet.parameterNames_()
