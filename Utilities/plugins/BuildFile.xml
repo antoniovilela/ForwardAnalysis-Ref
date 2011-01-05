@@ -4,6 +4,7 @@
   <use name="FWCore/ParameterSet"/>
   <use name="DataFormats/CaloTowers"/>
   <use name="DataFormats/ParticleFlowCandidate"/>
+  <use name="DataFormats/HepMCCandidate"/> 
   <use name="Geometry/CaloTopology"/>
   <use name="Geometry/CaloGeometry"/>
   <use name="CommonTools/UtilAlgos"/>
