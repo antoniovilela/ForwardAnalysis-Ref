@@ -21,6 +21,10 @@ process.TFileService = cms.Service("TFileService",
 process.load('Utilities.AnalysisSequences.minimumBiasAnalysisSequences_cff')
 process.load('Utilities.AnalysisSequences.outputModule_cfi')
 process.output.outputCommands.append('keep *_pfCandidateNoiseThresholds_*_*')
+process.output.outputCommands.append('keep *_edmNtupleEtaMax_*_*')
+process.output.outputCommands.append('keep *_edmNtupleEtaMin_*_*')
+process.output.outputCommands.append('keep *_edmNtupleEtaMaxNoThresholds_*_*')
+process.output.outputCommands.append('keep *_edmNtupleEtaMinNoThresholds_*_*')
 process.output.SelectEvents.SelectEvents = cms.vstring('selection_step')
 process.output.fileName = '/data1/antoniov/Test/pFlowNoiseThesholds.root'
 
