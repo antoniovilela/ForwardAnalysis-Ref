@@ -7,8 +7,9 @@ process.output.outputCommands.append('keep *_edmNtupleEtaMaxGen_*_*')
 process.output.outputCommands.append('keep *_edmNtupleEtaMinGen_*_*')
 process.TFileService.fileName = 'analysisHistos_pFlowNoiseThesholds_MC.root'
 
+Ebeam = 3500.
 process.load('Utilities.AnalysisSequences.genStableParticles_cfi')
-process.genStableParticles.cut = 'status = 1 & ( ( pdgId != 2212 ) | ( pdgId == 2212 & abs(pz) < %f ) )' % (0.75*7000)
+process.genStableParticles.cut = 'status = 1 & ( ( pdgId != 2212 ) | ( pdgId == 2212 & abs(pz) < %f ) )' % (0.75*Ebeam)
 process.etaMaxGenCandViewSelector = process.etaMaxCandViewSelector.clone(src = "genStableParticles")
 process.etaMinGenCandViewSelector = process.etaMinCandViewSelector.clone(src = "genStableParticles")
 
