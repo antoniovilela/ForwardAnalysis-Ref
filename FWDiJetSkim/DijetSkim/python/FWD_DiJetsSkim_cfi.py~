@@ -1,0 +1,58 @@
+import FWCore.ParameterSet.Config as cms
+
+from HLTrigger.HLTfilters.hltHighLevel_cfi import *
+forwardDiJetHLT = hltHighLevel
+#Define the HLT path to be used.
+forwardDiJetHLT.HLTPaths =['HLT_Jet30_v*',
+                           'HLT_ExclDiJet60_HFAND_v*',
+                           'HLT_ExclDiJet60_HFOR_v*',
+                           'HLT_DiJetAve15U_v*',
+                           'HLT_DiJetAve30U_v*',
+                           'HLT_Jet60_v*']
+
+
+forwardDiJetHLT.TriggerResultsTag = cms.InputTag("TriggerResults","",
+                           "HLT_Jet30_v*",
+                           "HLT_ExclDiJet60_HFAND_v*",
+                           "HLT_ExclDiJet60_HFOR_v*",
+                           "HLT_DiJetAve15U_v*",
+                           "HLT_DiJetAve30U_v*",
+                           "HLT_Jet60_v*")
+#Define the HLT quality cut 
+
+forwardHLTDiJetFilter = cms.EDFilter("HLTSummaryFilter",
+    summary = cms.InputTag("hltTriggerSummaryAOD","", "HLT_Jet30_v*",
+                           "HLT_ExclDiJet60_HFAND_v*",
+                           "HLT_ExclDiJet60_HFOR_v*",
+                           "HLT_DiJetAve15U_v*",
+                           "HLT_DiJetAve30U_v*",
+                           "HLT_Jet60_v*"), # trigger summary
+
+#    member  = cms.InputTag("hlt1jet30","","HLT"),      # filter
+#    member  = cms.InputTag("hltMCJetCorJetIcone5HF07","","HLT8E29")#,  # or collection
+ 
+ )
+                               
+#Define the Reco quality cut
+forwardRecoJetFilter = cms.EDFilter("CandViewSelector",
+    src = cms.InputTag("ak5PFJets"),
+    cut = cms.string("pt > 20.0"),
+    filter = cms.bool(True)
+)
+
+#Define the Di-jets Reco selection
+forwardRecoDiJetFilter = cms.EDFilter("CandViewCountFilter",
+    src = cms.InputTag("forwardRecoJetFilter"),
+    minNumber = cms.uint32(2),
+    filter = cms.bool(True)                                     
+)
+
+
+#Define group sequence, using HLT bits + either HLT/Reco quality cut. 
+forwardDiJetHLTQualitySeq = cms.Sequence(
+   forwardDiJetHLT + forwardHLTDiJetFilter
+   
+)
+forwardDiJetRecoQualitySeq = cms.Sequence(
+	forwardDiJetHLT + forwardRecoJetFilter*forwardRecoDiJetFilter
+)
