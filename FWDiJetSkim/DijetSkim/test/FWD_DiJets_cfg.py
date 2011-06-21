@@ -12,7 +12,7 @@ process.maxEvents = cms.untracked.PSet(
 #replace fileNames  with the file you want to skim
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
-'file:/tmp/eliza/Multijet2011.root'
+'file:/storage2/eliza/Multijet2011.root'
 
 ##   "/store/relval/CMSSW_3_2_6/RelValTTbar_Tauola_2M_PROD/GEN-SIM-RECO/MC_31X_V8-v1/0013/F46F8CA0-D09A-DE11-9DE6-001D09F251E0.root"
 	    )
