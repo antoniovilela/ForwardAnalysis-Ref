@@ -5,7 +5,7 @@
 
 namespace forwardAnalysis {
 
-bool AcceptCaloTower::operator() (CaloTower const& calotower, edm::Event const& event) {
+bool AcceptCaloTower::operator() (CaloTower const& calotower) {
   int ieta = calotower.ieta();
 
   bool accept = true; 

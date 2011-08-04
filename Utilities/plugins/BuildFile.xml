@@ -9,5 +9,6 @@
   <use name="Geometry/CaloGeometry"/>
   <use name="CommonTools/UtilAlgos"/>
   <use name="CommonTools/RecoAlgos"/> 
+  <use name="ForwardAnalysis/Utilities"/>
   <use name="root"/>
 </library>

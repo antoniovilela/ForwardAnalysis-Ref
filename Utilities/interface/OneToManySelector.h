@@ -5,15 +5,19 @@
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "FWCore/Utilities/interface/InputTag.h"
 #include "CommonTools/UtilAlgos/interface/AnyPairSelector.h"
+#include "CommonTools/UtilAlgos/interface/AnySelector.h"
 
 namespace forwardAnalysis {
 
-template <class Object, class Coll, class PairSelector=AnyPairSelector>
+template <class Object, class Coll, 
+          class PairSelector=AnyPairSelector, class S1=AnySelector, class S2=AnySelector>
 class OneToManySelector {
    public:
       OneToManySelector(edm::ParameterSet const& pset):
-         src_(pset.template getParameter<edm::InputTag>("src")),
-         selector_(reco::modules::make<PairSelector>(pset)) {}
+         src_( pset.template getParameter<edm::InputTag>("src") ),
+         selector_( reco::modules::make<PairSelector>(pset) ),
+         s1_( reco::modules::make<S1>(pset) ),
+         s2_( reco::modules::make<S2>(pset) ) {}
 
       ~OneToManySelector() {}
 
@@ -23,7 +27,7 @@ class OneToManySelector {
          typename Coll::const_iterator cand = source->begin(), source_end = source->end();
          bool result = true;
          for(; cand != source_end; ++cand){
-            if( !selector_(obj,*cand) ) { result = false; break; }
+            if( !s1_(obj) || !s2_(*cand) || !selector_(obj,*cand) ) { result = false; break; }
          }
          return result;
       }
@@ -31,6 +35,8 @@ class OneToManySelector {
    private: 
       edm::InputTag src_;
       PairSelector selector_;
+      S1 s1_;
+      S2 s2_;
 };
 
 } // namespace
