@@ -62,13 +62,15 @@ process.goodOfflinePrimaryVertices = cms.EDFilter(
     )
 
 # Compute the mean pt per unit area (rho) from the PFCHS inputs
-from RecoJets.Configuration.RecoPFJets_cff import kt6PFJets
+from RecoJets.Configuration.RecoPFJets_cff import kt6PFJets,ak5PFJets
 process.kt6PFJetsPFlow = kt6PFJets.clone(
     src = cms.InputTag('pfNoElectron'+postfix),
     doAreaFastjet = cms.bool(True),
     doRhoFastjet = cms.bool(True)
     )
 process.patJetCorrFactorsPFlow.rho = cms.InputTag("kt6PFJetsPFlow", "rho")
+
+process.ak5PFJetsPileUp = ak5PFJets.clone( src = cms.InputTag('pfPileUp'+postfix) )
 
 """
 process.pileUpN1PrimaryVertices = cms.EDFilter("RecoTauPileUpVertexSelector",
@@ -141,6 +143,11 @@ getattr(process,"patPF2PATSequence"+postfix).replace(
     )
 """
 
+getattr(process,"patPF2PATSequence"+postfix).replace(
+    getattr(process,"pfNoPileUp"+postfix),
+    getattr(process,"pfNoPileUp"+postfix) * process.ak5PFJetsPileUp
+    )
+
 #----------------------------------------------
 # Let it run
 process.p = cms.Path(
@@ -166,6 +173,7 @@ process.out.outputCommands += [
     'keep *_goodOfflinePrimaryVertices*_*_*',
     #'keep *_pileUpN*PrimaryVertices_*_*',
     #'keep *_pfPileUpExclN*_*_*'
+    'keep *_ak5PFJetsPileUp_*_*'
 ]
 
 # top projections in PF2PAT:
