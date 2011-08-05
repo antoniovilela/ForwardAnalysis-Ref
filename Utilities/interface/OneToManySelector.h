@@ -26,8 +26,10 @@ class OneToManySelector {
          event.getByLabel(src_,source);
          typename Coll::const_iterator cand = source->begin(), source_end = source->end();
          bool result = true;
+         if( !s1_(obj) ) { result=false; return result; } // Use only objects passing selector S1
          for(; cand != source_end; ++cand){
-            if( !s1_(obj) || !s2_(*cand) || !selector_(obj,*cand) ) { result = false; break; }
+            if( !s2_(*cand) ) continue; // Use only objects passing selector S2
+            if( !selector_(obj,*cand) ) { result = false; break; }
          }
          return result;
       }
