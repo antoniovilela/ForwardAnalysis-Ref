@@ -172,7 +172,8 @@ process.out.outputCommands += [
     #'keep double_*PFlow*_*_PAT',
     'keep *_goodOfflinePrimaryVertices*_*_*',
     #'keep *_pileUpN*PrimaryVertices_*_*',
-    #'keep *_pfPileUpExclN*_*_*'
+    #'keep *_pfPileUpExclN*_*_*',
+    'keep *_pfPileUpPFlow*_*_*',
     'keep *_ak5PFJetsPileUp_*_*'
 ]
 
