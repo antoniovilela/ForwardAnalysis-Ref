@@ -31,6 +31,8 @@ void ForwardTTreeProducer::beginJob()
   data_ = fs->make<TTree>("ProcessedTree","ProcessedTree");
   exclusiveDijetsEvent_ = new ExclusiveDijetsEvent();
   data_->Branch("Events","ExclusiveDijetsEvent",&exclusiveDijetsEvent_);
+ 
+
 }
 
 void ForwardTTreeProducer::endJob() {}
