@@ -5,7 +5,8 @@
   <use name="DataFormats/CaloTowers"/>
   <use name="DataFormats/HcalRecHit"/>
   <use name="DataFormats/ParticleFlowCandidate"/>
-  <use name="DataFormats/HepMCCandidate"/> 
+  <use name="DataFormats/HepMCCandidate"/>
+  <use name="DataFormats/GeometrySurface"/>  
   <use name="Geometry/CaloTopology"/>
   <use name="Geometry/CaloGeometry"/>
   <use name="CommonTools/UtilAlgos"/>

@@ -1,5 +1,10 @@
+<use name="FWCore/Framework"/>
+<use name="FWCore/ParameterSet"/>
 <use name="DataFormats/Common"/>
 <use name="DataFormats/CaloTowers"/>
+<use name="DataFormats/TrackReco"/>
+<use name="DataFormats/VertexReco"/>
+<use name="DataFormats/JetReco"/>
 <export>
   <lib name="1"/>
 </export>
