@@ -17,7 +17,6 @@ beamHaloVeto = hltLevel1GTSeed.clone(L1SeedsLogicalExpression = cms.string('NOT 
 l1CollBscAnd = cms.Sequence(beamHaloVeto)
 l1CollBscNoBptx = cms.Sequence(beamHaloVeto)
 
-
 ###--------
 from ForwardAnalysis.ForwardTTreeAnalysis.primaryVertexFilter_cfi import *
 ##---------------------
@@ -25,6 +24,8 @@ from ForwardAnalysis.ForwardTTreeAnalysis.filterScraping_cfi import *
 ##-------------
 from CommonTools.RecoAlgos.HBHENoiseFilter_cfi import *
 ##-------------
+
+######################
 ## Jet Trigger Filter
 ######################
 
@@ -56,6 +57,7 @@ jetFilter = cms.EDFilter("CandViewCountFilter",
 )
 jetFilterSequence = cms.Sequence(goodJets*jetFilter)
 
+#------------------------------
 """
 from PhysicsTools.RecoAlgos.recoTrackSelector_cfi import *
 recoTrackSelector.src = "generalTracks"
@@ -81,39 +83,36 @@ from ForwardAnalysis.ForwardTTreeAnalysis.tracksTransverseRegion_cfi import *
 tracksTransverseRegion.src = "selectTracksAssociatedToPV"
 tracksTransverseRegion.JetTag = "ak5PFJets"
 
+"""
 from ForwardAnalysis.ForwardTTreeAnalysis.trackMultiplicity_cfi import * 
 trackMultiplicity.TracksTag = "analysisTracks"
 trackMultiplicityAssociatedToPV = trackMultiplicity.clone(TracksTag = "selectTracksAssociatedToPV")
-#trackMultiplicityOutsideJets = trackMultiplicity.clone(TracksTag = "tracksOutsideJets")
+trackMultiplicityOutsideJets = trackMultiplicity.clone(TracksTag = "tracksOutsideJets")
 trackMultiplicityTransverseRegion = trackMultiplicity.clone(TracksTag = "tracksTransverseRegion")
-#trackMultiplicityOutsideFJets = trackMultiplicity.clone(TracksTag = "tracksOutsideFJets")
-#trackMultiplicityBetweenJets = trackMultiplicity.clone(TracksTag = "tracksBetweenJets")
+"""
+#------------------------------
 
-##------------------------------------------------------------
-
-#pfCandidateNoiseThresholds.cut = PFCandidateNoiseStringCut(pfThresholds).cut()
 # Add EtaMax
 from ForwardAnalysis.Utilities.pfCandidateSelector_cfi import pfCandidateSelector as pfCandidateNoiseThresholds
-from ForwardAnalysis.Utilities.ExcludeHFEdgesStringCut import ExcludeHFEdgesStringCut #add
+from ForwardAnalysis.Utilities.ExcludeHFEdgesStringCut import ExcludeHFEdgesStringCut
 from ForwardAnalysis.Utilities.PFCandidateNoiseStringCut import PFCandidateNoiseStringCut
 # Change thresholds here if needed
 #from ForwardAnalysis.Utilities.pfThresholds_cfi import pfThresholds
 from ForwardAnalysis.ForwardTTreeAnalysis.pfThresholds_cfi import pfThresholds
+pfStrCut1 = ExcludeHFEdgesStringCut().cut()
+pfStrCut2 = PFCandidateNoiseStringCut(pfThresholds).cut()
+pfStrCut = '%s & %s' % (pfStrCut1,pfStrCut2)
+pfCandidateNoiseThresholds.cut = pfStrCut
 
-pfStrCut1 = ExcludeHFEdgesStringCut().cut() #add
-pfStrCut2 = PFCandidateNoiseStringCut(pfThresholds).cut() #add
-pfStrCut = '%s & %s' % (pfStrCut1,pfStrCut2) #add
-pfCandidateNoiseThresholds.cut = pfStrCut #add
-
-#from ForwardAnalysis.ForwardTTreeAnalysis.pfThresholds_cfi import pfThresholds
 pfCandidateNoiseThresholds.cut = PFCandidateNoiseStringCut(pfThresholds).cut()
+
 from ForwardAnalysis.Utilities.etaMaxCandViewSelector_cfi import etaMaxCandViewSelector as etaMaxPFCands
 from ForwardAnalysis.Utilities.etaMinCandViewSelector_cfi import etaMinCandViewSelector as etaMinPFCands
 etaMaxPFCands.src = "pfCandidateNoiseThresholds"
 etaMinPFCands.src = "pfCandidateNoiseThresholds"
 
-from Utilities.AnalysisSequences.genChargedParticles_cfi import genChargedParticles
-from Utilities.AnalysisSequences.genStableParticles_cfi import genStableParticles
+from ForwardAnalysis.ForwardTTreeAnalysis.genChargedParticles_cfi import genChargedParticles
+from ForwardAnalysis.ForwardTTreeAnalysis.genStableParticles_cfi import genStableParticles
 genStableParticles.cut = 'status = 1 & ( ( pdgId != 2212 ) | ( pdgId == 2212 & abs(pz) < %f ) )' % (0.75*3500.0)
 genProtonDissociative = genStableParticles.clone( cut = 'pdgId == 9902210' )
 etaMaxGen = etaMaxPFCands.clone(src = "genStableParticles")
