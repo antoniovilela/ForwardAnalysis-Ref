@@ -8,28 +8,14 @@ from PhysicsTools.PatAlgos.patTemplate_cfg import *
 process.GlobalTag.globaltag =  'GR_R_42_V19::All'
 
 process.source.fileNames = [
-    'file:/storage2/eliza/samples_test/MultiJetPromptReco2_v4.root'
+   # 'file:/storage2/eliza/samples_test/MultiJetPromptReco2_v4.root'
+     'file:/storage2/eliza/JetMay10RecoRun2011.root'
 ]
 
-#                                         ##
-#   process.maxEvents.input = ...         ##  (e.g. -1 to run on all events)
-#                                         ##
-#   process.out.outputCommands = [ ... ]  ##  (e.g. taken from PhysicsTools/PatAlgos/python/patEventContent_cff.py)
-#                                         ##
-#   process.out.fileName = ...            ##  (e.g. 'myTuple.root')
-#                                         ##
-#   process.options.wantSummary = True    ##  (to suppress the long output at the end of the job)    
+  
 
 process.MessageLogger.cerr.FwkReport.reportEvery = 10
 
-# the source is already defined in patTemplate_cfg.
-# overriding source and various other things
-#process.load("CommonTools.ParticleFlow.Sources.source_ZtoEles_DBS_312_cfi")
-#process.source = cms.Source("PoolSource", 
-#     fileNames = cms.untracked.vstring('file:myAOD.root')
-#)
-
-# process.load("CommonTools.ParticleFlow.Sources.source_ZtoMus_DBS_cfi")
 process.options   = cms.untracked.PSet( wantSummary = cms.untracked.bool(False))
 
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1000) )
@@ -170,11 +156,23 @@ process.out.outputCommands = cms.untracked.vstring('drop *',
 process.out.outputCommands += [
     #'keep *_selectedPat*_*_*',
     #'keep double_*PFlow*_*_PAT',
+    'keep *_offlinePrimaryVertices*_*_*',
     'keep *_goodOfflinePrimaryVertices*_*_*',
     #'keep *_pileUpN*PrimaryVertices_*_*',
     #'keep *_pfPileUpExclN*_*_*',
     'keep *_pfPileUpPFlow*_*_*',
-    'keep *_ak5PFJetsPileUp_*_*'
+    'keep *_pfNoPileUpPFlow*_*_*',
+    'keep *_ak5PFJetsPileUp_*_*',
+    'keep *_ak5PFJets_*_*',
+    'keep recoTracks_generalTracks_*_*',
+ #------- Trigger collections ------
+    'keep edmTriggerResults_TriggerResults_*_*',
+    'keep *_hltTriggerSummaryAOD_*_*',
+    'keep L1GlobalTriggerObjectMapRecord_*_*_*',
+    'keep L1GlobalTriggerReadoutRecord_*_*_*'
+
+
+    
 ]
 
 # top projections in PF2PAT:
