@@ -56,17 +56,7 @@ jetFilter = cms.EDFilter("CandViewCountFilter",
 )
 jetFilterSequence = cms.Sequence(goodJets*jetFilter)
 
-#------------------
-from ForwardAnalysis.ForwardTTreeAnalysis.edmDumpAnalysis_cfi import *
-#--------------------------
-'''
-from ForwardAnalysis.ForwardTTreeAnalysis.leadingJets_cfi import *
-#leadingJets.src = "L2L3CorJetSC7PF"
-leadingJets.src = "ak5PFJets"
-'''
-#------------SDW-----------------------
-#from DiffractiveForwardAnalysis.SingleDiffractiveWAnalysis.selectGoodTracks_cfi import *
-#selectGoodTracks.cut = "pt > 0.5 & numberOfValidHits > 7 & d0 <= 3.5"
+"""
 from PhysicsTools.RecoAlgos.recoTrackSelector_cfi import *
 recoTrackSelector.src = "generalTracks"
 recoTrackSelector.minRapidity = -2.5
@@ -74,32 +64,23 @@ recoTrackSelector.maxRapidity = 2.5
 recoTrackSelector.ptMin = 0.5
 recoTrackSelector.quality = ["highPurity"]
 selectGoodTracks = recoTrackSelector
-#from ForwardAnalysis.ForwardTTreeAnalysis.analysisTracks_cfi import *
-from Utilities.AnalysisTools.analysisTracks_cfi import *
-##-----------SDW
-#from MyAnalysis.MyAnalysis.selectTracksAssociatedToPV_cfi import selectTracksAssociatedToPV as tracksAssociatedToPV
-##tracksAssociatedToPV.src = "selectGoodTracks"
-#tracksAssociatedToPV.src = "analysisTracks"
-#tracksAssociatedToPV.MaxDistanceFromVertex = 1.0
-#-------------------------------
-from ForwardAnalysis.ForwardTTreeAnalysis.selectTracksAssociatedToPV_cfi import *
-##tracksAssociatedToPV.src = "selectGoodTracks"
+"""
+from ForwardAnalysis.Utilities.analysisTracks_cfi import *
+
+from ForwardAnalysis.Utilities.selectTracksAssociatedToPV_cfi import *
 selectTracksAssociatedToPV.src = "analysisTracks"
-selectTracksAssociatedToPV.MaxDistanceFromVertex = 1.0
-##-----------
+#selectTracksAssociatedToPV.vertexTag = ""
+selectTracksAssociatedToPV.maxDistanceFromVertex = 0.5
 
-from ForwardAnalysis.ForwardTTreeAnalysis.tracksOutsideJets_cfi import *
-#tracksOutsideJets.src = "selectTracksAssociatedToPV" 
-#tracksOutsideJets.JetTag = "leadingJets"
-#tracksOutsideJets.JetConeSize = 0.5
-tracksOutsideJets = tracksOutsideJets.clone(src = "analysisTracks",JetTag = "ak5PFJets",JetConeSize = 0.5)
+from ForwardAnalysis.Utilities.tracksOutsideJets_cfi import *
+tracksOutsideJets.src = "selectTracksAssociatedToPV" 
+tracksOutsideJets.JetTag = "ak5PFJets"
+tracksOutsideJets.JetConeSize = 0.5
 
-##----------------------------------------------------------------
 from ForwardAnalysis.ForwardTTreeAnalysis.tracksTransverseRegion_cfi import *
 tracksTransverseRegion.src = "selectTracksAssociatedToPV"
 tracksTransverseRegion.JetTag = "ak5PFJets"
 
-##-----------SDW----------------------------------------------------
 from ForwardAnalysis.ForwardTTreeAnalysis.trackMultiplicity_cfi import * 
 trackMultiplicity.TracksTag = "analysisTracks"
 trackMultiplicityAssociatedToPV = trackMultiplicity.clone(TracksTag = "selectTracksAssociatedToPV")
