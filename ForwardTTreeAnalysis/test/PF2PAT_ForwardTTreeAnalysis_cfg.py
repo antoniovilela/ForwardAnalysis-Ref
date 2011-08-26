@@ -20,7 +20,8 @@ config.runOfflineOnly = True
 config.runNoColl = False
 config.runBPTX = False
 config.runHCALFilter = False
-#config.UsePAT = True
+#-----------------------------------------------------------------------------
+config.UsePAT = True
 #------------------------------------------------------------------------------
 process = cms.Process("Analysis")
 
@@ -65,24 +66,29 @@ process.ak5JPTL1Offset.useCondDB = False
 process.TFileService = cms.Service("TFileService",
                                    fileName = cms.string(config.outputTTreeFile))
 
-## if config.writeEdmOutput:
-##     process.load("ForwardAnalysis.ForwardTTreeAnalysis.outputModule_cfi")
-##     from ForwardAnalysis.ForwardTTreeAnalysis.EventContent_cff import ForwardTTreeAnalysisEventContent
-##     process.output.outputCommands = ForwardTTreeAnalysisEventContent.outputCommands
-##     process.output.fileName = config.outputEdmFile
-##     process.output.SelectEvents.SelectEvents = cms.vstring('selection_step')
 
-## process.TFileService = cms.Service("TFileService",
-##                                    fileName = cms.string(config.outputTTreeFile)
-## )
+#######################################
+#Configuation using PF(OK)
+process.load("ForwardAnalysis.ForwardTTreeAnalysis.ExclusiveDijetsAnalysis_cfi")
+process.ExclusiveDijetsAnalysis.JetTag = "selectedPatJetsPFlow"
+####################################
+process.load("ForwardAnalysis.Utilities.tracksOutsideJets_cfi")
+process.tracksOutsideJets.JetTag = "selectedPatJetsPFlow"
+
+process.load("ForwardAnalysis.ForwardTTreeAnalysis.tracksTransverseRegion_cfi")
+process.tracksTransverseRegion.JetTag = "selectedPatJetsPFlow"
+
 
 ###################################################################
 # Analysis modules
 #--------------------------------
-from Utilities.AnalysisTools.countsAnalyzer_cfi import countsAnalyzer
+from ForwardAnalysis.Utilities.countsAnalyzer_cfi import countsAnalyzer
  
 process.load("ForwardAnalysis.ForwardTTreeAnalysis.exclusiveDijetsAnalysisSequences_cff")
+
+
 #process.load("ForwardAnalysis.ForwardTTreeAnalysis.singleVertexFilter_cfi")
+
 process.load('ForwardAnalysis.ForwardTTreeAnalysis.exclusiveDijetsTTreeAnalysis_cfi')
 #process.exclusiveDijetsTTreeAnalysis.TriggerResultsTag = cms.InputTag("TriggerResults::HLT")
 process.exclusiveDijetsTTreeAnalysis.EBeam = config.comEnergy/2.
