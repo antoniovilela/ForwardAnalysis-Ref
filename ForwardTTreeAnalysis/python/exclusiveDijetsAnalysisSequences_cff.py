@@ -25,7 +25,7 @@ from ForwardAnalysis.AnalysisSequences.primaryVertexFilter_cfi import *
 ##---------------------
 from ForwardAnalysis.AnalysisSequences.filterScraping_cfi import *
 ##-------------
-from CommonTools.RecoAlgos.HBHENoiseFilter_cfi import *
+##from CommonTools.RecoAlgos.HBHENoiseFilter_cfi import *
 ##-------------
 
 ######################
@@ -33,33 +33,33 @@ from CommonTools.RecoAlgos.HBHENoiseFilter_cfi import *
 ######################
 
 from ForwardAnalysis.ForwardTTreeAnalysis.exclusiveDijetsHLTPaths_cfi import *
-exclusiveDijetsHLTFilter.HLTPaths = ['HLT_Jet60_v*'] 
+exclusiveDijetsHLTFilter.HLTPaths = ['HLT_ExclDiJet60_HFAND_v*',
+                                     'HLT_ExclDiJet60_HFOR_v*'] 
 
-ak5PFL1L2L3 = cms.ESSource(
-    'JetCorrectionServiceChain',
-    correctors = cms.vstring('ak5PFL1Offset','ak5PFL2Relative','ak5PFL3Absolute')
-    )
+## ak5PFL1L2L3 = cms.ESSource(
+##     'JetCorrectionServiceChain',
+##     correctors = cms.vstring('ak5PFL1Offset','ak5PFL2Relative','ak5PFL3Absolute')
+##     )
 
-ak5PFJetsL2L3   = cms.EDProducer('PFJetCorrectionProducer',
-    src         = cms.InputTag('ak5PFJets'),
-    correctors  = cms.vstring('ak5PFL1L2L3')
-    )
+## ak5PFJetsL2L3   = cms.EDProducer('PFJetCorrectionProducer',
+##     src         = cms.InputTag('ak5PFJets'),
+##     correctors  = cms.vstring('ak5PFL1L2L3')
+##     )
 #JetCorrectorSequence = cms.Sequence(ak5PFJetsL2L3)
 #-----------------------------
-"""
-goodJets = cms.EDFilter("CandViewSelector",
-  #src = cms.InputTag("ak5PFJets"),
-  src = cms.InputTag("ak5PFJetsL2L3"), 
-  cut = cms.string("pt > 0.")
-#  # ptMin = cms.double(20)
-)
-#------------------------------
-jetFilter = cms.EDFilter("CandViewCountFilter",
-   src = cms.InputTag("goodJets"),
-   minNumber = cms.uint32(2)
-)
-jetFilterSequence = cms.Sequence(goodJets*jetFilter)
-"""
+
+## goodJets = cms.EDFilter("CandViewSelector",
+##   src = cms.InputTag("ak5PFJetsPileUp"),
+##   cut = cms.string("pt > 0.")
+## #  # ptMin = cms.double(20)
+## )
+## #------------------------------
+## jetFilter = cms.EDFilter("CandViewCountFilter",
+##    src = cms.InputTag("goodJets"),
+##    minNumber = cms.uint32(1)
+## )
+## jetFilterSequence = cms.Sequence(goodJets*jetFilter)
+
 #------------------------------
 """
 from PhysicsTools.RecoAlgos.recoTrackSelector_cfi import *
@@ -79,12 +79,12 @@ selectTracksAssociatedToPV.maxDistanceFromVertex = 0.5
 
 from ForwardAnalysis.Utilities.tracksOutsideJets_cfi import *
 tracksOutsideJets.src = "selectTracksAssociatedToPV" 
-tracksOutsideJets.JetTag = "ak5PFJetsL2L3"
+tracksOutsideJets.JetTag = "ak5PFJets"
 tracksOutsideJets.JetConeSize = 0.5
 
 from ForwardAnalysis.ForwardTTreeAnalysis.tracksTransverseRegion_cfi import *
 tracksTransverseRegion.src = "selectTracksAssociatedToPV"
-tracksTransverseRegion.JetTag = "ak5PFJetsL2L3"
+tracksTransverseRegion.JetTag = "ak5PFJets"
 
 """
 from ForwardAnalysis.ForwardTTreeAnalysis.trackMultiplicity_cfi import * 
@@ -108,7 +108,7 @@ pfStrCut2 = PFCandidateNoiseStringCut(pfThresholds).cut()
 pfStrCut = '%s & %s' % (pfStrCut1,pfStrCut2)
 pfCandidateNoiseThresholds.cut = pfStrCut
 # Change to no pile-up collection
-#pfCandidateNoiseThresholds.src = "" 
+pfCandidateNoiseThresholds.src = "pfNoPileUpPFlow" 
 
 from ForwardAnalysis.Utilities.etaMaxCandViewSelector_cfi import etaMaxCandViewSelector as etaMaxPFCands
 from ForwardAnalysis.Utilities.etaMinCandViewSelector_cfi import etaMinCandViewSelector as etaMinPFCands
@@ -188,7 +188,7 @@ hcalVetoSumEMaxHBPlusAndMinus16 = hcalActivityFilter.clone(SumEMaxHBPlus = 16.0,
 
 ##-----------------------------------------------------------------
 # Event selection
-offlineSelection = cms.Sequence(primaryVertexFilter+filterScraping+HBHENoiseFilter)
+offlineSelection = cms.Sequence(primaryVertexFilter+filterScraping)#+HBHENoiseFilter)
 eventSelection = cms.Sequence(offlineSelection)
 eventSelectionHLT = cms.Sequence(exclusiveDijetsHLTFilter + offlineSelection)
 
@@ -203,7 +203,7 @@ eventSelectionHLTSumEMaxHBPlusAndMinus16 = cms.Sequence(eventSelectionHLT+hcalVe
 
 #-------------------------------------------
 # Sequences
-jets = cms.Sequence(ak5PFJetsL2L3)
+#jets = cms.Sequence(ak5PFJetsL2L3)
 tracks = cms.Sequence(analysisTracks*
                       selectTracksAssociatedToPV*
                      #tracksOutsideJets*
@@ -225,5 +225,5 @@ edmDump = cms.Sequence(trackMultiplicity+
 """
 edmDump = cms.Sequence(edmNtupleEtaMax+edmNtupleEtaMin)
 #-------------------------------------------
-analysisSequences = cms.Sequence(jets*tracks*pfCandidates*edmDump)
+analysisSequences = cms.Sequence(tracks*pfCandidates*edmDump)
 #-------------------------------------------

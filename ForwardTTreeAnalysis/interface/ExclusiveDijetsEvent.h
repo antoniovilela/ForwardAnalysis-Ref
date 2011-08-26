@@ -1,12 +1,18 @@
 #ifndef ExclusiveDijetsEvent_h
 #define ExclusiveDijetsEvent_h
 
+#include "DataFormats/JetReco/interface/Jet.h"
+
+
 namespace exclusiveDijetsAnalysis {
    class ExclusiveDijetsAnalysis;
 }
 
 class ExclusiveDijetsEvent {
   public:
+
+ typedef reco::Particle::LorentzVector LorentzVector;
+
      ExclusiveDijetsEvent();
      ~ExclusiveDijetsEvent();
 
@@ -14,6 +20,11 @@ class ExclusiveDijetsEvent {
  //------------ Set FWD methods ------------------------------
  void SetNPileUpBx0(int fnPileUpBx0)           { nPileUpBx0_       = fnPileUpBx0;}
  void SetNVertex(int fnVertex)                 { nVertex_          = fnVertex;}
+
+//------ jet 4-momentum vector------------------
+ void SetLeadingJetP4(LorentzVector fleadingJetP4)             {leadingJetP4_ = fleadingJetP4 ;}
+ void SetSecondJetP4(LorentzVector fsecondJetP4)               {secondJetP4_  = fsecondJetP4  ;}
+ void SetThirdJetP4(LorentzVector fthirdJetP4)                 {thirdJetP4_   = fthirdJetP4   ;}
 
  void SetLeadingJetPt(double fleadingJetPt)    { leadingJetPt_     = fleadingJetPt;}
  void SetLeadingJetEta(double fleadingJetEta)  { leadingJetEta_     = fleadingJetEta;}
@@ -99,6 +110,11 @@ class ExclusiveDijetsEvent {
  int GetNPileUpBx0()          const { return nPileUpBx0_;}
  int GetNVertex()             const { return nVertex_ ;}
 
+//------ jet 4-momentum vector------------------
+const LorentzVector& GetLeadingJetP4()       const {return leadingJetP4_;}
+const LorentzVector& GetSecondJetP4()        const {return secondJetP4_;}
+const LorentzVector& SetThirdJetP4()         const {return thirdJetP4_;}   
+
  double GetLeadingJetPt()        const { return leadingJetPt_ ;}
  double GetLeadingJetEta()       const { return leadingJetEta_ ;}
  double GetLeadingJetPhi()       const { return leadingJetPhi_ ;}
@@ -183,6 +199,13 @@ class ExclusiveDijetsEvent {
 
      int nPileUpBx0_;
      int nVertex_;
+//------ jet 4-momentum vector------------------
+     LorentzVector leadingJetP4_;
+     LorentzVector secondJetP4_;
+     LorentzVector thirdJetP4_;
+//-------------------------------------------------
+
+
      double leadingJetPt_;
      double leadingJetEta_;
      double leadingJetPhi_;
