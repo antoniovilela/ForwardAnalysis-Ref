@@ -44,7 +44,7 @@ ak5PFJetsL2L3   = cms.EDProducer('PFJetCorrectionProducer',
     src         = cms.InputTag('ak5PFJets'),
     correctors  = cms.vstring('ak5PFL1L2L3')
     )
-JetCorrectorSequence = cms.Sequence(ak5PFJetsL2L3)
+#JetCorrectorSequence = cms.Sequence(ak5PFJetsL2L3)
 #-----------------------------
 """
 goodJets = cms.EDFilter("CandViewSelector",
@@ -152,6 +152,14 @@ caloActivityFilter.EnergyThresholdHB = 1.5
 caloActivityFilter.EnergyThresholdHE = 2.0
 caloActivityFilter.EnergyThresholdHF = 4.0
 
+from ForwardAnalysis.Utilities.castorActivityFilter_cfi import castorActivityFilter
+castorActivityFilter.CastorRecHitTag = "castorRecHitCorrector"
+castorActivityFilter.SumEMaxCastor = 250.
+
+castorInvalidDataFilter = cms.EDFilter("CastorInvalidDataFilter")
+castorVeto = cms.Sequence(castorInvalidDataFilter + castorActivityFilter)
+castorTag = cms.Sequence(castorInvalidDataFilter + ~castorActivityFilter)
+
 ##-----------------------------------------------------------------
 """
 from Utilities.AnalysisTools.hcalActivitySummary_cfi import *
@@ -180,19 +188,22 @@ hcalVetoSumEMaxHBPlusAndMinus16 = hcalActivityFilter.clone(SumEMaxHBPlus = 16.0,
 
 ##-----------------------------------------------------------------
 # Event selection
-offlineSelection = cms.Sequence(primaryVertexFilter+filterScraping+HBHENoiseFilter+JetCorrectorSequence+jetFilterSequence)
+offlineSelection = cms.Sequence(primaryVertexFilter+filterScraping+HBHENoiseFilter)
 eventSelection = cms.Sequence(offlineSelection)
 eventSelectionHLT = cms.Sequence(exclusiveDijetsHLTFilter + offlineSelection)
 
+"""
 eventSelectionHLTHBVetoPlusAndMinus = cms.Sequence(eventSelectionHLT+hcalVetoHBPlusAndMinus)
 eventSelectionHLTHBHEVetoPlusAndMinus = cms.Sequence(eventSelectionHLT+hcalVetoHBHEPlusAndMinus)
 eventSelectionHLTSumEMaxHBPlusAndMinus4 = cms.Sequence(eventSelectionHLT+hcalVetoSumEMaxHBPlusAndMinus4)
 eventSelectionHLTSumEMaxHBPlusAndMinus8 = cms.Sequence(eventSelectionHLT+hcalVetoSumEMaxHBPlusAndMinus8)
 eventSelectionHLTSumEMaxHBPlusAndMinus12 = cms.Sequence(eventSelectionHLT+hcalVetoSumEMaxHBPlusAndMinus12)
 eventSelectionHLTSumEMaxHBPlusAndMinus16 = cms.Sequence(eventSelectionHLT+hcalVetoSumEMaxHBPlusAndMinus16)
+"""
 
 #-------------------------------------------
 # Sequences
+jets = cms.Sequence(ak5PFJetsL2L3)
 tracks = cms.Sequence(analysisTracks*
                       selectTracksAssociatedToPV*
                      #tracksOutsideJets*
@@ -213,4 +224,6 @@ edmDump = cms.Sequence(trackMultiplicity+
                        edmNtupleEtaMax+edmNtupleEtaMin)
 """
 edmDump = cms.Sequence(edmNtupleEtaMax+edmNtupleEtaMin)
+#-------------------------------------------
+analysisSequences = cms.Sequence(jets*tracks*pfCandidates*edmDump)
 #-------------------------------------------
