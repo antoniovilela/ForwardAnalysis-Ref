@@ -60,8 +60,6 @@ process.ak5CaloL1Offset.useCondDB = False
 process.ak5PFL1Offset.useCondDB = False
 process.ak5JPTL1Offset.useCondDB = False
 
-
-
 #---------------------------------------------------------------------------------
 # Output
 process.TFileService = cms.Service("TFileService",
@@ -84,28 +82,14 @@ process.TFileService = cms.Service("TFileService",
 from Utilities.AnalysisTools.countsAnalyzer_cfi import countsAnalyzer
  
 process.load("ForwardAnalysis.ForwardTTreeAnalysis.exclusiveDijetsAnalysisSequences_cff")
-process.load("ForwardAnalysis.ForwardTTreeAnalysis.singleVertexFilter_cfi")
-
- 
+#process.load("ForwardAnalysis.ForwardTTreeAnalysis.singleVertexFilter_cfi")
 process.load('ForwardAnalysis.ForwardTTreeAnalysis.exclusiveDijetsTTreeAnalysis_cfi')
 #process.exclusiveDijetsTTreeAnalysis.TriggerResultsTag = cms.InputTag("TriggerResults::HLT")
 process.exclusiveDijetsTTreeAnalysis.EBeam = config.comEnergy/2.
 process.exclusiveDijetsTTreeAnalysis.TrackTag = config.trackTagName
-process.exclusiveDijetsTTreeAnalysisPFNoiseThresholds = process.exclusiveDijetsTTreeAnalysis.clone(ParticleFlowTag = "pfCandidateNoiseThresholds")
-process.load('Utilities.AnalysisTools.trackHistos_cfi')
-process.trackHistos.src = config.trackTagName
-process.load('Utilities.AnalysisTools.trackHistoAnalyzer_cfi')
-process.trackHistoAnalyzer.TrackTag = config.trackTagName
+process.exclusiveDijetsTTreeAnalysis.ParticleFlowTag = "pfCandidateNoiseThresholds"
+#process.exclusiveDijetsTTreeAnalysisPFNoiseThresholds = process.exclusiveDijetsTTreeAnalysis.clone(ParticleFlowTag = "pfCandidateNoiseThresholds")
 
-
-
-attributesThresholds = [{'EnergyThresholdHF':4.0},
-                        {'EnergyThresholdHF':6.0},
-                        {'EnergyThresholdHF':8.0},
-                        {'EnergyThresholdHB':1.2,'EnergyThresholdHE':1.6},
-                        {'EnergyThresholdHB':1.8,'EnergyThresholdHE':2.4}]
-
-#attributes = attributesEnergyScale
-#attributes.extend(attributesThresholds)
-attributes = attributesThresholds
-
+process.analysis_reco_step = cms.Path(process.analysisSequences)
+process.analysis_exclusiveDijetsAnalysis_step = cms.Path(process.eventSelectionHLT+
+                                                         process.exclusiveDijetsTTreeAnalysis)
