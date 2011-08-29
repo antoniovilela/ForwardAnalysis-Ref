@@ -3,6 +3,7 @@
 <use name="FWCore/ParameterSet"/>
 <use name="DataFormats/Common"/>
 <use name="DataFormats/CaloTowers"/>
+<use name="DataFormats/HcalRecHit"/>
 <use name="DataFormats/TrackReco"/>
 <use name="DataFormats/VertexReco"/>
 <use name="DataFormats/JetReco"/>
