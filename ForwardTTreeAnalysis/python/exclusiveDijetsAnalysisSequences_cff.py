@@ -1,12 +1,12 @@
 import FWCore.ParameterSet.Config as cms
 
 ##---------------------------------------
-"""
+
 from L1TriggerConfig.L1GtConfigProducers.L1GtTriggerMaskAlgoTrigConfig_cff import *
 from L1TriggerConfig.L1GtConfigProducers.L1GtTriggerMaskTechTrigConfig_cff import *
 es_prefer_l1GtTriggerMaskAlgoTrig = cms.ESPrefer("L1GtTriggerMaskAlgoTrigTrivialProducer","l1GtTriggerMaskAlgoTrig")
 es_prefer_l1GtTriggerMaskTechTrig = cms.ESPrefer("L1GtTriggerMaskTechTrigTrivialProducer","l1GtTriggerMaskTechTrig")
-
+"""
 from HLTrigger.HLTfilters.hltLevel1GTSeed_cfi import *
 hltLevel1GTSeed.L1TechTriggerSeeding = cms.bool(True)
 bptx = hltLevel1GTSeed.clone(L1SeedsLogicalExpression = cms.string('0'))
@@ -33,8 +33,10 @@ from ForwardAnalysis.AnalysisSequences.filterScraping_cfi import *
 ######################
 
 from ForwardAnalysis.ForwardTTreeAnalysis.exclusiveDijetsHLTPaths_cfi import *
-exclusiveDijetsHLTFilter.HLTPaths = ['HLT_ExclDiJet60_HFAND_v*',
-                                     'HLT_ExclDiJet60_HFOR_v*'] 
+exclusiveDijetsHLTFilter.HLTPaths = ['HLT_Jet15U_v*','HLT_L1Jet6U_v*']
+#['HLT_ExclDiJet60_HFAND*', 'HLT_ExclDiJet60_HFOR*'] 
+#['HLT_Jet15U','HLT_L1Jet6U']
+ 
 
 ## ak5PFL1L2L3 = cms.ESSource(
 ##     'JetCorrectionServiceChain',
@@ -74,7 +76,7 @@ from ForwardAnalysis.Utilities.analysisTracks_cfi import *
 
 from ForwardAnalysis.Utilities.selectTracksAssociatedToPV_cfi import *
 selectTracksAssociatedToPV.src = "analysisTracks"
-#selectTracksAssociatedToPV.vertexTag = ""
+selectTracksAssociatedToPV.vertexTag = "offlinePrimaryVertices"
 selectTracksAssociatedToPV.maxDistanceFromVertex = 0.5
 
 from ForwardAnalysis.Utilities.tracksOutsideJets_cfi import *
@@ -151,7 +153,7 @@ caloVetoHFMinus = caloActivityFilter.clone(NTowersMaxHFMinus=0)
 caloActivityFilter.EnergyThresholdHB = 1.5
 caloActivityFilter.EnergyThresholdHE = 2.0
 caloActivityFilter.EnergyThresholdHF = 4.0
-
+'''
 from ForwardAnalysis.Utilities.castorActivityFilter_cfi import castorActivityFilter
 castorActivityFilter.CastorRecHitTag = "castorRecHitCorrector"
 castorActivityFilter.SumEMaxCastor = 250.
@@ -159,7 +161,7 @@ castorActivityFilter.SumEMaxCastor = 250.
 castorInvalidDataFilter = cms.EDFilter("CastorInvalidDataFilter")
 castorVeto = cms.Sequence(castorInvalidDataFilter + castorActivityFilter)
 castorTag = cms.Sequence(castorInvalidDataFilter + ~castorActivityFilter)
-
+'''
 ##-----------------------------------------------------------------
 """
 from Utilities.AnalysisTools.hcalActivitySummary_cfi import *

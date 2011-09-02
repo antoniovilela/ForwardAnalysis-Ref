@@ -9,6 +9,7 @@
 #include "DataFormats/ParticleFlowCandidate/interface/PFCandidate.h"
 #include "DataFormats/CaloTowers/interface/CaloTower.h"
 #include "DataFormats/CaloTowers/interface/CaloTowerFwd.h"
+#include "DataFormats/HcalRecHit/interface/HcalRecHitCollections.h"
 #include "TMath.h"
 #include <vector>
 #include <algorithm>
@@ -22,6 +23,67 @@ namespace exclusiveDijetsAnalysis {
 
 enum calo_region_t {Barrel,Endcap,Transition,Forward};
 
+
+bool sortByEta( const math::XYZTLorentzVector& a, const math::XYZTLorentzVector& b){ 
+   return a.eta() < b.eta();
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+void genRapidityGap(reco::GenParticleCollection const& genParticles, math::XYZTLorentzVector& genGapLow,
+                                                                     math::XYZTLorentzVector& genGapHigh){
+   // Copy and sort gen particles in eta
+   std::vector<math::XYZTLorentzVector> genParticlesSort(0);
+   double etaEdgeLow = -999.0;
+   double etaEdgeHigh = 999.0;
+   reco::GenParticleCollection::const_iterator genpart = genParticles.begin();
+   reco::GenParticleCollection::const_iterator genpart_end = genParticles.end();  
+   for(; genpart != genpart_end; ++genpart){
+      if( genpart->status() != 1 ) continue;
+
+      if((genpart->eta() >= etaEdgeLow) && (genpart->eta() <= etaEdgeHigh))
+         genParticlesSort.push_back( genpart->p4() );
+   }
+   std::stable_sort(genParticlesSort.begin(), genParticlesSort.end(), sortByEta);
+
+   // Cases: 0, 1 or > 1 particles in selected range
+   math::XYZTLorentzVector def_vec(0.,0.,0.,0.);
+   if( genParticlesSort.size() == 0 ){
+      genGapLow = def_vec; genGapHigh = def_vec;
+      return;
+   } else if( genParticlesSort.size() == 1 ){
+      genGapLow = def_vec;
+      genGapHigh = genParticlesSort[0];
+      return;
+   } else{
+      //FIXME; There must be a STL algorithm for this
+      double deltaEtaMax = 0.;
+      std::vector<math::XYZTLorentzVector>::const_iterator genPartDeltaEtaMax = genParticlesSort.end();
+      std::vector<math::XYZTLorentzVector>::const_iterator genpart = genParticlesSort.begin();
+      std::vector<math::XYZTLorentzVector>::const_iterator genpart_end = genParticlesSort.end();
+      for(; genpart != genpart_end; ++genpart){
+         std::vector<math::XYZTLorentzVector>::const_iterator next = genpart + 1;
+         double deltaEta = ( next != genpart_end ) ? ( next->eta() - genpart->eta() ) : 0.;
+         if( deltaEta > (deltaEtaMax - 0.0001) ){
+            deltaEtaMax = deltaEta;
+            genPartDeltaEtaMax = genpart;
+         } 
+      }
+      if( genPartDeltaEtaMax != genpart_end ){
+         std::vector<math::XYZTLorentzVector>::const_iterator next = genPartDeltaEtaMax + 1;
+         if( next != genpart_end ){
+            genGapLow = (*genPartDeltaEtaMax);
+            genGapHigh = (*next);
+         } else{
+            genGapLow = def_vec;
+            genGapHigh = (*genPartDeltaEtaMax);
+         }
+      } else{
+         genGapLow = def_vec; genGapHigh = def_vec;
+         return;
+      }
+   } 
+   
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////
 void setGenInfo(reco::GenParticleCollection const& genParticles, double Ebeam,
                                                                  math::XYZTLorentzVector& genAllParticles,
                                                                  math::XYZTLorentzVector& genAllParticlesInRange,
@@ -29,8 +91,8 @@ void setGenInfo(reco::GenParticleCollection const& genParticles, double Ebeam,
                                                                  math::XYZTLorentzVector& genAllParticlesHEMinus,
                                                                  math::XYZTLorentzVector& genAllParticlesHFPlus,
                                                                  math::XYZTLorentzVector& genAllParticlesHFMinus,
-                                                                 //math::XYZTLorentzVector& genEtaMax,
-                                                                 //math::XYZTLorentzVector& genEtaMin,
+                                                                 math::XYZTLorentzVector& genEtaMax,
+                                                                 math::XYZTLorentzVector& genEtaMin,
                                                                  math::XYZTLorentzVector& genProtonPlus,
                                                                  math::XYZTLorentzVector& genProtonMinus){
    /*fwlite::Handle<std::vector<reco::GenParticle> > genParticlesCollection;
@@ -76,12 +138,12 @@ void setGenInfo(reco::GenParticleCollection const& genParticles, double Ebeam,
       if( (genpart->eta() >= 3.0) && (genpart->eta() < 5.0) ) allGenParticlesHFPlus += genpart->p4();
       if( (genpart->eta() > -5.0) && (genpart->eta() <= -3.0) ) allGenParticlesHFMinus += genpart->p4(); 
 
-      /*if( (genpart != proton1) && (genpart != proton2) ){
+      if( (genpart != proton1) && (genpart != proton2) ){
          if( ( etaMaxParticle == genParticles.end() ) ||
              ( genpart->eta() > etaMaxParticle->eta() ) ) etaMaxParticle = genpart;
          if( ( etaMinParticle == genParticles.end() ) ||
              ( genpart->eta() < etaMinParticle->eta() ) ) etaMinParticle = genpart;
-      }*/
+      }
    }
 
    // Commit
@@ -98,8 +160,8 @@ void setGenInfo(reco::GenParticleCollection const& genParticles, double Ebeam,
    if( proton1 != genParticles.end() ) genProtonPlus = proton1->p4();
    if( proton2 != genParticles.end() ) genProtonMinus = proton2->p4();
 
-   //if( etaMaxParticle != genParticles.end() ) genEtaMax = etaMaxParticle->p4();
-   //if( etaMinParticle != genParticles.end() ) genEtaMin = etaMinParticle->p4();
+   if( etaMaxParticle != genParticles.end() ) genEtaMax = etaMaxParticle->p4();
+   if( etaMinParticle != genParticles.end() ) genEtaMin = etaMinParticle->p4();
 }
 
 int pflowId(std::string const& name){
@@ -169,17 +231,23 @@ bool pflowThreshold(reco::PFCandidate const& part, std::map<int, std::map<int,st
 
    return accept;
 }
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//added by eliza
+double MassDissGen(reco::GenParticleCollection const& genParticles, double rangeEtaMin = -999.,
+                                                                    double rangeEtaMax = 999.){
+                                                                    
+   math::XYZTLorentzVector allGenParticles(0.,0.,0.,0.);
+   reco::GenParticleCollection::const_iterator genpart = genParticles.begin();
+   reco::GenParticleCollection::const_iterator genpart_end = genParticles.end();
+   for(; genpart != genpart_end; ++genpart){
+      if( genpart->status() != 1 ) continue;
 
-/*bool caloTowerNoiseAccept(CaloTower const& tower, double emFracThreshold = 1.){
-   bool accept = true;
+      if( ( genpart->eta() >= (rangeEtaMin - 0.0001) ) && 
+          ( genpart->eta() <= (rangeEtaMax + 0.0001) ) ) allGenParticles += genpart->p4();
+   }
+   return allGenParticles.M();
+}
 
-   double emEnergy = tower.emEnergy();
-   double hadEnergy = tower.hadEnergy();
-   double emFrac = fabs(emEnergy/(emEnergy+hadEnergy));
-   if(emFrac > emFracThreshold) accept = false;
-
-   return accept;
-}*/
 
 ////////////////////////////////////////////////////////////////////////////
 //New functions of FWLITE
@@ -197,7 +265,7 @@ bool goodVertexFilter(const VertexColl& vertexCollection, unsigned int minNumTra
    return accept;
 
 }
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 template <class TrackColl>
 bool highPurityTracksFilter(const TrackColl& trackCollection, double thresh, unsigned int numtrack){
 
@@ -223,7 +291,8 @@ bool highPurityTracksFilter(const TrackColl& trackCollection, double thresh, uns
   
   return accept;
 }
-
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+/*
 template <class PartColl>
 double MassColl(PartColl& partCollection, double ptThreshold = -1.,
                 double energyHBThreshold = -1., double energyHEThreshold = -1.,
@@ -252,172 +321,8 @@ double MassColl(PartColl& partCollection, double ptThreshold = -1.,
 
    return allCands.M();
 }
-
-template <class PartColl>
-double MassColl(PartColl& partCollection){
-   math::XYZTLorentzVector allCands(0.,0.,0.,0.);
-   for(typename PartColl::const_iterator part = partCollection.begin();
-                                         part != partCollection.end(); ++part) allCands += part->p4();
-
-   return allCands.M();
-}
-
-template <class Coll>
-std::pair<double,double> xi(Coll& partCollection, double Ebeam, double ptThreshold = -1.,
-                            double energyHBThreshold = -1., double energyHEThreshold = -1.,
-                            double energyHFThreshold = -1., double energyScale = -1.){
-
-   double xi_towers_plus = 0.;
-   double xi_towers_minus = 0.;
-   for(typename Coll::const_iterator part = partCollection.begin(); part != partCollection.end(); ++part){
-
-      double part_pt = part->pt();
-      double part_energy = part->energy();
-      if(energyScale > 0.){
-         part_pt *= energyScale;
-         part_energy *= energyScale;
-      }
-
-      // HF eta rings 29, 40, 41
-      if( ( (fabs(part->eta()) >= 2.866) && (fabs(part->eta()) < 2.976) ) || 
-          (fabs(part->eta()) >= 4.730) ) continue;
-
-      if(part_pt < ptThreshold) continue;
-      if((fabs(part->eta()) < 1.3) && (part_energy < energyHBThreshold)) continue;
-      if(((fabs(part->eta()) >= 1.3) && (fabs(part->eta()) < 3.0)) && (part_energy < energyHEThreshold)) continue;
-      if((fabs(part->eta()) >= 3.0) && ((fabs(part->eta()) <= 5.0)) && (part_energy < energyHFThreshold)) continue;
-
-      //double correction = (jetCorrector)?(jetCorrector->getCorrection(part->pt(),part->eta())):1.;
-      double part_et = part->et();
-      double part_eta = part->eta();
-      if(energyScale > 0.) part_et *= energyScale;
-
-      xi_towers_plus += part_et*TMath::Exp(part_eta);
-      xi_towers_minus += part_et*TMath::Exp(-part_eta);
-   }
-
-   xi_towers_plus /= 2*Ebeam;
-   xi_towers_minus /= 2*Ebeam;
-   
-   return std::make_pair(xi_towers_plus,xi_towers_minus);
-}
-
-template <class Coll>
-std::pair<double,double> xi(Coll& partCollection, double Ebeam){
-
-   double xi_towers_plus = 0.;
-   double xi_towers_minus = 0.;
-   for(typename Coll::const_iterator part = partCollection.begin(); part != partCollection.end(); ++part){
-      double part_et = part->et();
-      double part_eta = part->eta();
-
-      xi_towers_plus += part_et*TMath::Exp(part_eta);
-      xi_towers_minus += part_et*TMath::Exp(-part_eta);
-   }
-   xi_towers_plus /= 2*Ebeam;
-   xi_towers_minus /= 2*Ebeam;
-
-   return std::make_pair(xi_towers_plus,xi_towers_minus);
-}
-
-template <class Coll>
-std::pair<double,double> EPlusPz(Coll& partCollection, double ptThreshold = -1.,
-                                 double energyHBThreshold = -1., double energyHEThreshold = -1.,
-                                 double energyHFThreshold = -1., double energyScale = -1.){
-   double e_plus_pz = 0.;
-   double e_minus_pz = 0.;
-   typename Coll::const_iterator part = partCollection.begin();
-   typename Coll::const_iterator part_end = partCollection.end();
-   for(; part != part_end; ++part){
-      double part_pt = part->pt();
-      double part_energy = part->energy();
-      double part_pz = part->pz();
-      if(energyScale > 0.){
-         part_pt *= energyScale;
-         part_energy *= energyScale;
-         part_pz *= energyScale;
-      }
-
-      // HF eta rings 29, 40, 41
-      if( ( (fabs(part->eta()) >= 2.866) && (fabs(part->eta()) < 2.976) ) || 
-          (fabs(part->eta()) >= 4.730) ) continue;
-
-      if(part_pt < ptThreshold) continue;
-      if((fabs(part->eta()) < 1.3) && (part_energy < energyHBThreshold)) continue;
-      if(((fabs(part->eta()) >= 1.3) && (fabs(part->eta()) < 3.0)) && (part_energy < energyHEThreshold)) continue; 
-      if((fabs(part->eta()) >= 3.0) && ((fabs(part->eta()) <= 5.0)) && (part_energy < energyHFThreshold)) continue;
-
-      e_plus_pz += part_energy + part_pz; 
-      e_minus_pz += part_energy - part_pz;
-   }
-
-   return std::make_pair(e_plus_pz,e_minus_pz);
-}
-
-template <class Coll>
-std::pair<double,double> EPlusPz(Coll& partCollection){
-   double e_plus_pz = 0.;
-   double e_minus_pz = 0.;
-   typename Coll::const_iterator part = partCollection.begin();
-   typename Coll::const_iterator part_end = partCollection.end();
-   for(; part != part_end; ++part){
-      double part_energy = part->energy();
-      double part_pz = part->pz();
-
-      e_plus_pz += part_energy + part_pz;
-      e_minus_pz += part_energy - part_pz;
-   }
-
-   return std::make_pair(e_plus_pz,e_minus_pz);
-}
-
-template <class JetColl,class PartColl>
-double Rjj(JetColl& jetCollection,PartColl& partCollection){
-   math::XYZTLorentzVector dijetSystem(0.,0.,0.,0.);
-   dijetSystem += (jetCollection[0]).p4();
-   dijetSystem += (jetCollection[1]).p4(); 
-
-   double Mx = MassColl(partCollection);
-
-   return (dijetSystem.M()/Mx);
-}
-
-unsigned int nHFSlice(const std::map<unsigned int, std::vector<unsigned int> >& mapThreshToiEta, unsigned int thresholdHF, unsigned int ieta){
-   const std::vector<unsigned int>& vec_iEta = mapThreshToiEta.find(thresholdHF)->second;
-
-   // Count number of ieta entries in vector 
-   int count_ieta = (int)std::count(vec_iEta.begin(),vec_iEta.end(),ieta);
-
-   return count_ieta;
-}
-
-unsigned int nHCALiEta(const std::map<unsigned int, std::vector<unsigned int> >& iEtaMultiplicity, unsigned int threshold, unsigned int ieta){
-
-   //if(iEtaMultiplicity.find(ieta) != iEtaMultiplicity.end()) count_ieta = iEtaMultiplicity[ieta];
-   std::map<unsigned int, std::vector<unsigned int> >::const_iterator it_ieta = iEtaMultiplicity.find(ieta);
-   unsigned int count_ieta = 0; 
-   if( it_ieta != iEtaMultiplicity.end() ) count_ieta = (it_ieta->second)[threshold];
-
-   return count_ieta;
-}
-
-double sumEHCALiEta(const std::map<unsigned int, std::vector<double> >& iEtaSumE, unsigned int threshold, unsigned int ieta){
-
-   std::map<unsigned int, std::vector<double> >::const_iterator it_ieta = iEtaSumE.find(ieta);
-   double sumE_ieta = 0;
-   if( it_ieta != iEtaSumE.end() ) sumE_ieta = (it_ieta->second)[threshold];
-
-   return sumE_ieta;
-}
-////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-
-
-
+*/
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
 // FIXME: Generalize for any collection with changeable threshold scheme
 double MassColl(reco::PFCandidateCollection const& pflowCollection, std::map<int, std::map<int,std::pair<double,double> > > const& thresholdMap){
    math::XYZTLorentzVector allCands(0.,0.,0.,0.);
@@ -429,8 +334,47 @@ double MassColl(reco::PFCandidateCollection const& pflowCollection, std::map<int
 
    return allCands.M();
 }
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+template <class JetColl,class PartColl>
+double Rjj(JetColl& jetCollection,PartColl& partCollection){
+   math::XYZTLorentzVector dijetSystem(0.,0.,0.,0.);
+   dijetSystem += (jetCollection[0]).p4();
+   dijetSystem += (jetCollection[1]).p4(); 
 
-std::pair<double,double> xi(reco::PFCandidateCollection const& pflowCollection, double Ebeam, std::map<int, std::map<int,std::pair<double,double> > > const& thresholdMap){
+   double Mx = MassColl(partCollection);
+
+   return (dijetSystem.M()/Mx);
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////
+unsigned int nHFSlice(const std::map<unsigned int, std::vector<unsigned int> >& mapThreshToiEta, unsigned int thresholdHF, unsigned int ieta){
+   const std::vector<unsigned int>& vec_iEta = mapThreshToiEta.find(thresholdHF)->second;
+
+   // Count number of ieta entries in vector 
+   int count_ieta = (int)std::count(vec_iEta.begin(),vec_iEta.end(),ieta);
+
+   return count_ieta;
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+unsigned int nHCALiEta(const std::map<unsigned int, std::vector<unsigned int> >& iEtaMultiplicity, unsigned int threshold, unsigned int ieta){
+
+   //if(iEtaMultiplicity.find(ieta) != iEtaMultiplicity.end()) count_ieta = iEtaMultiplicity[ieta];
+   std::map<unsigned int, std::vector<unsigned int> >::const_iterator it_ieta = iEtaMultiplicity.find(ieta);
+   unsigned int count_ieta = 0; 
+   if( it_ieta != iEtaMultiplicity.end() ) count_ieta = (it_ieta->second)[threshold];
+
+   return count_ieta;
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+double sumEHCALiEta(const std::map<unsigned int, std::vector<double> >& iEtaSumE, unsigned int threshold, unsigned int ieta){
+
+   std::map<unsigned int, std::vector<double> >::const_iterator it_ieta = iEtaSumE.find(ieta);
+   double sumE_ieta = 0;
+   if( it_ieta != iEtaSumE.end() ) sumE_ieta = (it_ieta->second)[threshold];
+
+   return sumE_ieta;
+}
+////////////////////////////////////////////////////////////////////////////
+std::pair<double,double> xi(reco::PFCandidateCollection const& pflowCollection, double Ebeam, std::map<int,std::map<int,std::pair<double,double> > > const& thresholdMap){
 
    double xi_towers_plus = 0.;
    double xi_towers_minus = 0.;
@@ -448,7 +392,7 @@ std::pair<double,double> xi(reco::PFCandidateCollection const& pflowCollection, 
    
    return std::make_pair(xi_towers_plus,xi_towers_minus);
 }
-
+///////////////////////////////////////////////////////////////////////////////
 std::pair<double,double> EPlusPz(reco::PFCandidateCollection const& pflowCollection, std::map<int, std::map<int,std::pair<double,double> > > const& thresholdMap){
    double e_plus_pz = 0.;
    double e_minus_pz = 0.;
@@ -463,7 +407,7 @@ std::pair<double,double> EPlusPz(reco::PFCandidateCollection const& pflowCollect
 
    return std::make_pair(e_plus_pz,e_minus_pz);
 }
-
+//////////////////////////////////////////////////////////////////////////////////
 std::pair<double,double> etaMax(reco::PFCandidateCollection const& pflowCollection, std::map<int, std::map<int,std::pair<double,double> > > const& thresholdMap){
    std::vector<double> etaCands;
    reco::PFCandidateCollection::const_iterator part = pflowCollection.begin();
@@ -478,6 +422,46 @@ std::pair<double,double> etaMax(reco::PFCandidateCollection const& pflowCollecti
    return std::make_pair(eta_max,eta_min);
 }
 
+///////////////////////////////////////////////////////////////////////////////////// 
+double castorEnergy(CastorRecHitCollection const& castorRecHitCollection, bool isRealData = true){
+ 
+   double sumETotCastor = 0.,
+          sumETotCastorNMod5 = 0.,
+          sumETotCastorNMod4 = 0.,
+          sumETotCastorNMod3 = 0.,
+          sumETotCastorNMod2 = 0.;
+  
+   // Loop over rec hits
+   CastorRecHitCollection::const_iterator castorRecHit = castorRecHitCollection.begin();
+   CastorRecHitCollection::const_iterator castorRecHits_end = castorRecHitCollection.end();
+   for(; castorRecHit != castorRecHits_end; ++castorRecHit) {
+      const CastorRecHit& recHit = (*castorRecHit);
+
+      int sectorId  = recHit.id().sector();
+      int moduleId  = recHit.id().module();
+      double energy = recHit.energy();
+      double time   = recHit.time();
+
+      if( !isRealData ) energy *= 62.5;
+
+      if( moduleId > 5 ) continue;
+
+      if( moduleId == 1 && sectorId == 5 ) continue;
+      if( moduleId == 1 && sectorId == 6) continue;
+
+      sumETotCastor += energy;
+
+      if( moduleId <= 5 ) sumETotCastorNMod5 += energy;
+      if( moduleId <= 4 ) sumETotCastorNMod4 += energy;
+      if( moduleId <= 3 ) sumETotCastorNMod3 += energy;
+      if( moduleId <= 2 ) sumETotCastorNMod2 += energy;
+   }
+
+   return sumETotCastor;
+}
+
+ 
 } // namespace
+
 #endif
 

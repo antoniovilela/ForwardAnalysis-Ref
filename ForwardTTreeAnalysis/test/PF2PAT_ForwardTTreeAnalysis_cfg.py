@@ -5,11 +5,11 @@ class config: pass
 config.verbose = True
 config.writeEdmOutput = False
 config.runOnMC = False
-config.globalTagNameData = 'GR_R_42_V19::All' #JECDATA 
-
-config.globalTagNameMC = ''
+config.globalTagNameData = 'GR_R_42_V19::All' 
+config.instLumiROOTFile='lumibylsXing_Cert_136033-149442_7TeV_Apr21ReReco_Collisions10_JSON.root'
+globalTagNameMC = ''
 #config.outputEdmFile = 'DijetsAnalysis.root'
-config.outputTTreeFile = 'DijetsanalysisDATA42X_PATTTree.root'
+config.outputTTreeFile = 'DijetsanalysisDATA42X_PATTTree_Apr21.root'
 config.comEnergy = 7000.0
 config.trackAnalyzerName = 'trackHistoAnalyzer'
 #config.trackTagName = 'selectGoodTracks'
@@ -35,9 +35,13 @@ process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
 
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring(
-       
-        'file:/storage2/sfonseca/CMSSW/Forward/CMSSW_4_2_8/src/ForwardAnalysis/Skimming/test/patTuple_PF2PAT.root'
+        # 'file:/storage2/eliza/FWDAna/CMSSW_4_2_8/src/ForwardAnalysis/ForwardTTreeAnalysis/test/patTuple_PF2PAT_PromptReco2.root'
+        #'file:/storage2/eliza/FWDAna/CMSSW_4_2_8/src/ForwardAnalysis/ForwardTTreeAnalysis/test/patTuple_PF2PAT_Apr21.root'
+        'file:/storage2/eliza/samples_Apr21/PAT_JetMETTAU.root'
+        
     )
+   #duplicateCheckMode = cms.untracked.string('noDuplicateCheck')
+
 )
 #-------------------------------------------------------------------------------
 # Import of standard configurations
@@ -66,8 +70,37 @@ process.ak5JPTL1Offset.useCondDB = False
 process.TFileService = cms.Service("TFileService",
                                    fileName = cms.string(config.outputTTreeFile))
 
+###################################################################################
+# CASTOR RecHit Corrector
+'''
+if not config.runOnMC:
+    process.castorRecHitCorrector = cms.EDProducer("RecHitCorrector",
+        rechitLabel = cms.InputTag("castorreco","","RECO"),
+        revertFactor = cms.double(1),
+        doInterCalib = cms.bool(False)
+    )
 
-#######################################
+    process.load("CondCore.DBCommon.CondDBSetup_cfi")
+    process.CastorDbProducer = cms.ESProducer("CastorDbProducer")
+    process.es_castor_pool = cms.ESSource("PoolDBESSource",
+        process.CondDBSetup,
+        timetype = cms.string('runnumber'),
+        connect = cms.string('frontier://cmsfrontier.cern.ch:8000/FrontierProd/CMS_COND_31X_HCAL'),
+        authenticationMethod = cms.untracked.uint32(0),
+        toGet = cms.VPSet(
+            cms.PSet(
+                record = cms.string('CastorChannelQualityRcd'),  
+                tag = cms.string('CastorChannelQuality_v2.2_offline')
+            )
+        )
+    )
+    process.es_prefer_castor = cms.ESPrefer('PoolDBESSource','es_castor_pool')
+
+    process.castorInvalidDataFilter = cms.EDFilter("CastorInvalidDataFilter")
+    process.castorSequence = cms.Sequence(process.castorInvalidDataFilter+process.castorRecHitCorrector)
+'''
+###################################################################################
+######################################
 #Configuation using PF(OK)
 process.load("ForwardAnalysis.ForwardTTreeAnalysis.ExclusiveDijetsAnalysis_cfi")
 process.ExclusiveDijetsAnalysis.JetTag = "selectedPatJetsPFlow"
@@ -79,10 +112,15 @@ process.load("ForwardAnalysis.ForwardTTreeAnalysis.tracksTransverseRegion_cfi")
 process.tracksTransverseRegion.JetTag = "selectedPatJetsPFlow"
 
 
-###################################################################
+####################################################################################
 # Analysis modules
 #--------------------------------
 from ForwardAnalysis.Utilities.countsAnalyzer_cfi import countsAnalyzer
+#added by eliza
+process.load('ForwardAnalysis.Utilities.lumiWeight_cfi')
+process.lumiWeight.rootFileName = cms.string(config.instLumiROOTFile)
+#end
+ 
  
 process.load("ForwardAnalysis.ForwardTTreeAnalysis.exclusiveDijetsAnalysisSequences_cff")
 
@@ -96,6 +134,10 @@ process.exclusiveDijetsTTreeAnalysis.TrackTag = config.trackTagName
 process.exclusiveDijetsTTreeAnalysis.ParticleFlowTag = "pfCandidateNoiseThresholds"
 #process.exclusiveDijetsTTreeAnalysisPFNoiseThresholds = process.exclusiveDijetsTTreeAnalysis.clone(ParticleFlowTag = "pfCandidateNoiseThresholds")
 
+#added by eliza
+process.eventWeightSequence = cms.Sequence(process.lumiWeight) 
+process.eventWeight_step = cms.Path(process.eventWeightSequence) 
+#
 process.analysis_reco_step = cms.Path(process.analysisSequences)
 process.analysis_exclusiveDijetsAnalysis_step = cms.Path(process.eventSelectionHLT+
                                                          process.exclusiveDijetsTTreeAnalysis)

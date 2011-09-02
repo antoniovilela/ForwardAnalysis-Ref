@@ -7,10 +7,11 @@ ExclusiveDijetsAnalysis = cms.PSet(
     VertexTag = cms.InputTag("goodOfflinePrimaryVertices"),
     METTag = cms.InputTag("met"),
     CaloTowerTag = cms.InputTag("towerMaker"), 
+    CastorRecHitTag = cms.InputTag("castorRecHitCorrector"),
     ParticleFlowTag = cms.InputTag("particleFlow"),
     GenChargedParticlesTag = cms.InputTag("genChargedParticles"),
     TriggerResultsTag = cms.InputTag("TriggerResults::HLT"),
-#    HCALTowerSummaryTag = cms.InputTag("hcalActivitySummary"),
+    #HCALTowerSummaryTag = cms.InputTag("hcalActivitySummary"),
     # Misc
     EnergyThresholdHB = cms.double(1.5),
     EnergyThresholdHE = cms.double(2.0),
@@ -20,8 +21,10 @@ ExclusiveDijetsAnalysis = cms.PSet(
     # Options
     ApplyEnergyScaleHCAL = cms.bool(False),
     EnergyScaleFactorHCAL = cms.double(1.0),
-    HLTPath2 = cms.string("HLT_ExclDiJet60_HFAND_v*"),
-    HLTPath3 = cms.string("HLT_ExclDiJet60_HFOR_v*"),
+    #HLTPath2 = cms.string("HLT_ExclDiJet60_HFAND_v*"),
+    #HLTPath3 = cms.string("HLT_ExclDiJet60_HFOR_v*"),
+    HLTPath2 = cms.string("HLT_Jet15U_v*"),
+    HLTPath3 = cms.string("HLT_L1Jet6U_v*"),
     AccessMCInfo = cms.untracked.bool(False),
     POMPYTMCInfo = cms.untracked.bool(False),
     UsePAT = cms.untracked.bool(False),
@@ -30,8 +33,8 @@ ExclusiveDijetsAnalysis = cms.PSet(
 #########################
 ###ExclusiveDijetsAnalysis
     # Input tags
-    JetTag = cms.InputTag("ak5PFJets"),
-    JetNonCorrTag = cms.InputTag("ak5PFJets"),
+    JetTag = cms.InputTag("selectedPatJetsPFlow"),
+    JetNonCorrTag = cms.InputTag("selectedPatJetsPFlow"),
     TrackMultiplicityTag = cms.InputTag("trackMultiplicityAssociatedToPV","trackMultiplicity"),
     TrackTag = cms.InputTag(""),
     # PF thresholds
