@@ -1,4 +1,5 @@
+#include "ForwardAnalysis/ForwardTTreeAnalysis/interface/DiffractiveEvent.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/ExclusiveDijetsEvent.h"
 
-using namespace exclusiveDijetsAnalysis;
+DiffractiveEvent diffractiveEvent;
 ExclusiveDijetsEvent exclusiveDijetsEvent;

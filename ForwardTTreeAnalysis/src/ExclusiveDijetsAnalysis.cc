@@ -14,8 +14,10 @@
 #include "DataFormats/VertexReco/interface/VertexFwd.h"
 #include "DataFormats/VertexReco/interface/Vertex.h"
 #include "JetMETCorrections/Objects/interface/JetCorrector.h"
-#include "ForwardAnalysis/ForwardTTreeAnalysis/interface/ExclusiveDijetsEvent.h"
 
+#include "ForwardAnalysis/Utilities/interface/LargestGenRapidityGap.h"
+#include "ForwardAnalysis/Utilities/interface/CastorEnergy.h"
+#include "ForwardAnalysis/ForwardTTreeAnalysis/interface/ExclusiveDijetsEvent.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/FWLiteTools.h"
 
 //added by eliza
@@ -41,20 +43,22 @@
 //end 
 //---------------------------------------------------------------------------
 
-namespace exclusiveDijetsAnalysis {
+using namespace forwardAnalysis;
+using exclusiveDijetsAnalysis::ExclusiveDijetsAnalysis;
 
 ExclusiveDijetsAnalysis::ExclusiveDijetsAnalysis(const edm::ParameterSet& pset):
+  runOnData_(true), 
   vertexTag_(pset.getParameter<edm::InputTag>("VertexTag")),//ok
   trackTag_(pset.getParameter<edm::InputTag>("TrackTag")),//old My dijets analysis
   metTag_(pset.getParameter<edm::InputTag>("METTag")),//old My dijets analysis
   jetTag_(pset.getParameter<edm::InputTag>("JetTag")),//ok
   jetNonCorrTag_(pset.getParameter<edm::InputTag>("JetNonCorrTag")), //ok
-  castorRecHitTag_(pset.getParameter<edm::InputTag>("CastorRecHitTag")), //added by liz
-  trackMultiplicityTag_(pset.getParameter<edm::InputTag>("TrackMultiplicityTag")),//ok
   particleFlowTag_(pset.getParameter<edm::InputTag>("ParticleFlowTag")),//ok
+  castorRecHitTag_(pset.getParameter<edm::InputTag>("CastorRecHitTag")), //added by liz
   genChargedTag_(pset.getParameter<edm::InputTag>("GenChargedParticlesTag")),//old My dijets analysis
   triggerResultsTag_(pset.getParameter<edm::InputTag>("TriggerResultsTag")),//old My dijets analysis
   //hcalTowerSummaryTag_(pset.getParameter<edm::InputTag>("HCALTowerSummaryTag")),//old My dijets analysis
+  trackMultiplicityTag_(pset.getParameter<edm::InputTag>("TrackMultiplicityTag")),//ok
   //doBtag_(pset.getParameter<bool>("DoBTag")),
   energyThresholdHB_(pset.getParameter<double>("EnergyThresholdHB")),//old My dijets analysis
   energyThresholdHE_(pset.getParameter<double>("EnergyThresholdHE")),//old My dijets analysis
@@ -68,16 +72,14 @@ ExclusiveDijetsAnalysis::ExclusiveDijetsAnalysis(const edm::ParameterSet& pset):
   usePAT_(pset.getUntrackedParameter<bool>("UsePAT",true)),
   accessMCInfo_(pset.getUntrackedParameter<bool>("AccessMCInfo",true)),//old My dijets analysis
   POMPYTMCInfo_(pset.getUntrackedParameter<bool>("POMPYTMCInfo",true)),//old My dijets analysis
-  runOnData_(pset.getUntrackedParameter<bool>("RunOnData",true)), 
+  //runOnData_(pset.getUntrackedParameter<bool>("RunOnData",true)), 
   //hltPathName1_(pset.getParameter<std::string>("HLTPath1")),//old My dijets analysis
-  hltPathName2_(pset.getParameter<std::string>("HLTPath2")),//old My dijets analysis
-  hltPathName3_(pset.getParameter<std::string>("HLTPath3"))//,//old My dijets analysis
+  //hltPathName2_(pset.getParameter<std::string>("HLTPath2")),//old My dijets analysis
+  //hltPathName3_(pset.getParameter<std::string>("HLTPath3"))//,//old My dijets analysis
   //hltPathName4_(pset.getParameter<std::string>("HLTPath4")),//old My dijets analysis
   //hltPathName5_(pset.getParameter<std::string>("HLTPath5")),//old My dijets analysis
   //hltPathName6_(pset.getParameter<std::string>("HLTPath6")) //old My dijets analysis
-
-
-{
+  hltPathNames_(pset.getParameter<std::vector<std::string> >("hltPaths")) {
   
   resetPFThresholds(thresholdsPFlowBarrel_);
   resetPFThresholds(thresholdsPFlowEndcap_);
@@ -178,7 +180,10 @@ void ExclusiveDijetsAnalysis::setBeginRun(const edm::Run& run, const edm::EventS
 }*/
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void ExclusiveDijetsAnalysis::fillEventData(ExclusiveDijetsEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
+  // Reset info
+  eventData.reset();
 
+  runOnData_ = event.isRealData();
   // Set internal info
   //if(!runOnData_) setGenInfo(event,setup);
 
@@ -206,7 +211,6 @@ void ExclusiveDijetsAnalysis::fillEventData(ExclusiveDijetsEvent& eventData, con
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void ExclusiveDijetsAnalysis::fillEventInfo(ExclusiveDijetsEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
 
-
   unsigned int eventNumber = event.id().event();
   unsigned int runNumber = event.id().run();
   unsigned int lumiSection = event.luminosityBlock();
@@ -226,23 +230,42 @@ void ExclusiveDijetsAnalysis::fillEventInfo(ExclusiveDijetsEvent& eventData, con
   eventData.SetLumiSection(lumiSection);
   eventData.SetBunchCrossing(bunchCrossing);
    
- }
+}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void ExclusiveDijetsAnalysis::fillTriggerInfo(ExclusiveDijetsEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
   //FIXME
   //if(!accessMCInfo_){
+
   edm::Handle<edm::TriggerResults> triggerResults;
   event.getByLabel(triggerResultsTag_, triggerResults);
 
-
   const edm::TriggerNames& triggerNames = event.triggerNames(*triggerResults);
 
-  std::string hltPath2;
+  size_t idxpath = 0;
+  std::vector<std::string>::const_iterator hltpath = hltPathNames_.begin();
+  std::vector<std::string>::const_iterator hltpaths_end = hltPathNames_.end(); 
+  for(; hltpath != hltpaths_end; ++hltpath,++idxpath){
+     std::string resolvedPathName; 
+     if( edm::is_glob( *hltpath ) ){
+        std::vector< std::vector<std::string>::const_iterator > matches = edm::regexMatch(triggerNames.triggerNames(), *hltpath);
+
+        if( matches.empty() )
+           throw cms::Exception("Configuration") << "Could not find any HLT path of type " << *hltpath << "\n";
+        else if( matches.size() > 1)
+           throw cms::Exception("Configuration") << "HLT path type " << *hltpath << " not unique\n";
+        else resolvedPathName = *(matches[0]);
+     } else{
+        resolvedPathName = *hltpath;
+     }
+
+     int idx_HLT = triggerNames.triggerIndex(resolvedPathName);
+     int accept_HLT = ( triggerResults->wasrun(idx_HLT) && triggerResults->accept(idx_HLT) ) ? 1 : 0;
+     eventData.SetHLTPath(idxpath, accept_HLT);
+  }
+  
+  /*std::string hltPath2;
   std::string hltPath3;
  
-  
-  //std::cout << " path " <<  std::endl;
-
   // In case hltPathName2_ is a pattern (e.g. HLT_Jet30U*)
   if( edm::is_glob(hltPathName2_) ){
      std::vector< std::vector<std::string>::const_iterator > matches = edm::regexMatch(triggerNames.triggerNames(), hltPathName2_);  
@@ -268,17 +291,15 @@ void ExclusiveDijetsAnalysis::fillTriggerInfo(ExclusiveDijetsEvent& eventData, c
   std::cout << "Using HLT path3 :" << hltPath3 << std::endl; 
   //--------------------------------------------------------
    
- 
   int idx_HLT_Jet15U = triggerNames.triggerIndex(hltPath2);
   int idx_HLT_L1Jet6U = triggerNames.triggerIndex(hltPath3);
   
   eventData.SetHLT_Jet15U((triggerResults->wasrun(idx_HLT_Jet15U) && triggerResults->accept(idx_HLT_Jet15U)) ? 1 : 0);
-  eventData.SetHLT_L1Jet6U((triggerResults->wasrun(idx_HLT_L1Jet6U) && triggerResults->accept(idx_HLT_L1Jet6U)) ? 1 : 0);
- 
-  }
-  // end new information (eliza): eventdatainfo & trigger
+  eventData.SetHLT_L1Jet6U((triggerResults->wasrun(idx_HLT_L1Jet6U) && triggerResults->accept(idx_HLT_L1Jet6U)) ? 1 : 0);*/
+}
+// end new information (eliza): eventdatainfo & trigger
 
-  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void ExclusiveDijetsAnalysis::fillPileUpInfo(ExclusiveDijetsEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
 //  edm::Handle<std::map<int,int> > pileUpMap;
 //   event.getByLabel("pileUpInfo",pileUpMap);
@@ -291,10 +312,8 @@ void ExclusiveDijetsAnalysis::fillPileUpInfo(ExclusiveDijetsEvent& eventData, co
 //   LogTrace("Analysis") << "  Number of pile-up events in bunch crossing 0: " << nPileUpBx0;
 //   //eventData.nPileUpBx0_ = nPileUpBx0;
 //     eventData.SetNPileUpBx0(nPileUpBx0);
-
-
 }
-  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void ExclusiveDijetsAnalysis::fillVertexInfo(ExclusiveDijetsEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
 
   edm::Handle<edm::View<reco::Vertex> > vertexCollectionH;
@@ -308,9 +327,8 @@ void ExclusiveDijetsAnalysis::fillVertexInfo(ExclusiveDijetsEvent& eventData, co
      if(vtx->isFake()) continue; // skip vertex from beam spot
      ++nGoodVertices;
   } 
+  eventData.SetNVertex(nGoodVertices);
 
-
- eventData.SetNVertex(nGoodVertices);
   /*const reco::Vertex& primVertex = (*vertexCollectionH)[0];
   if(primVertex.isValid() && !primVertex.isFake()){
      eventData.SetposXPrimVtx(primVertex.x());
@@ -322,7 +340,7 @@ void ExclusiveDijetsAnalysis::fillVertexInfo(ExclusiveDijetsEvent& eventData, co
      eventData.SetposZPrimVtx(-999.);
   }*/
 
-//   eventData.nVertex_ = nGoodVertices;
+  //eventData.nVertex_ = nGoodVertices;
 }
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void ExclusiveDijetsAnalysis::fillJetInfo(ExclusiveDijetsEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
@@ -333,126 +351,121 @@ void ExclusiveDijetsAnalysis::fillJetInfo(ExclusiveDijetsEvent& eventData, const
   event.getByLabel(particleFlowTag_,particleFlowCollectionH);
 
   if(jetCollectionH->size() > 1){
-  const reco::Jet& jet1 = (*jetCollectionH)[0];// they come out ordered right?
-  const reco::Jet& jet2 = (*jetCollectionH)[1];
-  //const reco::Jet& jet3 = (*jetCollectionH)[2];
+     const reco::Jet& jet1 = (*jetCollectionH)[0];// they come out ordered right?
+     const reco::Jet& jet2 = (*jetCollectionH)[1];
+     //const reco::Jet& jet3 = (*jetCollectionH)[2];
 
-  eventData.SetLeadingJetPt(jet1.pt());
-  //std::cout << "Leading Jet pt: " << jet1.pt() << std::endl;
-  eventData.SetLeadingJetEta(jet1.eta());
-  eventData.SetLeadingJetPhi(jet1.phi());
-  eventData.SetLeadingJetP4(jet1.p4());
+     eventData.SetLeadingJetPt(jet1.pt());
+     //std::cout << "Leading Jet pt: " << jet1.pt() << std::endl;
+     eventData.SetLeadingJetEta(jet1.eta());
+     eventData.SetLeadingJetPhi(jet1.phi());
+     eventData.SetLeadingJetP4(jet1.p4());
  
-  eventData.SetSecondJetPt(jet2.pt());
-  //std::cout << "Second Jet pt: " << jet2.pt() << std::endl;
-  eventData.SetSecondJetEta(jet2.eta());
-  //std::cout << "Second Jet eta: " << jet2.eta() << std::endl;
-  eventData.SetSecondJetPhi(jet2.phi());
-  //Using Lorentz Vector
-  eventData.SetSecondJetP4(jet2.p4());
+     eventData.SetSecondJetPt(jet2.pt());
+     //std::cout << "Second Jet pt: " << jet2.pt() << std::endl;
+     eventData.SetSecondJetEta(jet2.eta());
+     //std::cout << "Second Jet eta: " << jet2.eta() << std::endl;
+     eventData.SetSecondJetPhi(jet2.phi());
+     //Using Lorentz Vector
+     eventData.SetSecondJetP4(jet2.p4());
   
-  eventData.SetJetsAveEta((jet1.eta() + jet2.eta())/2);
-  eventData.SetJetsDeltaEta(jet1.eta() - jet2.eta());
-  eventData.SetJetsDeltaPhi(M_PI - fabs(jet1.phi() - jet2.phi()));
-  eventData.SetJetsDeltaPt(fabs(jet1.pt() - jet2.pt()));
+     eventData.SetJetsAveEta((jet1.eta() + jet2.eta())/2);
+     eventData.SetJetsDeltaEta(jet1.eta() - jet2.eta());
+     eventData.SetJetsDeltaPhi(M_PI - fabs(jet1.phi() - jet2.phi()));
+     eventData.SetJetsDeltaPt(fabs(jet1.pt() - jet2.pt()));
 
-  //Jet mass added by eliza
-  math::XYZTLorentzVector jetSystem(0.,0.,0.,0.);
-  jetSystem += jet1.p4();
-  eventData.SetMassJets(jetSystem.M());
-  // Di-jet mass
-  math::XYZTLorentzVector dijetSystem(0.,0.,0.,0.);
-  dijetSystem += jet1.p4();
-  dijetSystem += jet2.p4();
-  eventData.SetMassDijets(dijetSystem.M());  
+     //Jet mass added by eliza
+     math::XYZTLorentzVector jetSystem(0.,0.,0.,0.);
+     jetSystem += jet1.p4();
+     eventData.SetMassJets(jetSystem.M());
+     // Di-jet mass
+     math::XYZTLorentzVector dijetSystem(0.,0.,0.,0.);
+     dijetSystem += jet1.p4();
+     dijetSystem += jet2.p4();
+     eventData.SetMassDijets(dijetSystem.M());  
   
-  // M_{X}
-  math::XYZTLorentzVector allJets(0.,0.,0.,0.);
-  for(edm::View<reco::Jet>::const_iterator jet = jetCollectionH->begin();
-                                           jet != jetCollectionH->end(); ++jet) allJets += jet->p4();
+     // M_{X}
+     math::XYZTLorentzVector allJets(0.,0.,0.,0.);
+     for(edm::View<reco::Jet>::const_iterator jet = jetCollectionH->begin();
+                                              jet != jetCollectionH->end(); ++jet) allJets += jet->p4();
   
-  eventData.SetMxFromJets(allJets.M());
+     eventData.SetMxFromJets(allJets.M());
 
-  math::XYZTLorentzVector allPFCands(0.,0.,0.,0.);
-  for(edm::View<reco::PFCandidate>::const_iterator pfCand = particleFlowCollectionH->begin();
-                                                   pfCand != particleFlowCollectionH->end(); ++pfCand) allPFCands += pfCand->p4();
-
-
-   eventData.SetMxFromPFCands(allPFCands.M());
-
-  //Rj,Rjj & Rjj added by eliza
-  double RjFromJets = Rj(*jetCollectionH,*jetCollectionH);
-  double RjjFromJets = Rjj(*jetCollectionH,*jetCollectionH);
-  //double RjjjFromJets = Rjjj(*jetCollectionH,*jetCollectionH);
-
-  edm::Handle<edm::View<reco::Jet> > jetCollectionNonCorrH;
-  event.getByLabel(jetNonCorrTag_,jetCollectionNonCorrH);
-
-  double RjFromPFCands = Rj(*jetCollectionNonCorrH,*particleFlowCollectionH);
-  double RjjFromPFCands = Rjj(*jetCollectionNonCorrH,*particleFlowCollectionH);
-  //double RjjjFromPFCands = Rjjj(*jetCollectionNonCorrH,*particleFlowCollectionH);
-
-  eventData.SetRjFromJets(RjFromJets);
-  eventData.SetRjFromPFCands(RjFromPFCands);
-  eventData.SetRjjFromJets(RjjFromJets);
-  eventData.SetRjjFromPFCands(RjjFromPFCands);
+     math::XYZTLorentzVector allPFCands(0.,0.,0.,0.);
+     for(edm::View<reco::PFCandidate>::const_iterator pfCand = particleFlowCollectionH->begin();
+                                                      pfCand != particleFlowCollectionH->end();
+                                                      ++pfCand) allPFCands += pfCand->p4();
 
 
-  if(usePAT_){
-     const pat::Jet* patJet1 = dynamic_cast<const pat::Jet*>(&jet1);
-     const pat::Jet* patJet2 = dynamic_cast<const pat::Jet*>(&jet2);
-     //const pat::Jet* patJet3 = dynamic_cast<const pat::Jet*>(&jet3);
-     if(!patJet1 || !patJet2) throw edm::Exception(edm::errors::Configuration) << "Expecting PATJet's as input";
+     eventData.SetMxFromPFCands(allPFCands.M());
 
-     if(!runOnData_){
-        const reco::GenJet* genJet1 = patJet1->genJet();
-        const reco::GenJet* genJet2 = patJet2->genJet();
-        if(genJet1&&genJet2){
-           math::XYZTLorentzVector dijetGenSystem(0.,0.,0.,0.);
-           dijetGenSystem += genJet1->p4();
-           dijetGenSystem += genJet2->p4();
-           double massGen = dijetGenSystem.M();
-           eventData.SetMassDijetsGen(massGen);
+     //Rj,Rjj & Rjj added by eliza
+     double RjFromJets = Rj(*jetCollectionH,*jetCollectionH);
+     double RjjFromJets = Rjj(*jetCollectionH,*jetCollectionH);
+     //double RjjjFromJets = Rjjj(*jetCollectionH,*jetCollectionH);
 
+     edm::Handle<edm::View<reco::Jet> > jetCollectionNonCorrH;
+     event.getByLabel(jetNonCorrTag_,jetCollectionNonCorrH);
+
+     double RjFromPFCands = Rj(*jetCollectionNonCorrH,*particleFlowCollectionH);
+     double RjjFromPFCands = Rjj(*jetCollectionNonCorrH,*particleFlowCollectionH);
+     //double RjjjFromPFCands = Rjjj(*jetCollectionNonCorrH,*particleFlowCollectionH);
+
+     eventData.SetRjFromJets(RjFromJets);
+     eventData.SetRjFromPFCands(RjFromPFCands);
+     eventData.SetRjjFromJets(RjjFromJets);
+     eventData.SetRjjFromPFCands(RjjFromPFCands);
+
+     if(usePAT_){
+        const pat::Jet* patJet1 = dynamic_cast<const pat::Jet*>(&jet1);
+        const pat::Jet* patJet2 = dynamic_cast<const pat::Jet*>(&jet2);
+        //const pat::Jet* patJet3 = dynamic_cast<const pat::Jet*>(&jet3);
+        if(!patJet1 || !patJet2) throw edm::Exception(edm::errors::Configuration) << "Expecting PATJet's as input";
+
+        if(!runOnData_){
+           const reco::GenJet* genJet1 = patJet1->genJet();
+           const reco::GenJet* genJet2 = patJet2->genJet();
+           if(genJet1&&genJet2){
+              math::XYZTLorentzVector dijetGenSystem(0.,0.,0.,0.);
+              dijetGenSystem += genJet1->p4();
+              dijetGenSystem += genJet2->p4();
+              double massGen = dijetGenSystem.M();
+              eventData.SetMassDijetsGen(massGen);
+           }
+        } else{
+           eventData.SetMassDijetsGen(-999.);
         }
-     } else{
-          eventData.SetMassDijetsGen(-999.);
+
+        // B-tagging
+        if(doBtag_){
+           double bDiscJet1 = patJet1->bDiscriminator(bDiscriminatorName_);
+           double bDiscJet2 = patJet2->bDiscriminator(bDiscriminatorName_);
+
+           eventData.SetLeadingJetBDiscriminator(bDiscJet1);
+           eventData.SetSecondJetBDiscriminator(bDiscJet2);
+        }
+
+     } else {
+        // Access info from outside PAT here
+        eventData.SetMassDijetsGen(-999.);
+        eventData.SetLeadingJetBDiscriminator(-999.);
+        eventData.SetSecondJetBDiscriminator(-999.);
      }
 
-     // B-tagging
-     if(doBtag_){
-        double bDiscJet1 = patJet1->bDiscriminator(bDiscriminatorName_);
-        double bDiscJet2 = patJet2->bDiscriminator(bDiscriminatorName_);
-
-        eventData.SetLeadingJetBDiscriminator(bDiscJet1);
-        eventData.SetSecondJetBDiscriminator(bDiscJet2);
-
-
-    }
-   } else {
-     // access info from outside PAT here
-     eventData.SetMassDijetsGen(-999.);
-     eventData.SetLeadingJetBDiscriminator(-999.);
-     eventData.SetSecondJetBDiscriminator(-999.);
-
+  } else{
+     eventData.SetLeadingJetPt(-999.);
+     eventData.SetSecondJetPt(-999.);
+     eventData.SetLeadingJetEta(-999.);
+     eventData.SetSecondJetEta(-999.);
+     eventData.SetLeadingJetPhi(-999.);
+     eventData.SetSecondJetPhi(-999.);
+     //eventData.SetLeadingJetP4(-999.);
+     //eventData.SetSecondJetP4(-999.);
+     eventData.SetJetsAveEta(-999.);
+     eventData.SetJetsDeltaEta(-999.);
+     eventData.SetJetsDeltaPhi(-999.);
+     eventData.SetJetsDeltaPt(-999.);
   }
-
-
-
-  }else{
-  eventData.SetLeadingJetPt(-999.);
-  eventData.SetSecondJetPt(-999.);
-  eventData.SetLeadingJetEta(-999.);
-  eventData.SetSecondJetEta(-999.);
-  eventData.SetLeadingJetPhi(-999.);
-  eventData.SetSecondJetPhi(-999.);
-  //eventData.SetLeadingJetP4(-999.);
-  //eventData.SetSecondJetP4(-999.);
-  eventData.SetJetsAveEta(-999.);
-  eventData.SetJetsDeltaEta(-999.);
-  eventData.SetJetsDeltaPhi(-999.);
-  eventData.SetJetsDeltaPt(-999.);
- }
 
   //if(!runOnData_)  eventData.SetMxGen(genAllParticles_.M());  //eventData.MxGen_ = genAllParticles_.M();
   //else eventData.SetMxGen(-1.);        //eventData.MxGen_ = -1.;
@@ -481,7 +494,6 @@ void ExclusiveDijetsAnalysis::fillJetInfo(ExclusiveDijetsEvent& eventData, const
     eventData.SetThirdJetEta(-999.);
     eventData.SetMassTrijets(-999.);
    } 
-
 
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -740,16 +752,20 @@ void ExclusiveDijetsAnalysis::fillXiInfo(ExclusiveDijetsEvent& eventData, const 
      xigen_plus = 1 - genProtonPlus.pz()/Ebeam_;
      xigen_minus = 1 + genProtonMinus.pz()/Ebeam_;
 
+     LargestGenRapidityGap largestGenGap(-999.,999.);
      math::XYZTLorentzVector genGapLowEdge(0.,0.,0.,0.),genGapHighEdge(0.,0.,0.,0.);
-     genRapidityGap(genParticles,genGapLowEdge,genGapHighEdge);
+     largestGenGap(genParticles,genGapLowEdge,genGapHighEdge);
+
      double massDissGenPlus = (genGapHighEdge == math::XYZTLorentzVector(0.,0.,0.,0.)) ? -999. : MassDissGen(genParticles,genGapHighEdge.eta(),999.);
      double massDissGenMinus = (genGapLowEdge == math::XYZTLorentzVector(0.,0.,0.,0.)) ? -999. : MassDissGen(genParticles,-999.,genGapLowEdge.eta());
 
      double deltaEtaGen = 0.;
-     if(genGapHighEdge == math::XYZTLorentzVector(0.,0.,0.,0.) || genGapLowEdge == math::XYZTLorentzVector(0.,0.,0.,0.)) deltaEtaGen = -999.;
-     else deltaEtaGen = genGapHighEdge.eta() - genGapLowEdge.eta(); 
-     double etaGapLow = (genGapLowEdge == math::XYZTLorentzVector(0.,0.,0.,0.)) ? -999. : genGapLowEdge.eta();
-     double etaGapHigh = (genGapHighEdge == math::XYZTLorentzVector(0.,0.,0.,0.)) ? -999. : genGapHighEdge.eta();
+     if(genGapHighEdge == math::XYZTLorentzVector(0.,0.,0.,0.) ||
+        genGapLowEdge == math::XYZTLorentzVector(0.,0.,0.,0.)) deltaEtaGen = -999.;
+     else deltaEtaGen = ( genGapHighEdge.eta() - genGapLowEdge.eta() ); 
+
+     double etaGapGenLow = (genGapLowEdge == math::XYZTLorentzVector(0.,0.,0.,0.)) ? -999. : genGapLowEdge.eta();
+     double etaGapGenHigh = (genGapHighEdge == math::XYZTLorentzVector(0.,0.,0.,0.)) ? -999. : genGapHighEdge.eta();
 
      LogDebug("Analysis") << "Gap low,high = " << genGapLowEdge << " , " << genGapHighEdge;
      
@@ -757,16 +773,16 @@ void ExclusiveDijetsAnalysis::fillXiInfo(ExclusiveDijetsEvent& eventData, const 
      eventData.SetXiGenMinus(xigen_minus);
      eventData.SetMxGen(genAllParticles.mass());
      eventData.SetMxGenRange(genAllParticlesInRange.mass()); 
-     eventData.SetsumEnergyHEPlusGen(genAllParticlesHEPlus.energy());
-     eventData.SetsumEnergyHEMinusGen(genAllParticlesHEMinus.energy());
-     eventData.SetsumEnergyHFPlusGen(genAllParticlesHFPlus.energy());
-     eventData.SetsumEnergyHFMinusGen(genAllParticlesHFMinus.energy());
-     eventData.SetetaMaxGen(genEtaMax.eta());
-     eventData.SetetaMinGen(genEtaMin.eta());
+     eventData.SetSumEnergyHEPlusGen(genAllParticlesHEPlus.energy());
+     eventData.SetSumEnergyHEMinusGen(genAllParticlesHEMinus.energy());
+     eventData.SetSumEnergyHFPlusGen(genAllParticlesHFPlus.energy());
+     eventData.SetSumEnergyHFMinusGen(genAllParticlesHFMinus.energy());
+     eventData.SetEtaMaxGen(genEtaMax.eta());
+     eventData.SetEtaMinGen(genEtaMin.eta());
 
-     eventData.SetdeltaEtaGen(deltaEtaGen);
-     eventData.SetetaGapLow(etaGapLow);
-     eventData.SetetaGapHigh(etaGapHigh);
+     eventData.SetDeltaEtaGen(deltaEtaGen);
+     eventData.SetEtaGapLow(etaGapGenLow);
+     eventData.SetEtaGapHigh(etaGapGenHigh);
      eventData.SetMxGenPlus(massDissGenPlus);
      eventData.SetMxGenMinus(massDissGenMinus);
  
@@ -782,8 +798,8 @@ void ExclusiveDijetsAnalysis::fillXiInfo(ExclusiveDijetsEvent& eventData, const 
      edm::Handle<std::vector<float> > edmNtupleEtaMinGen;
      event.getByLabel(edm::InputTag("edmNtupleEtaMinGen","etaMin"),edmNtupleEtaMinGen);
 
-     eventData.SetetaMaxGenNew((edmNtupleEtaMaxGen.isValid() && edmNtupleEtaMaxGen->size()) ? (*edmNtupleEtaMaxGen)[0] : -999.);
-     eventData.SetetaMinGenNew((edmNtupleEtaMinGen.isValid() && edmNtupleEtaMinGen->size()) ? (*edmNtupleEtaMinGen)[0] : -999.);
+     eventData.SetEtaMaxGenNew((edmNtupleEtaMaxGen.isValid() && edmNtupleEtaMaxGen->size()) ? (*edmNtupleEtaMaxGen)[0] : -999.);
+     eventData.SetEtaMinGenNew((edmNtupleEtaMinGen.isValid() && edmNtupleEtaMinGen->size()) ? (*edmNtupleEtaMinGen)[0] : -999.);
   } else{
      eventData.SetXiGenPlus(-1.);
      eventData.SetXiGenMinus(-1.);
@@ -792,17 +808,17 @@ void ExclusiveDijetsAnalysis::fillXiInfo(ExclusiveDijetsEvent& eventData, const 
      eventData.SetMxGenRange(-1.);
      eventData.SetMxGenPlus(-1.); 
      eventData.SetMxGenMinus(-1.);
-     eventData.SetdeltaEtaGen(-1.); 
-     eventData.SetetaGapLow(-999.);
-     eventData.SetetaGapHigh(-999.);
-     eventData.SetsumEnergyHEPlusGen(-1.);
-     eventData.SetsumEnergyHEMinusGen(-1.);
-     eventData.SetsumEnergyHFPlusGen(-1.);
-     eventData.SetsumEnergyHFMinusGen(-1.);
-     eventData.SetetaMaxGen(-999.);
-     eventData.SetetaMinGen(-999.);
-     eventData.SetetaMaxGenNew(-999.);
-     eventData.SetetaMinGenNew(-999.);
+     eventData.SetDeltaEtaGen(-1.); 
+     eventData.SetEtaGapLow(-999.);
+     eventData.SetEtaGapHigh(-999.);
+     eventData.SetSumEnergyHEPlusGen(-1.);
+     eventData.SetSumEnergyHEMinusGen(-1.);
+     eventData.SetSumEnergyHFPlusGen(-1.);
+     eventData.SetSumEnergyHFMinusGen(-1.);
+     eventData.SetEtaMaxGen(-999.);
+     eventData.SetEtaMinGen(-999.);
+     eventData.SetEtaMaxGenNew(-999.);
+     eventData.SetEtaMinGenNew(-999.);
   }
 
   /*edm::Handle<edm::View<reco::Jet> > jetCollectionH;
@@ -848,11 +864,11 @@ void ExclusiveDijetsAnalysis::fillXiInfo(ExclusiveDijetsEvent& eventData, const 
   //double missingMassFromXiFromJets = 2*Ebeam_*sqrt(xiFromJets_plus*xiFromJets_minus);
   //eventData.missingMassFromXiFromJets_ = missingMassFromXiFromJets;
   double missingMassFromXiFromPFCands = 2*Ebeam_*sqrt(xiFromPFCands_plus*xiFromPFCands_minus);
-  eventData.SetmissingMassFromXiFromPFCands(missingMassFromXiFromPFCands);
+  eventData.SetMissingMassFromXiFromPFCands(missingMassFromXiFromPFCands);
 
   std::pair<double,double> etaMaxFromPFCands = etaMax(*particleFlowCollectionH,thresholdsPFlow_);
-  eventData.SetetaMaxFromPFCands(etaMaxFromPFCands.first);
-  eventData.SetetaMinFromPFCands(etaMaxFromPFCands.second);
+  eventData.SetEtaMaxFromPFCands(etaMaxFromPFCands.first);
+  eventData.SetEtaMinFromPFCands(etaMaxFromPFCands.second);
 
   edm::Handle<std::vector<float> > edmNtupleEtaMax;
   event.getByLabel(edm::InputTag("edmNtupleEtaMax","etaMax"),edmNtupleEtaMax);
@@ -864,8 +880,8 @@ void ExclusiveDijetsAnalysis::fillXiInfo(ExclusiveDijetsEvent& eventData, const 
 
   float etaMax_pfCands = edmNtupleEtaMax->size() ? (*edmNtupleEtaMax)[0] : -999.;
   float etaMin_pfCands = edmNtupleEtaMin->size() ? (*edmNtupleEtaMin)[0] : -999.; 
-  eventData.SetetaMaxFromPFCandsNew(etaMax_pfCands);
-  eventData.SetetaMinFromPFCandsNew(etaMin_pfCands);
+  eventData.SetEtaMaxFromPFCandsNew(etaMax_pfCands);
+  eventData.SetEtaMinFromPFCandsNew(etaMin_pfCands);
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*
   // Castor RecHit collection
@@ -877,6 +893,23 @@ void ExclusiveDijetsAnalysis::fillXiInfo(ExclusiveDijetsEvent& eventData, const 
 
 */
 
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////
+void ExclusiveDijetsAnalysis::fillCastorInfo(ExclusiveDijetsEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
+  std::vector<int> modules;
+  modules.push_back(1);
+  modules.push_back(2);
+  modules.push_back(3);
+  modules.push_back(4);
+  modules.push_back(5);
+   
+  edm::Handle<CastorRecHitCollection> castorRecHitCollectionH;
+  event.getByLabel(castorRecHitTag_,castorRecHitCollectionH);
+  CastorRecHitCollection const& castorRecHitCollection = *castorRecHitCollectionH;  
+
+  double sumETotCastor = CastorEnergy(modules)(castorRecHitCollection,runOnData_);
+  eventData.SetSumETotCastor(sumETotCastor); 
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void ExclusiveDijetsAnalysis::fillPFFlowInfo(ExclusiveDijetsEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
@@ -947,12 +980,11 @@ void ExclusiveDijetsAnalysis::fillPFFlowInfo(ExclusiveDijetsEvent& eventData, co
         eventData.SetEtaEGammaHF(eta); 
         eventData.SetEnergyEGammaHF(energy);
         eventData.SetPtEGammaHF(pt); 
-    }
- }
+     }
+  }
 
-      eventData.SetSumEHFPFlowPlus(sumEHFPlus);
-      eventData.SetSumEHFPFlowMinus(sumEHFMinus);
-     
+  eventData.SetSumEHFPFlowPlus(sumEHFPlus);
+  eventData.SetSumEHFPFlowMinus(sumEHFMinus);
 } 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //template <class OneJetColl,class OnePartColl>
@@ -1046,5 +1078,3 @@ void ExclusiveDijetsAnalysis::setPFThresholds(std::map<int,std::pair<double,doub
   }
 }  
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-} // namespace

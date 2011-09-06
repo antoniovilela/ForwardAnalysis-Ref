@@ -6,6 +6,7 @@
 <use   name="DataFormats/JetReco"/>
 <use   name="DataFormats/PatCandidates"/>
 <use   name="JetMETCorrections/Objects"/>
+<use   name="ForwardAnalysis/Utilities"/>
 <use   name="root"/>
 <export>
   <lib   name="1"/>

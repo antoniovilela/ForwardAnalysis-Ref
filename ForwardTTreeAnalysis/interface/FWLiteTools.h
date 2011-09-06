@@ -18,12 +18,9 @@
 
 namespace exclusiveDijetsAnalysis {
 
-
-
-
 enum calo_region_t {Barrel,Endcap,Transition,Forward};
 
-
+/*
 bool sortByEta( const math::XYZTLorentzVector& a, const math::XYZTLorentzVector& b){ 
    return a.eta() < b.eta();
 }
@@ -83,6 +80,7 @@ void genRapidityGap(reco::GenParticleCollection const& genParticles, math::XYZTL
    } 
    
 }
+*/
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 void setGenInfo(reco::GenParticleCollection const& genParticles, double Ebeam,
                                                                  math::XYZTLorentzVector& genAllParticles,
@@ -250,9 +248,9 @@ double MassDissGen(reco::GenParticleCollection const& genParticles, double range
 
 
 ////////////////////////////////////////////////////////////////////////////
+/*
 //New functions of FWLITE
 template <class VertexColl>
-
 bool goodVertexFilter(const VertexColl& vertexCollection, unsigned int minNumTracks = 2, double maxAbsZ = -1., double maxd0 = -1.){
    bool accept = false; 
    for(typename VertexColl::const_iterator it = vertexCollection.begin();
@@ -291,6 +289,7 @@ bool highPurityTracksFilter(const TrackColl& trackCollection, double thresh, uns
   
   return accept;
 }
+*/
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 /*
 template <class PartColl>
@@ -423,6 +422,7 @@ std::pair<double,double> etaMax(reco::PFCandidateCollection const& pflowCollecti
 }
 
 ///////////////////////////////////////////////////////////////////////////////////// 
+/*
 double castorEnergy(CastorRecHitCollection const& castorRecHitCollection, bool isRealData = true){
  
    double sumETotCastor = 0.,
@@ -459,7 +459,7 @@ double castorEnergy(CastorRecHitCollection const& castorRecHitCollection, bool i
 
    return sumETotCastor;
 }
-
+*/
  
 } // namespace
 

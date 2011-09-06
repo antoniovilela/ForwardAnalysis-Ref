@@ -41,29 +41,30 @@ class ExclusiveDijetsAnalysis {
      void fillVertexInfo(ExclusiveDijetsEvent&, const edm::Event&, const edm::EventSetup&);
      void fillJetInfo(ExclusiveDijetsEvent&, const edm::Event&, const edm::EventSetup&);
      void fillMultiplicities(ExclusiveDijetsEvent&, const edm::Event&, const edm::EventSetup&);
+     void fillCastorInfo(ExclusiveDijetsEvent&, const edm::Event&, const edm::EventSetup&);
      void fillXiInfo(ExclusiveDijetsEvent&, const edm::Event&, const edm::EventSetup&);
      void fillPFFlowInfo(ExclusiveDijetsEvent&, const edm::Event&, const edm::EventSetup&); //added by eliza
-
+     
      // PF functions
-      void resetPFThresholds(std::map<int,std::pair<double,double> >&);
-      void setPFThresholds(std::map<int,std::pair<double,double> >&, edm::ParameterSet const&);
+     void resetPFThresholds(std::map<int,std::pair<double,double> >&);
+     void setPFThresholds(std::map<int,std::pair<double,double> >&, edm::ParameterSet const&);
     
-
-      void fillEventVariables(ExclusiveDijetsEvent&, const edm::Event&, const edm::EventSetup&);
+     void fillEventVariables(ExclusiveDijetsEvent&, const edm::Event&, const edm::EventSetup&);
 
 //new input tags:
-    
+     bool runOnData_;
+   
      edm::InputTag vertexTag_;
      edm::InputTag trackTag_;
      edm::InputTag metTag_;
      edm::InputTag jetTag_;
      edm::InputTag jetNonCorrTag_;
-     edm::InputTag trackMultiplicityTag_;
      edm::InputTag particleFlowTag_;
      edm::InputTag castorRecHitTag_; //eliza
      edm::InputTag genChargedTag_;
      edm::InputTag triggerResultsTag_;
      edm::InputTag hcalTowerSummaryTag_;
+     edm::InputTag trackMultiplicityTag_;
      bool doBtag_;
      std::string bTagMode_;
      std::string bDiscriminatorName_;
@@ -80,7 +81,6 @@ class ExclusiveDijetsAnalysis {
      bool accessPileUpInfo_;
      double Ebeam_;
      bool usePAT_; 
-     bool runOnData_;
 
      //new variables:
 
@@ -88,11 +88,12 @@ class ExclusiveDijetsAnalysis {
      bool POMPYTMCInfo_;
    
      //std::string hltPathName1_; 
-     std::string hltPathName2_; 
-     std::string hltPathName3_;
+     //std::string hltPathName2_; 
+     //std::string hltPathName3_;
      //std::string hltPathName4_;
      //std::string hltPathName5_;
      //std::string hltPathName6_;
+     std::vector<std::string> hltPathNames_;
    
      std::string selectionPathName_;
 
@@ -105,7 +106,6 @@ class ExclusiveDijetsAnalysis {
      /*math::XYZTLorentzVector genProtonPlus_;
      math::XYZTLorentzVector genProtonMinus_;
      math::XYZTLorentzVector genAllParticles_;*/
-
 
      /*math::XYZTLorentzVector genAllParticles_;
      math::XYZTLorentzVector genAllParticlesHEPlus_;

@@ -23,8 +23,9 @@ ExclusiveDijetsAnalysis = cms.PSet(
     EnergyScaleFactorHCAL = cms.double(1.0),
     #HLTPath2 = cms.string("HLT_ExclDiJet60_HFAND_v*"),
     #HLTPath3 = cms.string("HLT_ExclDiJet60_HFOR_v*"),
-    HLTPath2 = cms.string("HLT_Jet15U_v*"),
-    HLTPath3 = cms.string("HLT_L1Jet6U_v*"),
+    #HLTPath2 = cms.string("HLT_Jet15U_v*"),
+    #HLTPath3 = cms.string("HLT_L1Jet6U_v*"),
+    hltPaths = cms.vstring('HLT_Jet15U_v*','HLT_L1Jet6U_v*'),
     AccessMCInfo = cms.untracked.bool(False),
     POMPYTMCInfo = cms.untracked.bool(False),
     UsePAT = cms.untracked.bool(False),
@@ -47,5 +48,5 @@ ExclusiveDijetsAnalysis = cms.PSet(
     # If accessing the pile-up info
     AccessPileUpInfo = cms.bool(True),
     EBeam = cms.untracked.double(3500.),
-    RunOnData = cms.untracked.bool(True)
+    #RunOnData = cms.untracked.bool(True)
 )
