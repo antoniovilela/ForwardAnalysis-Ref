@@ -13,7 +13,9 @@ class DiffractiveEvent {
       ~DiffractiveEvent();    
    private:
       friend class diffractiveAnalysis::DiffractiveAnalysis;
-   
+      
+      void reset();
+
       int processId_;
       int runNumber_;
       int eventNumber_;
