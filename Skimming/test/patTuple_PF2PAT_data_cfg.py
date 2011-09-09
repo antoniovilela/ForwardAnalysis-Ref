@@ -12,8 +12,6 @@ process.source.fileNames = [
      'file:/storage2/eliza/JetMay10RecoRun2011.root'
 ]
 
-  
-
 process.MessageLogger.cerr.FwkReport.reportEvery = 10
 
 process.options   = cms.untracked.PSet( wantSummary = cms.untracked.bool(False))
@@ -165,14 +163,18 @@ process.out.outputCommands += [
     'keep *_ak5PFJetsPileUp_*_*',
     'keep *_ak5PFJets_*_*',
     'keep recoTracks_generalTracks_*_*',
+    'keep HcalNoiseSummary_hcalnoise_*_*',
+    'keep *_BeamHaloSummary_*_*', 
  #------- Trigger collections ------
     'keep edmTriggerResults_TriggerResults_*_*',
     'keep *_hltTriggerSummaryAOD_*_*',
     'keep L1GlobalTriggerObjectMapRecord_*_*_*',
-    'keep L1GlobalTriggerReadoutRecord_*_*_*'
-
-
-    
+    'keep L1GlobalTriggerReadoutRecord_*_*_*',
+ #------- CASTOR rec hits ------
+    'keep *_logErrorHarvester_*_*', 
+    'keep *_castorreco_*_*',
+ #------- Calo towers (just for now) ------ 
+    'keep *_towerMaker_*_*' 
 ]
 
 # top projections in PF2PAT:
