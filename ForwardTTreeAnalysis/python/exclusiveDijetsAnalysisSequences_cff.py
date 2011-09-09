@@ -6,18 +6,7 @@ from L1TriggerConfig.L1GtConfigProducers.L1GtTriggerMaskAlgoTrigConfig_cff impor
 from L1TriggerConfig.L1GtConfigProducers.L1GtTriggerMaskTechTrigConfig_cff import *
 es_prefer_l1GtTriggerMaskAlgoTrig = cms.ESPrefer("L1GtTriggerMaskAlgoTrigTrivialProducer","l1GtTriggerMaskAlgoTrig")
 es_prefer_l1GtTriggerMaskTechTrig = cms.ESPrefer("L1GtTriggerMaskTechTrigTrivialProducer","l1GtTriggerMaskTechTrig")
-"""
-from HLTrigger.HLTfilters.hltLevel1GTSeed_cfi import *
-hltLevel1GTSeed.L1TechTriggerSeeding = cms.bool(True)
-bptx = hltLevel1GTSeed.clone(L1SeedsLogicalExpression = cms.string('0'))
-bscAnd = hltLevel1GTSeed.clone(L1SeedsLogicalExpression = cms.string('40 OR 41'))
-beamHaloVeto = hltLevel1GTSeed.clone(L1SeedsLogicalExpression = cms.string('NOT (36 OR 37 OR 38 OR 39)'))
 
-l1CollBscAnd = cms.Sequence(bptx+bscAnd+beamHaloVeto)
-l1CollBscNoBptx = cms.Sequence(bscAnd+beamHaloVeto)
-#l1CollBscAnd = cms.Sequence(beamHaloVeto)
-#l1CollBscNoBptx = cms.Sequence(beamHaloVeto)
-"""
 ##---------------------------------------
 
 ###--------
@@ -37,7 +26,6 @@ exclusiveDijetsHLTFilter.HLTPaths = ['HLT_Jet15U_v*','HLT_L1Jet6U_v*']
 #['HLT_ExclDiJet60_HFAND*', 'HLT_ExclDiJet60_HFOR*'] 
 #['HLT_Jet15U','HLT_L1Jet6U']
  
-
 ## ak5PFL1L2L3 = cms.ESSource(
 ##     'JetCorrectionServiceChain',
 ##     correctors = cms.vstring('ak5PFL1Offset','ak5PFL2Relative','ak5PFL3Absolute')
@@ -48,8 +36,8 @@ exclusiveDijetsHLTFilter.HLTPaths = ['HLT_Jet15U_v*','HLT_L1Jet6U_v*']
 ##     correctors  = cms.vstring('ak5PFL1L2L3')
 ##     )
 #JetCorrectorSequence = cms.Sequence(ak5PFJetsL2L3)
-#-----------------------------
 
+#-----------------------------
 ## goodJets = cms.EDFilter("CandViewSelector",
 ##   src = cms.InputTag("ak5PFJetsPileUp"),
 ##   cut = cms.string("pt > 0.")
@@ -61,7 +49,6 @@ exclusiveDijetsHLTFilter.HLTPaths = ['HLT_Jet15U_v*','HLT_L1Jet6U_v*']
 ##    minNumber = cms.uint32(1)
 ## )
 ## jetFilterSequence = cms.Sequence(goodJets*jetFilter)
-
 #------------------------------
 """
 from PhysicsTools.RecoAlgos.recoTrackSelector_cfi import *
@@ -77,7 +64,7 @@ from ForwardAnalysis.Utilities.analysisTracks_cfi import *
 from ForwardAnalysis.Utilities.selectTracksAssociatedToPV_cfi import *
 selectTracksAssociatedToPV.src = "analysisTracks"
 selectTracksAssociatedToPV.vertexTag = "offlinePrimaryVertices"
-selectTracksAssociatedToPV.maxDistanceFromVertex = 0.5
+selectTracksAssociatedToPV.maxDistanceFromVertex = 0.4
 
 from ForwardAnalysis.Utilities.tracksOutsideJets_cfi import *
 tracksOutsideJets.src = "selectTracksAssociatedToPV" 
@@ -88,13 +75,6 @@ from ForwardAnalysis.ForwardTTreeAnalysis.tracksTransverseRegion_cfi import *
 tracksTransverseRegion.src = "selectTracksAssociatedToPV"
 tracksTransverseRegion.JetTag = "ak5PFJets"
 
-"""
-from ForwardAnalysis.ForwardTTreeAnalysis.trackMultiplicity_cfi import * 
-trackMultiplicity.TracksTag = "analysisTracks"
-trackMultiplicityAssociatedToPV = trackMultiplicity.clone(TracksTag = "selectTracksAssociatedToPV")
-trackMultiplicityOutsideJets = trackMultiplicity.clone(TracksTag = "tracksOutsideJets")
-trackMultiplicityTransverseRegion = trackMultiplicity.clone(TracksTag = "tracksTransverseRegion")
-"""
 #------------------------------
 # Particle flow
 
@@ -163,7 +143,6 @@ castorVeto = cms.Sequence(castorInvalidDataFilter + castorActivityFilter)
 castorTag = cms.Sequence(castorInvalidDataFilter + ~castorActivityFilter)
 '''
 ##-----------------------------------------------------------------
-"""
 from Utilities.AnalysisTools.hcalActivitySummary_cfi import *
 hcalActivitySummary.DiscardFlaggedTowers = False
 hcalActivitySummaryScale090 = hcalActivitySummary.clone(ApplyEnergyScale = True,EnergyScaleFactorHB = 0.90,EnergyScaleFactorHE = 0.90,EnergyScaleFactorHF = 0.90)
@@ -174,7 +153,6 @@ hcalActivitySummaryScale102 = hcalActivitySummary.clone(ApplyEnergyScale = True,
 hcalActivitySummaryScale105 = hcalActivitySummary.clone(ApplyEnergyScale = True,EnergyScaleFactorHB = 1.05,EnergyScaleFactorHE = 1.05,EnergyScaleFactorHF = 1.05)
 hcalActivitySummaryScale108 = hcalActivitySummary.clone(ApplyEnergyScale = True,EnergyScaleFactorHB = 1.08,EnergyScaleFactorHE = 1.08,EnergyScaleFactorHF = 1.08)
 hcalActivitySummaryScale110 = hcalActivitySummary.clone(ApplyEnergyScale = True,EnergyScaleFactorHB = 1.10,EnergyScaleFactorHE = 1.10,EnergyScaleFactorHF = 1.10)
-"""
 """
 from Utilities.AnalysisTools.hcalActivityFilter_cfi import hcalActivityFilter
 hcalActivityFilter.EnergyThresholdHB = 1.5
@@ -213,19 +191,18 @@ tracks = cms.Sequence(analysisTracks*
 
 pfCandidates = cms.Sequence(pfCandidateNoiseThresholds* 
                             etaMaxPFCands+etaMinPFCands)
-"""
-edmDump = cms.Sequence(trackMultiplicity+
-                       trackMultiplicityAssociatedToPV+
+
+edmDump = cms.Sequence(#trackMultiplicity+
+                       #trackMultiplicityAssociatedToPV+
                        #trackMultiplicityOutsideJets+
-                       trackMultiplicityTransverseRegion+
+                       #trackMultiplicityTransverseRegion+
                        hcalActivitySummary+hcalActivitySummaryScale090+hcalActivitySummaryScale092+
                        hcalActivitySummaryScale095+hcalActivitySummaryScale098+
                        hcalActivitySummaryScale102+hcalActivitySummaryScale105+
                        hcalActivitySummaryScale108+hcalActivitySummaryScale110+
-                       hfTower+xiTower+xiFromCaloTowers+
+                       #hfTower+xiTower+xiFromCaloTowers+
                        edmNtupleEtaMax+edmNtupleEtaMin)
-"""
-edmDump = cms.Sequence(edmNtupleEtaMax+edmNtupleEtaMin)
+#edmDump = cms.Sequence(edmNtupleEtaMax+edmNtupleEtaMin)
 #-------------------------------------------
 analysisSequences = cms.Sequence(tracks*pfCandidates*edmDump)
 #-------------------------------------------

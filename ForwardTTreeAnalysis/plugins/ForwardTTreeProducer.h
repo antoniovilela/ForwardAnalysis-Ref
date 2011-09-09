@@ -4,8 +4,10 @@
 #include "FWCore/Framework/interface/EDAnalyzer.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 
+#include "ForwardAnalysis/ForwardTTreeAnalysis/interface/DiffractiveAnalysis.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/ExclusiveDijetsAnalysis.h"
 
+class DiffractiveEvent;
 class ExclusiveDijetsEvent; 
 class TTree;
 
@@ -20,9 +22,11 @@ class ForwardTTreeProducer : public edm::EDAnalyzer
     virtual ~ForwardTTreeProducer();
 
   private:  
+    diffractiveAnalysis::DiffractiveAnalysis diffractiveAnalysis_;
     exclusiveDijetsAnalysis::ExclusiveDijetsAnalysis exclusiveDijetsAnalysis_;
 
     TTree* data_;
+    DiffractiveEvent* diffractiveEvent_;
     ExclusiveDijetsEvent* exclusiveDijetsEvent_;
 };
 #endif

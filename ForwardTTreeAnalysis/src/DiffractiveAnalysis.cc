@@ -65,7 +65,7 @@ DiffractiveAnalysis::DiffractiveAnalysis(const edm::ParameterSet& pset):
 
 DiffractiveAnalysis::~DiffractiveAnalysis(){}
 
-void DiffractiveAnalysis::servicesBeginRun(const edm::Run& run, const edm::EventSetup& setup) {}
+void DiffractiveAnalysis::setBeginRun(const edm::Run& run, const edm::EventSetup& setup) {}
 
 void DiffractiveAnalysis::fillEventData(DiffractiveEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
   eventData.reset();
@@ -77,7 +77,7 @@ void DiffractiveAnalysis::fillEventData(DiffractiveEvent& eventData, const edm::
   fillTrackInfo(eventData,event,setup);
   fillJetInfo(eventData,event,setup);
   fillMETInfo(eventData,event,setup);
-  //fillCaloTowerInfo(eventData,event,setup);
+  fillCaloTowerInfo(eventData,event,setup);
   fillCastorInfo(eventData,event,setup);
   fillDiffVariables(eventData,event,setup);
   fillGenInfo(eventData,event,setup);
@@ -335,80 +335,91 @@ void DiffractiveAnalysis::fillCaloTowerInfo(DiffractiveEvent& eventData, const e
   edm::Handle<std::map<unsigned int, std::vector<double> > > iEtaHFETSumMinus;
   event.getByLabel(edm::InputTag(hcalTowerSummaryTag_.label(),"iEtaHFETSumMinus"),iEtaHFETSumMinus);
 
-  // FIXME
-  edm::Handle<std::vector<double> > thresholdsHE;
-  event.getByLabel(edm::InputTag(hcalTowerSummaryTag_.label(),"thresholdsHE"),thresholdsHE);
-  size_t indexThresholdHE = std::lower_bound((*thresholdsHE).begin(),(*thresholdsHE).end(),energyThresholdHE_) - (*thresholdsHE).begin();
+  if( iEtaHFMultiplicityPlus.isValid() ){
+     // FIXME
+     edm::Handle<std::vector<double> > thresholdsHE;
+     event.getByLabel(edm::InputTag(hcalTowerSummaryTag_.label(),"thresholdsHE"),thresholdsHE);
+     size_t indexThresholdHE = std::lower_bound((*thresholdsHE).begin(),(*thresholdsHE).end(),energyThresholdHE_) - (*thresholdsHE).begin();
 
-  edm::Handle<std::vector<double> > thresholdsHF;
-  event.getByLabel(edm::InputTag(hcalTowerSummaryTag_.label(),"thresholdsHF"),thresholdsHF);
-  size_t indexThresholdHF = std::lower_bound((*thresholdsHF).begin(),(*thresholdsHF).end(),energyThresholdHF_) - (*thresholdsHF).begin();
-  
-  unsigned int nHE_plus = (*nHEPlus)[indexThresholdHE];
-  unsigned int nHE_minus = (*nHEMinus)[indexThresholdHE];
+     edm::Handle<std::vector<double> > thresholdsHF;
+     event.getByLabel(edm::InputTag(hcalTowerSummaryTag_.label(),"thresholdsHF"),thresholdsHF);
+     size_t indexThresholdHF = std::lower_bound((*thresholdsHF).begin(),(*thresholdsHF).end(),energyThresholdHF_) - (*thresholdsHF).begin();
+     
+     unsigned int nHE_plus = (*nHEPlus)[indexThresholdHE];
+     unsigned int nHE_minus = (*nHEMinus)[indexThresholdHE];
 
-  unsigned int nHF_plus = (*nHFPlus)[indexThresholdHF];
-  unsigned int nHF_minus = (*nHFMinus)[indexThresholdHF];
+     unsigned int nHF_plus = (*nHFPlus)[indexThresholdHF];
+     unsigned int nHF_minus = (*nHFMinus)[indexThresholdHF];
 
-  double sumEHE_plus = (*sumEHEplus)[indexThresholdHE];
-  double sumEHE_minus = (*sumEHEminus)[indexThresholdHE];
+     double sumEHE_plus = (*sumEHEplus)[indexThresholdHE];
+     double sumEHE_minus = (*sumEHEminus)[indexThresholdHE];
 
-  double sumETHE_plus = (*sumETHEplus)[indexThresholdHE];
-  double sumETHE_minus = (*sumETHEminus)[indexThresholdHE];
+     double sumETHE_plus = (*sumETHEplus)[indexThresholdHE];
+     double sumETHE_minus = (*sumETHEminus)[indexThresholdHE];
 
-  double sumEHF_plus = (*sumEHFplus)[indexThresholdHF];
-  double sumEHF_minus = (*sumEHFminus)[indexThresholdHF];
+     double sumEHF_plus = (*sumEHFplus)[indexThresholdHF];
+     double sumEHF_minus = (*sumEHFminus)[indexThresholdHF];
 
-  double sumETHF_plus = (*sumETHFplus)[indexThresholdHF];
-  double sumETHF_minus = (*sumETHFminus)[indexThresholdHF];
- 
-  eventData.multiplicityHEPlus_ = nHE_plus;
-  eventData.multiplicityHEMinus_ = nHE_minus;
-  eventData.multiplicityHFPlus_ = nHF_plus;
-  eventData.multiplicityHFMinus_ = nHF_minus;
-  eventData.sumEnergyHEPlus_ = sumEHE_plus;
-  eventData.sumEnergyHEMinus_ = sumEHE_minus;
-  eventData.sumETHEPlus_ = sumETHE_plus;
-  eventData.sumETHEMinus_ = sumETHE_minus;
-  eventData.sumEnergyHFPlus_ = sumEHF_plus;
-  eventData.sumEnergyHFMinus_ = sumEHF_minus;
-  eventData.sumETHFPlus_ = sumETHF_plus;
-  eventData.sumETHFMinus_ = sumETHF_minus;
+     double sumETHF_plus = (*sumETHFplus)[indexThresholdHF];
+     double sumETHF_minus = (*sumETHFminus)[indexThresholdHF];
+    
+     eventData.multiplicityHEPlus_ = nHE_plus;
+     eventData.multiplicityHEMinus_ = nHE_minus;
+     eventData.multiplicityHFPlus_ = nHF_plus;
+     eventData.multiplicityHFMinus_ = nHF_minus;
+     eventData.sumEnergyHEPlus_ = sumEHE_plus;
+     eventData.sumEnergyHEMinus_ = sumEHE_minus;
+     eventData.sumETHEPlus_ = sumETHE_plus;
+     eventData.sumETHEMinus_ = sumETHE_minus;
+     eventData.sumEnergyHFPlus_ = sumEHF_plus;
+     eventData.sumEnergyHFMinus_ = sumEHF_minus;
+     eventData.sumETHFPlus_ = sumETHF_plus;
+     eventData.sumETHFMinus_ = sumETHF_minus;
 
-  for(unsigned int ieta = 29, index = 0; ieta <= 41; ++ieta,++index){
-     unsigned int nHFPlus_ieta = nHCALiEta(*iEtaHFMultiplicityPlus,indexThresholdHF,ieta);
-     eventData.multiplicityHFPlusVsiEta_[index] = nHFPlus_ieta;
-     double sumEHFPlus_ieta = sumEHCALiEta(*iEtaHFEnergySumPlus,indexThresholdHF,ieta);
-     eventData.sumEHFPlusVsiEta_[index] = sumEHFPlus_ieta;
-     double sumETHFPlus_ieta = sumEHCALiEta(*iEtaHFETSumPlus,indexThresholdHF,ieta);
-     eventData.sumETHFPlusVsiEta_[index] = sumETHFPlus_ieta; 
+     for(unsigned int ieta = 29, index = 0; ieta <= 41; ++ieta,++index){
+	unsigned int nHFPlus_ieta = nHCALiEta(*iEtaHFMultiplicityPlus,indexThresholdHF,ieta);
+	eventData.multiplicityHFPlusVsiEta_[index] = nHFPlus_ieta;
+	double sumEHFPlus_ieta = sumEHCALiEta(*iEtaHFEnergySumPlus,indexThresholdHF,ieta);
+	eventData.sumEHFPlusVsiEta_[index] = sumEHFPlus_ieta;
+	double sumETHFPlus_ieta = sumEHCALiEta(*iEtaHFETSumPlus,indexThresholdHF,ieta);
+	eventData.sumETHFPlusVsiEta_[index] = sumETHFPlus_ieta; 
 
-     unsigned int nHFMinus_ieta = nHCALiEta(*iEtaHFMultiplicityMinus,indexThresholdHF,ieta);
-     eventData.multiplicityHFMinusVsiEta_[index] = nHFMinus_ieta;
-     double sumEHFMinus_ieta = sumEHCALiEta(*iEtaHFEnergySumMinus,indexThresholdHF,ieta);
-     eventData.sumEHFMinusVsiEta_[index] = sumEHFMinus_ieta;     
-     double sumETHFMinus_ieta = sumEHCALiEta(*iEtaHFETSumMinus,indexThresholdHF,ieta);
-     eventData.sumETHFMinusVsiEta_[index] = sumETHFMinus_ieta;
+	unsigned int nHFMinus_ieta = nHCALiEta(*iEtaHFMultiplicityMinus,indexThresholdHF,ieta);
+	eventData.multiplicityHFMinusVsiEta_[index] = nHFMinus_ieta;
+	double sumEHFMinus_ieta = sumEHCALiEta(*iEtaHFEnergySumMinus,indexThresholdHF,ieta);
+	eventData.sumEHFMinusVsiEta_[index] = sumEHFMinus_ieta;     
+	double sumETHFMinus_ieta = sumEHCALiEta(*iEtaHFETSumMinus,indexThresholdHF,ieta);
+	eventData.sumETHFMinusVsiEta_[index] = sumETHFMinus_ieta;
+     }
   }
 
   //...
   edm::Handle<CaloTowerCollection> caloTowerCollectionH;
   event.getByLabel(caloTowerTag_,caloTowerCollectionH);
 
-  double energyScale = (applyEnergyScaleHCAL_) ? energyScaleHCAL_ : -1.;
-  double MxFromTowers = MassColl(*caloTowerCollectionH,-1.,energyThresholdHB_,energyThresholdHE_,energyThresholdHF_,energyScale);
-  
-  std::pair<double,double> xiFromTowers = Xi(*caloTowerCollectionH,Ebeam_,-1.,energyThresholdHB_,energyThresholdHE_,energyThresholdHF_,energyScale);
-  double xiFromTowers_plus = xiFromTowers.first;
-  double xiFromTowers_minus = xiFromTowers.second;
+  if( caloTowerCollectionH.isValid() ){
+     double energyScale = (applyEnergyScaleHCAL_) ? energyScaleHCAL_ : -1.;
+     double MxFromTowers = MassColl(*caloTowerCollectionH,-1.,energyThresholdHB_,energyThresholdHE_,energyThresholdHF_,energyScale);
+     
+     std::pair<double,double> xiFromTowers = Xi(*caloTowerCollectionH,Ebeam_,-1.,energyThresholdHB_,energyThresholdHE_,energyThresholdHF_,energyScale);
+     double xiFromTowers_plus = xiFromTowers.first;
+     double xiFromTowers_minus = xiFromTowers.second;
 
-  std::pair<double,double> EPlusPzFromTowers = EPlusPz(*caloTowerCollectionH,-1.,energyThresholdHB_,energyThresholdHE_,energyThresholdHF_,energyScale);
+     std::pair<double,double> EPlusPzFromTowers = EPlusPz(*caloTowerCollectionH,-1.,energyThresholdHB_,energyThresholdHE_,energyThresholdHF_,energyScale);
 
-  eventData.MxFromTowers_ = MxFromTowers;
-  eventData.xiPlusFromTowers_ = xiFromTowers_plus;
-  eventData.xiMinusFromTowers_ = xiFromTowers_minus;
-  eventData.EPlusPzFromTowers_ = EPlusPzFromTowers.first;
-  eventData.EMinusPzFromTowers_ = EPlusPzFromTowers.second;
+     eventData.MxFromTowers_ = MxFromTowers;
+     eventData.xiPlusFromTowers_ = xiFromTowers_plus;
+     eventData.xiMinusFromTowers_ = xiFromTowers_minus;
+     eventData.EPlusPzFromTowers_ = EPlusPzFromTowers.first;
+     eventData.EMinusPzFromTowers_ = EPlusPzFromTowers.second;
+  } else{
+     eventData.MxFromTowers_ = -999.;
+     eventData.xiPlusFromTowers_ = -999.;
+     eventData.xiMinusFromTowers_ = -999.;
+     eventData.EPlusPzFromTowers_ = -999.;
+     eventData.EMinusPzFromTowers_ = -999.;
+  }
+
 }
 
 void DiffractiveAnalysis::fillGenInfo(DiffractiveEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
@@ -506,34 +517,39 @@ void DiffractiveAnalysis::fillGenInfo(DiffractiveEvent& eventData, const edm::Ev
 
 void DiffractiveAnalysis::fillDiffVariables(DiffractiveEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
 
-  /*edm::Handle<CaloTowerCollection> caloTowerCollectionH;
-  event.getByLabel(caloTowerTag_,caloTowerCollectionH);*/
+  double energyScale = (applyEnergyScaleHCAL_) ? energyScaleHCAL_ : -1.;
 
+  // Leave only PF-based variables
+  /*edm::Handle<CaloTowerCollection> caloTowerCollectionH;
+  event.getByLabel(caloTowerTag_,caloTowerCollectionH);
+
+  double MxFromTowers = MassColl(*caloTowerCollectionH,-1.,energyThresholdHB_,energyThresholdHE_,energyThresholdHF_,energyScale);
+  eventData.MxFromTowers_ = MxFromTowers;
+
+  std::pair<double,double> xiFromTowers = Xi(*caloTowerCollectionH,Ebeam_,-1.,energyThresholdHB_,energyThresholdHE_,energyThresholdHF_,energyScale);
+  double xiFromTowers_plus = xiFromTowers.first;
+  double xiFromTowers_minus = xiFromTowers.second;
+  eventData.xiPlusFromTowers_ = xiFromTowers_plus;
+  eventData.xiMinusFromTowers_ = xiFromTowers_minus;
+
+  std::pair<double,double> EPlusPzFromTowers = EPlusPz(*caloTowerCollectionH,-1.,energyThresholdHB_,energyThresholdHE_,energyThresholdHF_,energyScale);
+  eventData.EPlusPzFromTowers_ = EPlusPzFromTowers.first;
+  eventData.EMinusPzFromTowers_ = EPlusPzFromTowers.second;*/
+  
   edm::Handle<reco::PFCandidateCollection> particleFlowCollectionH;
   event.getByLabel(particleFlowTag_,particleFlowCollectionH);
 
-  /*double energyScale = (applyEnergyScaleHCAL_) ? energyScaleHCAL_ : -1.; 
-  double MxFromTowers = MassColl(*caloTowerCollectionH,-1.,energyThresholdHB_,energyThresholdHE_,energyThresholdHF_,energyScale);
-  eventData.MxFromTowers_ = MxFromTowers;*/
   //double MxFromPFCands = MassColl(*particleFlowCollectionH,thresholdsPFlow_);
   double MxFromPFCands = MassColl(*particleFlowCollectionH);
   eventData.MxFromPFCands_ = MxFromPFCands;
 
-  /*std::pair<double,double> xiFromTowers = Xi(*caloTowerCollectionH,Ebeam_,-1.,energyThresholdHB_,energyThresholdHE_,energyThresholdHF_,energyScale);
-  double xiFromTowers_plus = xiFromTowers.first;
-  double xiFromTowers_minus = xiFromTowers.second;*/
   std::pair<double,double> xiFromPFCands = Xi(*particleFlowCollectionH,Ebeam_);
   double xiFromPFCands_plus = xiFromPFCands.first;
   double xiFromPFCands_minus = xiFromPFCands.second;
 
-  /*eventData.xiPlusFromTowers_ = xiFromTowers_plus;
-  eventData.xiMinusFromTowers_ = xiFromTowers_minus;*/
   eventData.xiPlusFromPFCands_ = xiFromPFCands_plus;
   eventData.xiMinusFromPFCands_ = xiFromPFCands_minus;
 
-  /*std::pair<double,double> EPlusPzFromTowers = EPlusPz(*caloTowerCollectionH,-1.,energyThresholdHB_,energyThresholdHE_,energyThresholdHF_,energyScale);
-  eventData.EPlusPzFromTowers_ = EPlusPzFromTowers.first;
-  eventData.EMinusPzFromTowers_ = EPlusPzFromTowers.second;*/
   //std::pair<double,double> EPlusPzFromPFCands = EPlusPz(*particleFlowCollectionH,thresholdsPFlow_);
   std::pair<double,double> EPlusPzFromPFCands = EPlusPz(*particleFlowCollectionH);
   eventData.EPlusPzFromPFCands_ = EPlusPzFromPFCands.first;
@@ -556,11 +572,13 @@ void DiffractiveAnalysis::fillCastorInfo(DiffractiveEvent& eventData, const edm:
   edm::Handle<CastorRecHitCollection> castorRecHitCollectionH;
   event.getByLabel(castorRecHitTag_,castorRecHitCollectionH);
 
-  int modules[] = {1,2,3,4,5};
-  std::vector<int> vec_modules(modules, modules + sizeof(modules)/sizeof(int));
+  if( castorRecHitCollectionH.isValid() ){
+     int modules[] = {1,2,3,4,5};
+     std::vector<int> vec_modules(modules, modules + sizeof(modules)/sizeof(int));
 
-  double sumETotCastor = CastorEnergy(vec_modules)(*castorRecHitCollectionH,event.isRealData());
-  eventData.sumETotCastor_ = sumETotCastor;
+     double sumETotCastor = CastorEnergy(vec_modules)(*castorRecHitCollectionH,event.isRealData());
+     eventData.sumETotCastor_ = sumETotCastor;
+  }
 }
 
 template <class PartColl>

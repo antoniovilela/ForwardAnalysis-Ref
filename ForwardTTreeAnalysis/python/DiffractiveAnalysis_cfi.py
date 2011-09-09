@@ -13,9 +13,9 @@ DiffractiveAnalysis = cms.PSet(
     triggerResultsTag = cms.InputTag("TriggerResults","","HLT"),
     hcalTowerSummaryTag = cms.InputTag("hcalActivitySummary"),
     # Misc
-    EnergyThresholdHB = cms.double(1.5),
-    EnergyThresholdHE = cms.double(2.0),
-    EnergyThresholdHF = cms.double(4.0),
+    energyThresholdHB = cms.double(1.5),
+    energyThresholdHE = cms.double(2.0),
+    energyThresholdHF = cms.double(4.0),
     # Options
     comEnergy = cms.double(7000.),
     applyEnergyScaleHCAL = cms.bool(False),
