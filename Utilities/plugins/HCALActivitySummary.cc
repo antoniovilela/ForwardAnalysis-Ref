@@ -722,4 +722,4 @@ bool HCALActivitySummary::checkTowerFlagsHF(CaloTower const& tower, double emFra
   return flagged;  
 }
 
-//DEFINE_FWK_MODULE(HCALActivitySummary);
+DEFINE_FWK_MODULE(HCALActivitySummary);

@@ -21,7 +21,11 @@ config.outputTTreeFile = 'exclusiveDijetsanalysis_PATTTree.root'
 process = cms.Process("Analysis")
 
 process.load('FWCore.MessageService.MessageLogger_cfi')
-process.MessageLogger.cerr.threshold = 'INFO'
+process.MessageLogger.cerr.threshold = 'DEBUG'
+process.MessageLogger.debugModules = cms.untracked.vstring('exclusiveDijetsTTreeAnalysis')
+process.MessageLogger.destinations = cms.untracked.vstring('cerr')
+process.MessageLogger.categories.append('Analysis')
+process.MessageLogger.cerr.Analysis = cms.untracked.PSet(limit = cms.untracked.int32(-1))
 
 process.options = cms.untracked.PSet( wantSummary = cms.untracked.bool(True),
 SkipEvent = cms.untracked.vstring('ProductNotFound') )

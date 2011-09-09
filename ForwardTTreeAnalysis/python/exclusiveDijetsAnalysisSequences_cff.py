@@ -22,7 +22,7 @@ from ForwardAnalysis.AnalysisSequences.filterScraping_cfi import *
 ######################
 
 from ForwardAnalysis.ForwardTTreeAnalysis.exclusiveDijetsHLTPaths_cfi import *
-exclusiveDijetsHLTFilter.HLTPaths = ['HLT_Jet15U_v*','HLT_L1Jet6U_v*']
+exclusiveDijetsHLTFilter.HLTPaths = ['HLT_Jet30_v*','HLT_Jet60_v*','HLT_ExclDiJet60_HFAND_v*','HLT_ExclDiJet60_HFOR_v*']
 #['HLT_ExclDiJet60_HFAND*', 'HLT_ExclDiJet60_HFOR*'] 
 #['HLT_Jet15U','HLT_L1Jet6U']
  

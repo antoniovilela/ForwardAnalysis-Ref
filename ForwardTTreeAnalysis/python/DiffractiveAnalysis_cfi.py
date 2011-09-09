@@ -20,7 +20,8 @@ DiffractiveAnalysis = cms.PSet(
     comEnergy = cms.double(7000.),
     applyEnergyScaleHCAL = cms.bool(False),
     energyScaleFactorHCAL = cms.double(1.0),
-    hltPath = cms.string("HLT_L1_BscMinBiasOR_BptxPlusORMinus"), 
+    #hltPath = cms.string("HLT_L1_BscMinBiasOR_BptxPlusORMinus"),
+    hltPath = cms.string("HLT_L1Tech_BSC_minBias*"), 
     techTrigBit = cms.int32(34),
     accessMCInfo = cms.untracked.bool(False)
 )
