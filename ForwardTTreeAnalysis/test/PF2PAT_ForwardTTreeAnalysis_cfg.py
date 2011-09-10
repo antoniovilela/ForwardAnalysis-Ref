@@ -110,6 +110,7 @@ if not config.runOnMC:
 #end
  
 process.load("ForwardAnalysis.ForwardTTreeAnalysis.exclusiveDijetsAnalysisSequences_cff")
+process.pfCandidateNoiseThresholds.src = "pfNoPileUpPFlow"
 
 #process.load("ForwardAnalysis.ForwardTTreeAnalysis.singleVertexFilter_cfi")
 
