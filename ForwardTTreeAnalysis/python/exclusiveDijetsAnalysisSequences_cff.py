@@ -143,7 +143,7 @@ castorVeto = cms.Sequence(castorInvalidDataFilter + castorActivityFilter)
 castorTag = cms.Sequence(castorInvalidDataFilter + ~castorActivityFilter)
 '''
 ##-----------------------------------------------------------------
-from Utilities.AnalysisTools.hcalActivitySummary_cfi import *
+from ForwardAnalysis.Utilities.hcalActivitySummary_cfi import *
 hcalActivitySummary.DiscardFlaggedTowers = False
 hcalActivitySummaryScale090 = hcalActivitySummary.clone(ApplyEnergyScale = True,EnergyScaleFactorHB = 0.90,EnergyScaleFactorHE = 0.90,EnergyScaleFactorHF = 0.90)
 hcalActivitySummaryScale092 = hcalActivitySummary.clone(ApplyEnergyScale = True,EnergyScaleFactorHB = 0.92,EnergyScaleFactorHE = 0.92,EnergyScaleFactorHF = 0.92)
