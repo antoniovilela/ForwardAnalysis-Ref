@@ -128,6 +128,7 @@ process.exclusiveDijetsTTreeAnalysis.exclusiveDijetsAnalysis.TrackTag = config.t
 process.exclusiveDijetsTTreeAnalysis.exclusiveDijetsAnalysis.VertexTag = "goodOfflinePrimaryVertices"
 process.exclusiveDijetsTTreeAnalysis.exclusiveDijetsAnalysis.ParticleFlowTag = "pfCandidateNoiseThresholds"
 process.exclusiveDijetsTTreeAnalysis.exclusiveDijetsAnalysis.JetTag = "selectedPatJetsPFlow"
+process.exclusiveDijetsTTreeAnalysis.exclusiveDijetsAnalysis.tracksTransverseRegion.JetTag = "selectedPatJetsPFlow"
 
 #added by eliza
 if not config.runOnMC:
