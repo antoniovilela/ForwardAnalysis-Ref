@@ -186,5 +186,5 @@ if not config.runOnMC:
 if not config.runOnMC: process.castor_step = cms.Path(process.castorSequence)
 
 process.analysis_reco_step = cms.Path(process.analysisSequences)
-process.analysis_exclusiveDijetsAnalysis_step = cms.Path(process.eventSelectionHLT+
-                                                         process.fwdQCDTTreeAnalysis)
+process.analysis_fwdQCDAnalysis_step = cms.Path(process.eventSelectionHLT+
+                                                process.fwdQCDTTreeAnalysis)

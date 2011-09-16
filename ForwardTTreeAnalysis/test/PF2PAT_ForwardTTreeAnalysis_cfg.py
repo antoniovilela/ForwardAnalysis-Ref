@@ -4,6 +4,7 @@ import FWCore.ParameterSet.Config as cms
 class config: pass
 config.verbose = True
 config.writeEdmOutput = False
+config.runPATSequences = True
 config.runOnMC = False
 config.usePAT = True
 config.globalTagNameData = 'GR_R_42_V19::All' 
@@ -14,21 +15,36 @@ config.trackAnalyzerName = 'trackHistoAnalyzer'
 config.trackTagName = 'analysisTracks'
 #config.generator = 'Pythia6'
 
-config.inputFileName = '/storage2/antoniov/data1/PATTuple/patTuple_PF2PAT.root'
-#config.outputEdmFile = 'DijetsAnalysis.root'
+config.inputFileName = '/storage2/eliza/JetMay10RecoRun2011.root'
 config.outputTTreeFile = 'exclusiveDijetsanalysis_PATTTree.root'
 
 process = cms.Process("Analysis")
 
-process.load('FWCore.MessageService.MessageLogger_cfi')
-process.MessageLogger.cerr.threshold = 'DEBUG'
-process.MessageLogger.debugModules = cms.untracked.vstring('exclusiveDijetsTTreeAnalysis')
-process.MessageLogger.destinations = cms.untracked.vstring('cerr')
-process.MessageLogger.categories.append('Analysis')
-process.MessageLogger.cerr.Analysis = cms.untracked.PSet(limit = cms.untracked.int32(-1))
+process.load('Configuration.StandardSequences.Services_cff')
+process.load('Configuration.StandardSequences.GeometryExtended_cff')
+process.load('Configuration.StandardSequences.MagneticField_38T_cff')
+process.load('Configuration.StandardSequences.Reconstruction_cff')
+process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
+#process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
+#process.load("CondCore.DBCommon.CondDBCommon_cfi")
+if config.runPATSequences:
+    from ForwardAnalysis.Skimming.addPATSequences import addPATSequences
+    addPATSequences(process)  
 
-process.options = cms.untracked.PSet( wantSummary = cms.untracked.bool(True),
-SkipEvent = cms.untracked.vstring('ProductNotFound') )
+process.load('FWCore.MessageService.MessageLogger_cfi')
+if not config.verbose:
+    process.MessageLogger.cerr.threshold = 'INFO'
+else:
+    process.MessageLogger.cerr.threshold = 'DEBUG'
+    process.MessageLogger.debugModules = cms.untracked.vstring('exclusiveDijetsTTreeAnalysis')
+    process.MessageLogger.destinations = cms.untracked.vstring('cerr')
+    process.MessageLogger.categories.append('Analysis')
+    process.MessageLogger.cerr.Analysis = cms.untracked.PSet(limit = cms.untracked.int32(-1))
+
+process.options = cms.untracked.PSet( 
+    wantSummary = cms.untracked.bool(True),
+    SkipEvent = cms.untracked.vstring('ProductNotFound')
+    )
 
 process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
 
@@ -37,33 +53,15 @@ process.source = cms.Source("PoolSource",
     #duplicateCheckMode = cms.untracked.string('noDuplicateCheck')
 )
 
+# Output
+process.TFileService = cms.Service("TFileService",
+                                   fileName = cms.string(config.outputTTreeFile))
 #-------------------------------------------------------------------------------
-# Import of standard configurations
-process.load('Configuration.StandardSequences.Services_cff')
-process.load('Configuration.StandardSequences.GeometryExtended_cff')
-process.load('Configuration.StandardSequences.MagneticField_38T_cff')
-process.load('Configuration.StandardSequences.Reconstruction_cff')
-process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
-process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
-#process.load("CondCore.DBCommon.CondDBCommon_cfi")
 
-process.options.wantSummary = True
-#--------------------------------------------------------------------------------
 if config.runOnMC: process.GlobalTag.globaltag = config.globalTagNameMC
 else: process.GlobalTag.globaltag = config.globalTagNameData
 
 #---------------------------------------------------------------------------------
-##Jet Correction Service
-
-process.ak5CaloL1Offset.useCondDB = False
-process.ak5PFL1Offset.useCondDB = False
-process.ak5JPTL1Offset.useCondDB = False
-
-#---------------------------------------------------------------------------------
-# Output
-process.TFileService = cms.Service("TFileService",
-                                   fileName = cms.string(config.outputTTreeFile))
-
 ###################################################################################
 # CASTOR RecHit Corrector
 if not config.runOnMC:
@@ -93,7 +91,7 @@ if not config.runOnMC:
     process.castorSequence = cms.Sequence(process.castorInvalidDataFilter+process.castorRecHitCorrector)
 
 ###################################################################################
-######################################
+# Analysis sequences
 process.load("ForwardAnalysis.Utilities.tracksOutsideJets_cfi")
 process.tracksOutsideJets.JetTag = "selectedPatJetsPFlow"
 process.load("ForwardAnalysis.ForwardTTreeAnalysis.tracksTransverseRegion_cfi")
