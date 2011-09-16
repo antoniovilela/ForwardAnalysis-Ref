@@ -108,6 +108,7 @@ if not config.runOnMC:
 #end
  
 process.load("ForwardAnalysis.ForwardTTreeAnalysis.exclusiveDijetsAnalysisSequences_cff")
+process.exclusiveDijetsHLTFilter.HLTPaths = ['HLT_ExclDiJet30U_HFAND_v*','HLT_ExclDiJet30U_HFOR_v*','HLT_Jet30U_v*']
 process.pfCandidateNoiseThresholds.src = "pfNoPileUpPFlow"
 process.tracksTransverseRegion.JetTag = "selectedPatJetsPFlow"
 
