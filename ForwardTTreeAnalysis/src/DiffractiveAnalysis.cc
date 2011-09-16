@@ -145,22 +145,25 @@ void DiffractiveAnalysis::fillTriggerInfo(DiffractiveEvent& eventData, const edm
   edm::Handle<edm::TriggerResults> triggerResults;
   event.getByLabel(triggerResultsTag_, triggerResults);
 
-  const edm::TriggerNames& triggerNames = event.triggerNames(*triggerResults);
+  if(triggerResults.isValid() && hltPathName_ != ""){
+     const edm::TriggerNames& triggerNames = event.triggerNames(*triggerResults);
+     // In case hltPathName_ is a pattern (e.g. HLT_Jet30U*)
+     std::string hltPath;
+     if( edm::is_glob(hltPathName_) ){
+	std::vector< std::vector<std::string>::const_iterator > matches = edm::regexMatch(triggerNames.triggerNames(), hltPathName_);  
 
-  // In case hltPathName_ is a pattern (e.g. HLT_Jet30U*)
-  std::string hltPath;
-  if( edm::is_glob(hltPathName_) ){
-     std::vector< std::vector<std::string>::const_iterator > matches = edm::regexMatch(triggerNames.triggerNames(), hltPathName_);  
+	if( matches.empty() ) throw cms::Exception("Configuration") << "Could not find any HLT path of type " << hltPathName_ << "\n";
+	else if( matches.size() > 1) throw cms::Exception("Configuration") << "HLT path type " << hltPathName_ << " not unique\n";
+	else hltPath = *(matches[0]);
+     } else{
+	hltPath = hltPathName_; 
+     } 
 
-     if( matches.empty() ) throw cms::Exception("Configuration") << "Could not find any HLT path of type " << hltPathName_ << "\n";
-     else if( matches.size() > 1) throw cms::Exception("Configuration") << "HLT path type " << hltPathName_ << " not unique\n";
-     else hltPath = *(matches[0]);
+     unsigned int idxHLT = triggerNames.triggerIndex(hltPath);
+     eventData.HLTPath_ = (triggerResults->wasrun(idxHLT) && triggerResults->accept(idxHLT)) ? 1 : 0; 
   } else{
-     hltPath = hltPathName_; 
-  } 
-
-  unsigned int idxHLT = triggerNames.triggerIndex(hltPath);
-  eventData.HLTPath_ = (triggerResults->wasrun(idxHLT) && triggerResults->accept(idxHLT)) ? 1 : 0; 
+     eventData.HLTPath_ = -1;
+  }
 
   edm::Handle<L1GlobalTriggerReadoutRecord> gtReadoutRecordH;
   event.getByLabel("gtDigis", gtReadoutRecordH);
@@ -193,8 +196,8 @@ void DiffractiveAnalysis::fillVertexInfo(DiffractiveEvent& eventData, const edm:
   } 
   eventData.nVertex_ = nGoodVertices;
 
-  const reco::Vertex& primVertex = (*vertexCollectionH)[0];
-  if(primVertex.isValid() && !primVertex.isFake()){
+  if( nGoodVertices ){
+     const reco::Vertex& primVertex = vtxColl[0];
      eventData.posXPrimVtx_ = primVertex.x();
      eventData.posYPrimVtx_ = primVertex.y();
      eventData.posZPrimVtx_ = primVertex.z();
