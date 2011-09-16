@@ -14,7 +14,7 @@ from ForwardAnalysis.AnalysisSequences.primaryVertexFilter_cfi import *
 ##---------------------
 from ForwardAnalysis.AnalysisSequences.filterScraping_cfi import *
 ##-------------
-##from CommonTools.RecoAlgos.HBHENoiseFilter_cfi import *
+from CommonTools.RecoAlgos.HBHENoiseFilter_cfi import *
 ##-------------
 
 ######################
@@ -170,7 +170,8 @@ hcalVetoSumEMaxHBPlusAndMinus16 = hcalActivityFilter.clone(SumEMaxHBPlus = 16.0,
 
 ##-----------------------------------------------------------------
 # Event selection
-offlineSelection = cms.Sequence(primaryVertexFilter+filterScraping)#+HBHENoiseFilter)
+#offlineSelection = cms.Sequence(primaryVertexFilter + filterScraping + HBHENoiseFilter)
+offlineSelection = cms.Sequence(filterScraping + HBHENoiseFilter)
 eventSelection = cms.Sequence(offlineSelection)
 eventSelectionHLT = cms.Sequence(exclusiveDijetsHLTFilter + offlineSelection)
 
