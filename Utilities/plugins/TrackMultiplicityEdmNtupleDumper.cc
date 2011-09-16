@@ -1,5 +1,5 @@
-#ifndef DiffractiveForwardAnalysis_SingleDiffractiveWAnalysis_TrackMultiplicityEdmNtupleDumper_h
-#define DiffractiveForwardAnalysis_SingleDiffractiveWAnalysis_TrackMultiplicityEdmNtupleDumper_h
+#ifndef ForwardAnalysis_Utilities_TrackMultiplicityEdmNtupleDumper_h
+#define ForwardAnalysis_Utilities_TrackMultiplicityEdmNtupleDumper_h
 
 #include "FWCore/Framework/interface/EDProducer.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
@@ -25,7 +25,7 @@ private:
 using namespace reco;
 
 TrackMultiplicityEdmNtupleDumper::TrackMultiplicityEdmNtupleDumper(const edm::ParameterSet& pset) {
-	tracksTag_ = pset.getParameter<edm::InputTag>("TracksTag");
+	tracksTag_ = pset.getParameter<edm::InputTag>("src");
 
 	std::string alias;
 	produces<unsigned int>( alias = "trackMultiplicity" ).setBranchAlias( alias );
@@ -56,5 +56,5 @@ void TrackMultiplicityEdmNtupleDumper::produce(edm::Event& event, const edm::Eve
 	event.put(trackMultiplicityEtaMinus,"trackMultiplicityEtaMinus");
 }
 
-//DEFINE_FWK_MODULE(TrackMultiplicityEdmNtupleDumper);
+DEFINE_FWK_MODULE(TrackMultiplicityEdmNtupleDumper);
  

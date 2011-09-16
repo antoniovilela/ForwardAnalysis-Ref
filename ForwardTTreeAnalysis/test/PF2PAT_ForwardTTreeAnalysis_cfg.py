@@ -15,7 +15,7 @@ config.trackAnalyzerName = 'trackHistoAnalyzer'
 config.trackTagName = 'analysisTracks'
 #config.generator = 'Pythia6'
 
-config.inputFileName = '/storage2/eliza/JetMay10RecoRun2011.root'
+config.inputFileName = '/storage2/eliza/samples_Apr21/MultiJetB_Apr21_ReReco2011.root'
 config.outputTTreeFile = 'exclusiveDijetsanalysis_PATTTree.root'
 
 process = cms.Process("Analysis")
@@ -122,7 +122,7 @@ process.exclusiveDijetsTTreeAnalysis.diffractiveAnalysis.particleFlowTag = "pfCa
 process.exclusiveDijetsTTreeAnalysis.diffractiveAnalysis.jetTag = "selectedPatJetsPFlow"
 # Exclusice dijets analysis
 process.exclusiveDijetsTTreeAnalysis.exclusiveDijetsAnalysis.TriggerResultsTag = cms.InputTag("TriggerResults::HLT")
-process.exclusiveDijetsTTreeAnalysis.exclusiveDijetsAnalysis.hltPaths = cms.vstring('HLT_ExclDiJet60_HFAND_v*','HLT_ExclDiJet60_HFOR_v*','HLT_Jet60_v*')
+process.exclusiveDijetsTTreeAnalysis.exclusiveDijetsAnalysis.hltPaths = cms.vstring('HLT_ExclDiJet30U_HFAND_v*','HLT_ExclDiJet30U_HFOR_v*','HLT_Jet30U_v*')
 process.exclusiveDijetsTTreeAnalysis.exclusiveDijetsAnalysis.EBeam = config.comEnergy/2.
 process.exclusiveDijetsTTreeAnalysis.exclusiveDijetsAnalysis.TrackTag = config.trackTagName
 process.exclusiveDijetsTTreeAnalysis.exclusiveDijetsAnalysis.VertexTag = "goodOfflinePrimaryVertices"

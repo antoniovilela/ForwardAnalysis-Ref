@@ -75,6 +75,8 @@ from ForwardAnalysis.ForwardTTreeAnalysis.tracksTransverseRegion_cfi import *
 tracksTransverseRegion.src = "selectTracksAssociatedToPV"
 tracksTransverseRegion.JetTag = "ak5PFJets"
 
+from ForwardAnalysis.Utilities.trackMultiplicity_cfi import *
+trackMultiplicityTransverseRegion = trackMultiplicity.clone( src = "tracksTransverseRegion" ) 
 #------------------------------
 # Particle flow
 
@@ -195,7 +197,7 @@ pfCandidates = cms.Sequence(pfCandidateNoiseThresholds*
 edmDump = cms.Sequence(#trackMultiplicity+
                        #trackMultiplicityAssociatedToPV+
                        #trackMultiplicityOutsideJets+
-                       #trackMultiplicityTransverseRegion+
+                       trackMultiplicityTransverseRegion+
                        hcalActivitySummary+hcalActivitySummaryScale090+hcalActivitySummaryScale092+
                        hcalActivitySummaryScale095+hcalActivitySummaryScale098+
                        hcalActivitySummaryScale102+hcalActivitySummaryScale105+
