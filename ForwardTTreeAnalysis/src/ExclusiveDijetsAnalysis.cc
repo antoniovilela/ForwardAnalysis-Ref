@@ -499,166 +499,12 @@ void ExclusiveDijetsAnalysis::fillJetInfo(ExclusiveDijetsEvent& eventData, const
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void ExclusiveDijetsAnalysis::fillMultiplicities(ExclusiveDijetsEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
   //////////////////////////////////////////////////////////////////////////////////////
-  //ORiginal Tunico
-// //  // Access multiplicities
-//   edm::Handle<unsigned int> trackMultiplicity; 
-//   //event.getByLabel("trackMultiplicityTransverseRegion","trackMultiplicity",trackMultiplicity);
-//   event.getByLabel(trackMultiplicityTag_,trackMultiplicity); 
+  // Access multiplicities
+  edm::Handle<unsigned int> trackMultiplicity; 
+  event.getByLabel(trackMultiplicityTag_,trackMultiplicity); 
 
-//   edm::Handle<std::vector<unsigned int> > nHBPlus;
-//   event.getByLabel(edm::InputTag(hcalTowerSummaryTag_.label(),"nHBplus"),nHBPlus);
-
-//   edm::Handle<std::vector<unsigned int> > nHBMinus;
-//   event.getByLabel(edm::InputTag(hcalTowerSummaryTag_.label(),"nHBminus"),nHBMinus);
-
-//   edm::Handle<std::vector<unsigned int> > nHEPlus;
-//   event.getByLabel(edm::InputTag(hcalTowerSummaryTag_.label(),"nHEplus"),nHEPlus);
-
-//   edm::Handle<std::vector<unsigned int> > nHEMinus;
-//   event.getByLabel(edm::InputTag(hcalTowerSummaryTag_.label(),"nHEminus"),nHEMinus);
-
-//   edm::Handle<std::vector<unsigned int> > nHFPlus;
-//   event.getByLabel(edm::InputTag(hcalTowerSummaryTag_.label(),"nHFplus"),nHFPlus);
-
-//   edm::Handle<std::vector<unsigned int> > nHFMinus;
-//   event.getByLabel(edm::InputTag(hcalTowerSummaryTag_.label(),"nHFminus"),nHFMinus);
-// edm::Handle<std::map<unsigned int, std::vector<unsigned int> > > iEtaHFMultiplicityPlus;
-//   event.getByLabel(edm::InputTag(hcalTowerSummaryTag_.label(),"iEtaHFMultiplicityPlus"),iEtaHFMultiplicityPlus);
-
-//   edm::Handle<std::map<unsigned int, std::vector<unsigned int> > > iEtaHFMultiplicityMinus;
-//   event.getByLabel(edm::InputTag(hcalTowerSummaryTag_.label(),"iEtaHFMultiplicityMinus"),iEtaHFMultiplicityMinus);
-
-//   edm::Handle<std::vector<double> > sumEHBplus;
-//   event.getByLabel(edm::InputTag(hcalTowerSummaryTag_.label(),"sumEHBplus"),sumEHBplus);
-
-//   edm::Handle<std::vector<double> > sumEHBminus;
-//   event.getByLabel(edm::InputTag(hcalTowerSummaryTag_.label(),"sumEHBminus"),sumEHBminus);
-
-//   edm::Handle<std::vector<double> > sumETHBplus;
-//   event.getByLabel(edm::InputTag(hcalTowerSummaryTag_.label(),"sumETHBplus"),sumETHBplus);
-
-//   edm::Handle<std::vector<double> > sumETHBminus;
-//   event.getByLabel(edm::InputTag(hcalTowerSummaryTag_.label(),"sumETHBminus"),sumETHBminus);
-
-//   edm::Handle<std::vector<double> > sumEHEplus;
-//   event.getByLabel(edm::InputTag(hcalTowerSummaryTag_.label(),"sumEHEplus"),sumEHEplus);
-
-//   edm::Handle<std::vector<double> > sumEHEminus;
-//   event.getByLabel(edm::InputTag(hcalTowerSummaryTag_.label(),"sumEHEminus"),sumEHEminus);
-
-//   edm::Handle<std::vector<double> > sumETHEplus;
-//   event.getByLabel(edm::InputTag(hcalTowerSummaryTag_.label(),"sumETHEplus"),sumETHEplus);
-
-//   edm::Handle<std::vector<double> > sumETHEminus;
-//   event.getByLabel(edm::InputTag(hcalTowerSummaryTag_.label(),"sumETHEminus"),sumETHEminus);
-
-//   edm::Handle<std::vector<double> > sumETHFplus;
-//   event.getByLabel(edm::InputTag(hcalTowerSummaryTag_.label(),"sumETHFplus"),sumETHFplus);
-
-//   edm::Handle<std::vector<double> > sumETHFminus;
-//   event.getByLabel(edm::InputTag(hcalTowerSummaryTag_.label(),"sumETHFminus"),sumETHFminus);
-
-
-//   edm::Handle<std::vector<double> > sumEHFminus;
-//   event.getByLabel(edm::InputTag(hcalTowerSummaryTag_.label(),"sumEHFminus"),sumEHFminus);
-
-//   edm::Handle<std::vector<double> > sumEHFplus;
-//   event.getByLabel(edm::InputTag(hcalTowerSummaryTag_.label(),"sumEHFplus"),sumEHFplus);
-
-//   edm::Handle<std::map<unsigned int, std::vector<double> > > iEtaHFEnergySumPlus;
-//   event.getByLabel(edm::InputTag(hcalTowerSummaryTag_.label(),"iEtaHFEnergySumPlus"),iEtaHFEnergySumPlus);
-
-//   edm::Handle<std::map<unsigned int, std::vector<double> > > iEtaHFEnergySumMinus;
-//   event.getByLabel(edm::InputTag(hcalTowerSummaryTag_.label(),"iEtaHFEnergySumMinus"),iEtaHFEnergySumMinus);
-
-//   edm::Handle<std::map<unsigned int, std::vector<double> > > iEtaHFETSumPlus;
-//   event.getByLabel(edm::InputTag(hcalTowerSummaryTag_.label(),"iEtaHFETSumPlus"),iEtaHFETSumPlus);
-
-//   edm::Handle<std::map<unsigned int, std::vector<double> > > iEtaHFETSumMinus;
-//   event.getByLabel(edm::InputTag(hcalTowerSummaryTag_.label(),"iEtaHFETSumMinus"),iEtaHFETSumMinus);
-
-//    edm::Handle<std::vector<double> > thresholdsHB;
-//   event.getByLabel(edm::InputTag(hcalTowerSummaryTag_.label(),"thresholdsHB"),thresholdsHB);
-//   size_t indexThresholdHB = std::lower_bound((*thresholdsHB).begin(),(*thresholdsHB).end(),energyThresholdHB_) - (*thresholdsHB).begin();
-
-//   edm::Handle<std::vector<double> > thresholdsHE;
-//   event.getByLabel(edm::InputTag(hcalTowerSummaryTag_.label(),"thresholdsHE"),thresholdsHE);
-//   size_t indexThresholdHE = std::lower_bound((*thresholdsHE).begin(),(*thresholdsHE).end(),energyThresholdHE_) - (*thresholdsHE).begin();
-
-//   edm::Handle<std::vector<double> > thresholdsHF;
-//   event.getByLabel(edm::InputTag(hcalTowerSummaryTag_.label(),"thresholdsHF"),thresholdsHF);
-//   size_t indexThresholdHF = std::lower_bound((*thresholdsHF).begin(),(*thresholdsHF).end(),energyThresholdHF_) - (*thresholdsHF).begin();
-  
-//   unsigned int nHB_plus = (*nHBPlus)[indexThresholdHB];
-//   unsigned int nHB_minus = (*nHBMinus)[indexThresholdHB];
-
-//   unsigned int nHE_plus = (*nHEPlus)[indexThresholdHE];
-//   unsigned int nHE_minus = (*nHEMinus)[indexThresholdHE];
-
-//   unsigned int nHF_plus = (*nHFPlus)[indexThresholdHF];
-//   unsigned int nHF_minus = (*nHFMinus)[indexThresholdHF];
-
-//   double sumEHB_plus = (*sumEHBplus)[indexThresholdHB];
-//   double sumEHB_minus = (*sumEHBminus)[indexThresholdHB];
-
-//   double sumETHB_plus = (*sumETHBplus)[indexThresholdHB];
-//   double sumETHB_minus = (*sumETHBminus)[indexThresholdHB];
-
-//   double sumEHE_plus = (*sumEHEplus)[indexThresholdHE];
-//   double sumEHE_minus = (*sumEHEminus)[indexThresholdHE];
-
-//   double sumETHE_plus = (*sumETHEplus)[indexThresholdHE];
-//   double sumETHE_minus = (*sumETHEminus)[indexThresholdHE];
-
-//   double sumEHF_plus = (*sumEHFplus)[indexThresholdHF];
-//   double sumEHF_minus = (*sumEHFminus)[indexThresholdHF];
-
-//   double sumETHF_plus = (*sumETHFplus)[indexThresholdHF];
-//   double sumETHF_minus = (*sumETHFminus)[indexThresholdHF];
-
-
-// /*
-//   edm::Handle<std::vector<unsigned int> > nHFPlus;
-//   event.getByLabel("hfTower","nHFplus",nHFPlus);
-  
-//   edm::Handle<std::vector<unsigned int> > nHFMinus;
-//   event.getByLabel("hfTower","nHFminus",nHFMinus);
-
-//   edm::Handle<std::map<unsigned int, std::vector<unsigned int> > > mapThreshToiEtaPlus;
-//   event.getByLabel("hfTower","mapTreshToiEtaplus",mapThreshToiEtaPlus);
-
-//   edm::Handle<std::map<unsigned int, std::vector<unsigned int> > > mapThreshToiEtaMinus;
-//   event.getByLabel("hfTower","mapTreshToiEtaminus",mapThreshToiEtaMinus);
-
-//   edm::Handle<std::vector<double> > sumEHFplus;
-//   event.getByLabel("hfTower","sumEHFplus",sumEHFplus);
-
-//   edm::Handle<std::vector<double> > sumEHFminus;
-//   event.getByLabel("hfTower","sumEHFminus",sumEHFminus);
-// */
-  
-
-//   //unsigned int nTracks = *trackMultiplicity;
-
-//  // unsigned int nHF_plus = (*nHFPlus)[thresholdHF_];
-//   //unsigned int nHF_minus = (*nHFMinus)[thresholdHF_];
-
-//   //double sumE_plus = (*sumEHFplus)[thresholdHF_];
-//   //double sumE_minus = (*sumEHFminus)[thresholdHF_];
-
-
-
-// //  eventData.trackMultiplicity_ = nTracks;
-// //  eventData.multiplicityHFPlus_ = nHF_plus;
-//  // eventData.multiplicityHFMinus_ = nHF_minus;
-// //  eventData.sumEnergyHFPlus_ = sumE_plus;
-// //  eventData.sumEnergyHFMinus_ = sumE_minus;
-
-
-
-//   unsigned int nTracks = *trackMultiplicity;
-//   // Multiplicity of Tracks
-//   eventData.SetTrackMultiplicity(nTracks);
+  unsigned int nTracks = *trackMultiplicity;
+  eventData.SetTrackMultiplicity(nTracks);
 //   //Multiplicity on HB
 //   eventData.SetMultiplicityHBPlus(nHB_plus);
 //   eventData.SetMultiplicityHBMinus(nHB_minus);
@@ -687,42 +533,8 @@ void ExclusiveDijetsAnalysis::fillMultiplicities(ExclusiveDijetsEvent& eventData
 //   eventData.SetSumEnergyHFPlus(sumEHF_plus);
 //   eventData.SetSumEnergyHFMinus(sumEHF_minus);
 
-  
-//   for(unsigned int ieta = 29, index = 0; ieta <= 41; ++ieta,++index){
-//     double sumETHFPlus_ieta = exclusiveDijetsAnalysis::sumEHCALiEta(*iEtaHFETSumPlus,indexThresholdHF,ieta);
-//     eventData.sumETHFPlusVsiEta_[index] = sumETHFPlus_ieta;
-//     //eventData.SetSumETHFPlusVsiEta(index,sumETHFPlus_ieta);
-
-//     unsigned int nHFMinus_ieta = exclusiveDijetsAnalysis::nHCALiEta(*iEtaHFMultiplicityMinus,indexThresholdHF,ieta);
-//     eventData.multiplicityHFMinusVsiEta_[index] = nHFMinus_ieta;
-//     //eventData.SetMultiplicityHFMinusVsiEta(index,nHFMinus_ieta);    
-
-//     double sumEHFMinus_ieta = exclusiveDijetsAnalysis::sumEHCALiEta(*iEtaHFEnergySumMinus,indexThresholdHF,ieta); 
-//     eventData.sumEHFMinusVsiEta_[index] = sumEHFMinus_ieta;
-//   //  eventData.SetSumEHFMinusVsiEta(index,sumEHFMinus_ieta);
-
-//     double sumETHFMinus_ieta = exclusiveDijetsAnalysis::sumEHCALiEta(*iEtaHFETSumMinus,indexThresholdHF,ieta);
-//     eventData.sumETHFMinusVsiEta_[index] = sumETHFMinus_ieta;
-//    //eventData.SetSumETHFMinusVsiEta(index,sumETHFMinus_ieta);
-
-
-
-// //   unsigned int nHFPlus_ieta = nHFSlice(*mapThreshToiEtaPlus,thresholdHF_,ieta);
-//     //eventData.multiplicityHFPlusVsiEta_[index] = nHFPlus_ieta;
-//      //eventData.SetMultiplicityHFPlusVsiEta[index](nHFPlus_ieta);
-
-
-//     // unsigned int nHFMinus_ieta = nHFSlice(*mapThreshToiEtaMinus,thresholdHF_,ieta);
-//     // eventData.multiplicityHFMinusVsiEta_[index] = nHFMinus_ieta;
-//     // eventData.SetMultiplicityHFMinusVsiEta[index](nHFMinus_ieta);
-
-    
-
-//  }
-
-
 }
-  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void ExclusiveDijetsAnalysis::fillXiInfo(ExclusiveDijetsEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
 
   if(accessMCInfo_){
