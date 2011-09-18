@@ -16,10 +16,10 @@ def countLumisFromJSON(filename,runMin,runMax):
         for pair in jsonOut[str(run)]:
             nLumis = pair[-1] - pair[0] + 1
             countLumi += nLumis
-        print "Run",run,"-->",countLumi
+        print "Run",run,"-->",countLumi,jsonOut[str(run)]
         totalNumberLumis += countLumi
 
-    print "Total number of lumis =",totalNumberLumis
+    print "Total number of lumis =",totalNumberLumis,
 
 if __name__ == '__main__':
     parser = optparse.OptionParser(usage="usage: %prog [options]")
