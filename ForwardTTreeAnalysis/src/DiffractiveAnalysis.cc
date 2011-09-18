@@ -520,25 +520,9 @@ void DiffractiveAnalysis::fillGenInfo(DiffractiveEvent& eventData, const edm::Ev
 
 void DiffractiveAnalysis::fillDiffVariables(DiffractiveEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
 
-  double energyScale = (applyEnergyScaleHCAL_) ? energyScaleHCAL_ : -1.;
+  //double energyScale = (applyEnergyScaleHCAL_) ? energyScaleHCAL_ : -1.;
 
   // Leave only PF-based variables
-  /*edm::Handle<CaloTowerCollection> caloTowerCollectionH;
-  event.getByLabel(caloTowerTag_,caloTowerCollectionH);
-
-  double MxFromTowers = MassColl(*caloTowerCollectionH,-1.,energyThresholdHB_,energyThresholdHE_,energyThresholdHF_,energyScale);
-  eventData.MxFromTowers_ = MxFromTowers;
-
-  std::pair<double,double> xiFromTowers = Xi(*caloTowerCollectionH,Ebeam_,-1.,energyThresholdHB_,energyThresholdHE_,energyThresholdHF_,energyScale);
-  double xiFromTowers_plus = xiFromTowers.first;
-  double xiFromTowers_minus = xiFromTowers.second;
-  eventData.xiPlusFromTowers_ = xiFromTowers_plus;
-  eventData.xiMinusFromTowers_ = xiFromTowers_minus;
-
-  std::pair<double,double> EPlusPzFromTowers = EPlusPz(*caloTowerCollectionH,-1.,energyThresholdHB_,energyThresholdHE_,energyThresholdHF_,energyScale);
-  eventData.EPlusPzFromTowers_ = EPlusPzFromTowers.first;
-  eventData.EMinusPzFromTowers_ = EPlusPzFromTowers.second;*/
-  
   edm::Handle<reco::PFCandidateCollection> particleFlowCollectionH;
   event.getByLabel(particleFlowTag_,particleFlowCollectionH);
 
