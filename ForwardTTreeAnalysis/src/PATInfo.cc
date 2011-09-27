@@ -89,36 +89,24 @@ void PATInfo::patTriggerInfo(PATInfoEvent& eventData, const edm::Event& event, c
   pat::TriggerAlgorithmRefVector algoBits = triggerEvent->physAlgorithms();
   pat::TriggerAlgorithmRefVector::const_iterator itrBit = algoBits.begin(); 
   
-  size_t idxpath = 0;
-  std::vector<std::string>::const_iterator l1path =  L1algoBitname_.begin();
-  std::vector<std::string>::const_iterator l1paths_end =  L1algoBitname_.end(); 
   
-  for(; l1path != l1paths_end; ++l1path,++idxpath){
+   unsigned int nL1algoBitname_ = L1algoBitname_.size();
+
   int nbit = 0;
   while ( itrBit != algoBits.end()) {
   itrBit++;    
 
-  //std::cout << l1path[++idxpath].compare( (*itrBit)->name() )<<std::endl;
+  for(unsigned int i = 0; i < nL1algoBitname_; ++i) {
+   std::string L1name = L1algoBitname_[i].c_str();
 
+   if ( L1name.compare((*itrBit)->name()) == 0){ 
 
-    std::string l1name(l1path[idxpath]);
-    std::string l1TriggerName( (*itrBit)->name() );
-    //char *l1name_;
-    //const l1name_=l1name.c_str();
-    //char *l1TriggerName_;
-    //const l1TriggerName_=l1TriggerName.c_str();
-
-    //std::cout << l1TriggerName<< std::endl,
-
-  if ( l1name.compare( l1TriggerName ) == 0  )
-
-    //if (l1name.compare( (*itrBit)->name() ) == 0 ){
    std::cout <<" looping over algoBits: " << nbit << '\t' 
             <<" L1 Bit: " << (*itrBit)->techTrigger() << '\t' 
-  //          <<" Trigger Name: " <<  (*itrBit)->name() << '\n'
-  //          <<" Logical Expression:  " << (*itrBit)->logicalExpression() << '\n'
-  //          <<" Trigger Condition Keys:" <<  (*itrBit)->conditionKeys().size() << '\t'
-           // <<" GT L1 Result:  " <<  (*itrBit)->gtlResult() << '\t'
+            <<" Trigger Name: " <<  (*itrBit)->name() << '\n'
+            <<" Logical Expression:  " << (*itrBit)->logicalExpression() << '\n'
+            <<" Trigger Condition Keys:" <<  (*itrBit)->conditionKeys().size() << '\t'
+            <<" GT L1 Result:  " <<  (*itrBit)->gtlResult() << '\t'
          //   <<" Trigger Decision:  " <<  (*itrBit)->decision() << '\t'
     //        <<" Trigger Decision Before Mask: " <<  (*itrBit)->decisionBeforeMask() << '\t'
     //        <<" Trigger Decision After Mask: " << (*itrBit)->decisionAfterMask() << '\t'
@@ -144,9 +132,11 @@ void PATInfo::patTriggerInfo(PATInfoEvent& eventData, const edm::Event& event, c
               eventData.SetL1TriggerDecisionBeforeMask(L1TriggerDecisionBeforeMask_);
               eventData.SetL1TriggerDecisionAfterMask(L1TriggerDecisionAfterMask_);
   
-
-       }//end of selection
-    }//L1TriggerName loop
+            }//check name
+     
+       }//L1 Trigger Name
+    }//while
+//   return;
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
  //Pat Jet
