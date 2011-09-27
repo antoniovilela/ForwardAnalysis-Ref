@@ -7,6 +7,12 @@
 <use   name="DataFormats/PatCandidates"/>
 <use   name="JetMETCorrections/Objects"/>
 <use   name="ForwardAnalysis/Utilities"/>
+<use   name="PhysicsTools/PatAlgos"/>
+<use   name="PhysicsTools/PatUtils"/>
+<use   name="PhysicsTools/CandUtils"/>
+<use   name="PhysicsTools/UtilAlgos"/>
+<use   name="HLTrigger/HLTcore"/>
+
 <use   name="root"/>
 <export>
   <lib   name="1"/>
