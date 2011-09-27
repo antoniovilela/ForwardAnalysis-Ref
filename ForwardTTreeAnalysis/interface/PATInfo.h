@@ -39,18 +39,21 @@ class PATInfo {
      edm::InputTag metTag_;
      edm::InputTag jetTag_;
      bool usePAT_; 
+     int nbit;
 
+     std::string TriggerName_; 
      bool TechL1bit_;  
-     bool L1LogicalExpression_ ; 
+     std::string L1LogicalExpression_ ; 
      bool L1TriggerConditionKeys_ ;
      bool GTL1Results_;
      bool L1TriggerDecision_ ;
      bool L1TriggerDecisionBeforeMask_ ;
      bool L1TriggerDecisionAfterMask_ ;
-
+     unsigned L1Prescale_;
 
 
 };
+
 
 } // namespace
 #endif //end code

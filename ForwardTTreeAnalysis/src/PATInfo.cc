@@ -79,7 +79,7 @@ void PATInfo::patTriggerInfo(PATInfoEvent& eventData, const edm::Event& event, c
   //Ref:http://cmssw.cvs.cern.ch/cgi-bin/cmssw.cgi/UserCode/Bromo/TopAnalysis/TopAnalyzer/src/JetTrigger.cc
 
   if(usePAT_){
- 
+   nbit = 0;
   // PAT trigger event
   edm::Handle< TriggerEvent > triggerEvent;
   event.getByLabel( patTriggerEvent_ , triggerEvent );
@@ -88,55 +88,64 @@ void PATInfo::patTriggerInfo(PATInfoEvent& eventData, const edm::Event& event, c
 //  algoBits is defined as a RefVector (think as it was a vector of pointers). It points to TriggerAlgorithm objects
   pat::TriggerAlgorithmRefVector algoBits = triggerEvent->physAlgorithms();
   pat::TriggerAlgorithmRefVector::const_iterator itrBit = algoBits.begin(); 
-  
+  pat::TriggerAlgorithmRefVector::const_iterator itrBit_end = algoBits.end(); 
   
    unsigned int nL1algoBitname_ = L1algoBitname_.size();
 
-  int nbit = 0;
-  while ( itrBit != algoBits.end()) {
-  itrBit++;    
+  for(; itrBit != itrBit_end; ++itrBit){
+  nbit++ ;
 
-  for(unsigned int i = 0; i < nL1algoBitname_; ++i) {
-   std::string L1name = L1algoBitname_[i].c_str();
 
-   if ( L1name.compare((*itrBit)->name()) == 0){ 
+// while ( itrBit != algoBits.end()) {
+  //itrBit++;    
+  
 
-   std::cout <<" looping over algoBits: " << nbit << '\t' 
+     std::string l1TriggerName( (*itrBit)->name() );
+   
+     for(unsigned int i = 0; i < nL1algoBitname_; ++i) {
+     std::string L1name = L1algoBitname_[i].c_str();
+   
+      if(L1name == l1TriggerName){
+
+  /* std::cout <<" looping over algoBits: " << nbit << '\t' 
             <<" L1 Bit: " << (*itrBit)->techTrigger() << '\t' 
             <<" Trigger Name: " <<  (*itrBit)->name() << '\n'
             <<" Logical Expression:  " << (*itrBit)->logicalExpression() << '\n'
             <<" Trigger Condition Keys:" <<  (*itrBit)->conditionKeys().size() << '\t'
             <<" GT L1 Result:  " <<  (*itrBit)->gtlResult() << '\t'
-         //   <<" Trigger Decision:  " <<  (*itrBit)->decision() << '\t'
-    //        <<" Trigger Decision Before Mask: " <<  (*itrBit)->decisionBeforeMask() << '\t'
-    //        <<" Trigger Decision After Mask: " << (*itrBit)->decisionAfterMask() << '\t'
+            <<" Trigger Decision:  " <<  (*itrBit)->decision() << '\t'
+            <<" Trigger Decision Before Mask: " <<  (*itrBit)->decisionBeforeMask() << '\t'
+            <<" Trigger Decision After Mask: " << (*itrBit)->decisionAfterMask() << '\t'
             << '\n';
+*/
 
-
-        
+          L1Prescale_ = (*itrBit)->prescale();
+          TriggerName_ = (*itrBit)->name();
           TechL1bit_ = (*itrBit)->techTrigger();  
-          //L1LogicalExpression_ = (*itrBit)->logicalExpression(); 
-	  //L1TriggerConditionKeys_ = (*itrBit)->conditionKeys().size();
+          L1LogicalExpression_ = (*itrBit)->logicalExpression(); 
+	  L1TriggerConditionKeys_ = (*itrBit)->conditionKeys().size();
           GTL1Results_ = (*itrBit)->gtlResult();
           L1TriggerDecision_ = (*itrBit)->decision() ;
           L1TriggerDecisionBeforeMask_ = (*itrBit)->decisionBeforeMask();
           L1TriggerDecisionAfterMask_ = (*itrBit)->decisionAfterMask();
          
  
-          ///   eventData.SetL1TriggerName();   
+              eventData.SetL1Prescale(L1Prescale_);
+              eventData.SetL1TriggerName(TriggerName_);   
               eventData.SetNBit(nbit);
+              eventData.SetL1LogicalExpression(L1LogicalExpression_);
               eventData.SetTechL1Bit(TechL1bit_);
-              //eventData.SetL1TriggerConditionKeys(L1TriggerConditionKeys_);
+              eventData.SetL1TriggerConditionKeys(L1TriggerConditionKeys_);
               eventData.SetGTL1Results(GTL1Results_);
               eventData.SetL1TriggerDecision(L1TriggerDecision_);
               eventData.SetL1TriggerDecisionBeforeMask(L1TriggerDecisionBeforeMask_);
               eventData.SetL1TriggerDecisionAfterMask(L1TriggerDecisionAfterMask_);
   
-            }//check name
+          }//check name
      
        }//L1 Trigger Name
     }//while
-//   return;
+   //return;
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
  //Pat Jet

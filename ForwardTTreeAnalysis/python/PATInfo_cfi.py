@@ -9,5 +9,5 @@ PATInfo = cms.PSet(
     patTrigger      = cms.InputTag("patTrigger"),
     jetMatch        = cms.string("jetTriggerMatchHLTJets"),
     L1AlgoBitName   = cms.vstring('L1_BptxMinus_NotBptxPlus','L1_SingleTauJet4'),
-    UsePAT          = cms.untracked.bool(False)
+    UsePAT          = cms.untracked.bool(True)
 )

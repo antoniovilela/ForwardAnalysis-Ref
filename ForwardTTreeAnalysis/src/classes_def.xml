@@ -2,5 +2,6 @@
 <selection>
   <class name="DiffractiveEvent"/> 
   <class name="ExclusiveDijetsEvent"/>
+  <class name="PATInfoEvent"/>
 </selection>
 </lcgdict>
