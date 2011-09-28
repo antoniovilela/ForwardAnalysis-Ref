@@ -6,7 +6,9 @@
 
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/DiffractiveAnalysis.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/ExclusiveDijetsAnalysis.h"
+#include "ForwardAnalysis/ForwardTTreeAnalysis/interface/PATInfo.h"
 
+class PATInfoEvent;
 class DiffractiveEvent;
 class ExclusiveDijetsEvent; 
 class TTree;
@@ -24,9 +26,14 @@ class ForwardTTreeProducer : public edm::EDAnalyzer
   private:  
     diffractiveAnalysis::DiffractiveAnalysis diffractiveAnalysis_;
     exclusiveDijetsAnalysis::ExclusiveDijetsAnalysis exclusiveDijetsAnalysis_;
+    patInfo::PATInfo patInfo_;
+
 
     TTree* data_;
     DiffractiveEvent* diffractiveEvent_;
     ExclusiveDijetsEvent* exclusiveDijetsEvent_;
+    PATInfoEvent* patInfoEvent_;
+
+
 };
 #endif
