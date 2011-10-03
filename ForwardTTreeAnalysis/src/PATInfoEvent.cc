@@ -5,9 +5,13 @@ PATInfoEvent::PATInfoEvent() {}
 
 PATInfoEvent::~PATInfoEvent() {}
 
-//void PATInfoEvent::reset(){
-// size_t len_hltTrigResults = sizeof(hltTrigResults_)/sizeof(int);
-//for(size_t k = 0; k < len_hltTrigResults; ++k) hltTrigResults_[k] = 0;
+void PATInfoEvent::reset(){
+   l1Triggers_.clear();
 
-  //...
-//}
+   HLTTriggers_.clear();
+
+   nHLTbit_ = -1;
+
+   nbit_ = -1;
+   //...
+}

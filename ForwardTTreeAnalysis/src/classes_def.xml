@@ -3,5 +3,7 @@
   <class name="DiffractiveEvent"/> 
   <class name="ExclusiveDijetsEvent"/>
   <class name="PATInfoEvent"/>
+  <class name="PATL1Trigger"/>
+  <class name="PATHLTTrigger"/>
 </selection>
 </lcgdict>

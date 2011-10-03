@@ -12,48 +12,33 @@ class PATInfoEvent;
 
 namespace patInfo {
 
-class PATInfo {
-  public:
-     explicit PATInfo(const edm::ParameterSet&);
-     ~PATInfo();
+   class PATInfo {
+      public:
+	 explicit PATInfo(const edm::ParameterSet&);
+	 ~PATInfo();
 
-     void setBeginRun(const edm::Run&, const edm::EventSetup&);
-     void fillEventData(PATInfoEvent&, const edm::Event&, const edm::EventSetup&);
-  private:
-     
-    //PAT information
-     void patTriggerInfo(PATInfoEvent&, const edm::Event&, const edm::EventSetup&); //added by SFonseca
+	 void setBeginRun(const edm::Run&, const edm::EventSetup&);
+	 void fillEventData(PATInfoEvent&, const edm::Event&, const edm::EventSetup&);
+      private:
 
+	 //L1 PAT information
+	 void patL1TriggerInfo(PATInfoEvent&, const edm::Event&, const edm::EventSetup&); //added by SFonseca
+	 //HLT PAT information
+         void patHLTTriggerInfo(PATInfoEvent&, const edm::Event&, const edm::EventSetup&); //added by SFonseca
 
+	 //new input tags:
+	 bool runOnData_;
+	 edm::InputTag patTrigger_;
+	 edm::InputTag  patTriggerEvent_;
 
-//new input tags:
-     bool runOnData_;
-     edm::InputTag patTrigger_;
-     edm::InputTag  patTriggerEvent_;
-    
- // Jet match objects
-     std::string  jetMatch_;
-     std::vector<std::string>  L1algoBitname_;
-     edm::InputTag vertexTag_;
-     edm::InputTag trackTag_;
-     edm::InputTag metTag_;
-     edm::InputTag jetTag_;
-     bool usePAT_; 
-     int nbit;
-
-     std::string TriggerName_; 
-     bool TechL1bit_;  
-     std::string L1LogicalExpression_ ; 
-     bool L1TriggerConditionKeys_ ;
-     bool GTL1Results_;
-     bool L1TriggerDecision_ ;
-     bool L1TriggerDecisionBeforeMask_ ;
-     bool L1TriggerDecisionAfterMask_ ;
-     unsigned L1Prescale_;
-
-
-};
-
-
+	 // Jet match objects
+	 std::string  jetMatch_;
+	 std::vector<std::string>  L1algoBitname_;
+	 std::vector<std::string>  HLTalgoBitname_;
+	 edm::InputTag vertexTag_;
+	 edm::InputTag trackTag_;
+	 edm::InputTag metTag_;
+	 edm::InputTag jetTag_;
+   };
 } // namespace
 #endif //end code
