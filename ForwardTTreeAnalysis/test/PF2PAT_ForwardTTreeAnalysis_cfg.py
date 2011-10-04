@@ -5,18 +5,21 @@ class config: pass
 config.verbose = True
 config.writeEdmOutput = False
 config.runPATSequences = True
-config.runOnMC = False
+config.runOnMC = True
 config.usePAT = True
 config.globalTagNameData = 'GR_R_42_V19::All' 
 config.instLumiROOTFile='lumibylsXing_Cert_136033-149442_7TeV_Apr21ReReco_Collisions10_JSON.root'
-globalTagNameMC = ''
+config.globalTagNameMC = 'START42_V14A::All'
 config.comEnergy = 7000.0
 config.trackAnalyzerName = 'trackHistoAnalyzer'
 config.trackTagName = 'analysisTracks'
-#config.generator = 'Pythia6'
+config.outputTTreeFile = 'exclusiveDijetsanalysis_PATTTreeMC.root'
 
-config.inputFileName = 'MultiJet_Run2010B_Apr21ReReco-v1_AOD_7EA7B611-7371-E011-B164-002354EF3BDB.root'
-config.outputTTreeFile = 'exclusiveDijetsanalysis_PATTTree.root'
+
+if config.runOnMC:
+    config.inputFileName = '/storage2/eliza/samples_test/QCD_Pt-15to30_TuneZ2_7TeV_pythia6AODSIMS_3.root'#MC
+else:
+    config.inputFileName = '/storage2/antoniov/data1/MultiJet_Run2010B_Apr21ReReco-v1_AOD/MultiJet_Run2010B_Apr21ReReco-v1_AOD_7EA7B611-7371-E011-B164-002354EF3BDB.root'#Data
 
 process = cms.Process("Analysis")
 
@@ -29,7 +32,15 @@ process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 #process.load("CondCore.DBCommon.CondDBCommon_cfi")
 if config.runPATSequences:
     from ForwardAnalysis.Skimming.addPATSequences import addPATSequences
-    addPATSequences(process)  
+    addPATSequences(process,config.runOnMC)
+
+if config.runOnMC:
+    process.patTrigger.addL1Algos = cms.bool( False )
+    process.patJets.addTagInfos   = cms.bool( False )
+else:
+    process.patTrigger.addL1Algos = cms.bool( True )
+    process.patJets.addTagInfos   = cms.bool( True )   
+
 
 process.load('FWCore.MessageService.MessageLogger_cfi')
 if not config.verbose:
@@ -108,7 +119,13 @@ if not config.runOnMC:
 #end
  
 process.load("ForwardAnalysis.ForwardTTreeAnalysis.exclusiveDijetsAnalysisSequences_cff")
-process.exclusiveDijetsHLTFilter.HLTPaths = ['HLT_ExclDiJet30U_HFAND_v*','HLT_ExclDiJet30U_HFOR_v*','HLT_Jet30U*']
+
+if config.runOnMC:
+    process.exclusiveDijetsHLTFilter.HLTPaths = ['HLT_Jet30_v*','HLT_Jet60_v*','HLT_Jet80_v*','HLT_Jet110_v*','HLT_Jet150_v*','HLT_Jet190_v*','HLT_Jet240_v*','HLT_Jet370_v*']
+
+else:
+    process.exclusiveDijetsHLTFilter.HLTPaths = ['HLT_ExclDiJet30U_HFAND_v*','HLT_ExclDiJet30U_HFOR_v*','HLT_Jet30U*'] 
+
 process.pfCandidateNoiseThresholds.src = "pfNoPileUpPFlow"
 process.tracksTransverseRegion.JetTag = "selectedPatJetsPFlow"
 
@@ -117,6 +134,7 @@ process.tracksTransverseRegion.JetTag = "selectedPatJetsPFlow"
 process.load('ForwardAnalysis.ForwardTTreeAnalysis.exclusiveDijetsTTreeAnalysis_cfi')
 castorTagName = "castorRecHitCorrector"
 if config.runOnMC: castorTagName = "castorreco"
+
 # Diffractive analysis
 process.exclusiveDijetsTTreeAnalysis.diffractiveAnalysis.triggerResultsTag = cms.InputTag("TriggerResults::HLT")
 process.exclusiveDijetsTTreeAnalysis.diffractiveAnalysis.hltPath = 'HLT_L1Tech_BSC_minBias_OR'
@@ -127,9 +145,7 @@ process.exclusiveDijetsTTreeAnalysis.diffractiveAnalysis.particleFlowTag = "pfCa
 process.exclusiveDijetsTTreeAnalysis.diffractiveAnalysis.jetTag = "selectedPatJetsPFlow"
 process.exclusiveDijetsTTreeAnalysis.diffractiveAnalysis.castorRecHitTag = castorTagName
 
-# Exclusice dijets analysis
-process.exclusiveDijetsTTreeAnalysis.exclusiveDijetsAnalysis.TriggerResultsTag = cms.InputTag("TriggerResults::HLT")
-process.exclusiveDijetsTTreeAnalysis.exclusiveDijetsAnalysis.hltPaths = cms.vstring('HLT_ExclDiJet30U_HFAND_v*','HLT_ExclDiJet30U_HFOR_v*','HLT_Jet30U*')
+# Exclusive dijets analysis
 process.exclusiveDijetsTTreeAnalysis.exclusiveDijetsAnalysis.EBeam = config.comEnergy/2.
 process.exclusiveDijetsTTreeAnalysis.exclusiveDijetsAnalysis.TrackTag = config.trackTagName
 process.exclusiveDijetsTTreeAnalysis.exclusiveDijetsAnalysis.VertexTag = "goodOfflinePrimaryVertices"
@@ -137,7 +153,12 @@ process.exclusiveDijetsTTreeAnalysis.exclusiveDijetsAnalysis.ParticleFlowTag = "
 process.exclusiveDijetsTTreeAnalysis.exclusiveDijetsAnalysis.JetTag = "selectedPatJetsPFlow"
 process.exclusiveDijetsTTreeAnalysis.exclusiveDijetsAnalysis.JetNonCorrTag = "ak5PFJets"
 
-# PAT analysis
+process.exclusiveDijetsTTreeAnalysis.exclusiveDijetsAnalysis.TriggerResultsTag = cms.InputTag("TriggerResults::HLT")
+
+if config.runOnMC: process.exclusiveDijetsTTreeAnalysis.exclusiveDijetsAnalysis.hltPaths = cms.vstring('HLT_Jet30*','HLT_Jet60_v*','HLT_Jet80_v*','HLT_Jet110_v*','HLT_Jet150_v*','HLT_Jet190_v*','HLT_Jet240_v*','HLT_Jet370_v*')
+else: process.exclusiveDijetsTTreeAnalysis.exclusiveDijetsAnalysis.hltPaths = cms.vstring('HLT_ExclDiJet30U_HFAND_v*','HLT_ExclDiJet30U_HFOR_v*','HLT_Jet30U*')
+
+# PAT Trigger 
 
 
 #added by eliza
