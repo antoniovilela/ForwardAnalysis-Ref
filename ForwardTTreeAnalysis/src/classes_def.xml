@@ -2,6 +2,7 @@
 <selection>
   <class name="DiffractiveEvent"/> 
   <class name="ExclusiveDijetsEvent"/>
+  <class name="DijetsTriggerEvent"/>
   <class name="PATInfoEvent"/>
   <class name="PATL1Trigger"/>
   <class name="PATHLTTrigger"/>

@@ -6,12 +6,15 @@
 <use   name="DataFormats/JetReco"/>
 <use   name="DataFormats/PatCandidates"/>
 <use   name="JetMETCorrections/Objects"/>
-<use   name="ForwardAnalysis/Utilities"/>
 <use   name="PhysicsTools/PatAlgos"/>
 <use   name="PhysicsTools/PatUtils"/>
 <use   name="PhysicsTools/CandUtils"/>
 <use   name="PhysicsTools/UtilAlgos"/>
+<use   name="DataFormats/Luminosity"/>
+<use   name="RecoLuminosity/LumiProducer"/>
 <use   name="HLTrigger/HLTcore"/>
+<use   name="L1Trigger/GlobalTriggerAnalyzer"/>
+<use   name="ForwardAnalysis/Utilities"/>
 
 <use   name="root"/>
 <export>
