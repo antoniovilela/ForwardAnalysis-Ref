@@ -31,6 +31,8 @@
 #include "ForwardAnalysis/Utilities/interface/LargestGenRapidityGap.h"
 #include "ForwardAnalysis/Utilities/interface/CastorEnergy.h"
 
+#include "FWCore/MessageLogger/interface/MessageLogger.h"
+
 //#include "Utilities/AnalysisTools/interface/FWLiteTools.h"
 //#include "MinimumBiasAnalysis/MinimumBiasAnalysis/interface/FWLiteTools.h"
 
@@ -164,7 +166,13 @@ void DiffractiveAnalysis::fillTriggerInfo(DiffractiveEvent& eventData, const edm
    //Ref: https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideEgammaHLT#Retrieving_offline_the_HLT_infor
 
      if (idxHLT < triggerResults->size()) eventData.HLTPath_ = (triggerResults->wasrun(idxHLT) && triggerResults->accept(idxHLT)) ? 1 : 0; 
-     else eventData.HLTPath_ = -1;
+     else {
+   
+      edm::LogWarning("Analysis")<<" Trigger index: "<< idxHLT <<" Trigger Results Size: "<< triggerResults->size()  
+     <<"  Trigger index  must be equal/more that the Trigger Results !! ";
+      eventData.HLTPath_ = -1;
+    
+       }
   } else{
      eventData.HLTPath_ = -1;
   }
