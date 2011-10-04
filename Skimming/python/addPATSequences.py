@@ -81,7 +81,7 @@ def addPATSequences(process,runMC):
     # Adjust the event content
     patOutputCommands += [
 	#'keep *_selectedPat*_*_*',
-	#'keep double_*PFlow*_*_PAT',
+	'keep *_genParticles*_*_*',
 	'keep *_offlinePrimaryVertices*_*_*',
 	'keep *_goodOfflinePrimaryVertices*_*_*',
 	#'keep *_pileUpN*PrimaryVertices_*_*',
