@@ -160,7 +160,11 @@ void DiffractiveAnalysis::fillTriggerInfo(DiffractiveEvent& eventData, const edm
      } 
 
      unsigned int idxHLT = triggerNames.triggerIndex(hltPath);
-     eventData.HLTPath_ = (triggerResults->wasrun(idxHLT) && triggerResults->accept(idxHLT)) ? 1 : 0; 
+   //idxHLT must be less than the size of HLTR or you get a CMSException: _M_range_check(SFonseca 10/04/2011)
+   //Ref: https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideEgammaHLT#Retrieving_offline_the_HLT_infor
+
+     if (idxHLT < triggerResults->size()) eventData.HLTPath_ = (triggerResults->wasrun(idxHLT) && triggerResults->accept(idxHLT)) ? 1 : 0; 
+     else eventData.HLTPath_ = -1;
   } else{
      eventData.HLTPath_ = -1;
   }
