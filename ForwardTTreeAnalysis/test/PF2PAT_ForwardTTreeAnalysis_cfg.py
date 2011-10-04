@@ -5,7 +5,7 @@ class config: pass
 config.verbose = True
 config.writeEdmOutput = False
 config.runPATSequences = True
-config.runOnMC = False
+config.runOnMC = True
 config.usePAT = True
 config.globalTagNameData = 'GR_R_42_V19::All' 
 config.instLumiROOTFile='lumibylsXing_Cert_136033-149442_7TeV_Apr21ReReco_Collisions10_JSON.root'
@@ -28,8 +28,7 @@ process.load('Configuration.StandardSequences.GeometryExtended_cff')
 process.load('Configuration.StandardSequences.MagneticField_38T_cff')
 process.load('Configuration.StandardSequences.Reconstruction_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
-#process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
-#process.load("CondCore.DBCommon.CondDBCommon_cfi")
+
 if config.runPATSequences:
     from ForwardAnalysis.Skimming.addPATSequences import addPATSequences
     addPATSequences(process,config.runOnMC)
@@ -50,7 +49,7 @@ else:
     process.MessageLogger.debugModules = cms.untracked.vstring('exclusiveDijetsTTreeAnalysis')
     process.MessageLogger.destinations = cms.untracked.vstring('cerr')
     process.MessageLogger.categories.append('Analysis')
-    process.MessageLogger.cerr.Analysis = cms.untracked.PSet(limit = cms.untracked.int32(-1))
+    process.MessageLogger.cerr.Analysis = cms.untracked.PSet(limit = cms.untracked.int32(300))
 
 process.options = cms.untracked.PSet( 
     wantSummary = cms.untracked.bool(True),
@@ -148,7 +147,9 @@ process.exclusiveDijetsTTreeAnalysis.diffractiveAnalysis.particleFlowTag = "pfCa
 process.exclusiveDijetsTTreeAnalysis.diffractiveAnalysis.jetTag = "selectedPatJetsPFlow"
 process.exclusiveDijetsTTreeAnalysis.diffractiveAnalysis.castorRecHitTag = castorTagName
 
-if config.runOnMC: process.exclusiveDijetsTTreeAnalysis.diffractiveAnalysis.accessMCInfo = True
+if config.runOnMC:
+    process.exclusiveDijetsTTreeAnalysis.diffractiveAnalysis.genChargedParticlesTag = cms.InputTag("genParticles")
+    process.exclusiveDijetsTTreeAnalysis.diffractiveAnalysis.accessMCInfo = True
 
 # Exclusive dijets analysis
 process.exclusiveDijetsTTreeAnalysis.exclusiveDijetsAnalysis.EBeam = config.comEnergy/2.
@@ -161,6 +162,7 @@ process.exclusiveDijetsTTreeAnalysis.exclusiveDijetsAnalysis.JetNonCorrTag = "ak
 process.exclusiveDijetsTTreeAnalysis.exclusiveDijetsAnalysis.TriggerResultsTag = cms.InputTag("TriggerResults::HLT")
 
 if config.runOnMC:
+    process.exclusiveDijetsTTreeAnalysis.exclusiveDijetsAnalysis.GenChargedParticlesTag = cms.InputTag("genParticles")
     process.exclusiveDijetsTTreeAnalysis.exclusiveDijetsAnalysis.AccessMCInfo = True
     process.exclusiveDijetsTTreeAnalysis.exclusiveDijetsAnalysis.hltPaths = cms.vstring('HLT_Jet30*','HLT_Jet60_v*','HLT_Jet80_v*','HLT_Jet110_v*','HLT_Jet150_v*','HLT_Jet190_v*','HLT_Jet240_v*','HLT_Jet370_v*')
 else: process.exclusiveDijetsTTreeAnalysis.exclusiveDijetsAnalysis.hltPaths = cms.vstring('HLT_ExclDiJet30U_HFAND_v*','HLT_ExclDiJet30U_HFOR_v*','HLT_Jet30U*')
