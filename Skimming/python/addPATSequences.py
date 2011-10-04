@@ -1,6 +1,8 @@
 import FWCore.ParameterSet.Config as cms
 
-def addPATSequences(process):
+
+
+def addPATSequences(process,runMC):
     # Load the PAT config
     from PhysicsTools.PatAlgos.patEventContent_cff import patEventContent
     process.out = cms.OutputModule("PoolOutputModule",
@@ -14,7 +16,8 @@ def addPATSequences(process):
     from PhysicsTools.PatAlgos.tools.pfTools import usePF2PAT
     postfix = "PFlow"
     jetAlgo="AK5"
-    usePF2PAT(process,runPF2PAT=True, jetAlgo=jetAlgo, runOnMC=False, postfix=postfix,jetCorrections=('AK5PFchs', ['L1FastJet','L2Relative','L3Absolute'])) 
+   # runOnMC = False
+    usePF2PAT(process,runPF2PAT=True, jetAlgo=jetAlgo, runOnMC=runMC, postfix=postfix,jetCorrections=('AK5PFchs', ['L1FastJet','L2Relative','L3Absolute'])) 
     #-----------------Customization----------------
     process.pfPileUpPFlow.Enable = True
     process.pfPileUpPFlow.checkClosestZVertex = False

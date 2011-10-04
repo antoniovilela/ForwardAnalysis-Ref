@@ -15,7 +15,7 @@ config.trackAnalyzerName = 'trackHistoAnalyzer'
 config.trackTagName = 'analysisTracks'
 #config.generator = 'Pythia6'
 
-config.inputFileName = '/storage2/antoniov/data1/MultiJet_Run2010B_Apr21ReReco-v1_AOD/MultiJet_Run2010B_Apr21ReReco-v1_AOD_7EA7B611-7371-E011-B164-002354EF3BDB.root'
+config.inputFileName = 'MultiJet_Run2010B_Apr21ReReco-v1_AOD_7EA7B611-7371-E011-B164-002354EF3BDB.root'
 config.outputTTreeFile = 'exclusiveDijetsanalysis_PATTTree.root'
 
 process = cms.Process("Analysis")
@@ -46,7 +46,7 @@ process.options = cms.untracked.PSet(
     SkipEvent = cms.untracked.vstring('ProductNotFound')
     )
 
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(3000) )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(30) )
 
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring( 'file:%s' % config.inputFileName )
@@ -136,6 +136,9 @@ process.exclusiveDijetsTTreeAnalysis.exclusiveDijetsAnalysis.VertexTag = "goodOf
 process.exclusiveDijetsTTreeAnalysis.exclusiveDijetsAnalysis.ParticleFlowTag = "pfCandidateNoiseThresholds"
 process.exclusiveDijetsTTreeAnalysis.exclusiveDijetsAnalysis.JetTag = "selectedPatJetsPFlow"
 process.exclusiveDijetsTTreeAnalysis.exclusiveDijetsAnalysis.JetNonCorrTag = "ak5PFJets"
+
+# PAT analysis
+
 
 #added by eliza
 if not config.runOnMC:
