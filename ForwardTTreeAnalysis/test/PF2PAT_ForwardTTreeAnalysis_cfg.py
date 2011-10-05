@@ -49,14 +49,14 @@ else:
     process.MessageLogger.debugModules = cms.untracked.vstring('exclusiveDijetsTTreeAnalysis')
     process.MessageLogger.destinations = cms.untracked.vstring('cerr')
     process.MessageLogger.categories.append('Analysis')
-    process.MessageLogger.cerr.Analysis = cms.untracked.PSet(limit = cms.untracked.int32(300))
+    process.MessageLogger.cerr.Analysis = cms.untracked.PSet(limit = cms.untracked.int32(-1))
 
 process.options = cms.untracked.PSet( 
     wantSummary = cms.untracked.bool(True),
     SkipEvent = cms.untracked.vstring('ProductNotFound')
     )
 
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(300) )
 
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring( 'file:%s' % config.inputFileName )
@@ -148,7 +148,6 @@ process.exclusiveDijetsTTreeAnalysis.diffractiveAnalysis.jetTag = "selectedPatJe
 process.exclusiveDijetsTTreeAnalysis.diffractiveAnalysis.castorRecHitTag = castorTagName
 
 if config.runOnMC:
-    process.exclusiveDijetsTTreeAnalysis.diffractiveAnalysis.genChargedParticlesTag = cms.InputTag("genParticles")
     process.exclusiveDijetsTTreeAnalysis.diffractiveAnalysis.accessMCInfo = True
 
 # Exclusive dijets analysis
@@ -162,7 +161,6 @@ process.exclusiveDijetsTTreeAnalysis.exclusiveDijetsAnalysis.JetNonCorrTag = "ak
 process.exclusiveDijetsTTreeAnalysis.exclusiveDijetsAnalysis.TriggerResultsTag = cms.InputTag("TriggerResults::HLT")
 
 if config.runOnMC:
-    process.exclusiveDijetsTTreeAnalysis.exclusiveDijetsAnalysis.GenChargedParticlesTag = cms.InputTag("genParticles")
     process.exclusiveDijetsTTreeAnalysis.exclusiveDijetsAnalysis.AccessMCInfo = True
     process.exclusiveDijetsTTreeAnalysis.exclusiveDijetsAnalysis.hltPaths = cms.vstring('HLT_Jet30*','HLT_Jet60_v*','HLT_Jet80_v*','HLT_Jet110_v*','HLT_Jet150_v*','HLT_Jet190_v*','HLT_Jet240_v*','HLT_Jet370_v*')
 else: process.exclusiveDijetsTTreeAnalysis.exclusiveDijetsAnalysis.hltPaths = cms.vstring('HLT_ExclDiJet30U_HFAND_v*','HLT_ExclDiJet30U_HFOR_v*','HLT_Jet30U*')
@@ -181,6 +179,13 @@ if not config.runOnMC:
     process.eventWeight_step = cms.Path(process.eventWeightSequence) 
 
 if not config.runOnMC: process.castor_step = cms.Path(process.castorSequence)
+
+if config.runOnMC:
+   process.gen_step = cms.Path(process.genChargedParticles+
+                               process.genProtonDissociative*process.edmNtupleMxGen+
+                               process.genStableParticles*
+                               process.etaMaxGen+process.etaMinGen*
+                               process.edmNtupleEtaMaxGen+process.edmNtupleEtaMinGen)
 
 process.analysis_reco_step = cms.Path(process.analysisSequences)
 process.analysis_exclusiveDijetsAnalysis_step = cms.Path(process.eventSelectionHLT+
