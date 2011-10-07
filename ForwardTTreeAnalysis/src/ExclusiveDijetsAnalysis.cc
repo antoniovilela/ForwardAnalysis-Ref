@@ -812,7 +812,7 @@ double ExclusiveDijetsAnalysis::Rj(OneJetColl& jetCollection,OnePartColl& partCo
   for(typename OnePartColl::const_iterator part = partCollection.begin();
                                         part != partCollection.end(); ++part) allCands += part->p4();
 
-  return (jetSystem.M()/allCands.M());
+  return allCands.M() > 0. ? (jetSystem.M()/allCands.M()) : -1.;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 template <class JetColl,class PartColl>
@@ -826,7 +826,7 @@ double ExclusiveDijetsAnalysis::Rjj(JetColl& jetCollection,PartColl& partCollect
   for(typename PartColl::const_iterator part = partCollection.begin();
                                         part != partCollection.end(); ++part) allCands += part->p4();
 
-  return (dijetSystem.M()/allCands.M());
+  return allCands.M() > 0. ? (dijetSystem.M()/allCands.M()) : -1.;
   
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
