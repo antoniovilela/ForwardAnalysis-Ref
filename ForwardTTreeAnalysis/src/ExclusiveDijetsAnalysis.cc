@@ -481,6 +481,7 @@ void ExclusiveDijetsAnalysis::fillJetInfo(ExclusiveDijetsEvent& eventData, const
     
     eventData.SetThirdJetPt(jet3.pt());
     eventData.SetThirdJetEta(jet3.eta());
+    eventData.SetThirdJetPhi(jet3.phi()); //added by Diego
     ///Using Lorentz Vector
     eventData.SetThirdJetP4(jet3.p4());
 
@@ -494,6 +495,7 @@ void ExclusiveDijetsAnalysis::fillJetInfo(ExclusiveDijetsEvent& eventData, const
    }else{
     eventData.SetThirdJetPt(-999.);
     eventData.SetThirdJetEta(-999.);
+    eventData.SetThirdJetPhi(-999.); // added by Diego
     eventData.SetMassTrijets(-999.);
    } 
 
