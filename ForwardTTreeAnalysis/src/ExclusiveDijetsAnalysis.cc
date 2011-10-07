@@ -46,6 +46,8 @@
 using namespace forwardAnalysis;
 using exclusiveDijetsAnalysis::ExclusiveDijetsAnalysis;
 
+const char* ExclusiveDijetsAnalysis::name = "ExclusiveDijetsAnalysis";
+
 ExclusiveDijetsAnalysis::ExclusiveDijetsAnalysis(const edm::ParameterSet& pset):
   runOnData_(true), 
   vertexTag_(pset.getParameter<edm::InputTag>("VertexTag")),//ok

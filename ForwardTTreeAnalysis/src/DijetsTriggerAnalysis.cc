@@ -36,6 +36,8 @@
 
 using dijetsTriggerAnalysis::DijetsTriggerAnalysis;
 
+const char* DijetsTriggerAnalysis::name = "DijetsTriggerAnalysis";
+
 DijetsTriggerAnalysis::DijetsTriggerAnalysis(const edm::ParameterSet& pset):
      gctDigisTag_(pset.getParameter<edm::InputTag>("gctDigisTag")),
      thresholdHFRingEtSum_(pset.getParameter<unsigned int>("hfRingEtSumThreshold")),

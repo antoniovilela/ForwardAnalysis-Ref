@@ -14,5 +14,6 @@
         AutoLibraryLoader::enable();
         gSystem->Load("libDataFormatsFWLite.so");
         gSystem->Load("libDataFormatsPatCandidates.so");
-        gSystem->Load("libForwardAnalysisForwardTTreeAnalysis.so");
+        gSystem->Load("libForwardAnalysisForwardTTreeAnalysis");
+        gSystem->Load("libUtilitiesPlottingTools");
 }

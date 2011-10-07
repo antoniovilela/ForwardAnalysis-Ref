@@ -7,7 +7,8 @@ namespace diffractiveAnalysis {
 
 class DiffractiveEvent {
    public:
-      typedef diffractiveAnalysis::DiffractiveAnalysis type;
+      typedef diffractiveAnalysis::DiffractiveAnalysis analysis_type;
+      static const char* name;
 
       DiffractiveEvent();
       ~DiffractiveEvent();

@@ -11,7 +11,9 @@ namespace exclusiveDijetsAnalysis {
 class ExclusiveDijetsEvent {
   public:
 
-  typedef exclusiveDijetsAnalysis::ExclusiveDijetsAnalysis type;
+  typedef exclusiveDijetsAnalysis::ExclusiveDijetsAnalysis analysis_type;
+  static const char* name;
+
   typedef reco::Particle::LorentzVector LorentzVector;
 
   ExclusiveDijetsEvent();

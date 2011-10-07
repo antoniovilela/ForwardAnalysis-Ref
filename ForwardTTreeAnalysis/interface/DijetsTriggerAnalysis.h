@@ -22,7 +22,11 @@ namespace dijetsTriggerAnalysis {
 
    class DijetsTriggerAnalysis {
       public:
-	 explicit DijetsTriggerAnalysis(const edm::ParameterSet&);
+         typedef DijetsTriggerEvent event_type;
+         static const char* name;
+
+         DijetsTriggerAnalysis() { }
+	 DijetsTriggerAnalysis(const edm::ParameterSet&);
 	 ~DijetsTriggerAnalysis();
 
 	 void setBeginRun(const edm::Run&, const edm::EventSetup&);

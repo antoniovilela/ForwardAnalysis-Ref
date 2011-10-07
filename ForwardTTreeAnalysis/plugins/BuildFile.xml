@@ -8,4 +8,5 @@
   <use   name="CommonTools/UtilAlgos"/>
   <use   name="ForwardAnalysis/ForwardTTreeAnalysis"/>
   <use   name="root"/>
+  <use   name="boost_header"/>
 </library>

@@ -17,7 +17,11 @@ namespace diffractiveAnalysis {
 
 class DiffractiveAnalysis {
    public:
-      explicit DiffractiveAnalysis(const edm::ParameterSet&);
+      typedef DiffractiveEvent event_type;
+      static const char* name;
+
+      DiffractiveAnalysis() {} 
+      DiffractiveAnalysis(const edm::ParameterSet&);
       ~DiffractiveAnalysis();
 
       void setBeginRun(const edm::Run&, const edm::EventSetup&);

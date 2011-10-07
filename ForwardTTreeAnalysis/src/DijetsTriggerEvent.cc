@@ -1,6 +1,8 @@
 
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/DijetsTriggerEvent.h"
 
+const char* DijetsTriggerEvent::name = "DijetsTriggerEvent";
+
 DijetsTriggerEvent::DijetsTriggerEvent() {}
 
 DijetsTriggerEvent::~DijetsTriggerEvent() {}

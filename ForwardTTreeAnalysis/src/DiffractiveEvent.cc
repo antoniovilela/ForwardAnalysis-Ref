@@ -1,6 +1,8 @@
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/DiffractiveEvent.h"
 #include <cstdio>
 
+const char* DiffractiveEvent::name = "DiffractiveEvent";
+
 DiffractiveEvent::DiffractiveEvent() {}
 
 DiffractiveEvent::~DiffractiveEvent() {}

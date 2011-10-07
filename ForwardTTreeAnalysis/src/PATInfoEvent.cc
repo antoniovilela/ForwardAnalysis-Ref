@@ -1,6 +1,8 @@
 
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/PATInfoEvent.h"
 
+const char* PATInfoEvent::name = "PATInfoEvent";
+
 PATInfoEvent::PATInfoEvent() {}
 
 PATInfoEvent::~PATInfoEvent() {}

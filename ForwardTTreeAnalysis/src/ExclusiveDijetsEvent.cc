@@ -1,6 +1,8 @@
 
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/ExclusiveDijetsEvent.h"
 
+const char* ExclusiveDijetsEvent::name = "ExclusiveDijetsEvent";
+
 ExclusiveDijetsEvent::ExclusiveDijetsEvent() {}
 
 ExclusiveDijetsEvent::~ExclusiveDijetsEvent() {}

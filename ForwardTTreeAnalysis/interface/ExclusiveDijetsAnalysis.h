@@ -16,7 +16,11 @@ namespace exclusiveDijetsAnalysis {
 
 class ExclusiveDijetsAnalysis {
   public:
-     explicit ExclusiveDijetsAnalysis(const edm::ParameterSet&);
+     typedef ExclusiveDijetsEvent event_type;
+     static const char* name;
+
+     ExclusiveDijetsAnalysis() { }
+     ExclusiveDijetsAnalysis(const edm::ParameterSet&);
      ~ExclusiveDijetsAnalysis();
 
      void setBeginRun(const edm::Run&, const edm::EventSetup&);

@@ -15,7 +15,6 @@
 <use   name="HLTrigger/HLTcore"/>
 <use   name="L1Trigger/GlobalTriggerAnalyzer"/>
 <use   name="ForwardAnalysis/Utilities"/>
-
 <use   name="root"/>
 <export>
   <lib   name="1"/>

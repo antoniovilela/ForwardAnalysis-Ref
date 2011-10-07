@@ -36,6 +36,8 @@ using namespace pat;
 //using patInfo::PATInfo;
 using namespace patInfo;
 
+const char* PATInfo::name = "PATInfo";
+
 PATInfo::PATInfo(const edm::ParameterSet& pset):
   runOnData_(true),
   /*vertexTag_(pset.getParameter<edm::InputTag>("vertexTag")),

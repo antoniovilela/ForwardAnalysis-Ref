@@ -12,7 +12,8 @@ namespace patInfo {
 
 class PATInfoEvent {
    public:
-      typedef patInfo::PATInfo type;
+      typedef patInfo::PATInfo analysis_type;
+      static const char* name;
 
       PATInfoEvent();
       ~PATInfoEvent();

@@ -10,7 +10,8 @@ namespace dijetsTriggerAnalysis {
 
 class DijetsTriggerEvent {
    public:
-      typedef dijetsTriggerAnalysis::DijetsTriggerAnalysis type;
+      typedef dijetsTriggerAnalysis::DijetsTriggerAnalysis analysis_type;
+      static const char* name;
 
       DijetsTriggerEvent();
       ~DijetsTriggerEvent();

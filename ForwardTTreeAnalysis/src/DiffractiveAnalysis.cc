@@ -39,6 +39,8 @@
 using namespace forwardAnalysis;
 using diffractiveAnalysis::DiffractiveAnalysis;
 
+const char* DiffractiveAnalysis::name = "DiffractiveAnalysis";
+
 DiffractiveAnalysis::DiffractiveAnalysis(const edm::ParameterSet& pset):
   vertexTag_(pset.getParameter<edm::InputTag>("vertexTag")),
   trackTag_(pset.getParameter<edm::InputTag>("trackTag")),

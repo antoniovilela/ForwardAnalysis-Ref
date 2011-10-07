@@ -14,7 +14,11 @@ namespace patInfo {
 
    class PATInfo {
       public:
-	 explicit PATInfo(const edm::ParameterSet&);
+         typedef PATInfoEvent event_type;
+         static const char* name;
+
+         PATInfo() {};
+	 PATInfo(const edm::ParameterSet&);
 	 ~PATInfo();
 
 	 void setBeginRun(const edm::Run&, const edm::EventSetup&);
