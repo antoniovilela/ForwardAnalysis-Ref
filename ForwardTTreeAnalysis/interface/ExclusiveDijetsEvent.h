@@ -113,6 +113,7 @@ class ExclusiveDijetsEvent {
 
   void SetThirdJetPt(double fthirdJetPt)        { thirdJetPt_        = fthirdJetPt;}
   void SetThirdJetEta(double fthirdJetEta)      { thirdJetEta_       = fthirdJetEta;}
+  void SetThirdJetPhi(double fthirdJetPhi)      { thirdJetPhi_       = fthirdJetPhi;} //added by Diego
 
   void SetJetsAveEta(double fjetsAveEta)        { jetsAveEta_       = fjetsAveEta;}
   void SetJetsDeltaEta(double fjetsDeltaEta)    { jetsDeltaEta_     = fjetsDeltaEta;}  //redundant
@@ -186,6 +187,7 @@ class ExclusiveDijetsEvent {
 
   void SetLeadingJetBDiscriminator(double fleadingJetBDiscriminator)    {leadingJetBDiscriminator_ = fleadingJetBDiscriminator;}
   void SetSecondJetBDiscriminator(double fsecondJetBDiscriminator)      {secondJetBDiscriminator_  = fsecondJetBDiscriminator;}
+  void SetThirdJetBDiscriminator(double fthirdJetBDiscriminator)        {thirdJetBDiscriminator_ = fthirdJetBDiscriminator;} // added by Diego 
 
   //------------ Get FWD methods ------------------------------
 
@@ -195,7 +197,7 @@ class ExclusiveDijetsEvent {
   //------ jet 4-momentum vector------------------
   const LorentzVector& GetLeadingJetP4()       const {return leadingJetP4_;}
   const LorentzVector& GetSecondJetP4()        const {return secondJetP4_;}
-  const LorentzVector& SetThirdJetP4()         const {return thirdJetP4_;}   
+  const LorentzVector& GetThirdJetP4()         const {return thirdJetP4_;} //fixed by Diego  
 
   double GetLeadingJetPt()        const { return leadingJetPt_ ;}
   double GetLeadingJetEta()       const { return leadingJetEta_ ;}
@@ -207,6 +209,7 @@ class ExclusiveDijetsEvent {
 
   double GetThirdJetPt()          const { return thirdJetPt_;}
   double GetThirdJetEta()         const { return thirdJetEta_;}
+  double GetThirdJetPhi()         const { return thirdJetPhi_;} // added by Diego
 
   double GetJetsAveEta()          const { return jetsAveEta_ ;}
   double GetJetsDeltaEta()        const { return  jetsDeltaEta_;}  //redundant
@@ -279,6 +282,7 @@ class ExclusiveDijetsEvent {
 
   double GetLeadingJetBDiscriminator()    const  {return leadingJetBDiscriminator_ ;}
   double GetSecondJetBDiscriminator()     const  {return secondJetBDiscriminator_ ;}
+  double GetThirdJetBDiscriminator()      const  {return thirdJetBDiscriminator_ ;} // added by Diego
   //added by eliza
   int  GetRunNumber()                        const {return runNumber_;}
   int  GetEventNumber()                      const {return eventNumber_;}
@@ -386,6 +390,8 @@ class ExclusiveDijetsEvent {
      double secondJetBDiscriminator_;
      double thirdJetPt_;
      double thirdJetEta_;
+     double thirdJetPhi_; // added by Diego
+     double thirdJetBDiscriminator_; //added by Diego
      double jetsAveEta_; //redundant
      double jetsDeltaEta_; //redundant
      double jetsDeltaPhi_; //redundant
