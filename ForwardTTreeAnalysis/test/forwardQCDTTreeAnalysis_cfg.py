@@ -5,6 +5,7 @@ class config: pass
 config.verbose = True
 config.writeEdmOutput = False
 config.runOnMC = False
+config.runPATSequences = True
 config.usePAT = False
 config.globalTagNameData = 'GR_R_42_V19::All' 
 config.instLumiROOTFile='lumibylsXing_Cert_136033-149442_7TeV_Apr21ReReco_Collisions10_JSON.root'
@@ -12,17 +13,18 @@ globalTagNameMC = ''
 config.comEnergy = 7000.0
 config.trackAnalyzerName = 'trackHistoAnalyzer'
 config.trackTagName = 'analysisTracks'
+config.hltPaths = ('HLT_ExclDiJet60_HFAND_v*','HLT_ExclDiJet60_HFOR_v*','HLT_Jet60_v*')
 #config.generator = 'Pythia6'
 
 config.inputFileName = '/storage2/eliza/JetMay10RecoRun2011.root'
 #config.outputEdmFile = 'DijetsAnalysis.root'
-config.outputTTreeFile = 'fwdQCDTTreeAnalysis.root'
+config.outputTTreeFile = 'forwardQCDTTreeAnalysis.root'
 
 process = cms.Process("Analysis")
 
 process.load('FWCore.MessageService.MessageLogger_cfi')
 process.MessageLogger.cerr.threshold = 'DEBUG'
-process.MessageLogger.debugModules = cms.untracked.vstring('fwdQCDTTreeAnalysis')
+process.MessageLogger.debugModules = cms.untracked.vstring('forwardQCDTTreeAnalysis')
 process.MessageLogger.destinations = cms.untracked.vstring('cerr')
 process.MessageLogger.categories.append('Analysis')
 process.MessageLogger.cerr.Analysis = cms.untracked.PSet(limit = cms.untracked.int32(-1))
@@ -30,7 +32,7 @@ process.MessageLogger.cerr.Analysis = cms.untracked.PSet(limit = cms.untracked.i
 process.options = cms.untracked.PSet( wantSummary = cms.untracked.bool(True),
 SkipEvent = cms.untracked.vstring('ProductNotFound') )
 
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(3000) )
 
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring( 'file:%s' % config.inputFileName )
@@ -67,31 +69,8 @@ process.TFileService = cms.Service("TFileService",
 ###################################################################################
 # CASTOR RecHit Corrector
 if not config.runOnMC:
-    process.castorRecHitCorrector = cms.EDProducer("RecHitCorrector",
-        rechitLabel = cms.InputTag("castorreco","","RECO"),
-        revertFactor = cms.double(1),
-        doInterCalib = cms.bool(False)
-    )
-
-    process.load("CondCore.DBCommon.CondDBSetup_cfi")
-    process.CastorDbProducer = cms.ESProducer("CastorDbProducer")
-    process.es_castor_pool = cms.ESSource("PoolDBESSource",
-        process.CondDBSetup,
-        timetype = cms.string('runnumber'),
-        connect = cms.string('frontier://cmsfrontier.cern.ch:8000/FrontierProd/CMS_COND_31X_HCAL'),
-        authenticationMethod = cms.untracked.uint32(0),
-        toGet = cms.VPSet(
-            cms.PSet(
-                record = cms.string('CastorChannelQualityRcd'),  
-                tag = cms.string('CastorChannelQuality_v2.2_offline')
-            )
-        )
-    )
-    process.es_prefer_castor = cms.ESPrefer('PoolDBESSource','es_castor_pool')
-
-    process.castorInvalidDataFilter = cms.EDFilter("CastorInvalidDataFilter")
-    process.castorSequence = cms.Sequence(process.castorInvalidDataFilter+process.castorRecHitCorrector)
-
+    from ForwardAnalysis.ForwardTTreeAnalysis.addCastorRecHitCorrector import addCastorRecHitCorrector
+    addCastorRecHitCorrector(process)
 ####################################################################################
 # Analysis modules
 #--------------------------------
@@ -105,12 +84,14 @@ if not config.runOnMC:
 #process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
 
 process.load("ForwardAnalysis.ForwardTTreeAnalysis.exclusiveDijetsAnalysisSequences_cff")
-process.pfCandidateNoiseThresholds.src = "particleFlow"
-#process.load("ForwardAnalysis.ForwardTTreeAnalysis.singleVertexFilter_cfi")
+process.pfCandidateNoiseThresholds.src = "pfNoPileUpPFlow"
+process.tracksTransverseRegion.JetTag = "selectedPatJetsPFlow"
 
 from ForwardAnalysis.ForwardTTreeAnalysis.DiffractiveAnalysis_cfi import DiffractiveAnalysis
-process.fwdQCDTTreeAnalysis = cms.EDAnalyzer('ProcessedTreeProducer',
+from ForwardAnalysis.ForwardTTreeAnalysis.ExclusiveDijetsAnalysis_cfi import ExclusiveDijetsAnalysis
+process.forwardQCDTTreeAnalysis = cms.EDAnalyzer('ProcessedTreeProducer',
     diffractiveAnalysis = DiffractiveAnalysis,
+    exclusiveDijetsAnalysis = ExclusiveDijetsAnalysis,
     ## jet collections ###########################
     pfjets          = cms.InputTag('ak5PFJets'),
     calojets        = cms.InputTag('ak5CaloJets'),
@@ -154,14 +135,32 @@ process.fwdQCDTTreeAnalysis = cms.EDAnalyzer('ProcessedTreeProducer',
     pfjecService    = cms.string('ak5PFL1FastL2L3Residual'),
     calojecService  = cms.string('ak5CaloL1L2L3Residual')
 )
+
+config.castorTagName = "castorRecHitCorrector"
+if config.runOnMC: config.castorTagName = "castorreco"
 # Diffractive analysis
-process.fwdQCDTTreeAnalysis.diffractiveAnalysis.triggerResultsTag = cms.InputTag("TriggerResults::HLT")
-process.fwdQCDTTreeAnalysis.diffractiveAnalysis.comEnergy = config.comEnergy
-process.fwdQCDTTreeAnalysis.diffractiveAnalysis.trackTag = config.trackTagName
-process.fwdQCDTTreeAnalysis.diffractiveAnalysis.vertexTag = "offlinePrimaryVertices"
-process.fwdQCDTTreeAnalysis.diffractiveAnalysis.particleFlowTag = "pfCandidateNoiseThresholds"
-process.fwdQCDTTreeAnalysis.diffractiveAnalysis.metTag = "met"
-process.fwdQCDTTreeAnalysis.diffractiveAnalysis.jetTag = "ak5PFJets"
+process.forwardQCDTTreeAnalysis.diffractiveAnalysis.triggerResultsTag = cms.InputTag("TriggerResults::HLT")
+process.forwardQCDTTreeAnalysis.diffractiveAnalysis.hltPath = ''
+process.forwardQCDTTreeAnalysis.diffractiveAnalysis.comEnergy = config.comEnergy
+process.forwardQCDTTreeAnalysis.diffractiveAnalysis.trackTag = config.trackTagName
+process.forwardQCDTTreeAnalysis.diffractiveAnalysis.vertexTag = "goodOfflinePrimaryVertices"
+process.forwardQCDTTreeAnalysis.diffractiveAnalysis.particleFlowTag = "pfCandidateNoiseThresholds"
+process.forwardQCDTTreeAnalysis.diffractiveAnalysis.jetTag = "selectedPatJetsPFlow"
+process.forwardQCDTTreeAnalysis.diffractiveAnalysis.castorRecHitTag = config.castorTagName
+if config.runOnMC:
+    process.forwardQCDTTreeAnalysis.diffractiveAnalysis.accessMCInfo = True
+
+# Exclusive dijets analysis
+process.forwardQCDTTreeAnalysis.exclusiveDijetsAnalysis.TriggerResultsTag = cms.InputTag("TriggerResults::HLT")
+process.forwardQCDTTreeAnalysis.exclusiveDijetsAnalysis.hltPaths = config.hltPaths
+process.forwardQCDTTreeAnalysis.exclusiveDijetsAnalysis.EBeam = config.comEnergy/2.
+process.forwardQCDTTreeAnalysis.exclusiveDijetsAnalysis.TrackTag = config.trackTagName
+process.forwardQCDTTreeAnalysis.exclusiveDijetsAnalysis.VertexTag = "goodOfflinePrimaryVertices"
+process.forwardQCDTTreeAnalysis.exclusiveDijetsAnalysis.ParticleFlowTag = "pfCandidateNoiseThresholds"
+process.forwardQCDTTreeAnalysis.exclusiveDijetsAnalysis.JetTag = "selectedPatJetsPFlow"
+process.forwardQCDTTreeAnalysis.exclusiveDijetsAnalysis.JetNonCorrTag = "ak5PFJets"
+if config.runOnMC:
+    process.forwardQCDTTreeAnalysis.exclusiveDijetsAnalysis.AccessMCInfo = True
 
 ############# Turn-on the fastjet area calculation needed for the L1Fastjet ##############
 ############# applied only to PFJets because if CaloJets are re-recoed the JetID map will be lost #####
@@ -175,16 +174,25 @@ process.ak7PFJets.jetPtMin = cms.double(5.0)
 process.ak5PFJets.doAreaFastjet = True
 process.ak5PFJets.Rho_EtaMax = cms.double(5.0)
 process.ak5PFJets.jetPtMin = cms.double(5.0)
-
-#process.reco_step = cms.Path(process.kt6PFJets * process.kt6CaloJets * process.ak5PFJets * process.ak7PFJets * process.ak5 * process.ak7)
 process.reco_step = cms.Path(process.kt6PFJets * process.kt6CaloJets * process.ak5PFJets)
+
+if not config.runOnMC: process.castor_step = cms.Path(process.castorSequence)
+
+if config.runPATSequences:
+    from ForwardAnalysis.Skimming.addPATSequences import addPATSequences
+    addPATSequences(process,config.runOnMC)
+
+    if config.runOnMC:
+	process.patTrigger.addL1Algos = cms.bool( False )
+	process.patJets.addTagInfos   = cms.bool( False )
+    else:
+	process.patTrigger.addL1Algos = cms.bool( True )
+	process.patJets.addTagInfos   = cms.bool( True )   
 
 if not config.runOnMC:
     process.eventWeightSequence = cms.Sequence(process.lumiWeight) 
     process.eventWeight_step = cms.Path(process.eventWeightSequence) 
 
-if not config.runOnMC: process.castor_step = cms.Path(process.castorSequence)
-
 process.analysis_reco_step = cms.Path(process.analysisSequences)
-process.analysis_fwdQCDAnalysis_step = cms.Path(process.eventSelectionHLT+
-                                                process.fwdQCDTTreeAnalysis)
+process.analysis_forwardQCDAnalysis_step = cms.Path(process.eventSelectionHLT+
+                                                    process.forwardQCDTTreeAnalysis)
