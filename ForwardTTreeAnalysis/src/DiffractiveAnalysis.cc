@@ -503,14 +503,7 @@ void DiffractiveAnalysis::fillGenInfo(DiffractiveEvent& eventData, const edm::Ev
  
      eventData.MxGenDiss_ = (edmNtupleMxGen.isValid() && edmNtupleMxGen->size()) ? (*edmNtupleMxGen)[0] : -999.;
 
-     /*edm::Handle<std::vector<float> > edmNtupleEtaMaxGen;
-     event.getByLabel(edm::InputTag("edmNtupleEtaMaxGen","etaMax"),edmNtupleEtaMaxGen);
-
-     edm::Handle<std::vector<float> > edmNtupleEtaMinGen;
-     event.getByLabel(edm::InputTag("edmNtupleEtaMinGen","etaMin"),edmNtupleEtaMinGen);
-
-     eventData.etaMaxGen_ = (edmNtupleEtaMaxGen.isValid() && edmNtupleEtaMaxGen->size()) ? (*edmNtupleEtaMaxGen)[0] : -999.;
-     eventData.etaMinGen_ = (edmNtupleEtaMinGen.isValid() && edmNtupleEtaMinGen->size()) ? (*edmNtupleEtaMinGen)[0] : -999.;*/
+   
   } else{
      eventData.xiGenPlus_ = -1.;
      eventData.xiGenMinus_ = -1.;
@@ -534,13 +527,13 @@ void DiffractiveAnalysis::fillGenInfo(DiffractiveEvent& eventData, const edm::Ev
 
 void DiffractiveAnalysis::fillDiffVariables(DiffractiveEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
 
-  //double energyScale = (applyEnergyScaleHCAL_) ? energyScaleHCAL_ : -1.;
+  
 
   // Leave only PF-based variables
   edm::Handle<reco::PFCandidateCollection> particleFlowCollectionH;
   event.getByLabel(particleFlowTag_,particleFlowCollectionH);
 
-  //double MxFromPFCands = MassColl(*particleFlowCollectionH,thresholdsPFlow_);
+ 
   double MxFromPFCands = MassColl(*particleFlowCollectionH);
   eventData.MxFromPFCands_ = MxFromPFCands;
 
@@ -551,7 +544,7 @@ void DiffractiveAnalysis::fillDiffVariables(DiffractiveEvent& eventData, const e
   eventData.xiPlusFromPFCands_ = xiFromPFCands_plus;
   eventData.xiMinusFromPFCands_ = xiFromPFCands_minus;
 
-  //std::pair<double,double> EPlusPzFromPFCands = EPlusPz(*particleFlowCollectionH,thresholdsPFlow_);
+  
   std::pair<double,double> EPlusPzFromPFCands = EPlusPz(*particleFlowCollectionH);
   eventData.EPlusPzFromPFCands_ = EPlusPzFromPFCands.first;
   eventData.EMinusPzFromPFCands_ = EPlusPzFromPFCands.second;

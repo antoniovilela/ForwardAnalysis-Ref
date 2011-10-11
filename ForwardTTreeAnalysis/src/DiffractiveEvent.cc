@@ -8,8 +8,7 @@ DiffractiveEvent::DiffractiveEvent() {}
 DiffractiveEvent::~DiffractiveEvent() {}
 
 void DiffractiveEvent::reset(){
-  /*size_t len_hltTrigResults = sizeof(hltTrigResults_)/sizeof(int);
-  for(size_t k = 0; k < len_hltTrigResults; ++k) hltTrigResults_[k] = 0;*/
+ 
 
   processId_ = -1;
   lumiWeight_ = -1.;

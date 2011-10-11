@@ -374,8 +374,6 @@ class ExclusiveDijetsEvent {
      int lumiSection_;
      int bunchCrossing_; 
      double lumiWeight_;
-     //int HLT_Jet15U_; 
-     //int HLT_L1Jet6U_;
      int hltTrigResults_[20];
 //------ jet 4-momentum vector------------------
      LorentzVector leadingJetP4_;

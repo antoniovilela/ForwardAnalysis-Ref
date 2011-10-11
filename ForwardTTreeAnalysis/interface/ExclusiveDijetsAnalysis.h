@@ -26,9 +26,7 @@ class ExclusiveDijetsAnalysis {
      void setBeginRun(const edm::Run&, const edm::EventSetup&);
      void fillEventData(ExclusiveDijetsEvent&, const edm::Event&, const edm::EventSetup&);
   private:
-     //template <class Coll>
-     //std::pair<double,double> xi(Coll& partCollection,bool useJetCorr = false);
-
+    
      template <class OneJetColl,class OnePartColl> //eliza
      double Rj(OneJetColl& jetCollection,OnePartColl& partCollection); //eliza
      template <class JetColl,class PartColl>
@@ -91,12 +89,7 @@ class ExclusiveDijetsAnalysis {
      bool accessMCInfo_;
      bool POMPYTMCInfo_;
    
-     //std::string hltPathName1_; 
-     //std::string hltPathName2_; 
-     //std::string hltPathName3_;
-     //std::string hltPathName4_;
-     //std::string hltPathName5_;
-     //std::string hltPathName6_;
+     
      std::vector<std::string> hltPathNames_;
    
      std::string selectionPathName_;
@@ -107,18 +100,7 @@ class ExclusiveDijetsAnalysis {
      std::map<int,std::pair<double,double> > thresholdsPFlowForward_;
      std::map<int,std::map<int,std::pair<double,double> > > thresholdsPFlow_;
 
-     /*math::XYZTLorentzVector genProtonPlus_;
-     math::XYZTLorentzVector genProtonMinus_;
-     math::XYZTLorentzVector genAllParticles_;*/
-
-     /*math::XYZTLorentzVector genAllParticles_;
-     math::XYZTLorentzVector genAllParticlesHEPlus_;
-     math::XYZTLorentzVector genAllParticlesHEMinus_;
-     math::XYZTLorentzVector genAllParticlesHFPlus_;
-     math::XYZTLorentzVector genAllParticlesHFMinus_;
-     math::XYZTLorentzVector genProtonPlus_;
-     math::XYZTLorentzVector genProtonMinus_;*/
-
+    
      std::string jetCorrectionService_;
      const JetCorrector* corrector_;
      
