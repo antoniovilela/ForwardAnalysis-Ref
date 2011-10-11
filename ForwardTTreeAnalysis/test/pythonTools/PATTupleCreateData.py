@@ -27,6 +27,7 @@ def cmsRunCall():
 
 def ConfigHandler(dataset,uiworkingdir,userremotedir,jsonfile,lumis,lumisjob,runsel,lumixs,sewhitelist,output,triggersfilter,triggersttree,mail):
     pset_py = """
+
 import FWCore.ParameterSet.Config as cms
 
 # Settings
@@ -50,7 +51,6 @@ if config.runOnMC:
 else:
     config.inputFileName = '/storage2/antoniov/data1/MultiJet_Run2010B_Apr21ReReco-v1_AOD/MultiJet_Run2010B_Apr21ReReco-v1_AOD_7EA7B611-7371-E011-B164-002354EF3BDB.root'#Data
    #  config.inputFileName = '/storage2/eliza/samples_test/MultiJetPromptReco_v4.root'#data 2011
-
 process = cms.Process("Analysis")
 
 process.load('Configuration.StandardSequences.Services_cff')
@@ -346,9 +346,9 @@ print 'Starting submission...'
 print '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@'
 print '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@'
 
-##############
-# Samples
-##############
+###############
+# Samples 2010
+###############
 
 ## /JetMETTau/Run2010A-Apr21ReReco-v1/AOD 
 dataset = '/JetMETTau/Run2010A-Apr21ReReco-v1/AOD '  
@@ -356,7 +356,7 @@ uiworkingdir = 'crab_JetMETTau-Run2010A-Apr21ReReco-v1-AOD'
 userremotedir = '/Data/crab_JetMETTau-Run2010A-Apr21ReReco-v1-AOD'
 jsonfile = 'Intersection_Castor_GOOD_135821-141887.json'
 lumis ='1'
-lumisjob = '20'
+lumisjob = '15'
 runsel = '135821-141887'
 lumixs = 'lumibylsXing_Cert_136033-149442_7TeV_Apr21ReReco_Collisions10_JSON.root'
 sewhitelist = ''
@@ -372,7 +372,7 @@ uiworkingdir = 'crab_JetMET-Run2010A-Apr21ReReco-v1-AOD'
 userremotedir = '/Data/crab_JetMET-Run2010A-Apr21ReReco-v1-AOD'
 jsonfile = 'Intersection_Castor_GOOD_141950-144114.json'
 lumis ='1'
-lumisjob = '20'
+lumisjob = '15'
 runsel = '141950-144114'
 lumixs = 'lumibylsXing_Cert_136033-149442_7TeV_Apr21ReReco_Collisions10_JSON.root'
 sewhitelist = ''
@@ -388,7 +388,7 @@ uiworkingdir = 'crab_Jet-Run2010B-Apr21ReReco-v1-AOD'
 userremotedir = '/Data/crab_Jet-Run2010B-Apr21ReReco-v1-AOD'
 jsonfile = 'Intersection_Castor_GOOD_146240-148068.json'
 lumis ='1'
-lumisjob = '20'
+lumisjob = '15'
 runsel = '146240-148068'
 lumixs = 'lumibylsXing_Cert_136033-149442_7TeV_Apr21ReReco_Collisions10_JSON.root'
 sewhitelist = ''
@@ -404,7 +404,7 @@ uiworkingdir = 'crab_Jet-Run2010B-Apr21ReReco-v1-AOD-Other'
 userremotedir = '/Data/crab_Jet-Run2010B-Apr21ReReco-v1-AOD-Other'
 jsonfile = 'Intersection_Castor_GOOD_148791-149711.json'
 lumis ='1'
-lumisjob = '20'
+lumisjob = '15'
 runsel = '148791-149711'
 lumixs = 'lumibylsXing_Cert_136033-149442_7TeV_Apr21ReReco_Collisions10_JSON.root'
 sewhitelist = ''
@@ -420,7 +420,7 @@ uiworkingdir = 'crab_MultiJet_Run2010A_PATTuple'
 userremotedir = '/Data/crab_MultiJet_Run2010A'
 jsonfile = 'Intersection_Castor_GOOD_147146-149711.json'
 lumis ='-1'
-lumisjob = '20'
+lumisjob = '15'
 runsel = '147146-149442'
 lumixs = 'lumibylsXing_Cert_136033-149442_7TeV_Apr21ReReco_Collisions10_JSON.root'
 sewhitelist = ''
@@ -428,7 +428,7 @@ output = 'MultiJetPATTuple.root'
 triggersfilter = "'HLT_ExclDiJet30U_HFAND_v*','HLT_ExclDiJet30U_HFOR_v*','HLT_Jet30U*'"
 triggersttree = "'HLT_ExclDiJet30U_HFAND_v*','HLT_ExclDiJet30U_HFOR_v*','HLT_Jet30U*'"
 mail = 'dmf@cern.ch'
-ConfigHandler(dataset,uiworkingdir,userremotedir,jsonfile,lumis,lumisjob,runsel,lumixs,sewhitelist,output,triggersfilter,triggersttree,mail)
+#ConfigHandler(dataset,uiworkingdir,userremotedir,jsonfile,lumis,lumisjob,runsel,lumixs,sewhitelist,output,triggersfilter,triggersttree,mail)
 
 ## TEST
 dataset = '/JetMETTau/Run2010A-Apr21ReReco-v1/AOD '  
@@ -445,6 +445,75 @@ triggersfilter = "'HLT_L1Jet6U','HLT_Jet15U','HLT_Jet30U','HLT_Jet50U'"
 triggersttree = "'HLT_L1Jet6U','HLT_Jet15U','HLT_Jet30U','HLT_Jet50U'"
 mail='dmf@cern.ch'
 #ConfigHandler(dataset,uiworkingdir,userremotedir,jsonfile,lumis,lumisjob,runsel,lumixs,sewhitelist,output,triggersfilter,triggersttree,mail)
+
+#
+# Samples 2011
+#
+
+## /MultiJet/Run2011A-PromptReco-v4/AOD 
+dataset = '/MultiJet/Run2011A-PromptReco-v4/AOD'
+uiworkingdir = 'crab_MultiJet_Run2011A-v4_PATTuple'
+userremotedir = '/Data/crab_MultiJet_Run2011A-v4'
+jsonfile = 'Intersection_Castor_GOOD_165071-168437.json'
+lumis ='-1'
+lumisjob = '15'
+runsel = '165071-168437'
+lumixs = 'lumibyXing_Cert_160404-176023_7TeV_PromptReco_Collisions11_JSON.root'
+sewhitelist = ''
+output = 'MultiJetPATTuple-v4.root'
+triggersfilter = "'HLT_ExclDiJet60U_HFAND_v*','HLT_ExclDiJet60U_HFOR_v*','HLT_Jet60U*'"
+triggersttree = "'HLT_ExclDiJet60U_HFAND_v*','HLT_ExclDiJet60U_HFOR_v*','HLT_Jet60U*'"
+mail = 'dmf@cern.ch'
+#ConfigHandler(dataset,uiworkingdir,userremotedir,jsonfile,lumis,lumisjob,runsel,lumixs,sewhitelist,output,triggersfilter,triggersttree,mail)
+
+## /MultiJet/Run2011A-PromptReco-v5/AOD 
+dataset = '/MultiJet/Run2011A-PromptReco-v5/AOD'
+uiworkingdir = 'crab_MultiJet_Run2011A-v5_PATTuple'
+userremotedir = '/Data/crab_MultiJet_Run2011A-v5'
+jsonfile = 'Intersection_Castor_GOOD_160404-176023.json'
+lumis ='-1'
+lumisjob = '15'
+runsel = '160404-176023'
+lumixs = 'lumibyXing_Cert_160404-176023_7TeV_PromptReco_Collisions11_JSON.root'
+sewhitelist = ''
+output = 'MultiJetPATTuple-v5.root'
+triggersfilter = "'HLT_ExclDiJet60U_HFAND_v*','HLT_ExclDiJet60U_HFOR_v*','HLT_Jet60U*'"
+triggersttree = "'HLT_ExclDiJet60U_HFAND_v*','HLT_ExclDiJet60U_HFOR_v*','HLT_Jet60U*'"
+mail = 'dmf@cern.ch'
+#ConfigHandler(dataset,uiworkingdir,userremotedir,jsonfile,lumis,lumisjob,runsel,lumixs,sewhitelist,output,triggersfilter,triggersttree,mail)
+
+## /MultiJet/Run2011A-PromptReco-v6/AOD 
+dataset = '/MultiJet/Run2011A-PromptReco-v6/AOD'
+uiworkingdir = 'crab_MultiJet_Run2011A-v6_PATTuple'
+userremotedir = '/Data/crab_MultiJet_Run2011A-v6'
+jsonfile = 'Intersection_Castor_GOOD_172620-175770.json'
+lumis ='-1'
+lumisjob = '15'
+runsel = '172620-175770'
+lumixs = 'lumibyXing_Cert_160404-176023_7TeV_PromptReco_Collisions11_JSON.root'
+sewhitelist = ''
+output = 'MultiJetPATTuple-v6.root'
+triggersfilter = "'HLT_ExclDiJet60U_HFAND_v*','HLT_ExclDiJet60U_HFOR_v*','HLT_Jet60U*'"
+triggersttree = "'HLT_ExclDiJet60U_HFAND_v*','HLT_ExclDiJet60U_HFOR_v*','HLT_Jet60U*'"
+mail = 'dmf@cern.ch'
+#ConfigHandler(dataset,uiworkingdir,userremotedir,jsonfile,lumis,lumisjob,runsel,lumixs,sewhitelist,output,triggersfilter,triggersttree,mail)
+
+## TEST 
+dataset = '/MultiJet/Run2011A-PromptReco-v6/AOD'
+uiworkingdir = 'crab_MultiJet_Run2011A-v6_PATTuple'
+userremotedir = '/Data/crab_MultiJet_Run2011A-v6'
+jsonfile = 'Intersection_Castor_GOOD_172620-175770.json'
+lumis ='1'
+lumisjob = '1'
+runsel = '172620-175770'
+lumixs = 'lumibyXing_Cert_160404-176023_7TeV_PromptReco_Collisions11_JSON.root'
+sewhitelist = ''
+output = 'MultiJetPATTuple-v6.root'
+triggersfilter = "'HLT_ExclDiJet60U_HFAND_v*','HLT_ExclDiJet60U_HFOR_v*','HLT_Jet60U*'"
+triggersttree = "'HLT_ExclDiJet60U_HFAND_v*','HLT_ExclDiJet60U_HFOR_v*','HLT_Jet60U*'"
+mail = 'dmf@cern.ch'
+#ConfigHandler(dataset,uiworkingdir,userremotedir,jsonfile,lumis,lumisjob,runsel,lumixs,sewhitelist,output,triggersfilter,triggersttree,mail)
+
 
 print ''
 print '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@'
