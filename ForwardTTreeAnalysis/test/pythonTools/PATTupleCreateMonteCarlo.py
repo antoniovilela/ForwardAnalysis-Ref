@@ -51,7 +51,6 @@ if config.runOnMC:
 else:
     config.inputFileName = '/storage2/antoniov/data1/MultiJet_Run2010B_Apr21ReReco-v1_AOD/MultiJet_Run2010B_Apr21ReReco-v1_AOD_7EA7B611-7371-E011-B164-002354EF3BDB.root'#Data
    #  config.inputFileName = '/storage2/eliza/samples_test/MultiJetPromptReco_v4.root'#data 2011
-
 process = cms.Process("Analysis")
 
 process.load('Configuration.StandardSequences.Services_cff')
@@ -221,7 +220,6 @@ if config.runOnMC:
 process.analysis_reco_step = cms.Path(process.analysisSequences)
 process.analysis_exclusiveDijetsAnalysis_step = cms.Path(process.eventSelectionHLT+
                                                          process.exclusiveDijetsTTreeAnalysis)
-
 """
 
     crab_cfg = """
@@ -259,7 +257,7 @@ email = dmf@cern.ch
 [GRID]
 proxy_server = myproxy.cern.ch
 @@USESEWHITELIST@@se_white_list = @@SEWHITELIST@@
-se_black_list = T2_US_UCSD
+se_black_list = T3_US_COLORADO
 virtual_organization = cms
 
 """
@@ -339,7 +337,10 @@ print '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@'
 # MC Samples
 ##############
 
-#dataset = '/QCD_Pt_120to170_TuneZ2_7TeV_pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM'
+#
+# TEST SAMPLE
+#
+
 dataset = '/QCD_Pt-120to170_TuneZ2_7TeV_pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM'
 uiworkingdir = 'crab_TestMC'
 userremotedir = '/crab_TestMC'
@@ -351,7 +352,213 @@ output = 'TEST.root'
 triggersfilter = "'HLT_Jet30_v*','HLT_Jet60_v*'"
 triggersttree = "'HLT_Jet30_v*','HLT_Jet60_v*'"
 mail='dmf@cern.ch'
+#ConfigHandler(dataset,uiworkingdir,userremotedir,sewhitelist,output,triggersfilter,triggersttree,mail,nevent,ejob,lumixs)
+
+#
+# Sample: /QCD_Pt-15to3000_TuneZ2_Flat_7TeV_pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM
+#
+
+dataset = '/QCD_Pt-15to3000_TuneZ2_Flat_7TeV_pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM'
+uiworkingdir = 'crab_QCD_Pt-15to3000-Z2'
+userremotedir = '/crab_QCD_Pt-15to3000-Z2'
+lumixs = 'lumibylsXing_Cert_136033-149442_7TeV_Apr21ReReco_Collisions10_JSON.root'
+nevent ='5000000'
+ejob = '20000'
+sewhitelist = ''
+output = 'QCD_Pt-15to3000-Z2.root'
+triggersfilter = "'HLT_Jet30_v*','HLT_Jet60_v*'"
+triggersttree = "'HLT_Jet30_v*','HLT_Jet60_v*'"
+mail='dmf@cern.ch'
 ConfigHandler(dataset,uiworkingdir,userremotedir,sewhitelist,output,triggersfilter,triggersttree,mail,nevent,ejob,lumixs)
+
+#
+# Sample: /QCD_Pt-0to5_TuneZ2_7TeV_pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM 
+#
+
+dataset = '/QCD_Pt-0to5_TuneZ2_7TeV_pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM'
+uiworkingdir = 'crab_QCD_Pt-0to5-Z2'
+userremotedir = '/crab_QCD_Pt-0to5-Z2'
+lumixs = 'lumibylsXing_Cert_136033-149442_7TeV_Apr21ReReco_Collisions10_JSON.root'
+nevent ='1000000'
+ejob = '10000'
+sewhitelist = ''
+output = 'QCD_Pt-0to5-Z2.root'
+triggersfilter = "'HLT_Jet30_v*','HLT_Jet60_v*'"
+triggersttree = "'HLT_Jet30_v*','HLT_Jet60_v*'"
+mail='dmf@cern.ch'
+ConfigHandler(dataset,uiworkingdir,userremotedir,sewhitelist,output,triggersfilter,triggersttree,mail,nevent,ejob,lumixs)
+
+#
+# Sample: /QCD_Pt-5to15_TuneZ2_7TeV_pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM
+#
+
+dataset = '/QCD_Pt-5to15_TuneZ2_7TeV_pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM'
+uiworkingdir = 'crab_QCD_Pt-5to15-Z2'
+userremotedir = '/crab_QCD_Pt-5to15-Z2'
+lumixs = 'lumibylsXing_Cert_136033-149442_7TeV_Apr21ReReco_Collisions10_JSON.root'
+nevent ='1000000'
+ejob = '10000'
+sewhitelist = ''
+output = 'QCD_Pt-5to15-Z2.root'
+triggersfilter = "'HLT_Jet30_v*','HLT_Jet60_v*'"
+triggersttree = "'HLT_Jet30_v*','HLT_Jet60_v*'"
+mail='dmf@cern.ch'
+ConfigHandler(dataset,uiworkingdir,userremotedir,sewhitelist,output,triggersfilter,triggersttree,mail,nevent,ejob,lumixs)
+
+#
+# Sample: /QCD_Pt-15to30_TuneZ2_7TeV_pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM
+#
+
+dataset = '/QCD_Pt-15to30_TuneZ2_7TeV_pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM'
+uiworkingdir = 'crab_QCD_Pt-15to30-Z2'
+userremotedir = '/crab_QCD_Pt-15to30-Z2'
+lumixs = 'lumibylsXing_Cert_136033-149442_7TeV_Apr21ReReco_Collisions10_JSON.root'
+nevent ='1000000'
+ejob = '1000'
+sewhitelist = ''
+output = 'QCD_Pt-15to30-Z2.root'
+triggersfilter = "'HLT_Jet30_v*','HLT_Jet60_v*'"
+triggersttree = "'HLT_Jet30_v*','HLT_Jet60_v*'"
+mail='dmf@cern.ch'
+ConfigHandler(dataset,uiworkingdir,userremotedir,sewhitelist,output,triggersfilter,triggersttree,mail,nevent,ejob,lumixs)
+
+#
+# Sample: /QCD_Pt-30to50_TuneZ2_7TeV_pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM
+#
+
+dataset = '/QCD_Pt-30to50_TuneZ2_7TeV_pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM'
+uiworkingdir = 'crab_QCD_Pt-30to50-Z2'
+userremotedir = '/crab_QCD_Pt-30to50-Z2'
+lumixs = 'lumibylsXing_Cert_136033-149442_7TeV_Apr21ReReco_Collisions10_JSON.root'
+nevent ='1000000'
+ejob = '10000'
+sewhitelist = ''
+output = 'QCD_Pt-30to50-Z2.root'
+triggersfilter = "'HLT_Jet30_v*','HLT_Jet60_v*'"
+triggersttree = "'HLT_Jet30_v*','HLT_Jet60_v*'"
+mail='dmf@cern.ch'
+ConfigHandler(dataset,uiworkingdir,userremotedir,sewhitelist,output,triggersfilter,triggersttree,mail,nevent,ejob,lumixs)
+
+#
+# Sample: /QCD_Pt-50to80_TuneZ2_7TeV_pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM
+#
+
+dataset = '/QCD_Pt-50to80_TuneZ2_7TeV_pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM'
+uiworkingdir = 'crab_QCD_Pt-50to80-Z2'
+userremotedir = '/crab_QCD_Pt-50to80-Z2'
+lumixs = 'lumibylsXing_Cert_136033-149442_7TeV_Apr21ReReco_Collisions10_JSON.root'
+nevent ='1000000'
+ejob = '10000'
+sewhitelist = ''
+output = 'QCD_Pt-50to80-Z2.root'
+triggersfilter = "'HLT_Jet30_v*','HLT_Jet60_v*'"
+triggersttree = "'HLT_Jet30_v*','HLT_Jet60_v*'"
+mail='dmf@cern.ch'
+ConfigHandler(dataset,uiworkingdir,userremotedir,sewhitelist,output,triggersfilter,triggersttree,mail,nevent,ejob,lumixs)
+
+#
+# Sample: /QCD_Pt-80to120_TuneZ2_7TeV_pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM
+#
+
+dataset = '/QCD_Pt-80to120_TuneZ2_7TeV_pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM'
+uiworkingdir = 'crab_QCD_Pt-80to120-Z2'
+userremotedir = '/crab_QCD_Pt-80to120-Z2'
+lumixs = 'lumibylsXing_Cert_136033-149442_7TeV_Apr21ReReco_Collisions10_JSON.root'
+nevent ='1000000'
+ejob = '10000'
+sewhitelist = ''
+output = 'QCD_Pt-80to120-Z2.root'
+triggersfilter = "'HLT_Jet30_v*','HLT_Jet60_v*'"
+triggersttree = "'HLT_Jet30_v*','HLT_Jet60_v*'"
+mail='dmf@cern.ch'
+ConfigHandler(dataset,uiworkingdir,userremotedir,sewhitelist,output,triggersfilter,triggersttree,mail,nevent,ejob,lumixs)
+
+#
+# Sample: /QCD_Pt-120to170_TuneZ2_7TeV_pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM
+#
+
+dataset = '/QCD_Pt-120to170_TuneZ2_7TeV_pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM'
+uiworkingdir = 'crab_QCD_Pt-120to170-Z2'
+userremotedir = '/crab_QCD_Pt-120to170-Z2'
+lumixs = 'lumibylsXing_Cert_136033-149442_7TeV_Apr21ReReco_Collisions10_JSON.root'
+nevent ='1000000'
+ejob = '10000'
+sewhitelist = ''
+output = 'QCD_Pt-120to170-Z2.root'
+triggersfilter = "'HLT_Jet30_v*','HLT_Jet60_v*'"
+triggersttree = "'HLT_Jet30_v*','HLT_Jet60_v*'"
+mail='dmf@cern.ch'
+ConfigHandler(dataset,uiworkingdir,userremotedir,sewhitelist,output,triggersfilter,triggersttree,mail,nevent,ejob,lumixs)
+
+#
+# Sample: /QCD_Pt-170to300_TuneZ2_7TeV_pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM
+#
+
+dataset = '/QCD_Pt-170to300_TuneZ2_7TeV_pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM'
+uiworkingdir = 'crab_QCD_Pt-170to300-Z2'
+userremotedir = '/crab_QCD_Pt-170to300-Z2'
+lumixs = 'lumibylsXing_Cert_136033-149442_7TeV_Apr21ReReco_Collisions10_JSON.root'
+nevent ='1000000'
+ejob = '10000'
+sewhitelist = ''
+output = 'QCD_Pt-170to300-Z2.root'
+triggersfilter = "'HLT_Jet30_v*','HLT_Jet60_v*'"
+triggersttree = "'HLT_Jet30_v*','HLT_Jet60_v*'"
+mail='dmf@cern.ch'
+ConfigHandler(dataset,uiworkingdir,userremotedir,sewhitelist,output,triggersfilter,triggersttree,mail,nevent,ejob,lumixs)
+
+#
+# Sample: /QCD_Pt-300to470_TuneZ2_7TeV_pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM
+#
+
+dataset = '/QCD_Pt-300to470_TuneZ2_7TeV_pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM'
+uiworkingdir = 'crab_QCD_Pt-300to470-Z2'
+userremotedir = '/crab_QCD_Pt-300to470-Z2'
+lumixs = 'lumibylsXing_Cert_136033-149442_7TeV_Apr21ReReco_Collisions10_JSON.root'
+nevent ='1000000'
+ejob = '10000'
+sewhitelist = ''
+output = 'QCD_Pt-300to470-Z2.root'
+triggersfilter = "'HLT_Jet30_v*','HLT_Jet60_v*'"
+triggersttree = "'HLT_Jet30_v*','HLT_Jet60_v*'"
+mail='dmf@cern.ch'
+ConfigHandler(dataset,uiworkingdir,userremotedir,sewhitelist,output,triggersfilter,triggersttree,mail,nevent,ejob,lumixs)
+
+#
+# Sample: /QCD_Pt-470to600_TuneZ2_7TeV_pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM
+#
+
+dataset = '/QCD_Pt-470to600_TuneZ2_7TeV_pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM'
+uiworkingdir = 'crab_QCD_Pt-470to600-Z2'
+userremotedir = '/crab_QCD_Pt-470to600-Z2'
+lumixs = 'lumibylsXing_Cert_136033-149442_7TeV_Apr21ReReco_Collisions10_JSON.root'
+nevent ='1000000'
+ejob = '10000'
+sewhitelist = ''
+output = 'QCD_Pt-470to600-Z2.root'
+triggersfilter = "'HLT_Jet30_v*','HLT_Jet60_v*'"
+triggersttree = "'HLT_Jet30_v*','HLT_Jet60_v*'"
+mail='dmf@cern.ch'
+ConfigHandler(dataset,uiworkingdir,userremotedir,sewhitelist,output,triggersfilter,triggersttree,mail,nevent,ejob,lumixs)
+
+#
+# Sample: /QCD_Pt-600to800_TuneZ2_7TeV_pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM
+#
+
+dataset = '/QCD_Pt-600to800_TuneZ2_7TeV_pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM'
+uiworkingdir = 'crab_QCD_Pt-600to800-Z2'
+userremotedir = '/crab_QCD_Pt-600to800-Z2'
+lumixs = 'lumibylsXing_Cert_136033-149442_7TeV_Apr21ReReco_Collisions10_JSON.root'
+nevent ='1000000'
+ejob = '10000'
+sewhitelist = ''
+output = 'QCD_Pt-600to800-Z2.root'
+triggersfilter = "'HLT_Jet30_v*','HLT_Jet60_v*'"
+triggersttree = "'HLT_Jet30_v*','HLT_Jet60_v*'"
+mail='dmf@cern.ch'
+ConfigHandler(dataset,uiworkingdir,userremotedir,sewhitelist,output,triggersfilter,triggersttree,mail,nevent,ejob,lumixs)
+
+
 
 print ''
 print '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@'
