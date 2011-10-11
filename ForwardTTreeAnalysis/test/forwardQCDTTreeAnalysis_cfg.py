@@ -4,21 +4,32 @@ import FWCore.ParameterSet.Config as cms
 class config: pass
 config.verbose = True
 config.writeEdmOutput = False
-config.runOnMC = False
+config.runOnMC = True
 config.runPATSequences = True
 config.usePAT = False
 config.globalTagNameData = 'GR_R_42_V19::All' 
-config.instLumiROOTFile='lumibylsXing_Cert_136033-149442_7TeV_Apr21ReReco_Collisions10_JSON.root'
-globalTagNameMC = ''
+config.instLumiROOTFile='/storage2/eliza/lumibylsXing_Cert_136033-149442_7TeV_Apr21ReReco_Collisions10_JSON.root'
+config.globalTagNameMC = 'START42_V14A::All'
 config.comEnergy = 7000.0
 config.trackAnalyzerName = 'trackHistoAnalyzer'
 config.trackTagName = 'analysisTracks'
-config.hltPaths = ('HLT_ExclDiJet60_HFAND_v*','HLT_ExclDiJet60_HFOR_v*','HLT_Jet60_v*')
+
+if config.runOnMC:
+    config.hltPaths =('HLT_Jet30*','HLT_Jet60*','HLT_Jet80*','HLT_Jet110*','HLT_Jet150*','HLT_Jet190*','HLT_Jet240_v*','HLT_Jet370_v*')
+else:
+    config.hltPaths = ('HLT_ExclDiJet60_HFAND_v*','HLT_ExclDiJet60_HFOR_v*','HLT_Jet60_v*')
+    
 #config.generator = 'Pythia6'
 
-config.inputFileName = '/storage2/eliza/JetMay10RecoRun2011.root'
 #config.outputEdmFile = 'DijetsAnalysis.root'
 config.outputTTreeFile = 'forwardQCDTTreeAnalysis.root'
+
+if config.runOnMC:
+    config.inputFileName = '/storage2/eliza/samples_test/QCD_Pt-15to30_TuneZ2_7TeV_pythia6AODSIMS_3.root'# MC
+else:
+    config.inputFileName = '/storage2/antoniov/data1/MultiJet_Run2010B_Apr21ReReco-v1_AOD/MultiJet_Run2010B_Apr21ReReco-v1_AOD_7EA7B611-7371-E011-B164-002354EF3BDB.root'#Data
+    
+
 
 process = cms.Process("Analysis")
 
@@ -193,6 +204,12 @@ if not config.runOnMC:
     process.eventWeightSequence = cms.Sequence(process.lumiWeight) 
     process.eventWeight_step = cms.Path(process.eventWeightSequence) 
 
+if config.runOnMC:
+   process.gen_step = cms.Path(process.genChargedParticles+
+                               process.genProtonDissociative*process.edmNtupleMxGen+
+                               process.genStableParticles*
+                               process.etaMaxGen+process.etaMinGen*
+                               process.edmNtupleEtaMaxGen+process.edmNtupleEtaMinGen)
 process.analysis_reco_step = cms.Path(process.analysisSequences)
 process.analysis_forwardQCDAnalysis_step = cms.Path(process.eventSelectionHLT+
                                                     process.forwardQCDTTreeAnalysis)
