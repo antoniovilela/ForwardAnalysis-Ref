@@ -19,10 +19,8 @@ config.data2011 = False
 if config.runOnMC:
     config.inputFileName = '/storage2/eliza/samples_test/QCD_Pt-15to30_TuneZ2_7TeV_pythia6AODSIMS_3.root'#MC
 else:
-    config.inputFileName = '/storage2/antoniov/data1/MultiJet_Run2010B_Apr21ReReco-v1_AOD/MultiJet_Run2010B_Apr21ReReco-v1_AOD_7EA7B611-7371-E011-B164-002354EF3BDB.root'
-   #  Data
+    config.inputFileName = '/storage2/antoniov/data1/MultiJet_Run2010B_Apr21ReReco-v1_AOD/MultiJet_Run2010B_Apr21ReReco-v1_AOD_7EA7B611-7371-E011-B164-002354EF3BDB.root'#Data
    #  config.inputFileName = '/storage2/eliza/samples_test/MultiJetPromptReco_v4.root'#data 2011
-
 process = cms.Process("Analysis")
 
 process.load('Configuration.StandardSequences.Services_cff')
@@ -122,12 +120,12 @@ if not config.runOnMC:
 process.load("ForwardAnalysis.ForwardTTreeAnalysis.exclusiveDijetsAnalysisSequences_cff")
 
 if config.runOnMC:
-    process.exclusiveDijetsHLTFilter.HLTPaths = ['HLT_L1Jet6U','HLT_Jet15U','HLT_Jet30U','HLT_Jet50U']
+    process.exclusiveDijetsHLTFilter.HLTPaths = ['HLT_Jet30_v*','HLT_Jet60_v*','HLT_Jet80_v*','HLT_Jet110_v*','HLT_Jet150_v*','HLT_Jet190_v*','HLT_Jet240_v*','HLT_Jet370_v*']
 
 else:
-    process.exclusiveDijetsHLTFilter.HLTPaths = ['HLT_L1Jet6U','HLT_Jet15U','HLT_Jet30U','HLT_Jet50U'] 
+    process.exclusiveDijetsHLTFilter.HLTPaths = ['HLT_ExclDiJet30U_HFAND_v*','HLT_ExclDiJet30U_HFOR_v*','HLT_Jet30U*'] 
 
-if config.data2011: process.exclusiveDijetsHLTFilter.HLTPaths = ['HLT_L1Jet6U','HLT_Jet15U','HLT_Jet30U','HLT_Jet50U'] 
+if config.data2011: process.exclusiveDijetsHLTFilter.HLTPaths = ['HLT_ExclDiJet60_HFAND_v*','HLT_ExclDiJet60_HFOR_v*','HLT_Jet60_v*'] 
 
 
 process.pfCandidateNoiseThresholds.src = "pfNoPileUpPFlow"
@@ -164,9 +162,9 @@ process.exclusiveDijetsTTreeAnalysis.exclusiveDijetsAnalysis.TriggerResultsTag =
 
 if config.runOnMC:
     process.exclusiveDijetsTTreeAnalysis.exclusiveDijetsAnalysis.AccessMCInfo = True
-    process.exclusiveDijetsTTreeAnalysis.exclusiveDijetsAnalysis.hltPaths = cms.vstring('HLT_L1Jet6U','HLT_Jet15U','HLT_Jet30U','HLT_Jet50U')
-else: process.exclusiveDijetsTTreeAnalysis.exclusiveDijetsAnalysis.hltPaths = cms.vstring('HLT_L1Jet6U','HLT_Jet15U','HLT_Jet30U','HLT_Jet50U')
-if config.data2011: process.exclusiveDijetsTTreeAnalysis.exclusiveDijetsAnalysis.hltPaths = cms.vstring('HLT_L1Jet6U','HLT_Jet15U','HLT_Jet30U','HLT_Jet50U')
+    process.exclusiveDijetsTTreeAnalysis.exclusiveDijetsAnalysis.hltPaths = cms.vstring('HLT_Jet30*','HLT_Jet60_v*','HLT_Jet80_v*','HLT_Jet110_v*','HLT_Jet150_v*','HLT_Jet190_v*','HLT_Jet240_v*','HLT_Jet370_v*')
+else: process.exclusiveDijetsTTreeAnalysis.exclusiveDijetsAnalysis.hltPaths = cms.vstring('HLT_ExclDiJet30U_HFAND_v*','HLT_ExclDiJet30U_HFOR_v*','HLT_Jet30U*')
+if config.data2011: process.exclusiveDijetsTTreeAnalysis.exclusiveDijetsAnalysis.hltPaths = cms.vstring('HLT_ExclDiJet60_HFAND_v*','HLT_ExclDiJet60_HFOR_v*','HLT_Jet60_v*')
 
 # PAT Trigger
 
@@ -192,4 +190,3 @@ if config.runOnMC:
 process.analysis_reco_step = cms.Path(process.analysisSequences)
 process.analysis_exclusiveDijetsAnalysis_step = cms.Path(process.eventSelectionHLT+
                                                          process.exclusiveDijetsTTreeAnalysis)
-
