@@ -4,11 +4,11 @@ import FWCore.ParameterSet.Config as cms
 class config: pass
 config.verbose = True
 config.writeEdmOutput = False
-config.runOnMC = True
+config.runOnMC = False
 config.runPATSequences = True
 config.usePAT = False
 config.globalTagNameData = 'GR_R_42_V19::All' 
-config.instLumiROOTFile='/storage2/eliza/lumibylsXing_Cert_136033-149442_7TeV_Apr21ReReco_Collisions10_JSON.root'
+config.instLumiROOTFile='/storage2/eliza/lumibyXing_Cert_160404-176023_7TeV_PromptReco_Collisions11_JSON.root'
 config.globalTagNameMC = 'START42_V14A::All'
 config.comEnergy = 7000.0
 config.trackAnalyzerName = 'trackHistoAnalyzer'
@@ -17,8 +17,9 @@ config.trackTagName = 'analysisTracks'
 if config.runOnMC:
     config.hltPaths =('HLT_Jet30*','HLT_Jet60*','HLT_Jet80*','HLT_Jet110*','HLT_Jet150*','HLT_Jet190*','HLT_Jet240_v*','HLT_Jet370_v*')
 else:
-    config.hltPaths = ('HLT_ExclDiJet60_HFAND_v*','HLT_ExclDiJet60_HFOR_v*','HLT_Jet60_v*')
-    
+    #config.hltPaths = ('HLT_ExclDiJet60_HFAND_v*','HLT_ExclDiJet60_HFOR_v*','HLT_Jet60_v*')
+    config.hltPaths = ('HLT_ExclDiJet30U_HFAND_v*','HLT_ExclDiJet30U_HFOR_v*','HLT_Jet30U*')
+
 #config.generator = 'Pythia6'
 
 #config.outputEdmFile = 'DijetsAnalysis.root'
@@ -27,8 +28,8 @@ config.outputTTreeFile = 'forwardQCDTTreeAnalysis.root'
 if config.runOnMC:
     config.inputFileName = '/storage2/eliza/samples_test/QCD_Pt-15to30_TuneZ2_7TeV_pythia6AODSIMS_3.root'# MC
 else:
-    config.inputFileName = '/storage2/antoniov/data1/MultiJet_Run2010B_Apr21ReReco-v1_AOD/MultiJet_Run2010B_Apr21ReReco-v1_AOD_7EA7B611-7371-E011-B164-002354EF3BDB.root'#Data
-    
+    #config.inputFileName = '/storage2/eliza/samples_test/MultiJetPromptReco_v4.root'#data 2011
+    config.inputFileName = '/storage2/antoniov/data1/MultiJet_Run2010B_Apr21ReReco-v1_AOD/MultiJet_Run2010B_Apr21ReReco-v1_AOD_7EA7B611-7371-E011-B164-002354EF3BDB.root' 
 
 
 process = cms.Process("Analysis")
@@ -95,6 +96,12 @@ if not config.runOnMC:
 #process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
 
 process.load("ForwardAnalysis.ForwardTTreeAnalysis.exclusiveDijetsAnalysisSequences_cff")
+
+if config.runOnMC:
+    process.exclusiveDijetsHLTFilter.HLTPaths = config.hltPaths 
+else:
+    process.exclusiveDijetsHLTFilter.HLTPaths = config.hltPaths 
+
 process.pfCandidateNoiseThresholds.src = "pfNoPileUpPFlow"
 process.tracksTransverseRegion.JetTag = "selectedPatJetsPFlow"
 
