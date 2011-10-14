@@ -4,7 +4,7 @@ import FWCore.ParameterSet.Config as cms
 class config: pass
 config.verbose = True
 config.writeEdmOutput = False
-config.runOnMC = True
+config.runOnMC = False
 config.runPATSequences = True
 config.usePAT = False
 config.globalTagNameData = 'GR_R_42_V19::All' 
@@ -16,6 +16,7 @@ config.trackTagName = 'analysisTracks'
 ##PAT INFO does not using Asterisk, yet.
 
 if config.runOnMC:
+    #config.l1Paths = ('ALL')
     config.l1Paths = ('L1_ZeroBias','L1_BptxMinus_NotBptxPlus','L1_SingleJet30U')
     config.hltPaths =('HLT_Jet30_v1','HLT_Jet30_v2','HLT_Jet30_v3','HLT_Jet30_v4','HLT_Jet30_v5','HLT_Jet30_v6')
 else:
@@ -107,8 +108,9 @@ from ForwardAnalysis.ForwardTTreeAnalysis.DiffractiveAnalysis_cfi import Diffrac
 from ForwardAnalysis.ForwardTTreeAnalysis.ExclusiveDijetsAnalysis_cfi import ExclusiveDijetsAnalysis
 from ForwardAnalysis.ForwardTTreeAnalysis.PATInfo_cfi import PATInfo
 
-PATInfo.L1AlgoBitName = config.l1Paths
+PATInfo.L1AlgoBitName =  config.l1Paths 
 PATInfo.HLTAlgoBitName = config.hltPaths 
+PATInfo.runALLTriggerPath = True
 
 
 process.patInfoTTree = cms.EDAnalyzer("PATInfoTTree",

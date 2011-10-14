@@ -2,6 +2,7 @@ import FWCore.ParameterSet.Config as cms
 
 PATInfo = cms.PSet(
     # Input tags
+    runALLTriggerPath = cms.untracked.bool(False),
     #vertexTag       = cms.InputTag("goodOfflinePrimaryVertices"),
     #trackTag        = cms.InputTag("analysisTracks"),
     #jetTag          = cms.InputTag("selectedPatJetsPFlow"),

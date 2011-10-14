@@ -30,9 +30,15 @@ namespace patInfo {
 	 //HLT PAT information
          void patHLTTriggerInfo(PATInfoEvent&, const edm::Event&, const edm::EventSetup&); //added by SFonseca
 
+         void patL1TriggerInfoSelection(PATInfoEvent&, const edm::Event&, const edm::EventSetup&); //added by SFonseca
+         //HLT PAT information
+         void patHLTTriggerInfoSelection(PATInfoEvent&, const edm::Event&, const edm::EventSetup&); //added by SFonseca
+
+
 	 //new input tags:
 	 bool runOnData_;
-	 edm::InputTag patTrigger_;
+         bool runALLTriggerPath_;
+         edm::InputTag patTrigger_;
 	 edm::InputTag  patTriggerEvent_;
 
 	 // Jet match objects
