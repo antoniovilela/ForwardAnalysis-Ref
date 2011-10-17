@@ -90,6 +90,12 @@ from ForwardAnalysis.Utilities.countsAnalyzer_cfi import countsAnalyzer
 if not config.runOnMC:
     process.load('ForwardAnalysis.Utilities.lumiWeight_cfi')
     process.lumiWeight.rootFileName = cms.string(config.instLumiROOTFile)
+
+
+if config.runOnMC:
+     process.forwardQCDTTreeAnalysis.exclusiveDijetsAnalysis.AccessMCInfo = True
+else:
+     process.forwardQCDTTreeAnalysis.exclusiveDijetsAnalysis.AccessMCInfo = False
  
 #process.load('RecoJets.Configuration.RecoPFJets_cff')
 #process.load('RecoJets.Configuration.RecoJets_cff')
