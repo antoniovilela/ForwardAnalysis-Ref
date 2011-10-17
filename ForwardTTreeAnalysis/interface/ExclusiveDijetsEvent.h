@@ -20,7 +20,9 @@ class ExclusiveDijetsEvent {
   ~ExclusiveDijetsEvent();
 
   //------------ Set FWD methods ------------------------------
-  void SetNPileUpBx0(int fnPileUpBx0)           { nPileUpBx0_       = fnPileUpBx0;}
+  void SetNPileUpBxm1(int fnPileUpBxm1)           { nPileUpBxm1_       = fnPileUpBxm1;}
+  void SetNPileUpBx0(int fnPileUpBx0)             { nPileUpBx0_       = fnPileUpBx0;}
+  void SetNPileUpBxp1(int fnPileUpBxp1)           { nPileUpBxp1_       = fnPileUpBxp1;}
   void SetNVertex(int fnVertex)                 { nVertex_          = fnVertex;}
 
   //added by eliza
@@ -192,8 +194,10 @@ class ExclusiveDijetsEvent {
   void SetThirdJetBDiscriminator(double fthirdJetBDiscriminator)        {thirdJetBDiscriminator_ = fthirdJetBDiscriminator;} // added by Diego 
 
   //------------ Get FWD methods ------------------------------
-
+  
+  int GetNPileUpBxm1()         const { return nPileUpBxm1_;}
   int GetNPileUpBx0()          const { return nPileUpBx0_;}
+  int GetNPileUpBxp1()         const { return nPileUpBxp1_;}
   int GetNVertex()             const { return nVertex_ ;}
 
   //------ jet 4-momentum vector------------------
@@ -365,7 +369,9 @@ class ExclusiveDijetsEvent {
 
      void reset();
  
+     int nPileUpBxm1_;
      int nPileUpBx0_;
+     int nPileUpBxp1_;
      int nVertex_;
 
      //added by eliza

@@ -12,6 +12,8 @@ void ExclusiveDijetsEvent::reset(){
   for(size_t k = 0; k < len_hltTrigResults; ++k) hltTrigResults_[k] = 0;
    
   nPileUpBx0_ = -1;
+  nPileUpBxm1_ = -1;
+  nPileUpBxp1_ = -1;
   nVertex_=  -1;
   runNumber_ = -1;
   eventNumber_= -1;

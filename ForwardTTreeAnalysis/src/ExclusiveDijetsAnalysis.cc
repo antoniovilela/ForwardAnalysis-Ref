@@ -26,6 +26,10 @@
 #include "FWCore/Framework/interface/LuminosityBlock.h"
 #include "DataFormats/Luminosity/interface/LumiDetails.h"
 #include "DataFormats/Luminosity/interface/LumiSummary.h"
+//added PU info
+#include "SimDataFormats/PileupSummaryInfo/interface/PileupSummaryInfo.h"
+#include "PhysicsTools/Utilities/interface/LumiReWeighting.h"
+
 #include "DataFormats/Math/interface/LorentzVector.h"
 #include "SimDataFormats/GeneratorProducts/interface/HepMCProduct.h"
 #include "SimDataFormats/GeneratorProducts/interface/GenEventInfoProduct.h"
@@ -136,10 +140,12 @@ void ExclusiveDijetsAnalysis::fillEventData(ExclusiveDijetsEvent& eventData, con
   runOnData_ = event.isRealData();
  
   // Fill event data
-  if(!runOnData_ && accessPileUpInfo_){
+  if(accessMCInfo_ && accessPileUpInfo_){
      fillPileUpInfo(eventData,event,setup);
   } else {
-     eventData.nPileUpBx0_ = -1;
+     eventData.SetNPileUpBxm1(-1);
+     eventData.SetNPileUpBx0(-1);
+     eventData.SetNPileUpBxp1(-1);
   }
 
   //added by eliza 
@@ -216,6 +222,35 @@ void ExclusiveDijetsAnalysis::fillTriggerInfo(ExclusiveDijetsEvent& eventData, c
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void ExclusiveDijetsAnalysis::fillPileUpInfo(ExclusiveDijetsEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
+//Number of pile-up events
+
+  edm::Handle<std::vector< PileupSummaryInfo > >  PupInfo;
+  event.getByLabel(edm::InputTag("addPileupInfo"), PupInfo);
+
+  std::vector<PileupSummaryInfo>::const_iterator PVI;
+
+  int nm1 = -1; int n0 = -1; int np1 = -1;
+  for(PVI = PupInfo->begin(); PVI != PupInfo->end(); ++PVI) {
+
+     int BX = PVI->getBunchCrossing();
+
+     if(BX == -1) { 
+       nm1 = PVI->getPU_NumInteractions();
+     }
+     if(BX == 0) { 
+       n0 = PVI->getPU_NumInteractions();
+     }
+     if(BX == 1) { 
+       np1 = PVI->getPU_NumInteractions();
+     }
+
+  }
+  //eventData.SetMyWeight3D = LumiWeights_.weight3D( nm1,n0,np1);
+  eventData.SetNPileUpBxm1(nm1);
+  eventData.SetNPileUpBx0(n0);
+  eventData.SetNPileUpBxp1(np1);
+
+/////////////////////////////////////////////
 
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
