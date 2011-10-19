@@ -47,7 +47,7 @@ config.trackTagName = 'analysisTracks'
 if config.runOnMC:
     config.hltPaths =(@@TRIGGERSMC@@)
 else:
-    #config.hltPaths = (@@TRIGGERSDATA@@')
+    #config.hltPaths = (@@TRIGGERSDATA@@)
     config.hltPaths = (@@TRIGGERSDATA@@)
 
 #config.generator = 'Pythia6'
@@ -122,10 +122,10 @@ if not config.runOnMC:
     process.lumiWeight.rootFileName = cms.string(config.instLumiROOTFile)
 
 
-if config.runOnMC:
-     process.forwardQCDTTreeAnalysis.exclusiveDijetsAnalysis.AccessMCInfo = True
-else:
-     process.forwardQCDTTreeAnalysis.exclusiveDijetsAnalysis.AccessMCInfo = False
+#if config.runOnMC:
+#     process.forwardQCDTTreeAnalysis.exclusiveDijetsAnalysis.AccessMCInfo = True
+#else:
+#     process.forwardQCDTTreeAnalysis.exclusiveDijetsAnalysis.AccessMCInfo = False
  
 #process.load('RecoJets.Configuration.RecoPFJets_cff')
 #process.load('RecoJets.Configuration.RecoJets_cff')
@@ -215,6 +215,9 @@ process.forwardQCDTTreeAnalysis.exclusiveDijetsAnalysis.JetTag = "selectedPatJet
 process.forwardQCDTTreeAnalysis.exclusiveDijetsAnalysis.JetNonCorrTag = "ak5PFJets"
 if config.runOnMC:
     process.forwardQCDTTreeAnalysis.exclusiveDijetsAnalysis.AccessMCInfo = True
+else:
+    process.forwardQCDTTreeAnalysis.exclusiveDijetsAnalysis.AccessMCInfo = False
+
 
 ############# Turn-on the fastjet area calculation needed for the L1Fastjet ##############
 ############# applied only to PFJets because if CaloJets are re-recoed the JetID map will be lost #####
@@ -256,7 +259,6 @@ if config.runOnMC:
 process.analysis_reco_step = cms.Path(process.analysisSequences)
 process.analysis_forwardQCDAnalysis_step = cms.Path(process.eventSelectionHLT+
                                                     process.forwardQCDTTreeAnalysis)
-
 
 """
 

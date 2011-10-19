@@ -47,7 +47,7 @@ config.trackTagName = 'analysisTracks'
 if config.runOnMC:
     config.hltPaths =(@@TRIGGERSMC@@)
 else:
-    #config.hltPaths = (@@TRIGGERSDATA@@')
+    #config.hltPaths = (@@TRIGGERSDATA@@)
     config.hltPaths = (@@TRIGGERSDATA@@)
 
 #config.generator = 'Pythia6'
@@ -122,10 +122,10 @@ if not config.runOnMC:
     process.lumiWeight.rootFileName = cms.string(config.instLumiROOTFile)
 
 
-if config.runOnMC:
-     process.forwardQCDTTreeAnalysis.exclusiveDijetsAnalysis.AccessMCInfo = True
-else:
-     process.forwardQCDTTreeAnalysis.exclusiveDijetsAnalysis.AccessMCInfo = False
+#if config.runOnMC:
+#     process.forwardQCDTTreeAnalysis.exclusiveDijetsAnalysis.AccessMCInfo = True
+#else:
+#     process.forwardQCDTTreeAnalysis.exclusiveDijetsAnalysis.AccessMCInfo = False
  
 #process.load('RecoJets.Configuration.RecoPFJets_cff')
 #process.load('RecoJets.Configuration.RecoJets_cff')
@@ -215,6 +215,9 @@ process.forwardQCDTTreeAnalysis.exclusiveDijetsAnalysis.JetTag = "selectedPatJet
 process.forwardQCDTTreeAnalysis.exclusiveDijetsAnalysis.JetNonCorrTag = "ak5PFJets"
 if config.runOnMC:
     process.forwardQCDTTreeAnalysis.exclusiveDijetsAnalysis.AccessMCInfo = True
+else:
+    process.forwardQCDTTreeAnalysis.exclusiveDijetsAnalysis.AccessMCInfo = False
+
 
 ############# Turn-on the fastjet area calculation needed for the L1Fastjet ##############
 ############# applied only to PFJets because if CaloJets are re-recoed the JetID map will be lost #####
@@ -381,7 +384,7 @@ print '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@'
 dataset = '/QCD_Pt-120to170_TuneZ2_7TeV_pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM'
 uiworkingdir = 'crab_TestMC'
 userremotedir = '/crab_TestMC'
-lumixs = 'lumibylsXing_Cert_136033-149442_7TeV_Apr21ReReco_Collisions10_JSON.root'
+lumixs = ''
 nevent ='10'
 ejob = '100'
 sewhitelist = ''
@@ -398,15 +401,15 @@ mail='dmf@cern.ch'
 dataset = '/QCD_Pt-15to3000_TuneZ2_Flat_7TeV_pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM'
 uiworkingdir = 'crab_QCD_Pt-15to3000-Z2'
 userremotedir = '/crab_QCD_Pt-15to3000-Z2'
-lumixs = 'lumibylsXing_Cert_136033-149442_7TeV_Apr21ReReco_Collisions10_JSON.root'
-nevent ='5000000'
+lumixs = ''
+nevent ='4000000'
 ejob = '20000'
 sewhitelist = ''
 output = 'QCD_Pt-15to3000-Z2.root'
 triggersmc = "'HLT_Jet30_v*','HLT_Jet60_v*'"
 triggersdata = "'HLT_Jet30_v*','HLT_Jet60_v*'"
 mail='dmf@cern.ch'
-#ConfigHandler(dataset,uiworkingdir,userremotedir,sewhitelist,output,triggersmc,triggersdata,mail,nevent,ejob,lumixs)
+ConfigHandler(dataset,uiworkingdir,userremotedir,sewhitelist,output,triggersmc,triggersdata,mail,nevent,ejob,lumixs)
 
 #
 # Sample: /QCD_Pt-0to5_TuneZ2_7TeV_pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM 
@@ -415,7 +418,7 @@ mail='dmf@cern.ch'
 dataset = '/QCD_Pt-0to5_TuneZ2_7TeV_pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM'
 uiworkingdir = 'crab_QCD_Pt-0to5-Z2'
 userremotedir = '/crab_QCD_Pt-0to5-Z2'
-lumixs = 'lumibylsXing_Cert_136033-149442_7TeV_Apr21ReReco_Collisions10_JSON.root'
+lumixs = ''
 nevent ='1000000'
 ejob = '10000'
 sewhitelist = ''
@@ -423,7 +426,7 @@ output = 'QCD_Pt-0to5-Z2.root'
 triggersmc = "'HLT_Jet30_v*','HLT_Jet60_v*'"
 triggersdata = "'HLT_Jet30_v*','HLT_Jet60_v*'"
 mail='dmf@cern.ch'
-#ConfigHandler(dataset,uiworkingdir,userremotedir,sewhitelist,output,triggersmc,triggersdata,mail,nevent,ejob,lumixs)
+ConfigHandler(dataset,uiworkingdir,userremotedir,sewhitelist,output,triggersmc,triggersdata,mail,nevent,ejob,lumixs)
 
 #
 # Sample: /QCD_Pt-5to15_TuneZ2_7TeV_pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM
@@ -432,7 +435,7 @@ mail='dmf@cern.ch'
 dataset = '/QCD_Pt-5to15_TuneZ2_7TeV_pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM'
 uiworkingdir = 'crab_QCD_Pt-5to15-Z2'
 userremotedir = '/crab_QCD_Pt-5to15-Z2'
-lumixs = 'lumibylsXing_Cert_136033-149442_7TeV_Apr21ReReco_Collisions10_JSON.root'
+lumixs = ''
 nevent ='1000000'
 ejob = '10000'
 sewhitelist = ''
@@ -440,7 +443,7 @@ output = 'QCD_Pt-5to15-Z2.root'
 triggersmc = "'HLT_Jet30_v*','HLT_Jet60_v*'"
 triggersdata = "'HLT_Jet30_v*','HLT_Jet60_v*'"
 mail='dmf@cern.ch'
-#ConfigHandler(dataset,uiworkingdir,userremotedir,sewhitelist,output,triggersmc,triggersdata,mail,nevent,ejob,lumixs)
+ConfigHandler(dataset,uiworkingdir,userremotedir,sewhitelist,output,triggersmc,triggersdata,mail,nevent,ejob,lumixs)
 
 #
 # Sample: /QCD_Pt-15to30_TuneZ2_7TeV_pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM
@@ -449,15 +452,15 @@ mail='dmf@cern.ch'
 dataset = '/QCD_Pt-15to30_TuneZ2_7TeV_pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM'
 uiworkingdir = 'crab_QCD_Pt-15to30-Z2'
 userremotedir = '/crab_QCD_Pt-15to30-Z2'
-lumixs = 'lumibylsXing_Cert_136033-149442_7TeV_Apr21ReReco_Collisions10_JSON.root'
+lumixs = ''
 nevent ='1000000'
-ejob = '1000'
+ejob = '10000'
 sewhitelist = ''
 output = 'QCD_Pt-15to30-Z2.root'
 triggersmc = "'HLT_Jet30_v*','HLT_Jet60_v*'"
 triggersdata = "'HLT_Jet30_v*','HLT_Jet60_v*'"
 mail='dmf@cern.ch'
-#ConfigHandler(dataset,uiworkingdir,userremotedir,sewhitelist,output,triggersmc,triggersdata,mail,nevent,ejob,lumixs)
+ConfigHandler(dataset,uiworkingdir,userremotedir,sewhitelist,output,triggersmc,triggersdata,mail,nevent,ejob,lumixs)
 
 #
 # Sample: /QCD_Pt-30to50_TuneZ2_7TeV_pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM
@@ -466,7 +469,7 @@ mail='dmf@cern.ch'
 dataset = '/QCD_Pt-30to50_TuneZ2_7TeV_pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM'
 uiworkingdir = 'crab_QCD_Pt-30to50-Z2'
 userremotedir = '/crab_QCD_Pt-30to50-Z2'
-lumixs = 'lumibylsXing_Cert_136033-149442_7TeV_Apr21ReReco_Collisions10_JSON.root'
+lumixs = ''
 nevent ='1000000'
 ejob = '10000'
 sewhitelist = ''
@@ -474,7 +477,7 @@ output = 'QCD_Pt-30to50-Z2.root'
 triggersmc = "'HLT_Jet30_v*','HLT_Jet60_v*'"
 triggersdata = "'HLT_Jet30_v*','HLT_Jet60_v*'"
 mail='dmf@cern.ch'
-#ConfigHandler(dataset,uiworkingdir,userremotedir,sewhitelist,output,triggersmc,triggersdata,mail,nevent,ejob,lumixs)
+ConfigHandler(dataset,uiworkingdir,userremotedir,sewhitelist,output,triggersmc,triggersdata,mail,nevent,ejob,lumixs)
 
 #
 # Sample: /QCD_Pt-50to80_TuneZ2_7TeV_pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM
@@ -483,7 +486,7 @@ mail='dmf@cern.ch'
 dataset = '/QCD_Pt-50to80_TuneZ2_7TeV_pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM'
 uiworkingdir = 'crab_QCD_Pt-50to80-Z2'
 userremotedir = '/crab_QCD_Pt-50to80-Z2'
-lumixs = 'lumibylsXing_Cert_136033-149442_7TeV_Apr21ReReco_Collisions10_JSON.root'
+lumixs = ''
 nevent ='1000000'
 ejob = '10000'
 sewhitelist = ''
@@ -491,7 +494,7 @@ output = 'QCD_Pt-50to80-Z2.root'
 triggersmc = "'HLT_Jet30_v*','HLT_Jet60_v*'"
 triggersdata = "'HLT_Jet30_v*','HLT_Jet60_v*'"
 mail='dmf@cern.ch'
-#ConfigHandler(dataset,uiworkingdir,userremotedir,sewhitelist,output,triggersmc,triggersdata,mail,nevent,ejob,lumixs)
+ConfigHandler(dataset,uiworkingdir,userremotedir,sewhitelist,output,triggersmc,triggersdata,mail,nevent,ejob,lumixs)
 
 #
 # Sample: /QCD_Pt-80to120_TuneZ2_7TeV_pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM
@@ -500,7 +503,7 @@ mail='dmf@cern.ch'
 dataset = '/QCD_Pt-80to120_TuneZ2_7TeV_pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM'
 uiworkingdir = 'crab_QCD_Pt-80to120-Z2'
 userremotedir = '/crab_QCD_Pt-80to120-Z2'
-lumixs = 'lumibylsXing_Cert_136033-149442_7TeV_Apr21ReReco_Collisions10_JSON.root'
+lumixs = ''
 nevent ='1000000'
 ejob = '10000'
 sewhitelist = ''
@@ -508,7 +511,7 @@ output = 'QCD_Pt-80to120-Z2.root'
 triggersmc = "'HLT_Jet30_v*','HLT_Jet60_v*'"
 triggersdata = "'HLT_Jet30_v*','HLT_Jet60_v*'"
 mail='dmf@cern.ch'
-#ConfigHandler(dataset,uiworkingdir,userremotedir,sewhitelist,output,triggersmc,triggersdata,mail,nevent,ejob,lumixs)
+ConfigHandler(dataset,uiworkingdir,userremotedir,sewhitelist,output,triggersmc,triggersdata,mail,nevent,ejob,lumixs)
 
 #
 # Sample: /QCD_Pt-120to170_TuneZ2_7TeV_pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM
@@ -517,7 +520,7 @@ mail='dmf@cern.ch'
 dataset = '/QCD_Pt-120to170_TuneZ2_7TeV_pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM'
 uiworkingdir = 'crab_QCD_Pt-120to170-Z2'
 userremotedir = '/crab_QCD_Pt-120to170-Z2'
-lumixs = 'lumibylsXing_Cert_136033-149442_7TeV_Apr21ReReco_Collisions10_JSON.root'
+lumixs = ''
 nevent ='1000000'
 ejob = '10000'
 sewhitelist = ''
@@ -525,7 +528,7 @@ output = 'QCD_Pt-120to170-Z2.root'
 triggersmc = "'HLT_Jet30_v*','HLT_Jet60_v*'"
 triggersdata = "'HLT_Jet30_v*','HLT_Jet60_v*'"
 mail='dmf@cern.ch'
-#ConfigHandler(dataset,uiworkingdir,userremotedir,sewhitelist,output,triggersmc,triggersdata,mail,nevent,ejob,lumixs)
+ConfigHandler(dataset,uiworkingdir,userremotedir,sewhitelist,output,triggersmc,triggersdata,mail,nevent,ejob,lumixs)
 
 #
 # Sample: /QCD_Pt-170to300_TuneZ2_7TeV_pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM
@@ -534,7 +537,7 @@ mail='dmf@cern.ch'
 dataset = '/QCD_Pt-170to300_TuneZ2_7TeV_pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM'
 uiworkingdir = 'crab_QCD_Pt-170to300-Z2'
 userremotedir = '/crab_QCD_Pt-170to300-Z2'
-lumixs = 'lumibylsXing_Cert_136033-149442_7TeV_Apr21ReReco_Collisions10_JSON.root'
+lumixs = ''
 nevent ='1000000'
 ejob = '10000'
 sewhitelist = ''
@@ -542,7 +545,7 @@ output = 'QCD_Pt-170to300-Z2.root'
 triggersmc = "'HLT_Jet30_v*','HLT_Jet60_v*'"
 triggersdata = "'HLT_Jet30_v*','HLT_Jet60_v*'"
 mail='dmf@cern.ch'
-#ConfigHandler(dataset,uiworkingdir,userremotedir,sewhitelist,output,triggersmc,triggersdata,mail,nevent,ejob,lumixs)
+ConfigHandler(dataset,uiworkingdir,userremotedir,sewhitelist,output,triggersmc,triggersdata,mail,nevent,ejob,lumixs)
 
 #
 # Sample: /QCD_Pt-300to470_TuneZ2_7TeV_pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM
@@ -551,7 +554,7 @@ mail='dmf@cern.ch'
 dataset = '/QCD_Pt-300to470_TuneZ2_7TeV_pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM'
 uiworkingdir = 'crab_QCD_Pt-300to470-Z2'
 userremotedir = '/crab_QCD_Pt-300to470-Z2'
-lumixs = 'lumibylsXing_Cert_136033-149442_7TeV_Apr21ReReco_Collisions10_JSON.root'
+lumixs = ''
 nevent ='1000000'
 ejob = '10000'
 sewhitelist = ''
@@ -559,7 +562,7 @@ output = 'QCD_Pt-300to470-Z2.root'
 triggersmc = "'HLT_Jet30_v*','HLT_Jet60_v*'"
 triggersdata = "'HLT_Jet30_v*','HLT_Jet60_v*'"
 mail='dmf@cern.ch'
-#ConfigHandler(dataset,uiworkingdir,userremotedir,sewhitelist,output,triggersmc,triggersdata,mail,nevent,ejob,lumixs)
+ConfigHandler(dataset,uiworkingdir,userremotedir,sewhitelist,output,triggersmc,triggersdata,mail,nevent,ejob,lumixs)
 
 #
 # Sample: /QCD_Pt-470to600_TuneZ2_7TeV_pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM
@@ -568,7 +571,7 @@ mail='dmf@cern.ch'
 dataset = '/QCD_Pt-470to600_TuneZ2_7TeV_pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM'
 uiworkingdir = 'crab_QCD_Pt-470to600-Z2'
 userremotedir = '/crab_QCD_Pt-470to600-Z2'
-lumixs = 'lumibylsXing_Cert_136033-149442_7TeV_Apr21ReReco_Collisions10_JSON.root'
+lumixs = ''
 nevent ='1000000'
 ejob = '10000'
 sewhitelist = ''
@@ -576,7 +579,7 @@ output = 'QCD_Pt-470to600-Z2.root'
 triggersmc = "'HLT_Jet30_v*','HLT_Jet60_v*'"
 triggersdata = "'HLT_Jet30_v*','HLT_Jet60_v*'"
 mail='dmf@cern.ch'
-#ConfigHandler(dataset,uiworkingdir,userremotedir,sewhitelist,output,triggersmc,triggersdata,mail,nevent,ejob,lumixs)
+ConfigHandler(dataset,uiworkingdir,userremotedir,sewhitelist,output,triggersmc,triggersdata,mail,nevent,ejob,lumixs)
 
 #
 # Sample: /QCD_Pt-600to800_TuneZ2_7TeV_pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM
@@ -585,7 +588,7 @@ mail='dmf@cern.ch'
 dataset = '/QCD_Pt-600to800_TuneZ2_7TeV_pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM'
 uiworkingdir = 'crab_QCD_Pt-600to800-Z2'
 userremotedir = '/crab_QCD_Pt-600to800-Z2'
-lumixs = 'lumibylsXing_Cert_136033-149442_7TeV_Apr21ReReco_Collisions10_JSON.root'
+lumixs = ''
 nevent ='1000000'
 ejob = '10000'
 sewhitelist = ''
