@@ -78,9 +78,7 @@ if config.runPATSequences:
 	process.patTrigger.addL1Algos = cms.bool( True )
 	process.patJets.addTagInfos   = cms.bool( True )   
 
-## if not config.runOnMC:
-##     process.eventWeightSequence = cms.Sequence(process.lumiWeight) 
-##     process.eventWeight_step = cms.Path(process.eventWeightSequence)
+
 
 from ForwardAnalysis.ForwardTTreeAnalysis.addCastorRecHitCorrector import addCastorRecHitCorrector
 addCastorRecHitCorrector(process)
@@ -93,6 +91,10 @@ process.load("ForwardAnalysis.ForwardTTreeAnalysis.exclusiveDijetsAnalysisSequen
 ## if not config.runOnMC:
 ##     process.load('ForwardAnalysis.Utilities.lumiWeight_cfi')
 ##     process.lumiWeight.rootFileName = cms.string(config.instLumiROOTFile)
+
+## if not config.runOnMC:
+##     process.eventWeightSequence = cms.Sequence(process.lumiWeight) 
+##     process.eventWeight_step = cms.Path(process.eventWeightSequence)
 ############################################################################################################## 
 process.pfCandidateNoiseThresholds.src = "pfNoPileUpPFlow"
 process.tracksTransverseRegion.JetTag = "selectedPatJetsPFlow"
