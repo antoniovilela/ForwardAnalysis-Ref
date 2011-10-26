@@ -62,56 +62,59 @@ cout << " " << endl;
 TFile *outf = new TFile(savehistofile.c_str(),"RECREATE");
 int NEVENTS = tr->GetEntriesFast();
 
+TH1D *h_DeltaEtaGen = new TH1D("DeltaEtaGen","#DeltaGen#eta Distribution; #DeltaGen#eta; N events",20,0.0,5.2);
+TH1D *h_MxGenRange = new TH1D("MxGenRange","Mass_{X} Gen Distribution; M_{x}Gen [GeV]; N events",50,0,5000);
+
 TH1D *h_RJJ = new TH1D("RJJ","R_{jj} Distribution - Jets in |#eta| < 5.2 ; R_{jj}; N events",50,0,1);
 TH1D *h_RJJetsAtTracker = new TH1D("RJJetsAtTracker","R_{jj} Distribution - Jets in |#eta| < 2.9; R_{jj}; N events",50,0,1);
 
-TH1D *h_deltaEtaJets = new TH1D("deltaEtaJets","#Delta#eta_{jj} Distribution; #Delta#eta_{jj}; N events",20,-5.2,5.2);
-TH1D *h_deltaPhiJets = new TH1D("deltaPhiJets","#Delta#phi_{jj} Distribution; #Delta#phi_{jj}; N events",20,-3.2,3.2);
+TH1D *h_deltaEtaJets = new TH1D("deltaEtaJets","#Delta#eta_{jj} Distribution; #Delta#eta_{jj}; N events",20,0.0,5.2);
+TH1D *h_deltaPhiJets = new TH1D("deltaPhiJets","#Delta#phi_{jj} Distribution; #Delta#phi_{jj}; N events",20,0.0.2,3.2);
 TH1D *h_deltaPtJets = new TH1D("deltaPtJets","#Delta P_{T} Distribution; #Delta P_{T} [GeV.c^{-1}]; N events",40,0,400);
 TH1D *h_dijetMass = new TH1D("dijetMass","Dijet Invariant Mass Distribution; M_{jj} [GeV]; N events",40,0,400);
 
-TH1D *h_deltaEtaJets4 = new TH1D("deltaEtaJets4","#Delta#eta_{jj} Distribution; #Delta#eta_{jj}; N events",20,-5.2,5.2);
-TH1D *h_deltaPhiJets4 = new TH1D("deltaPhiJets4","#Delta#phi_{jj} Distribution; #Delta#phi_{jj}; N events",20,-3.2,3.2);
+TH1D *h_deltaEtaJets4 = new TH1D("deltaEtaJets4","#Delta#eta_{jj} Distribution; #Delta#eta_{jj}; N events",20,0.0,5.2);
+TH1D *h_deltaPhiJets4 = new TH1D("deltaPhiJets4","#Delta#phi_{jj} Distribution; #Delta#phi_{jj}; N events",20,0.0,3.2);
 TH1D *h_deltaPtJets4 = new TH1D("deltaPtJets4","#Delta P_{T} Distribution; #Delta P_{T} [GeV.c^{-1}]; N events",40,0,400);
 TH1D *h_dijetMass4 = new TH1D("dijetMass4","Dijet Invariant Mass Distribution; M_{jj} [GeV]; N events",40,0,400);
 
-TH1D *h_deltaEtaJets3 = new TH1D("deltaEtaJets3","#Delta#eta_{jj} Distribution; #Delta#eta_{jj}; N events",20,-5.2,5.2);
-TH1D *h_deltaPhiJets3 = new TH1D("deltaPhiJets3","#Delta#phi_{jj} Distribution; #Delta#phi_{jj}; N events",20,-3.2,3.2);
+TH1D *h_deltaEtaJets3 = new TH1D("deltaEtaJets3","#Delta#eta_{jj} Distribution; #Delta#eta_{jj}; N events",20,0.0,5.2);
+TH1D *h_deltaPhiJets3 = new TH1D("deltaPhiJets3","#Delta#phi_{jj} Distribution; #Delta#phi_{jj}; N events",20,0.0,3.2);
 TH1D *h_deltaPtJets3 = new TH1D("deltaPtJets3","#Delta P_{T} Distribution; #Delta P_{T} [GeV.c^{-1}]; N events",40,0,400);
 TH1D *h_dijetMass3 = new TH1D("dijetMass3","Dijet Invariant Mass Distribution; M_{jj} [GeV]; N events",40,0,400);
 
-TH1D *h_deltaEtaJets2 = new TH1D("deltaEtaJets2","#Delta#eta_{jj} Distribution; #Delta#eta_{jj}; N events",20,-5.2,5.2);
-TH1D *h_deltaPhiJets2 = new TH1D("deltaPhiJets2","#Delta#phi_{jj} Distribution; #Delta#phi_{jj}; N events",20,-3.2,3.2);
+TH1D *h_deltaEtaJets2 = new TH1D("deltaEtaJets2","#Delta#eta_{jj} Distribution; #Delta#eta_{jj}; N events",20,0.0,5.2);
+TH1D *h_deltaPhiJets2 = new TH1D("deltaPhiJets2","#Delta#phi_{jj} Distribution; #Delta#phi_{jj}; N events",20,0.0,3.2);
 TH1D *h_deltaPtJets2 = new TH1D("deltaPtJets2","#Delta P_{T} Distribution; #Delta P_{T} [GeV.c^{-1}]; N events",40,0,400);
 TH1D *h_dijetMass2 = new TH1D("dijetMass2","Dijet Invariant Mass Distribution; M_{jj} [GeV]; N events",40,0,400);
 
-TH1D *h_deltaEtaJets1 = new TH1D("deltaEtaJets1","#Delta#eta_{jj} Distribution; #Delta#eta_{jj}; N events",20,-5.2,5.2);
-TH1D *h_deltaPhiJets1 = new TH1D("deltaPhiJets1","#Delta#phi_{jj} Distribution; #Delta#phi_{jj}; N events",20,-3.2,3.2);
+TH1D *h_deltaEtaJets1 = new TH1D("deltaEtaJets1","#Delta#eta_{jj} Distribution; #Delta#eta_{jj}; N events",20,0.0,5.2);
+TH1D *h_deltaPhiJets1 = new TH1D("deltaPhiJets1","#Delta#phi_{jj} Distribution; #Delta#phi_{jj}; N events",20,0.0,3.2);
 TH1D *h_deltaPtJets1 = new TH1D("deltaPtJets1","#Delta P_{T} Distribution; #Delta P_{T} [GeV.c^{-1}]; N events",40,0,400);
 TH1D *h_dijetMass1 = new TH1D("dijetMass1","Dijet Invariant Mass Distribution; M_{jj} [GeV]; N events",40,0,400);
 
-TH1D *h_deltaEtaJetsAtTracker = new TH1D("deltaEtaJetsAtTracker","#Delta#eta_{jj} Distribution; #Delta#eta_{jj}; N events",20,-5.2,5.2);
-TH1D *h_deltaPhiJetsAtTracker = new TH1D("deltaPhiJetsAtTracker","#Delta#phi_{jj} Distribution; #Delta#phi_{jj}; N events",20,-3.2,3.2);
+TH1D *h_deltaEtaJetsAtTracker = new TH1D("deltaEtaJetsAtTracker","#Delta#eta_{jj} Distribution; #Delta#eta_{jj}; N events",20,0.0,5.2);
+TH1D *h_deltaPhiJetsAtTracker = new TH1D("deltaPhiJetsAtTracker","#Delta#phi_{jj} Distribution; #Delta#phi_{jj}; N events",20,0.0,3.2);
 TH1D *h_deltaPtJetsAtTracker = new TH1D("deltaPtJetsAtTracker","#Delta P_{T} Distribution; #Delta P_{T} [GeV.c^{-1}]; N events",40,0,400);
 TH1D *h_dijetMassAtTracker = new TH1D("dijetMassAtTracker","Dijet Invariant Mass Distribution; M_{jj} [GeV]; N events",40,0,400);
 
-TH1D *h_deltaEtaJetsAtTracker4 = new TH1D("deltaEtaJetsAtTracker4","#Delta#eta_{jj} Distribution; #Delta#eta_{jj}; N events",20,-5.2,5.2);
-TH1D *h_deltaPhiJetsAtTracker4 = new TH1D("deltaPhiJetsAtTracker4","#Delta#phi_{jj} Distribution; #Delta#phi_{jj}; N events",20,-3.2,3.2);
+TH1D *h_deltaEtaJetsAtTracker4 = new TH1D("deltaEtaJetsAtTracker4","#Delta#eta_{jj} Distribution; #Delta#eta_{jj}; N events",20,0.0,5.2);
+TH1D *h_deltaPhiJetsAtTracker4 = new TH1D("deltaPhiJetsAtTracker4","#Delta#phi_{jj} Distribution; #Delta#phi_{jj}; N events",20,0.0,3.2);
 TH1D *h_deltaPtJetsAtTracker4 = new TH1D("deltaPtJetsAtTracker4","#Delta P_{T} Distribution; #Delta P_{T} [GeV.c^{-1}]; N events",40,0,400);
 TH1D *h_dijetMassAtTracker4 = new TH1D("dijetMassAtTracker4","Dijet Invariant Mass Distribution; M_{jj} [GeV]; N events",40,0,400);
 
-TH1D *h_deltaEtaJetsAtTracker3 = new TH1D("deltaEtaJetsAtTracker3","#Delta#eta_{jj} Distribution; #Delta#eta_{jj}; N events",20,-5.2,5.2);
-TH1D *h_deltaPhiJetsAtTracker3 = new TH1D("deltaPhiJetsAtTracker3","#Delta#phi_{jj} Distribution; #Delta#phi_{jj}; N events",20,-3.2,3.2);
+TH1D *h_deltaEtaJetsAtTracker3 = new TH1D("deltaEtaJetsAtTracker3","#Delta#eta_{jj} Distribution; #Delta#eta_{jj}; N events",20,0.0,5.2);
+TH1D *h_deltaPhiJetsAtTracker3 = new TH1D("deltaPhiJetsAtTracker3","#Delta#phi_{jj} Distribution; #Delta#phi_{jj}; N events",20,0.0,3.2);
 TH1D *h_deltaPtJetsAtTracker3 = new TH1D("deltaPtJetsAtTracker3","#Delta P_{T} Distribution; #Delta P_{T} [GeV.c^{-1}]; N events",40,0,400);
 TH1D *h_dijetMassAtTracker3 = new TH1D("dijetMassAtTracker3","Dijet Invariant Mass Distribution; M_{jj} [GeV]; N events",40,0,400);
 
-TH1D *h_deltaEtaJetsAtTracker2 = new TH1D("deltaEtaJetsAtTracker2","#Delta#eta_{jj} Distribution; #Delta#eta_{jj}; N events",20,-5.2,5.2);
-TH1D *h_deltaPhiJetsAtTracker2 = new TH1D("deltaPhiJetsAtTracker2","#Delta#phi_{jj} Distribution; #Delta#phi_{jj}; N events",20,-3.2,3.2);
+TH1D *h_deltaEtaJetsAtTracker2 = new TH1D("deltaEtaJetsAtTracker2","#Delta#eta_{jj} Distribution; #Delta#eta_{jj}; N events",20,0.0,5.2);
+TH1D *h_deltaPhiJetsAtTracker2 = new TH1D("deltaPhiJetsAtTracker2","#Delta#phi_{jj} Distribution; #Delta#phi_{jj}; N events",20,0.0,3.2);
 TH1D *h_deltaPtJetsAtTracker2 = new TH1D("deltaPtJetsAtTracker2","#Delta P_{T} Distribution; #Delta P_{T} [GeV.c^{-1}]; N events",40,0,400);
 TH1D *h_dijetMassAtTracker2 = new TH1D("dijetMassAtTracker2","Dijet Invariant Mass Distribution; M_{jj} [GeV]; N events",40,0,400);
 
-TH1D *h_deltaEtaJetsAtTracker1 = new TH1D("deltaEtaJets1AtTracker1","#Delta#eta_{jj} Distribution; #Delta#eta_{jj}; N events",20,-5.2,5.2);
-TH1D *h_deltaPhiJetsAtTracker1 = new TH1D("deltaPhiJets1AtTracker1","#Delta#phi_{jj} Distribution; #Delta#phi_{jj}; N events",20,-3.2,3.2);
+TH1D *h_deltaEtaJetsAtTracker1 = new TH1D("deltaEtaJets1AtTracker1","#Delta#eta_{jj} Distribution; #Delta#eta_{jj}; N events",20,0.0,5.2);
+TH1D *h_deltaPhiJetsAtTracker1 = new TH1D("deltaPhiJets1AtTracker1","#Delta#phi_{jj} Distribution; #Delta#phi_{jj}; N events",20,0.0,3.2);
 TH1D *h_deltaPtJetsAtTracker1 = new TH1D("deltaPtJetsAtTracker1","#Delta P_{T} Distribution; #Delta P_{T} [GeV.c^{-1}]; N events",40,0,400);
 TH1D *h_dijetMassAtTracker1 = new TH1D("dijetMassAtTracker1","Dijet Invariant Mass Distribution; M_{jj} [GeV]; N events",40,0,400);
 
@@ -261,6 +264,8 @@ aSumE=0;
 //    if (eventexcl->GetHLTPath(optTrigger)) {
     ++counterTrigger;
 
+
+
         if(eventexcl->GetNVertex() > 0 && eventexcl->GetNVertex()<= optnVertex){
              if (dataon) { double weight = 1; weightlumi = 1; triggereff = 1;}
              else {double weight = LumiWeights_.ITweight(eventexcl->GetNPileUpBx0()); } 
@@ -277,7 +282,10 @@ aSumE=0;
 //cout << "" << endl;
 //cout << "Weight["<<i<<"]: " << weight << endl;
 //cout << "" << endl;
-
+            ////////////////////////////////////////////////
+            h_DeltaEtaGen->Fill(eventexcl->GetDeltaEtaGen(),triggereff*weight*weightlumi);
+            h_MxGenRange->Fill(eventexcl->GetMxGenRange(),triggereff*weight*weightlumi);
+            //////////////////////////////////////////////////
             // Setting Analysis Cut
             if (eventexcl->GetLeadingJetP4().Pt() > jet1PT && eventexcl->GetSecondJetP4().Pt() > jet2PT ){
                 
