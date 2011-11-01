@@ -117,6 +117,10 @@ if not config.runOnMC:
 # Analysis modules
 #--------------------------------
 from ForwardAnalysis.Utilities.countsAnalyzer_cfi import countsAnalyzer
+process.countsAll = countsAnalyzer.clone()
+process.countsAfterTrigger = countsAnalyzer.clone()
+process.countsAfterPATFWD = countsAnalyzer.clone()
+
 if not config.runOnMC:
     process.load('ForwardAnalysis.Utilities.lumiWeight_cfi')
     process.lumiWeight.rootFileName = cms.string(config.instLumiROOTFile)
@@ -257,8 +261,11 @@ if config.runOnMC:
                                process.etaMaxGen+process.etaMinGen*
                                process.edmNtupleEtaMaxGen+process.edmNtupleEtaMinGen)
 process.analysis_reco_step = cms.Path(process.analysisSequences)
-process.analysis_forwardQCDAnalysis_step = cms.Path(process.eventSelectionHLT+
-                                                    process.forwardQCDTTreeAnalysis)
+#process.analysis_forwardQCDAnalysis_step = cms.Path(process.eventSelectionHLT+
+#                                                    process.forwardQCDTTreeAnalysis)
+
+process.analysis_forwardQCDAnalysis_step = cms.Path(process.countsAll + process.eventSelectionHLT + process.countsAfterTrigger + process.forwardQCDTTreeAnalysis + process.countsAfterPATFWD)
+
 
 """
 
