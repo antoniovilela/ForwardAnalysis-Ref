@@ -117,6 +117,10 @@ if not config.runOnMC:
 # Analysis modules
 #--------------------------------
 from ForwardAnalysis.Utilities.countsAnalyzer_cfi import countsAnalyzer
+process.countsAll = countsAnalyzer.clone()
+process.countsAfterTrigger = countsAnalyzer.clone()
+process.countsAfterPATFWD = countsAnalyzer.clone()
+
 if not config.runOnMC:
     process.load('ForwardAnalysis.Utilities.lumiWeight_cfi')
     process.lumiWeight.rootFileName = cms.string(config.instLumiROOTFile)
@@ -134,7 +138,8 @@ if not config.runOnMC:
 process.load("ForwardAnalysis.ForwardTTreeAnalysis.exclusiveDijetsAnalysisSequences_cff")
 
 if config.runOnMC:
-    process.exclusiveDijetsHLTFilter.HLTPaths = config.hltPaths 
+    #process.exclusiveDijetsHLTFilter.HLTPaths = config.hltPaths 
+    process.exclusiveDijetsHLTFilter.HLTPaths = ['HLT*']
 else:
     process.exclusiveDijetsHLTFilter.HLTPaths = config.hltPaths 
 
@@ -257,8 +262,13 @@ if config.runOnMC:
                                process.etaMaxGen+process.etaMinGen*
                                process.edmNtupleEtaMaxGen+process.edmNtupleEtaMinGen)
 process.analysis_reco_step = cms.Path(process.analysisSequences)
-process.analysis_forwardQCDAnalysis_step = cms.Path(process.eventSelectionHLT+
+process.analysis_forwardQCDAnalysis_step = cms.Path(process.countsAll + process.eventSelectionHLT + process.countsAfterTrigger + process.forwardQCDTTreeAnalysis + process.countsAfterPATFWD)
+
+
+#process.analysis_forwardQCDAnalysis_step = cms.Path(process.eventSelectionHLT+
                                                     process.forwardQCDTTreeAnalysis)
+
+#process.analysis_forwardQCDAnalysis_step = cms.Path(process.forwardQCDTTreeAnalysis)
 
 """
 
@@ -381,7 +391,7 @@ print '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@'
 # TEST SAMPLE
 #
 
-dataset = '/QCD_Pt-120to170_TuneZ2_7TeV_pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM'
+dataset = '/QCD_Pt-0to5_TuneZ2_7TeV_pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM'
 uiworkingdir = 'crab_TestMC'
 userremotedir = '/crab_TestMC'
 lumixs = ''
