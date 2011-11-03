@@ -28,14 +28,12 @@
 //#include "EventMacro2010.h"
 
 //For 2011 Data: normalize MC
-//#include "EventMacro2011.h"
+#include "EventMacro2011.h"
 
 //TEST
-#include "EventMacroTest.h"
+//#include "EventMacroTest.h"
 
 // Castor in fC. log10(fabs(eventdiff->GetSumETotCastor())) Using fabs because there are some signals with -fC.
-// Castor Energy log10 put just in Legend. This is not calculated running this code.
-
 
 using namespace std;
 
@@ -70,14 +68,25 @@ cout << " " << endl;
 TFile *outf = new TFile(savehistofile.c_str(),"RECREATE");
 int NEVENTS = tr->GetEntriesFast();
 
-TH1D *h_DeltaEtaGen = new TH1D("DeltaEtaGen","#Delta#eta_{Gen} Distribution; #Delta#eta_{Gen}; N events",20,0.0,5.2);
-TH1D *h_MxGenRange = new TH1D("MxGenRange","Mass_{X} Gen Distribution; M_{x} Gen [GeV]; N events",50,0,5000);
+TH1D *h_DeltaEtaGenAll = new TH1D("DeltaEtaGenAll","#Delta#eta_{Gen} Distribution; #Delta#eta_{Gen}; N events",20,0.0,5.2);
+TH1D *h_MxGenRangeAll = new TH1D("MxGenRangeAll","Mass_{X} Gen Distribution; M_{x} Gen [GeV]; N events",50,0,5000);
+TH1D *h_RJJAll = new TH1D("RJJAll","R_{jj} Distribution; R_{jj}; N events",50,0,1);
+TH2F *h_MultHFAll = new TH2F( "mHFAll", "HF^{+} and HF^{-} Multiplicity; n HF^{+}; n HF^{-}; N events", 10,  0., 10., 10,  0., 10. );
+TH2F *h_ET_CalosAll = new TH2F( "ETCalosAll", "HF^{+} and Castor; Energy HF^{+}; log_{10} Castor Signal [fC]; N events", 10,  0., 10., 50,  0., 50. );
+TH1D *h_tracksAll = new TH1D("tracksAll","Tracks Multiplicity; n Tracks; N events",50,0,150);
+TH1D *h_pfetamaxAll = new TH1D("pfetamaxAll","Particle Flow #eta_{max} Distribution; #eta; N events",20,0,5.5);
+TH1D *h_pfetaminAll = new TH1D("pfetaminAll","Particle Flow #eta_{min} Distribution; #eta; N events",20,-5.5,0);
+TH1D *h_aSumEAll = new TH1D("aEnergyAll","Forward Backward Asymmetry Distribution ; (#sum HF^{+} - #sum HF^{-})x(#sum HF^{+} + #sum HF^{-})^{-1}; N events",50,-1,1);
+TH1D *h_deltaEtaJetsAll = new TH1D("deltaEtaJetsAll","#Delta#eta_{jj} Distribution; #Delta#eta_{jj}; N events",20,0.0,5.2);
+TH1D *h_deltaPhiJetsAll = new TH1D("deltaPhiJetsAll","#Delta#phi_{jj} Distribution; #Delta#phi_{jj}; N events",20,0.0,3.2);
+TH1D *h_deltaPtJetsAll = new TH1D("deltaPtJetsAll","#Delta P_{T} Distribution; #Delta P_{T} [GeV.c^{-1}]; N events",40,0,400);
+TH1D *h_dijetMassAll = new TH1D("dijetMassAll","Dijet Invariant Mass Distribution; M_{jj} [GeV]; N events",40,0,400);
 
 TH1D *h_RJJ = new TH1D("RJJ","R_{jj} Distribution - Jets in |#eta| < 5.2 ; R_{jj}; N events",50,0,1);
 TH1D *h_RJJetsAtTracker = new TH1D("RJJetsAtTracker","R_{jj} Distribution - Jets in |#eta| < 2.9; R_{jj}; N events",50,0,1);
 
 TH1D *h_deltaEtaJets = new TH1D("deltaEtaJets","#Delta#eta_{jj} Distribution; #Delta#eta_{jj}; N events",20,0.0,5.2);
-TH1D *h_deltaPhiJets = new TH1D("deltaPhiJets","#Delta#phi_{jj} Distribution; #Delta#phi_{jj}; N events",20,0.0.2,3.2);
+TH1D *h_deltaPhiJets = new TH1D("deltaPhiJets","#Delta#phi_{jj} Distribution; #Delta#phi_{jj}; N events",20,0.0,3.2);
 TH1D *h_deltaPtJets = new TH1D("deltaPtJets","#Delta P_{T} Distribution; #Delta P_{T} [GeV.c^{-1}]; N events",40,0,400);
 TH1D *h_dijetMass = new TH1D("dijetMass","Dijet Invariant Mass Distribution; M_{jj} [GeV]; N events",40,0,400);
 
@@ -142,8 +151,8 @@ TH2F *h_ET_Calos = new TH2F( "ETCalos", "HF^{+} and Castor: jets in |#eta| < 5.2
 
 TH2F *h_ET_CalosJetsAtTracker = new TH2F( "ETCalosJetsAtTracker", "HF^{+} and Castor: jets in |#eta| < 2.9; Energy HF^{+}; log_{10} Castor Signal [fC]; N events", 10,  0., 10., 50,  0., 50. );
 
-TH1D *h_pfetamax = new TH1D("pfetamax","Particle Flow #eta_{max} Distribution -  jets in |#eta| < 5.2;; #eta; N events",20,0,5.5);
-TH1D *h_pfetamin = new TH1D("pfetamin","Particle Flow #eta_{min} Distribution -  jets in |#eta| < 5.2;; #eta; N events",20,-5.5,0);
+TH1D *h_pfetamax = new TH1D("pfetamax","Particle Flow #eta_{max} Distribution -  jets in |#eta| < 5.2; #eta; N events",20,0,5.5);
+TH1D *h_pfetamin = new TH1D("pfetamin","Particle Flow #eta_{min} Distribution -  jets in |#eta| < 5.2; #eta; N events",20,-5.5,0);
 
 TH1D *h_pfetamaxJetsAtTracker = new TH1D("pfetamaxJetsAtTracker","Particle Flow #eta_{max} Distribution - jets in |#eta| < 2.9; #eta; N events",20,0,5.5);
 TH1D *h_pfetaminJetsAtTracker = new TH1D("pfetaminJetsAtTracker","Particle Flow #eta_{min} Distribution - jets in |#eta| < 2.9; #eta; N events",20,-5.5,0);
@@ -240,16 +249,16 @@ int decade = 0;
 // Event by Event Analysis
 //////////////////////////
 
-double aSumE;
 int TotalE = 0;
 int counterTrigger = 0;
 int counterJetsAll = 0;
 int counterJetsAtTracker = 0;
 double deltaphi_ = fabs(eventexcl->GetLeadingJetPhi()-eventexcl->GetSecondJetPhi());
+double aSumE_ = (eventdiff->GetSumEnergyHFPlus() - eventdiff->GetSumEnergyHFMinus())/(eventdiff->GetSumEnergyHFPlus() + eventdiff->GetSumEnergyHFMinus());
 
 
 for(unsigned i=0;i<NEVENTS;i++) {
-aSumE=0;
+aSumE_=0;
 ++TotalE;
 
     //----------- Progress Report -------------
@@ -291,22 +300,36 @@ aSumE=0;
 //cout << "" << endl;
 //cout << "Weight["<<i<<"]: " << weight << endl;
 //cout << "" << endl;
+
+            // Control Histograms          
             ////////////////////////////////////////////////
-            h_DeltaEtaGen->Fill(eventexcl->GetDeltaEtaGen(),triggereff*weight*weightlumi);
-            h_MxGenRange->Fill(eventexcl->GetMxGenRange(),triggereff*weight*weightlumi);
+                 h_DeltaEtaGenAll->Fill(eventexcl->GetDeltaEtaGen(),triggereff*weight*weightlumi);
+                 h_MxGenRangeAll->Fill(eventexcl->GetMxGenRange(),triggereff*weight*weightlumi);
+                 h_RJJAll->Fill(eventexcl->GetRjjFromJets(),triggereff*weight*weightlumi);
+                 h_MultHFAll->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),triggereff*weight*weightlumi);
+                 h_ET_CalosAll->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())),triggereff*weight*weightlumi);
+                 h_tracksAll->Fill(eventdiff->GetMultiplicityTracks(),triggereff*weight*weightlumi);
+                 h_aSumEAll->Fill(aSumE_,triggereff*weight*weightlumi);
+                 h_pfetaminAll->Fill(eventdiff->GetEtaMinFromPFCands(),triggereff*weight*weightlumi);
+                 h_pfetamaxAll->Fill(eventdiff->GetEtaMaxFromPFCands(),triggereff*weight*weightlumi);
+                 h_deltaEtaJetsAll->Fill(eventexcl->GetJetsDeltaEta(),triggereff*weight*weightlumi);
+                 h_deltaPhiJetsAll->Fill(deltaphi_,triggereff*weight*weightlumi);
+                 h_deltaPtJetsAll->Fill(eventexcl->GetJetsDeltaPt(),triggereff*weight*weightlumi);
+                 h_dijetMassAll->Fill(eventexcl->GetMassDijets(),triggereff*weight*weightlumi);
             //////////////////////////////////////////////////
-            // Setting Analysis Cut
+          
+
+ // Setting Analysis Cut
             if (eventexcl->GetLeadingJetP4().Pt() > jet1PT && eventexcl->GetSecondJetP4().Pt() > jet2PT ){
                 
                 if (eventexcl->GetLeadingJetP4().Eta() < 5.2 && eventexcl->GetSecondJetP4().Eta() < 5.2 && eventexcl->GetLeadingJetP4().Eta() > -5.2 && eventexcl->GetSecondJetP4().Eta() > -5.2){
-                aSumE = (eventdiff->GetSumEnergyHFPlus() - eventdiff->GetSumEnergyHFMinus())/(eventdiff->GetSumEnergyHFPlus() + eventdiff->GetSumEnergyHFMinus());
 
                  ++counterJetsAll;
                  h_RJJ->Fill(eventexcl->GetRjjFromJets(),triggereff*weight*weightlumi);
                  h_MultHF->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),triggereff*weight*weightlumi);
                  h_ET_Calos->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())),triggereff*weight*weightlumi);
                  h_tracks->Fill(eventdiff->GetMultiplicityTracks(),triggereff*weight*weightlumi);
-                 h_aSumE->Fill(aSumE,triggereff*weight*weightlumi);
+                 h_aSumE->Fill(aSumE_,triggereff*weight*weightlumi);
                  h_pfetamin->Fill(eventdiff->GetEtaMinFromPFCands(),triggereff*weight*weightlumi);
                  h_pfetamax->Fill(eventdiff->GetEtaMaxFromPFCands(),triggereff*weight*weightlumi);
                  h_deltaEtaJets->Fill(eventexcl->GetJetsDeltaEta(),triggereff*weight*weightlumi);
@@ -320,7 +343,7 @@ aSumE=0;
                       h_MultHF4->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),triggereff*weight*weightlumi);
                       h_ET_Calos4->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())),triggereff*weight*weightlumi);
                       h_tracks4->Fill(eventdiff->GetMultiplicityTracks(),triggereff*weight*weightlumi);
-                      h_aSumE4->Fill(aSumE,triggereff*weight*weightlumi);
+                      h_aSumE4->Fill(aSumE_,triggereff*weight*weightlumi);
                       h_deltaEtaJets4->Fill(eventexcl->GetJetsDeltaEta(),triggereff*weight*weightlumi);
                       h_deltaPhiJets4->Fill(deltaphi_,triggereff*weight*weightlumi);
                       h_deltaPtJets4->Fill(eventexcl->GetJetsDeltaPt(),triggereff*weight*weightlumi);
@@ -332,7 +355,7 @@ aSumE=0;
                       h_MultHF3->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),triggereff*weight*weightlumi);
                       h_ET_Calos3->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())),triggereff*weight*weightlumi);
                       h_tracks3->Fill(eventdiff->GetMultiplicityTracks(),triggereff*weight*weightlumi);
-                      h_aSumE3->Fill(aSumE,triggereff*weight*weightlumi);
+                      h_aSumE3->Fill(aSumE_,triggereff*weight*weightlumi);
                       h_deltaEtaJets3->Fill(eventexcl->GetJetsDeltaEta(),triggereff*weight*weightlumi);
                       h_deltaPhiJets3->Fill(deltaphi_,triggereff*weight*weightlumi);
                       h_deltaPtJets3->Fill(eventexcl->GetJetsDeltaPt(),triggereff*weight*weightlumi);
@@ -345,7 +368,7 @@ aSumE=0;
                       h_MultHF2->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),triggereff*weight*weightlumi);
                       h_ET_Calos2->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())),triggereff*weight*weightlumi);
                       h_tracks2->Fill(eventdiff->GetMultiplicityTracks(),triggereff*weight*weightlumi);
-                      h_aSumE2->Fill(aSumE,triggereff*weight*weightlumi);
+                      h_aSumE2->Fill(aSumE_,triggereff*weight*weightlumi);
                       h_deltaEtaJets2->Fill(eventexcl->GetJetsDeltaEta(),triggereff*weight*weightlumi);
                       h_deltaPhiJets2->Fill(deltaphi_,triggereff*weight*weightlumi);
                       h_deltaPtJets2->Fill(eventexcl->GetJetsDeltaPt(),triggereff*weight*weightlumi);
@@ -358,7 +381,7 @@ aSumE=0;
                       h_MultHF1->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),triggereff*weight*weightlumi);
                       h_ET_Calos1->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())),triggereff*weight*weightlumi);
                       h_tracks1->Fill(eventdiff->GetMultiplicityTracks(),triggereff*weight*weightlumi);
-                      h_aSumE1->Fill(aSumE,triggereff*weight*weightlumi);
+                      h_aSumE1->Fill(aSumE_,triggereff*weight*weightlumi);
                       h_deltaEtaJets1->Fill(eventexcl->GetJetsDeltaEta(),triggereff*weight*weightlumi);
                       h_deltaPhiJets1->Fill(deltaphi_,triggereff*weight*weightlumi);
                       h_deltaPtJets1->Fill(eventexcl->GetJetsDeltaPt(),triggereff*weight*weightlumi);
@@ -369,14 +392,13 @@ aSumE=0;
                  }  
 
                 if (eventexcl->GetLeadingJetP4().Eta() < 2.9 && eventexcl->GetSecondJetP4().Eta() < 2.9 && eventexcl->GetLeadingJetP4().Eta() > -2.9 && eventexcl->GetSecondJetP4().Eta() > -2.9){
-                aSumE = (eventdiff->GetSumEnergyHFPlus() - eventdiff->GetSumEnergyHFMinus())/(eventdiff->GetSumEnergyHFPlus() + eventdiff->GetSumEnergyHFMinus());
-  
+
                 ++counterJetsAtTracker;
                 h_RJJetsAtTracker->Fill(eventexcl->GetRjjFromJets(),triggereff*weight*weightlumi);
                 h_MultHFJetsAtTracker->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),triggereff*weight*weightlumi);
                 h_ET_CalosJetsAtTracker->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())),triggereff*weight*weightlumi);
                 h_tracksJetsAtTracker->Fill(eventdiff->GetMultiplicityTracks(),triggereff*weight*weightlumi);
-                h_aSumEJetsAtTracker->Fill(aSumE,triggereff*weight*weightlumi);
+                h_aSumEJetsAtTracker->Fill(aSumE_,triggereff*weight*weightlumi);
                 h_pfetaminJetsAtTracker->Fill(eventdiff->GetEtaMinFromPFCands(),triggereff*weight*weightlumi);
                 h_pfetamaxJetsAtTracker->Fill(eventdiff->GetEtaMaxFromPFCands(),triggereff*weight*weightlumi);
                 h_deltaEtaJetsAtTracker->Fill(eventexcl->GetJetsDeltaEta(),triggereff*weight*weightlumi);
@@ -390,7 +412,7 @@ aSumE=0;
                       h_MultHFJetsAtTracker4->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),triggereff*weight*weightlumi);
                       h_ET_CalosJetsAtTracker4->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())),triggereff*weight*weightlumi);
                       h_tracksJetsAtTracker4->Fill(eventdiff->GetMultiplicityTracks(),triggereff*weight*weightlumi);
-                      h_aSumEJetsAtTracker4->Fill(aSumE,triggereff*weight*weightlumi);
+                      h_aSumEJetsAtTracker4->Fill(aSumE_,triggereff*weight*weightlumi);
                       h_deltaEtaJetsAtTracker4->Fill(eventexcl->GetJetsDeltaEta(),triggereff*weight*weightlumi);
                       h_deltaPhiJetsAtTracker4->Fill(deltaphi_,triggereff*weight*weightlumi);
                       h_deltaPtJetsAtTracker4->Fill(eventexcl->GetJetsDeltaPt(),triggereff*weight*weightlumi);
@@ -402,7 +424,7 @@ aSumE=0;
                       h_MultHFJetsAtTracker3->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),triggereff*weight*weightlumi);
                       h_ET_CalosJetsAtTracker3->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())),triggereff*weight*weightlumi);
                       h_tracksJetsAtTracker3->Fill(eventdiff->GetMultiplicityTracks(),triggereff*weight*weightlumi);
-                      h_aSumEJetsAtTracker3->Fill(aSumE,triggereff*weight*weightlumi);
+                      h_aSumEJetsAtTracker3->Fill(aSumE_,triggereff*weight*weightlumi);
                       h_deltaEtaJetsAtTracker3->Fill(eventexcl->GetJetsDeltaEta(),triggereff*weight*weightlumi);
                       h_deltaPhiJetsAtTracker3->Fill(deltaphi_,triggereff*weight*weightlumi);
                       h_deltaPtJetsAtTracker3->Fill(eventexcl->GetJetsDeltaPt(),triggereff*weight*weightlumi);
@@ -414,7 +436,7 @@ aSumE=0;
                       h_MultHFJetsAtTracker2->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),triggereff*weight*weightlumi);
                       h_ET_CalosJetsAtTracker2->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())),triggereff*weight*weightlumi);
                       h_tracksJetsAtTracker2->Fill(eventdiff->GetMultiplicityTracks(),triggereff*weight*weightlumi);
-                      h_aSumEJetsAtTracker2->Fill(aSumE,triggereff*weight*weightlumi);
+                      h_aSumEJetsAtTracker2->Fill(aSumE_,triggereff*weight*weightlumi);
                       h_deltaEtaJetsAtTracker2->Fill(eventexcl->GetJetsDeltaEta(),triggereff*weight*weightlumi);
                       h_deltaPhiJetsAtTracker2->Fill(deltaphi_,triggereff*weight*weightlumi);
                       h_deltaPtJetsAtTracker2->Fill(eventexcl->GetJetsDeltaPt(),triggereff*weight*weightlumi);
@@ -426,7 +448,7 @@ aSumE=0;
                       h_MultHFJetsAtTracker1->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),triggereff*weight*weightlumi);
                       h_ET_CalosJetsAtTracker1->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())),triggereff*weight*weightlumi);
                       h_tracksJetsAtTracker1->Fill(eventdiff->GetMultiplicityTracks(),triggereff*weight*weightlumi);
-                      h_aSumEJetsAtTracker1->Fill(aSumE,triggereff*weight*weightlumi);
+                      h_aSumEJetsAtTracker1->Fill(aSumE_,triggereff*weight*weightlumi);
                       h_deltaEtaJetsAtTracker1->Fill(eventexcl->GetJetsDeltaEta(),triggereff*weight*weightlumi);
                       h_deltaPhiJetsAtTracker1->Fill(deltaphi_,triggereff*weight*weightlumi);
                       h_deltaPtJetsAtTracker1->Fill(eventexcl->GetJetsDeltaPt(),triggereff*weight*weightlumi);
