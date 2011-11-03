@@ -245,6 +245,7 @@ int TotalE = 0;
 int counterTrigger = 0;
 int counterJetsAll = 0;
 int counterJetsAtTracker = 0;
+double deltaphi_ = fabs(eventexcl->GetLeadingJetPhi()-eventexcl->GetSecondJetPhi());
 
 
 for(unsigned i=0;i<NEVENTS;i++) {
@@ -309,7 +310,7 @@ aSumE=0;
                  h_pfetamin->Fill(eventdiff->GetEtaMinFromPFCands(),triggereff*weight*weightlumi);
                  h_pfetamax->Fill(eventdiff->GetEtaMaxFromPFCands(),triggereff*weight*weightlumi);
                  h_deltaEtaJets->Fill(eventexcl->GetJetsDeltaEta(),triggereff*weight*weightlumi);
-                 h_deltaPhiJets->Fill(fabs(eventexcl->GetLeadingJetPhi()-eventexcl->GetSecondJetPhi()),triggereff*weight*weightlumi);
+                 h_deltaPhiJets->Fill(deltaphi_,triggereff*weight*weightlumi);
                  h_deltaPtJets->Fill(eventexcl->GetJetsDeltaPt(),triggereff*weight*weightlumi);
                  h_dijetMass->Fill(eventexcl->GetMassDijets(),triggereff*weight*weightlumi);
 
@@ -321,7 +322,7 @@ aSumE=0;
                       h_tracks4->Fill(eventdiff->GetMultiplicityTracks(),triggereff*weight*weightlumi);
                       h_aSumE4->Fill(aSumE,triggereff*weight*weightlumi);
                       h_deltaEtaJets4->Fill(eventexcl->GetJetsDeltaEta(),triggereff*weight*weightlumi);
-                      h_deltaPhiJets4->Fill(fabs(eventexcl->GetLeadingJetPhi()-eventexcl->GetSecondJetPhi()),triggereff*weight*weightlumi);
+                      h_deltaPhiJets4->Fill(deltaphi_,triggereff*weight*weightlumi);
                       h_deltaPtJets4->Fill(eventexcl->GetJetsDeltaPt(),triggereff*weight*weightlumi);
                       h_dijetMass4->Fill(eventexcl->GetMassDijets(),triggereff*weight*weightlumi);
                       }
@@ -333,7 +334,7 @@ aSumE=0;
                       h_tracks3->Fill(eventdiff->GetMultiplicityTracks(),triggereff*weight*weightlumi);
                       h_aSumE3->Fill(aSumE,triggereff*weight*weightlumi);
                       h_deltaEtaJets3->Fill(eventexcl->GetJetsDeltaEta(),triggereff*weight*weightlumi);
-                      h_deltaPhiJets3->Fill(fabs(eventexcl->GetLeadingJetPhi()-eventexcl->GetSecondJetPhi()),triggereff*weight*weightlumi);
+                      h_deltaPhiJets3->Fill(deltaphi_,triggereff*weight*weightlumi);
                       h_deltaPtJets3->Fill(eventexcl->GetJetsDeltaPt(),triggereff*weight*weightlumi);
                       h_dijetMass3->Fill(eventexcl->GetMassDijets(),triggereff*weight*weightlumi);
                       
@@ -346,7 +347,7 @@ aSumE=0;
                       h_tracks2->Fill(eventdiff->GetMultiplicityTracks(),triggereff*weight*weightlumi);
                       h_aSumE2->Fill(aSumE,triggereff*weight*weightlumi);
                       h_deltaEtaJets2->Fill(eventexcl->GetJetsDeltaEta(),triggereff*weight*weightlumi);
-                      h_deltaPhiJets2->Fill(fabs(eventexcl->GetLeadingJetPhi()-eventexcl->GetSecondJetPhi()),triggereff*weight*weightlumi);
+                      h_deltaPhiJets2->Fill(deltaphi_,triggereff*weight*weightlumi);
                       h_deltaPtJets2->Fill(eventexcl->GetJetsDeltaPt(),triggereff*weight*weightlumi);
                       h_dijetMass2->Fill(eventexcl->GetMassDijets(),triggereff*weight*weightlumi);
                       
@@ -359,7 +360,7 @@ aSumE=0;
                       h_tracks1->Fill(eventdiff->GetMultiplicityTracks(),triggereff*weight*weightlumi);
                       h_aSumE1->Fill(aSumE,triggereff*weight*weightlumi);
                       h_deltaEtaJets1->Fill(eventexcl->GetJetsDeltaEta(),triggereff*weight*weightlumi);
-                      h_deltaPhiJets1->Fill(fabs(eventexcl->GetLeadingJetPhi()-eventexcl->GetSecondJetPhi()),triggereff*weight*weightlumi);
+                      h_deltaPhiJets1->Fill(deltaphi_,triggereff*weight*weightlumi);
                       h_deltaPtJets1->Fill(eventexcl->GetJetsDeltaPt(),triggereff*weight*weightlumi);
                       h_dijetMass1->Fill(eventexcl->GetMassDijets(),triggereff*weight*weightlumi);
                       
@@ -379,7 +380,7 @@ aSumE=0;
                 h_pfetaminJetsAtTracker->Fill(eventdiff->GetEtaMinFromPFCands(),triggereff*weight*weightlumi);
                 h_pfetamaxJetsAtTracker->Fill(eventdiff->GetEtaMaxFromPFCands(),triggereff*weight*weightlumi);
                 h_deltaEtaJetsAtTracker->Fill(eventexcl->GetJetsDeltaEta(),triggereff*weight*weightlumi);
-                h_deltaPhiJetsAtTracker->Fill(fabs(eventexcl->GetLeadingJetPhi()-eventexcl->GetSecondJetPhi()),triggereff*weight*weightlumi);
+                h_deltaPhiJetsAtTracker->Fill(deltaphi_,triggereff*weight*weightlumi);
                 h_deltaPtJetsAtTracker->Fill(eventexcl->GetJetsDeltaPt(),triggereff*weight*weightlumi);
                 h_dijetMassAtTracker->Fill(eventexcl->GetMassDijets(),triggereff*weight*weightlumi);
                       
@@ -391,7 +392,7 @@ aSumE=0;
                       h_tracksJetsAtTracker4->Fill(eventdiff->GetMultiplicityTracks(),triggereff*weight*weightlumi);
                       h_aSumEJetsAtTracker4->Fill(aSumE,triggereff*weight*weightlumi);
                       h_deltaEtaJetsAtTracker4->Fill(eventexcl->GetJetsDeltaEta(),triggereff*weight*weightlumi);
-                      h_deltaPhiJetsAtTracker4->Fill(fabs(eventexcl->GetLeadingJetPhi()-eventexcl->GetSecondJetPhi()),triggereff*weight*weightlumi);
+                      h_deltaPhiJetsAtTracker4->Fill(deltaphi_,triggereff*weight*weightlumi);
                       h_deltaPtJetsAtTracker4->Fill(eventexcl->GetJetsDeltaPt(),triggereff*weight*weightlumi);
                       h_dijetMassAtTracker4->Fill(eventexcl->GetMassDijets(),triggereff*weight*weightlumi);
                       }
@@ -403,7 +404,7 @@ aSumE=0;
                       h_tracksJetsAtTracker3->Fill(eventdiff->GetMultiplicityTracks(),triggereff*weight*weightlumi);
                       h_aSumEJetsAtTracker3->Fill(aSumE,triggereff*weight*weightlumi);
                       h_deltaEtaJetsAtTracker3->Fill(eventexcl->GetJetsDeltaEta(),triggereff*weight*weightlumi);
-                      h_deltaPhiJetsAtTracker3->Fill(fabs(eventexcl->GetLeadingJetPhi()-eventexcl->GetSecondJetPhi()),triggereff*weight*weightlumi);
+                      h_deltaPhiJetsAtTracker3->Fill(deltaphi_,triggereff*weight*weightlumi);
                       h_deltaPtJetsAtTracker3->Fill(eventexcl->GetJetsDeltaPt(),triggereff*weight*weightlumi);
                       h_dijetMassAtTracker3->Fill(eventexcl->GetMassDijets(),triggereff*weight*weightlumi);
                       }
@@ -415,7 +416,7 @@ aSumE=0;
                       h_tracksJetsAtTracker2->Fill(eventdiff->GetMultiplicityTracks(),triggereff*weight*weightlumi);
                       h_aSumEJetsAtTracker2->Fill(aSumE,triggereff*weight*weightlumi);
                       h_deltaEtaJetsAtTracker2->Fill(eventexcl->GetJetsDeltaEta(),triggereff*weight*weightlumi);
-                      h_deltaPhiJetsAtTracker2->Fill(fabs(eventexcl->GetLeadingJetPhi()-eventexcl->GetSecondJetPhi()),triggereff*weight*weightlumi);
+                      h_deltaPhiJetsAtTracker2->Fill(deltaphi_,triggereff*weight*weightlumi);
                       h_deltaPtJetsAtTracker2->Fill(eventexcl->GetJetsDeltaPt(),triggereff*weight*weightlumi);
                       h_dijetMassAtTracker2->Fill(eventexcl->GetMassDijets(),triggereff*weight*weightlumi);
                       }
@@ -427,7 +428,7 @@ aSumE=0;
                       h_tracksJetsAtTracker1->Fill(eventdiff->GetMultiplicityTracks(),triggereff*weight*weightlumi);
                       h_aSumEJetsAtTracker1->Fill(aSumE,triggereff*weight*weightlumi);
                       h_deltaEtaJetsAtTracker1->Fill(eventexcl->GetJetsDeltaEta(),triggereff*weight*weightlumi);
-                      h_deltaPhiJetsAtTracker1->Fill(fabs(eventexcl->GetLeadingJetPhi()-eventexcl->GetSecondJetPhi()),triggereff*weight*weightlumi);
+                      h_deltaPhiJetsAtTracker1->Fill(deltaphi_,triggereff*weight*weightlumi);
                       h_deltaPtJetsAtTracker1->Fill(eventexcl->GetJetsDeltaPt(),triggereff*weight*weightlumi);
                       h_dijetMassAtTracker1->Fill(eventexcl->GetMassDijets(),triggereff*weight*weightlumi);
                       }
