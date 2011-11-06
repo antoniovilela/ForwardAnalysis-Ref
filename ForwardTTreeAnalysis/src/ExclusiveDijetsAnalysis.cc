@@ -152,7 +152,11 @@ void ExclusiveDijetsAnalysis::fillEventData(ExclusiveDijetsEvent& eventData, con
   fillEventInfo(eventData,event,setup);
   fillTriggerInfo(eventData,event,setup);
   fillVertexInfo(eventData,event,setup);
-  fillJetInfo(eventData,event,setup);
+ 
+
+ fillJetInfo(eventData,event,setup);
+
+
   fillMultiplicities(eventData,event,setup);
   fillXiInfo(eventData,event,setup);
   fillPFFlowInfo(eventData,event,setup);
@@ -282,10 +286,9 @@ void ExclusiveDijetsAnalysis::fillJetInfo(ExclusiveDijetsEvent& eventData, const
   if(jetCollectionH->size() > 1){
      const reco::Jet& jet1 = (*jetCollectionH)[0];// they come out ordered right?
      const reco::Jet& jet2 = (*jetCollectionH)[1];
-   
 
      eventData.SetLeadingJetPt(jet1.pt());
-    
+   
      eventData.SetLeadingJetEta(jet1.eta());
      eventData.SetLeadingJetPhi(jet1.phi());
      eventData.SetLeadingJetP4(jet1.p4());
@@ -328,22 +331,34 @@ void ExclusiveDijetsAnalysis::fillJetInfo(ExclusiveDijetsEvent& eventData, const
 
      eventData.SetMxFromPFCands(allPFCands.M());
 
-     //Rj,Rjj & Rjj added by eliza
+   //Rj,Rjj & Rjj added by eliza
      double RjFromJets = Rj(*jetCollectionH,*jetCollectionH);
+
+// Defense Added by Diego     
+     if(jetCollectionH->size() > 1){
      double RjjFromJets = Rjj(*jetCollectionH,*jetCollectionH);
-    
+     eventData.SetRjjFromJets(RjjFromJets);
+     }
+     else eventData.SetRjjFromJets(-1);
+///////////////////////////////////////////
 
      edm::Handle<edm::View<reco::Jet> > jetCollectionNonCorrH;
      event.getByLabel(jetNonCorrTag_,jetCollectionNonCorrH);
 
      double RjFromPFCands = Rj(*jetCollectionNonCorrH,*particleFlowCollectionH);
+
+// Defense Added by Diego     
+     if(jetCollectionNonCorrH->size() > 1){
      double RjjFromPFCands = Rjj(*jetCollectionNonCorrH,*particleFlowCollectionH);
-    
+     eventData.SetRjjFromPFCands(RjjFromPFCands);
+     }
+     else eventData.SetRjjFromPFCands(-1);
+//////////////////////////////////////////////
 
      eventData.SetRjFromJets(RjFromJets);
      eventData.SetRjFromPFCands(RjFromPFCands);
-     eventData.SetRjjFromJets(RjjFromJets);
-     eventData.SetRjjFromPFCands(RjjFromPFCands);
+     //eventData.SetRjjFromJets(RjjFromJets);
+     //eventData.SetRjjFromPFCands(RjjFromPFCands);
 
      if(usePAT_){
         const pat::Jet* patJet1 = dynamic_cast<const pat::Jet*>(&jet1);
@@ -689,17 +704,17 @@ double ExclusiveDijetsAnalysis::Rj(OneJetColl& jetCollection,OnePartColl& partCo
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 template <class JetColl,class PartColl>
 double ExclusiveDijetsAnalysis::Rjj(JetColl& jetCollection,PartColl& partCollection){
+
   math::XYZTLorentzVector dijetSystem(0.,0.,0.,0.);
   dijetSystem += (jetCollection[0]).p4();
   dijetSystem += (jetCollection[1]).p4();
-
 
   math::XYZTLorentzVector allCands(0.,0.,0.,0.);
   for(typename PartColl::const_iterator part = partCollection.begin();
                                         part != partCollection.end(); ++part) allCands += part->p4();
 
   return allCands.M() > 0. ? (dijetSystem.M()/allCands.M()) : -1.;
-  
+    
 }
 
 
