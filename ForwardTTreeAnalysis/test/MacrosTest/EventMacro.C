@@ -28,10 +28,10 @@
 //#include "EventMacro2010.h"
 
 //For 2011 Data: normalize MC
-#include "EventMacro2011.h"
+//#include "EventMacro2011.h"
 
 //TEST
-//#include "EventMacroTest.h"
+#include "EventMacroTest.h"
 
 // Castor in fC. log10(fabs(eventdiff->GetSumETotCastor())) Using fabs because there are some signals with -fC.
 
@@ -81,6 +81,8 @@ TH1D *h_deltaEtaJetsAll = new TH1D("deltaEtaJetsAll","#Delta#eta_{jj} Distributi
 TH1D *h_deltaPhiJetsAll = new TH1D("deltaPhiJetsAll","#Delta#phi_{jj} Distribution; #Delta#phi_{jj}; N events",20,0.0,3.2);
 TH1D *h_deltaPtJetsAll = new TH1D("deltaPtJetsAll","#Delta P_{T} Distribution; #Delta P_{T} [GeV.c^{-1}]; N events",40,0,400);
 TH1D *h_dijetMassAll = new TH1D("dijetMassAll","Dijet Invariant Mass Distribution; M_{jj} [GeV]; N events",40,0,400);
+TH1D *h_pTJet1 = new TH1D("pTJet1All","Leading Jet - P_{T} Distribution; P_{T} [GeV.c^{-1}]; N events",100,0,2000);
+TH1D *h_pTJet2 = new TH1D("pTJet2All","Second Jet  - P_{T} Distribution; P_{T} [GeV.c^{-1}]; N events",100,0,2000);
 
 TH1D *h_RJJ = new TH1D("RJJ","R_{jj} Distribution - Jets in |#eta| < 5.2 ; R_{jj}; N events",50,0,1);
 TH1D *h_RJJetsAtTracker = new TH1D("RJJetsAtTracker","R_{jj} Distribution - Jets in |#eta| < 2.9; R_{jj}; N events",50,0,1);
@@ -253,12 +255,11 @@ int TotalE = 0;
 int counterTrigger = 0;
 int counterJetsAll = 0;
 int counterJetsAtTracker = 0;
-double deltaphi_ = fabs(eventexcl->GetLeadingJetPhi()-eventexcl->GetSecondJetPhi());
-double aSumE_ = (eventdiff->GetSumEnergyHFPlus() - eventdiff->GetSumEnergyHFMinus())/(eventdiff->GetSumEnergyHFPlus() + eventdiff->GetSumEnergyHFMinus());
+double deltaphi_ = 0;
+double aSumE_ = 0;
 
 
 for(unsigned i=0;i<NEVENTS;i++) {
-aSumE_=0;
 ++TotalE;
 
     //----------- Progress Report -------------
@@ -281,6 +282,9 @@ aSumE_=0;
 
 //    if (eventexcl->GetHLTPath(optTrigger)) {
     ++counterTrigger;
+    
+deltaphi_ = fabs(eventexcl->GetLeadingJetPhi()-eventexcl->GetSecondJetPhi());
+aSumE_ = (eventdiff->GetSumEnergyHFPlus() - eventdiff->GetSumEnergyHFMinus())/(eventdiff->GetSumEnergyHFPlus() + eventdiff->GetSumEnergyHFMinus());
 
 
 
@@ -316,6 +320,8 @@ aSumE_=0;
                  h_deltaPhiJetsAll->Fill(deltaphi_,triggereff*weight*weightlumi);
                  h_deltaPtJetsAll->Fill(eventexcl->GetJetsDeltaPt(),triggereff*weight*weightlumi);
                  h_dijetMassAll->Fill(eventexcl->GetMassDijets(),triggereff*weight*weightlumi);
+                 h_pTJet1->Fill(eventexcl->GetLeadingJetPt(),triggereff*weight*weightlumi);
+                 h_pTJet2->Fill(eventexcl->GetSecondJetPt(),triggereff*weight*weightlumi);
             //////////////////////////////////////////////////
           
 
