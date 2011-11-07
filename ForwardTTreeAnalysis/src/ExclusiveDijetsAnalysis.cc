@@ -331,9 +331,6 @@ void ExclusiveDijetsAnalysis::fillJetInfo(ExclusiveDijetsEvent& eventData, const
 
      eventData.SetMxFromPFCands(allPFCands.M());
 
-   //Rj,Rjj & Rjj added by eliza
-     double RjFromJets = Rj(*jetCollectionH,*jetCollectionH);
-
 // Defense Added by Diego     
      if(jetCollectionH->size() > 1){
      double RjjFromJets = Rjj(*jetCollectionH,*jetCollectionH);
@@ -342,10 +339,24 @@ void ExclusiveDijetsAnalysis::fillJetInfo(ExclusiveDijetsEvent& eventData, const
      else eventData.SetRjjFromJets(-1);
 ///////////////////////////////////////////
 
+// Defense Added by Diego 
+     if(jetCollectionH->size() > 0){
+     double RjFromJets = Rj(*jetCollectionH,*jetCollectionH);
+     eventData.SetRjFromJets(RjFromJets);
+     }
+     else eventData.SetRjFromJets(-1);
+///////////////////////////////////////////
+
      edm::Handle<edm::View<reco::Jet> > jetCollectionNonCorrH;
      event.getByLabel(jetNonCorrTag_,jetCollectionNonCorrH);
 
+// Defense Added by Diego
+     if(jetCollectionNonCorrH->size() > 0){
      double RjFromPFCands = Rj(*jetCollectionNonCorrH,*particleFlowCollectionH);
+     eventData.SetRjFromPFCands(RjFromPFCands);
+     }
+     else eventData.SetRjFromPFCands(-1);
+//////////////////////////////////////////////
 
 // Defense Added by Diego     
      if(jetCollectionNonCorrH->size() > 1){
@@ -355,8 +366,8 @@ void ExclusiveDijetsAnalysis::fillJetInfo(ExclusiveDijetsEvent& eventData, const
      else eventData.SetRjjFromPFCands(-1);
 //////////////////////////////////////////////
 
-     eventData.SetRjFromJets(RjFromJets);
-     eventData.SetRjFromPFCands(RjFromPFCands);
+     //eventData.SetRjFromJets(RjFromJets);
+     //eventData.SetRjFromPFCands(RjFromPFCands);
      //eventData.SetRjjFromJets(RjjFromJets);
      //eventData.SetRjjFromPFCands(RjjFromPFCands);
 
