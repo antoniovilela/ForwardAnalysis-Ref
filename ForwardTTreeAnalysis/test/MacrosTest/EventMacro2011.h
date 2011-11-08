@@ -47,16 +47,15 @@ cout << "-------------------------------" << endl;
 cout << " " << endl;
 
 //Loading Files and Running Analysis
-LoadFiles(0);
-//LoadFiles(1);
-//LoadFiles(2);
-//LoadFiles(3);
-//LoadFiles(4);
-//LoadFiles(5);
-//LoadFiles(6);
-//LoadFiles(7);
-//LoadFiles(8);
-//LoadFiles(9);
+LoadFiles(1);
+LoadFiles(2);
+LoadFiles(3);
+LoadFiles(4);
+LoadFiles(5);
+LoadFiles(6);
+LoadFiles(7);
+LoadFiles(8);
+LoadFiles(9);
 
 
 }
@@ -69,34 +68,23 @@ EventMacro::LoadFiles(int entering)
   gSystem->Load("libPhysicsToolsUtilities.so");
   AutoLibraryLoader::enable();
 
-   if (entering == 0) {
-
-   OpenPattuple("teste.root");
-
-   cout << "\n Teste \n" << endl;
-
-   RunExclusive("out-teste.root",1,1,1,0,false,1286120.9,  0.987);
-
-   }
-
-
    if (entering == 1) {
 
    OpenPattuple("/storage2/dmf/Common/OutputFiles/MCPythia6/QCD_Pt-15to30-Z2_PUS3.root");
    
    cout << "\n MC Sample: Jets pT -> [15,30] GeV/c\n" << endl;
    
-   RunExclusive("v4hltjet60-qcd_15to30.root",60,60,1,0,false,1286120.9,  0.987);
-   RunExclusive("v4hltexcldijet60and-qcd_15to30.root",60,60,1,1,false,1286120.9,  0.0154);
-   RunExclusive("v4hltexcldijet60Uor-qcd_15to30.root",60,60,1,2,false,1286120.9,  0.0016);
+   RunExclusive("v4hltjet60-qcd_15to30.root",100,100,1,0,false,1286120.9,  0.987);
+   RunExclusive("v4hltexcldijet60and-qcd_15to30.root",100,100,1,1,false,1286120.9,  0.0154);
+   RunExclusive("v4hltexcldijet60Uor-qcd_15to30.root",100,100,1,2,false,1286120.9,  0.0016);
    
-   RunExclusive("v5hltjet60-qcd_15to30.root",60,60,1,0,false,1286120.9,  0.99315852102092);
-   RunExclusive("v5hltexcldijet60and-qcd_15to30.root",60,60,1,1,false,1286120.9,  0.010051078366032);
-   RunExclusive("v5hltexcldijet60or-qcd_15to30.root",60,60,1,2,false,1286120.9,  0.000275224159285);
+   RunExclusive("v5hltjet60-qcd_15to30.root",100,100,1,0,false,1286120.9,  0.99315852102092);
+   RunExclusive("v5hltexcldijet60and-qcd_15to30.root",100,100,1,1,false,1286120.9,  0.010051078366032);
+   RunExclusive("v5hltexcldijet60or-qcd_15to30.root",100,100,1,2,false,1286120.9,  0.000275224159285);
    
-   RunExclusive("v6hltjet60-qcd_15to30.root",60,60,1,0,false,1286120.9,  0.99466333611528);
-   RunExclusive("v6hltexcldijet60and-qcd_15to30.root",60,60,1,1,false,1286120.9,  0.007451719650059);
-   RunExclusive("v6hltexcldijet60or-qcd_15to30.root",60,60,1,2,false,1286120.9,  0.000462230730173);
+   RunExclusive("v6hltjet60-qcd_15to30.root",100,100,1,0,false,1286120.9,  0.99466333611528);
+   RunExclusive("v6hltexcldijet60and-qcd_15to30.root",100,100,1,1,false,1286120.9,  0.007451719650059);
+   RunExclusive("v6hltexcldijet60or-qcd_15to30.root",100,100,1,2,false,1286120.9,  0.000462230730173);
    
    }
 
@@ -106,17 +94,17 @@ EventMacro::LoadFiles(int entering)
    
    cout << "\n MC Sample: Jets pT -> [30,50] GeV/c\n" << endl;
    
-   RunExclusive("v4hltjet60-qcd_30to50.root",60,60,1,0,false,81222.1798400012,  0.987);
-   RunExclusive("v4hltexcldijet60and-qcd_30to50.root",60,60,1,1,false,81222.1798400012,  0.0154);
-   RunExclusive("v4hltexcldijet60Uor-qcd_30to50.root",60,60,1,2,false,81222.1798400012,  0.0016);
+   RunExclusive("v4hltjet60-qcd_30to50.root",100,100,1,0,false,81222.1798400012,  0.987);
+   RunExclusive("v4hltexcldijet60and-qcd_30to50.root",100,100,1,1,false,81222.1798400012,  0.0154);
+   RunExclusive("v4hltexcldijet60Uor-qcd_30to50.root",100,100,1,2,false,81222.1798400012,  0.0016);
    
-   RunExclusive("v5hltjet60-qcd_30to50.root",60,60,1,0,false,81222.1798400012,  0.99315852102092);
-   RunExclusive("v5hltexcldijet60and-qcd_30to50.root",60,60,1,1,false,81222.1798400012,  0.010051078366032);
-   RunExclusive("v5hltexcldijet60or-qcd_30to50.root",60,60,1,2,false,81222.1798400012,  0.000275224159285);
+   RunExclusive("v5hltjet60-qcd_30to50.root",100,100,1,0,false,81222.1798400012,  0.99315852102092);
+   RunExclusive("v5hltexcldijet60and-qcd_30to50.root",100,100,1,1,false,81222.1798400012,  0.010051078366032);
+   RunExclusive("v5hltexcldijet60or-qcd_30to50.root",100,100,1,2,false,81222.1798400012,  0.000275224159285);
    
-   RunExclusive("v6hltjet60-qcd_30to50.root",60,60,1,0,false,81222.1798400012,  0.99466333611528);
-   RunExclusive("v6hltexcldijet60and-qcd_30to50.root",60,60,1,1,false,81222.1798400012,  0.007451719650059);
-   RunExclusive("v6hltexcldijet60or-qcd_30to50.root",60,60,1,2,false,81222.1798400012,  0.000462230730173);
+   RunExclusive("v6hltjet60-qcd_30to50.root",100,100,1,0,false,81222.1798400012,  0.99466333611528);
+   RunExclusive("v6hltexcldijet60and-qcd_30to50.root",100,100,1,1,false,81222.1798400012,  0.007451719650059);
+   RunExclusive("v6hltexcldijet60or-qcd_30to50.root",100,100,1,2,false,81222.1798400012,  0.000462230730173);
    
 
    }
@@ -127,17 +115,17 @@ EventMacro::LoadFiles(int entering)
    
    cout << "\n MC Sample: Jets pT -> [50,80] GeV/c\n" << endl;
    
-   RunExclusive("v4hltjet60-qcd_50to80.root",60,60,1,0,false,9821.32776565658,  0.987);
-   RunExclusive("v4hltexcldijet60and-qcd_50to80.root",60,60,1,1,false,9821.32776565658,  0.0154);
-   RunExclusive("v4hltexcldijet60Uor-qcd_50to80.root",60,60,1,2,false,9821.32776565658,  0.0016);
+   RunExclusive("v4hltjet60-qcd_50to80.root",100,100,1,0,false,9821.32776565658,  0.987);
+   RunExclusive("v4hltexcldijet60and-qcd_50to80.root",100,100,1,1,false,9821.32776565658,  0.0154);
+   RunExclusive("v4hltexcldijet60Uor-qcd_50to80.root",100,100,1,2,false,9821.32776565658,  0.0016);
    
-   RunExclusive("v5hltjet60-qcd_50to80.root",60,60,1,0,false,9821.32776565658,  0.99315852102092);
-   RunExclusive("v5hltexcldijet60and-qcd_50to80.root",60,60,1,1,false,9821.32776565658,  0.010051078366032);
-   RunExclusive("v5hltexcldijet60or-qcd_50to80.root",60,60,1,2,false,9821.32776565658,  0.000275224159285);
+   RunExclusive("v5hltjet60-qcd_50to80.root",100,100,1,0,false,9821.32776565658,  0.99315852102092);
+   RunExclusive("v5hltexcldijet60and-qcd_50to80.root",100,100,1,1,false,9821.32776565658,  0.010051078366032);
+   RunExclusive("v5hltexcldijet60or-qcd_50to80.root",100,100,1,2,false,9821.32776565658,  0.000275224159285);
    
-   RunExclusive("v6hltjet60-qcd_50to80.root",60,60,1,0,false,9821.32776565658,  0.99466333611528);
-   RunExclusive("v6hltexcldijet60and-qcd_50to80.root",60,60,1,1,false,9821.32776565658,  0.007451719650059);
-   RunExclusive("v6hltexcldijet60or-qcd_50to80.root",60,60,1,2,false,9821.32776565658,  0.000462230730173);
+   RunExclusive("v6hltjet60-qcd_50to80.root",100,100,1,0,false,9821.32776565658,  0.99466333611528);
+   RunExclusive("v6hltexcldijet60and-qcd_50to80.root",100,100,1,1,false,9821.32776565658,  0.007451719650059);
+   RunExclusive("v6hltexcldijet60or-qcd_50to80.root",100,100,1,2,false,9821.32776565658,  0.000462230730173);
    
 
    }
@@ -148,17 +136,17 @@ EventMacro::LoadFiles(int entering)
    
    cout << "\n MC Sample: Jets pT -> [80,120] GeV/c\n" << endl;
    
-   RunExclusive("v4hltjet60-qcd_80to120.root",60,60,1,0,false,1199.2197976,  0.987);
-   RunExclusive("v4hltexcldijet60and-qcd_80to120.root",60,60,1,1,false,1199.2197976,  0.0154);
-   RunExclusive("v4hltexcldijet60Uor-qcd_80to120.root",60,60,1,2,false,1199.2197976,  0.0016);
+   RunExclusive("v4hltjet60-qcd_80to120.root",100,100,1,0,false,1199.2197976,  0.987);
+   RunExclusive("v4hltexcldijet60and-qcd_80to120.root",100,100,1,1,false,1199.2197976,  0.0154);
+   RunExclusive("v4hltexcldijet60Uor-qcd_80to120.root",100,100,1,2,false,1199.2197976,  0.0016);
    
-   RunExclusive("v5hltjet60-qcd_80to120.root",60,60,1,0,false,1199.2197976,  0.99315852102092);
-   RunExclusive("v5hltexcldijet60and-qcd_80to120.root",60,60,1,1,false,1199.2197976,  0.010051078366032);
-   RunExclusive("v5hltexcldijet60or-qcd_80to120.root",60,60,1,2,false,1199.2197976,  0.000275224159285);
+   RunExclusive("v5hltjet60-qcd_80to120.root",100,100,1,0,false,1199.2197976,  0.99315852102092);
+   RunExclusive("v5hltexcldijet60and-qcd_80to120.root",100,100,1,1,false,1199.2197976,  0.010051078366032);
+   RunExclusive("v5hltexcldijet60or-qcd_80to120.root",100,100,1,2,false,1199.2197976,  0.000275224159285);
    
-   RunExclusive("v6hltjet60-qcd_80to120.root",60,60,1,0,false,1199.2197976,  0.99466333611528);
-   RunExclusive("v6hltexcldijet60and-qcd_80to120.root",60,60,1,1,false,1199.2197976,  0.007451719650059);
-   RunExclusive("v6hltexcldijet60or-qcd_80to120.root",60,60,1,2,false,1199.2197976,  0.000462230730173);
+   RunExclusive("v6hltjet60-qcd_80to120.root",100,100,1,0,false,1199.2197976,  0.99466333611528);
+   RunExclusive("v6hltexcldijet60and-qcd_80to120.root",100,100,1,1,false,1199.2197976,  0.007451719650059);
+   RunExclusive("v6hltexcldijet60or-qcd_80to120.root",100,100,1,2,false,1199.2197976,  0.000462230730173);
    
 
    }
@@ -169,17 +157,17 @@ EventMacro::LoadFiles(int entering)
    
    cout << "\n MC Sample: Jets pT -> [120,170] GeV/c\n" << endl;
    
-   RunExclusive("v4hltjet60-qcd_120to170.root",60,60,1,0,false,175.9915832,  0.987);
-   RunExclusive("v4hltexcldijet60and-qcd_120to170.root",60,60,1,1,false,175.9915832,  0.0154);
-   RunExclusive("v4hltexcldijet60Uor-qcd_120to170.root",60,60,1,2,false,175.9915832,  0.0016);
+   RunExclusive("v4hltjet60-qcd_120to170.root",100,100,1,0,false,175.9915832,  0.987);
+   RunExclusive("v4hltexcldijet60and-qcd_120to170.root",100,100,1,1,false,175.9915832,  0.0154);
+   RunExclusive("v4hltexcldijet60Uor-qcd_120to170.root",100,100,1,2,false,175.9915832,  0.0016);
    
-   RunExclusive("v5hltjet60-qcd_120to170.root",60,60,1,0,false,175.9915832,  0.99315852102092);
-   RunExclusive("v5hltexcldijet60and-qcd_120to170.root",60,60,1,1,false,175.9915832,  0.010051078366032);
-   RunExclusive("v5hltexcldijet60or-qcd_120to170.root",60,60,1,2,false,175.9915832,  0.000275224159285);
+   RunExclusive("v5hltjet60-qcd_120to170.root",100,100,1,0,false,175.9915832,  0.99315852102092);
+   RunExclusive("v5hltexcldijet60and-qcd_120to170.root",100,100,1,1,false,175.9915832,  0.010051078366032);
+   RunExclusive("v5hltexcldijet60or-qcd_120to170.root",100,100,1,2,false,175.9915832,  0.000275224159285);
    
-   RunExclusive("v6hltjet60-qcd_120to170.root",60,60,1,0,false,175.9915832,  0.99466333611528);
-   RunExclusive("v6hltexcldijet60and-qcd_120to170.root",60,60,1,1,false,175.9915832,  0.007451719650059);
-   RunExclusive("v6hltexcldijet60or-qcd_120to170.root",60,60,1,2,false,175.9915832,  0.000462230730173);
+   RunExclusive("v6hltjet60-qcd_120to170.root",100,100,1,0,false,175.9915832,  0.99466333611528);
+   RunExclusive("v6hltexcldijet60and-qcd_120to170.root",100,100,1,1,false,175.9915832,  0.007451719650059);
+   RunExclusive("v6hltexcldijet60or-qcd_120to170.root",100,100,1,2,false,175.9915832,  0.000462230730173);
    
 
    }
@@ -190,17 +178,17 @@ EventMacro::LoadFiles(int entering)
    
    cout << "\n MC Sample: Jets pT -> [170,300] GeV/c\n" << endl;
    
-   RunExclusive("v4hltjet60-qcd_170to300.root",60,60,1,0,false,37.09431632,  0.987);
-   RunExclusive("v4hltexcldijet60and-qcd_170to300.root",60,60,1,1,false,37.09431632,  0.0154);
-   RunExclusive("v4hltexcldijet60Uor-qcd_170to300.root",60,60,1,2,false,37.09431632,  0.0016);
+   RunExclusive("v4hltjet60-qcd_170to300.root",100,100,1,0,false,37.09431632,  0.987);
+   RunExclusive("v4hltexcldijet60and-qcd_170to300.root",100,100,1,1,false,37.09431632,  0.0154);
+   RunExclusive("v4hltexcldijet60Uor-qcd_170to300.root",100,100,1,2,false,37.09431632,  0.0016);
    
-   RunExclusive("v5hltjet60-qcd_170to300.root",60,60,1,0,false,37.09431632,  0.99315852102092);
-   RunExclusive("v5hltexcldijet60and-qcd_170to300.root",60,60,1,1,false,37.09431632,  0.010051078366032);
-   RunExclusive("v5hltexcldijet60or-qcd_170to300.root",60,60,1,2,false,37.09431632,  0.000275224159285);
+   RunExclusive("v5hltjet60-qcd_170to300.root",100,100,1,0,false,37.09431632,  0.99315852102092);
+   RunExclusive("v5hltexcldijet60and-qcd_170to300.root",100,100,1,1,false,37.09431632,  0.010051078366032);
+   RunExclusive("v5hltexcldijet60or-qcd_170to300.root",100,100,1,2,false,37.09431632,  0.000275224159285);
    
-   RunExclusive("v6hltjet60-qcd_170to300.root",60,60,1,0,false,37.09431632,  0.99466333611528);
-   RunExclusive("v6hltexcldijet60and-qcd_170to300.root",60,60,1,1,false,37.09431632,  0.007451719650059);
-   RunExclusive("v6hltexcldijet60or-qcd_170to300.root",60,60,1,2,false,37.09431632,  0.000462230730173);
+   RunExclusive("v6hltjet60-qcd_170to300.root",100,100,1,0,false,37.09431632,  0.99466333611528);
+   RunExclusive("v6hltexcldijet60and-qcd_170to300.root",100,100,1,1,false,37.09431632,  0.007451719650059);
+   RunExclusive("v6hltexcldijet60or-qcd_170to300.root",100,100,1,2,false,37.09431632,  0.000462230730173);
    
 
    }
@@ -211,17 +199,17 @@ EventMacro::LoadFiles(int entering)
    
    cout << "\n MC Sample: Jets pT -> [300,470] GeV/c\n" << endl;
    
-   RunExclusive("v4hltjet60-qcd_300to470.root",60,60,1,0,false,1.785909376,  0.987);
-   RunExclusive("v4hltexcldijet60and-qcd_300to470.root",60,60,1,1,false,1.785909376,  0.0154);
-   RunExclusive("v4hltexcldijet60Uor-qcd_300to470.root",60,60,1,2,false,1.785909376,  0.0016);
+   RunExclusive("v4hltjet60-qcd_300to470.root",100,100,1,0,false,1.785909376,  0.987);
+   RunExclusive("v4hltexcldijet60and-qcd_300to470.root",100,100,1,1,false,1.785909376,  0.0154);
+   RunExclusive("v4hltexcldijet60Uor-qcd_300to470.root",100,100,1,2,false,1.785909376,  0.0016);
    
-   RunExclusive("v5hltjet60-qcd_300to470.root",60,60,1,0,false,1.785909376,  0.99315852102092);
-   RunExclusive("v5hltexcldijet60and-qcd_300to470.root",60,60,1,1,false,1.785909376,  0.010051078366032);
-   RunExclusive("v5hltexcldijet60or-qcd_300to470.root",60,60,1,2,false,1.785909376,  0.000275224159285);
+   RunExclusive("v5hltjet60-qcd_300to470.root",100,100,1,0,false,1.785909376,  0.99315852102092);
+   RunExclusive("v5hltexcldijet60and-qcd_300to470.root",100,100,1,1,false,1.785909376,  0.010051078366032);
+   RunExclusive("v5hltexcldijet60or-qcd_300to470.root",100,100,1,2,false,1.785909376,  0.000275224159285);
    
-   RunExclusive("v6hltjet60-qcd_300to470.root",60,60,1,0,false,1.785909376,  0.99466333611528);
-   RunExclusive("v6hltexcldijet60and-qcd_300to470.root",60,60,1,1,false,1.785909376,  0.007451719650059);
-   RunExclusive("v6hltexcldijet60or-qcd_300to470.root",60,60,1,2,false,1.785909376,  0.000462230730173);
+   RunExclusive("v6hltjet60-qcd_300to470.root",100,100,1,0,false,1.785909376,  0.99466333611528);
+   RunExclusive("v6hltexcldijet60and-qcd_300to470.root",100,100,1,1,false,1.785909376,  0.007451719650059);
+   RunExclusive("v6hltexcldijet60or-qcd_300to470.root",100,100,1,2,false,1.785909376,  0.000462230730173);
    
 
    }
@@ -232,17 +220,17 @@ EventMacro::LoadFiles(int entering)
    
    cout << "\n MC Sample: Jets pT -> [470,600] GeV/c\n" << endl;
    
-   RunExclusive("v4hltjet60-qcd_470to600.root",60,60,1,0,false,0.10736862704,  0.987);
-   RunExclusive("v4hltexcldijet60and-qcd_470to600.root",60,60,1,1,false,0.10736862704,  0.0154);
-   RunExclusive("v4hltexcldijet60Uor-qcd_470to600.root",60,60,1,2,false,0.10736862704,  0.0016);
+   RunExclusive("v4hltjet60-qcd_470to600.root",100,100,1,0,false,0.10736862704,  0.987);
+   RunExclusive("v4hltexcldijet60and-qcd_470to600.root",100,100,1,1,false,0.10736862704,  0.0154);
+   RunExclusive("v4hltexcldijet60Uor-qcd_470to600.root",100,100,1,2,false,0.10736862704,  0.0016);
    
-   RunExclusive("v5hltjet60-qcd_470to600.root",60,60,1,0,false,0.10736862704,  0.99315852102092);
-   RunExclusive("v5hltexcldijet60and-qcd_470to600.root",60,60,1,1,false,0.10736862704,  0.010051078366032);
-   RunExclusive("v5hltexcldijet60or-qcd_470to600.root",60,60,1,2,false,0.10736862704,  0.000275224159285);
+   RunExclusive("v5hltjet60-qcd_470to600.root",100,100,1,0,false,0.10736862704,  0.99315852102092);
+   RunExclusive("v5hltexcldijet60and-qcd_470to600.root",100,100,1,1,false,0.10736862704,  0.010051078366032);
+   RunExclusive("v5hltexcldijet60or-qcd_470to600.root",100,100,1,2,false,0.10736862704,  0.000275224159285);
    
-   RunExclusive("v6hltjet60-qcd_470to600.root",60,60,1,0,false,0.10736862704,  0.99466333611528);
-   RunExclusive("v6hltexcldijet60and-qcd_470to600.root",60,60,1,1,false,0.10736862704,  0.007451719650059);
-   RunExclusive("v6hltexcldijet60or-qcd_470to600.root",60,60,1,2,false,0.10736862704,  0.000462230730173);
+   RunExclusive("v6hltjet60-qcd_470to600.root",100,100,1,0,false,0.10736862704,  0.99466333611528);
+   RunExclusive("v6hltexcldijet60and-qcd_470to600.root",100,100,1,1,false,0.10736862704,  0.007451719650059);
+   RunExclusive("v6hltexcldijet60or-qcd_470to600.root",100,100,1,2,false,0.10736862704,  0.000462230730173);
    
 
    }
@@ -253,17 +241,17 @@ EventMacro::LoadFiles(int entering)
    
    cout << "\n MC Sample: Jets pT -> [600,800] GeV/c\n" << endl;
    
-   RunExclusive("v4hltjet60-qcd_600to800.root",60,60,1,0,false,0.0237764476,  0.987);
-  /RunExclusive("v4hltexcldijet60and-qcd_600to800.root",60,60,1,1,false,0.0237764476,  0.0154);
-   RunExclusive("v4hltexcldijet60Uor-qcd_600to800.root",60,60,1,2,false,0.0237764476,  0.0016);
+   RunExclusive("v4hltjet60-qcd_600to800.root",100,100,1,0,false,0.0237764476,  0.987);
+   RunExclusive("v4hltexcldijet60and-qcd_600to800.root",100,100,1,1,false,0.0237764476,  0.0154);
+   RunExclusive("v4hltexcldijet60Uor-qcd_600to800.root",100,100,1,2,false,0.0237764476,  0.0016);
    
-   RunExclusive("v5hltjet60-qcd_600to800.root",60,60,1,0,false,0.0237764476,  0.99315852102092);
-  /RunExclusive("v5hltexcldijet60and-qcd_600to800.root",60,60,1,1,false,0.0237764476,  0.010051078366032);
-   RunExclusive("v5hltexcldijet60or-qcd_600to800.root",60,60,1,2,false,0.0237764476,  0.000275224159285);
+   RunExclusive("v5hltjet60-qcd_600to800.root",100,100,1,0,false,0.0237764476,  0.99315852102092);
+   RunExclusive("v5hltexcldijet60and-qcd_600to800.root",100,100,1,1,false,0.0237764476,  0.010051078366032);
+   RunExclusive("v5hltexcldijet60or-qcd_600to800.root",100,100,1,2,false,0.0237764476,  0.000275224159285);
    
-   RunExclusive("v6hltjet60-qcd_600to800.root",60,60,1,0,false,0.0237764476,  0.99466333611528);
-   RunExclusive("v6hltexcldijet60and-qcd_600to800.root",60,60,1,1,false,0.0237764476,  0.007451719650059);
-   RunExclusive("v6hltexcldijet60or-qcd_600to800.root",60,60,1,2,false,0.0237764476,  0.000462230730173);
+   RunExclusive("v6hltjet60-qcd_600to800.root",100,100,1,0,false,0.0237764476,  0.99466333611528);
+   RunExclusive("v6hltexcldijet60and-qcd_600to800.root",100,100,1,1,false,0.0237764476,  0.007451719650059);
+   RunExclusive("v6hltexcldijet60or-qcd_600to800.root",100,100,1,2,false,0.0237764476,  0.000462230730173);
    
 
    }
