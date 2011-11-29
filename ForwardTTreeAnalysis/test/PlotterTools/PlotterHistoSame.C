@@ -62,7 +62,7 @@ TStyle *tdrStyle = new TStyle("tdrStyle","Style for P-TDR");
   // tdrStyle->SetDateY(Float_t y = 0.01);
 
 // For the statistics box:
-  tdrStyle->SetOptFile(0);
+  //tdrStyle->SetOptFile(0);
   //tdrStyle->SetOptStat(1); // To display the mean and RMS:   SetOptStat("mr");
   tdrStyle->SetStatColor(kWhite);
   tdrStyle->SetStatFont(42);
@@ -139,6 +139,7 @@ TStyle *tdrStyle = new TStyle("tdrStyle","Style for P-TDR");
   // tdrStyle->SetPalette(Int_t ncolors = 0, Int_t* colors = 0);
   // tdrStyle->SetTimeOffset(Double_t toffset);
   // tdrStyle->SetHistMinimumZero(kTRUE);
+  //tdrStyle->SetOptLogz(1);
 
 tdrStyle->cd();
 
@@ -147,10 +148,10 @@ tdrStyle->cd();
 
 void PlotterHistoSame(){
 cout << "\nRunning...\n" << endl;
-Plotter ("exclusive_pTJ1-60_pTJ2-60_nV-1_Trigger-0.root","exclusive_pTJ1-60_pTJ2-60_nV-1_Trigger-1.root","exclusive_pTJ1-60_pTJ2-60_nV-1_Trigger-2.root","Triggers");
+Plotter ("data_2011_HFAND60.root","hltexcldijet60and-exume.root","hltexcldijet60and-pompty.root","hltexcldijet60and-pythia6.root","excldijet60And");
 }
 
-void Plotter(char* name1, char* name2, char* name3, char* titlename){
+void Plotter(char* name1, char* name2, char* name3, char* name4, char* titlename){
 
 setGraphTDR();
 
@@ -180,6 +181,15 @@ else if(name3==NULL){
 	printf(name3);
 	printf(" does not exist \n\n");
 	return;
+}
+
+else if(name4==NULL){
+
+	printf("\nWarning: ");
+	printf("the file ");
+	printf(name4);
+	printf(" does not exist \n\n");
+	return;
 	
 }
 
@@ -188,16 +198,19 @@ else{
 	TFile *f1= new TFile(name1);
 	TFile *f2= new TFile(name2);
         TFile *f3= new TFile(name3);
+        TFile *f4= new TFile(name4);
 
 }
 
 char *hName1 = new char [80];
 char *hName2 = new char [80]; 
-char *hName3 = new char [80]; 	
+char *hName3 = new char [80];
+char *hName4 = new char [80]; 	
 char *filesave = new char[80];
 char *filesave1 = new char[80];
 char *filesave2 = new char[80];
 char *filesave3 = new char[80];
+char *filesave4 = new char[80];
 
 f1->cd();
 TIter nextkey1( f1->GetListOfKeys() );
@@ -211,13 +224,17 @@ f3->cd();
 TIter nextkey3( f3->GetListOfKeys() );
 TKey *key3;
 
+f4->cd();
+TIter nextkey4( f4->GetListOfKeys() );
+TKey *key4;
 
 int i=0;
 
     while ((key1 = (TKey*)nextkey1())) {
 
-        key2 = (TKey*)nextkey2();
-        key3 = (TKey*)nextkey3();
+       key2 = (TKey*)nextkey2();
+       key3 = (TKey*)nextkey3();
+       key4 = (TKey*)nextkey4();
 
 	// read object from source file
 	TObject *obj1 = key1->ReadObj();
@@ -231,9 +248,14 @@ int i=0;
 	TObject *obj3 = key3->ReadObj();
 	TH1D *h3 = (TH1D*)obj3;
 
+	// read object from source file
+	TObject *obj4 = key4->ReadObj();
+	TH1D *h4 = (TH1D*)obj4;
+
 	hName1=h1->GetName();
-	hName2=h2->GetName();
-        hName2=h3->GetName();
+      	hName2=h2->GetName();
+       hName3=h3->GetName();
+       hName4=h4->GetName();
 
         // General Style
         
@@ -246,21 +268,28 @@ int i=0;
         h3->GetXaxis()->SetTitleOffset(1.6);
         h3->GetYaxis()->SetTitleOffset(1.6);
         h3->GetZaxis()->SetTitleOffset(2.);
+        h4->GetXaxis()->SetTitleOffset(1.6);
+        h4->GetYaxis()->SetTitleOffset(1.6);
+        h4->GetZaxis()->SetTitleOffset(2.);
         
 
         sprintf(filesave,"%s%s.png",h1->GetName(),titlename);
         std::string checkLog(obj1->GetName());
 
 
-   if (h1->GetEntries() != 0 || h2->GetEntries() != 0 || h3->GetEntries() != 0){ // Defense
+   if (h1->GetEntries() != 0 || h2->GetEntries() != 0 || h3->GetEntries() != 0 || h4->GetEntries() != 0){ // Defense
 
-        if (obj1->IsA()->InheritsFrom("TH1") && obj2->IsA()->InheritsFrom("TH1") && obj3->IsA()->InheritsFrom("TH1")){
+        if (obj1->IsA()->InheritsFrom("TH1") && obj2->IsA()->InheritsFrom("TH1") && obj3->IsA()->InheritsFrom("TH1") && obj4->IsA()->InheritsFrom("TH1")){
         
-           TCanvas *together = new TCanvas("canvasSame","canvasSame");
-           together->cd();     
+           TCanvas *togetherlog = new TCanvas("canvasSamelog","canvasSamelog");
+           togetherlog->cd();     
+
+           if ( checkLog == "pTJet1All" || checkLog == "pTJet2All" || checkLog == "pfetamaxAll" || checkLog == "pfetaminAll" || checkLog == "deltaEtaJetsAll" || checkLog == "deltaPhiJetsAll" || checkLog == "deltaPtJetsAll"  || checkLog == "dijetMassAll" || checkLog == "pfetamax" || checkLog == "pfetamin" || checkLog == "deltaEtaJets" || checkLog == "deltaPhiJets" || checkLog == "deltaPtJets"  || checkLog == "dijetMass" || checkLog == "pfetamax4" || checkLog == "pfetamin4" || checkLog == "deltaEtaJets4" || checkLog == "deltaPhiJets4" || checkLog == "deltaPtJets4" || checkLog == "dijetMass4" || checkLog == "RJJAll" || checkLog == "RJJ" || checkLog == "RJJ4" || checkLog == "tracksAll" || checkLog == "tracks" || checkLog == "tracks4") {
+           togetherlog->SetLogy();
+           }           
+
 
            setGraphTDR();
-           //setTH1();
 
            h1->SetMarkerStyle(20);
            h1->SetMarkerSize(1);
@@ -272,39 +301,53 @@ int i=0;
            h3->SetMarkerStyle(20);
            h3->SetMarkerSize(1);
            h3->SetMarkerColor(3);
+
+           h4->SetMarkerStyle(20);
+           h4->SetMarkerSize(1);
+           h4->SetMarkerColor(4);
            
            leg = new TLegend(0.71,0.89,0.989,0.989);
            leg->SetTextSize(0.020);
            leg->SetFillColor(0);
            gStyle->SetOptStat(0);
-           leg->AddEntry(h1,"ExclDijet30U_HFAND","p");
-           leg->AddEntry(h2,"ExclDijet30U_HFOR","p");
-           leg->AddEntry(h3,"HLT_Jet30U","p");
+           leg->AddEntry(h1,"Data 2011","p");
+           leg->AddEntry(h2,"Exume","p");
+           leg->AddEntry(h3,"Pompty","p");
+           leg->AddEntry(h4,"Pythia6 Z2","p");
                    
            //h1->SetFillColor(1);
-           h1->Sumw2();
-           h1->GetYaxis()->SetTitle("Probability");
-           h1->DrawNormalized("PE");
+           //h1->Sumw2();
+           //h1->GetYaxis()->SetTitle("Probability");
+           h1->Draw("PE");
+           //h1->DrawNormalized("PE");
 
            //h2->SetFillColor(2);
-           h2->Sumw2();
-           h2->GetYaxis()->SetTitle("Probability");
-           h2->DrawNormalized("SAMEPE");
+           //h2->Sumw2();
+           //h2->GetYaxis()->SetTitle("Probability");
+           h2->Draw("SAMEPE");
+           //h2->DrawNormalized("SAMEPE");
 
            //h3->SetFillColor(3);
-           h3->Sumw2();
-           h3->GetYaxis()->SetTitle("Probability");
-           h3->DrawNormalized("SAMEPE");
+           //h3->Sumw2();
+           //h3->GetYaxis()->SetTitle("Probability");
+           h3->Draw("SAMEPE");
+           //h3->DrawNormalized("SAMEPE");
+           leg->Draw();
+
+           //h4->SetFillColor(3);
+           //h4->Sumw2();
+           //h4->GetYaxis()->SetTitle("Probability");
+           h4->Draw("SAMEPE");
+           //h4->DrawNormalized("SAMEPE");
            leg->Draw();
            
-           together->Update();
-           together->SaveAs(filesave);
-           delete together;
-
+           togetherlog->Update();
+           togetherlog->SaveAs(filesave);
+           delete togetherlog;
 
         }
 
-        if (obj1->IsA ()->InheritsFrom ("TH2") && obj2->IsA ()->InheritsFrom ("TH2") && obj2->IsA ()->InheritsFrom ("TH2")){
+        if (obj1->IsA ()->InheritsFrom ("TH2") && obj2->IsA ()->InheritsFrom ("TH2") && obj3->IsA ()->InheritsFrom ("TH2") && obj4->IsA ()->InheritsFrom ("TH2")){
      
 
           if ( checkLog == "ETCalos" || checkLog == "ETCalosJetsAtTracker" || checkLog == "ETCalos1" || checkLog == "ETCalosJetsAtTracker1" || checkLog == "ETCalos2" || checkLog == "ETCalosJetsAtTracker2" || checkLog == "ETCalos3" || checkLog == "ETCalosJetsAtTracker3" || checkLog == "ETCalos4" || checkLog == "ETCalosJetsAtTracker4" ){
@@ -315,41 +358,53 @@ int i=0;
                h1->SetMarkerSize(0);
                h2->SetMarkerSize(0);
                h3->SetMarkerSize(0);
+               h4->SetMarkerSize(0);
 
                //h1->GetZaxis()->SetTitle("Probability");
                //h2->GetZaxis()->SetTitle("Probability");
                //h3->GetZaxis()->SetTitle("Probability");
+               //h4->GetZaxis()->SetTitle("Probability");
 
                h1->GetYaxis()->SetTitle("log_{10} Castor Signal [fC]");
                h2->GetYaxis()->SetTitle("log_{10} Castor Signal [fC]");
                h3->GetYaxis()->SetTitle("log_{10} Castor Signal [fC]");
+               h4->GetYaxis()->SetTitle("log_{10} Castor Signal [fC]");
 
                togetherLego->cd();
-               togetherLego->SetLogy();
+               togetherLego->SetLogy(1);
                //h1->SetLineColor(1);
                h1->SetFillColor(1);
                h1->Draw("LEGO1E0");
                togetherLego->Update();
-               sprintf(filesave1,"%s%s-trigger0.png",h1->GetName(),titlename);
+               sprintf(filesave1,"%s%s-data2011.png",h1->GetName(),titlename);
                togetherLego->SaveAs(filesave1);
 
                togetherLego->cd();
-               togetherLego->SetLogy();
-               //h3->SetLineColor(2);
+               togetherLego->SetLogy(1);
+               //h2->SetLineColor(2);
                h2->SetFillColor(2);
                h2->Draw("LEGO1E0");
                togetherLego->Update();
-               sprintf(filesave2,"%s%s-trigger1.png",h1->GetName(),titlename);
+               sprintf(filesave2,"%s%s-exume2011.png",h2->GetName(),titlename);
                togetherLego->SaveAs(filesave2);  
 
                togetherLego->cd();
-               togetherLego->SetLogy();
+               togetherLego->SetLogy(1);
                //h3->SetLineColor(3);
                h3->SetFillColor(3);
                h3->Draw("LEGO1E0");
                togetherLego->Update();
-               sprintf(filesave3,"%s%s-trigger2.png",h1->GetName(),titlename);
-               togetherLego->SaveAs(filesave3);            
+               sprintf(filesave3,"%s%s-pompty2011.png",h3->GetName(),titlename);
+               togetherLego->SaveAs(filesave3);   
+
+               togetherLego->cd();
+               togetherLego->SetLogy(1);
+               //h4->SetLineColor(3);
+               h4->SetFillColor(4);
+               h4->Draw("LEGO1E0");
+               togetherLego->Update();
+               sprintf(filesave4,"%s%s-pythia62011.png",h4->GetName(),titlename);
+               togetherLego->SaveAs(filesave4);           
 
                delete togetherLego;
 
@@ -358,28 +413,32 @@ int i=0;
           else {
 
           TCanvas *togetherLegoAll = new TCanvas("canvasLegoAll","canvasLegoAll",1200,400);
-          togetherLegoAll->Divide(3,1);
+          togetherLegoAll->Divide(4,1);
 
           setGraphTDR();
           //setTH2();   
           h1->SetMarkerSize(0);
           h2->SetMarkerSize(0);
-          h3->SetMarkerSize(0);     
+          h3->SetMarkerSize(0);
+          h4->SetMarkerSize(0);       
 
           leg2 = new TLegend(0.71,0.89,0.989,0.989);
           leg2->SetTextSize(0.020);
           leg2->SetFillColor(0);
-          leg2->AddEntry(h1,"ExclDijet30U_HFAND","f");
-          leg2->AddEntry(h2,"ExclDijet30U_HFOR","f");
-          leg2->AddEntry(h3,"HLT_Jet30U","f");
+          leg2->AddEntry(h1,"Data 2011","f");
+          leg2->AddEntry(h2,"Exume","f");
+          leg2->AddEntry(h3,"Pompty","f");
+          leg2->AddEntry(h4,"Pythia6 Z2","f");
 
           //h1->GetZaxis()->SetTitle("Probability");
           //h2->GetZaxis()->SetTitle("Probability");
           //h3->GetZaxis()->SetTitle("Probability");
+          //h4->GetZaxis()->SetTitle("Probability");
 
           h1->GetYaxis()->SetTitle("nHF^{-}");
           h2->GetYaxis()->SetTitle("nHF^{-}");
           h3->GetYaxis()->SetTitle("nHF^{-}");
+          h4->GetYaxis()->SetTitle("nHF^{-}");
 
           togetherLegoAll->cd(1);
           h1->SetFillColor(1);
@@ -392,6 +451,10 @@ int i=0;
           togetherLegoAll->cd(3);
           h3->SetFillColor(3);
           h3->Draw("LEGO1E0");
+
+          togetherLegoAll->cd(4);
+          h4->SetFillColor(4);
+          h4->Draw("LEGO1E0");
 
           //leg2->Draw();
           togetherLegoAll->Update();
