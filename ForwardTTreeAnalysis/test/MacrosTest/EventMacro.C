@@ -18,20 +18,28 @@
 //            weight = luminosity weight (L_data/L_MC) for MC;
 //            triggereff = trigger efficiency;
 //
-
+//
+// REMEMBER TO COMMENT THE TRIGGER EMULATION IN DATA CASE AND UNCOMMENT REAL TRIGGER.
+// 
 
 #include <string.h>
 #include <stdio.h>
 #include "LumiReweightingStandAlone.h"
 
 //For 2010 Data: normalize MC 
-//#include "EventMacro2010.h"
+#include "EventMacro2010.h"
+//#include "EventMacroMCDiff2010.h"
 
 //For 2011 Data: normalize MC
 //#include "EventMacro2011.h"
 
+//For Data: 2011
+//#include "EventMacro.h"
+
 //TEST
-#include "EventMacroTest.h"
+//#include "EventMacroTest.h"
+
+
 
 // Castor in fC. log10(fabs(eventdiff->GetSumETotCastor())) Using fabs because there are some signals with -fC.
 
@@ -42,7 +50,7 @@ void RunExclusive(string savehistofile, double jet1PT, double jet2PT, int optnVe
 
 using namespace reweight;
 LumiReWeighting LumiWeights_;
-LumiWeights_ = LumiReWeighting("pu2011A_v4v5v6.root","pileupmc.root","pileup","pileupmc");
+LumiWeights_ = LumiReWeighting("pu2010B.root","pileupmc.root","pileup","pileupmc");
 
 
 if (optnVertex == 0){
@@ -280,6 +288,10 @@ for(unsigned i=0;i<NEVENTS;i++) {
              cout << "==============" << endl;   
 */
 
+
+// Emule Trigger
+if (eventdiff->GetSumEnergyHFMinus() < 5 && eventdiff->GetSumEnergyHFPlus() < 5){
+
 //    if (eventexcl->GetHLTPath(optTrigger)) {
     ++counterTrigger;
     
@@ -465,9 +477,11 @@ aSumE_ = (eventdiff->GetSumEnergyHFPlus() - eventdiff->GetSumEnergyHFMinus())/(e
 
            }// Jets Cuts
 
-//        }// Triggers
+  //      }// Triggers
 
      }// If nVertex
+
+   } // Emule Trigger
 
   }// Run All Events
 
