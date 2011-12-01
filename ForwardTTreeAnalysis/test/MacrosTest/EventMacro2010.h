@@ -47,15 +47,16 @@ cout << "-------------------------------" << endl;
 cout << " " << endl;
 
 //Loading Files and Running Analysis
-LoadFiles(1);
-LoadFiles(2);
-LoadFiles(3);
-LoadFiles(4);
-LoadFiles(5);
-LoadFiles(6);
-LoadFiles(7);
-LoadFiles(8);
-LoadFiles(9);
+//LoadFiles(1);
+//LoadFiles(2);
+//LoadFiles(3);
+//LoadFiles(4);
+//LoadFiles(5);
+//LoadFiles(6);
+//LoadFiles(7);
+//LoadFiles(8);
+//LoadFiles(9);
+LoadFiles(10);
 
 }
 
@@ -174,6 +175,20 @@ EventMacro::LoadFiles(int entering)
    RunExclusive("hltexcldijet30Uand-qcd_600to800.root",60,60,1,0,false,0.00039280855,  0.059207885504661);
    RunExclusive("hltexcldijet30Uor-qcd_600to800.root",60,60,1,1,false,0.00039280855,  0.95513643211874);
    RunExclusive("hltjet30U-qcd_600to800.root",60,60,1,2,false,0.00039280855,  0.021555176752449);
+
+   }
+
+   if (entering == 10) {
+
+   OpenPattuple("/storage2/dmf/Common/OutputFiles/MCPythia6/QCD_All_Pt-15to3000-Z2_PUS3.root");
+
+   cout << "\n MC Sample: Jets pT -> [15,3000] GeV/c\n" << endl;
+
+//   RunExclusive("hltexcldijet30Uand-qcd_15to3000.root",60,60,1,0,false,139756.482499861,  0.059207885504661);
+//   RunExclusive("hltexcldijet30Uor-qcd_150to3000.root",60,60,1,1,false,139756.482499861,  0.95513643211874);
+//   RunExclusive("hltjet30U-qcd_15to3000.root",60,60,1,2,false,139756.482499861,  0.021555176752449);
+
+   RunExclusive("normalized-qcd_15to3000.root",60,60,1,0,false,139756.482499861, 1);
 
    }
 
