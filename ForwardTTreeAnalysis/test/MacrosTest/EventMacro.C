@@ -8,19 +8,20 @@
 // How Execute: root -l EventMacro.C
 // 
 // Functions: LoadFiles(i) - load a specific file (i) and run your analysis with your cuts defined in RunExclusive 
-//            RunExclusive( pT[jet1], pT[jet2], Number of Vertex, Trigger Reference, dataOn, weight, triggereff)
+//            RunExclusive( pT[jet1], pT[jet2], Number of Vertex, Trigger Reference, switchWeightPU_, weight, triggereff)
 //            
 //            pT[jet1] = Jet1 pT cut;
 //            pT[jet2] = Jet2 pT cut;
 //            optnVertex = Selecting Events with number of vertex < optnVertex;
 //            optTrigger = Trigger option (0,1,2...). Same order defined in your PF2PAT(...).py or forwardQCD(...).py which generate your Pattuple. See hltpath variable.
-//            dataOn = true (if is running data). This apply weightpu = 1, false (if is running mc);
+//            switchWeightPU_ = true (if is running data). This apply weightpu = 1, false (if is running mc);
 //            weight = luminosity weight (L_data/L_MC) for MC;
 //            triggereff = trigger efficiency;
 //
+// REMEMBER TO UNCOMMENT TRIGGER IN CASE YOU ARE RUNNING DATA AND UNCOMMENT TRIGGER EMULATION FOR MONTECARLO.
 //
-// REMEMBER TO COMMENT THE TRIGGER EMULATION IN DATA CASE AND UNCOMMENT REAL TRIGGER.
-// 
+//
+
 
 #include <string.h>
 #include <stdio.h>
@@ -45,8 +46,7 @@
 
 using namespace std;
 
-void RunExclusive(string savehistofile, double jet1PT, double jet2PT, int optnVertex, int optTrigger, bool dataon, double weightlumi, double triggereff)
-{
+void RunExclusive(string savehistofile, double jet1PT, double jet2PT, int optnVertex, int optTrigger, bool switchWeightPU_, bool switchWeightLumi_, bool switchWeightEff_, double weightlumi_, double triggereff_){
 
 using namespace reweight;
 LumiReWeighting LumiWeights_;
@@ -290,8 +290,11 @@ for(unsigned i=0;i<NEVENTS;i++) {
 
 
 // Emule Trigger
+////////////////
 if (eventdiff->GetSumEnergyHFMinus() < 5 && eventdiff->GetSumEnergyHFPlus() < 5){
 
+// TRIGGER
+///////////////
 //    if (eventexcl->GetHLTPath(optTrigger)) {
     ++counterTrigger;
     
@@ -301,8 +304,15 @@ aSumE_ = (eventdiff->GetSumEnergyHFPlus() - eventdiff->GetSumEnergyHFMinus())/(e
 
 
         if(eventexcl->GetNVertex() > 0 && eventexcl->GetNVertex()<= optnVertex){
-             if (dataon) { double weight = 1; weightlumi = 1; triggereff = 1;}
-             else {double weight = LumiWeights_.ITweight(eventexcl->GetNPileUpBx0()); } 
+        
+             if (switchWeightPU_) { double weight = LumiWeights_.ITweight(eventexcl->GetNPileUpBx0());}
+             else {double weight = 1;} 
+             
+             if (switchWeightLumi_) { double weightlumi = weightlumi_; }
+             else {double weightlumi = 1;} 
+             
+             if (switchWeightEff_) { double triggereff = triggereff_;}
+             else {double triggereff = 1;} 
 
 /*
              cout << "" << endl;
