@@ -76,6 +76,10 @@ cout << " " << endl;
 TFile *outf = new TFile(savehistofile.c_str(),"RECREATE");
 int NEVENTS = tr->GetEntriesFast();
 
+TH1::SetDefaultSumw2(true);
+TH2::SetDefaultSumw2(true);
+
+
 TH1D *h_DeltaEtaGenAll = new TH1D("DeltaEtaGenAll","#Delta#eta_{Gen} Distribution; #Delta#eta_{Gen}; N events",20,0.0,5.2);
 TH1D *h_MxGenRangeAll = new TH1D("MxGenRangeAll","Mass_{X} Gen Distribution; M_{x} Gen [GeV]; N events",50,0,5000);
 TH1D *h_RJJAll = new TH1D("RJJAll","R_{jj} Distribution; R_{jj}; N events",50,0,1);
