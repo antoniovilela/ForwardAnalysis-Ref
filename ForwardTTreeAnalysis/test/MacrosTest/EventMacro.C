@@ -79,6 +79,21 @@ int NEVENTS = tr->GetEntriesFast();
 TH1::SetDefaultSumw2(true);
 TH2::SetDefaultSumw2(true);
 
+TH1D *h_DeltaEtaGenwc = new TH1D("DeltaEtaGenwc","#Delta#eta_{Gen} Distribution; #Delta#eta_{Gen}; N events",20,0.0,5.2);
+TH1D *h_MxGenRangewc = new TH1D("MxGenRangewc","Mass_{X} Gen Distribution; M_{x} Gen [GeV]; N events",50,0,5000);
+TH1D *h_RJJwc = new TH1D("RJJwc","R_{jj} Distribution; R_{jj}; N events",50,0,1);
+TH2F *h_MultHFwc = new TH2F( "mHFwc", "HF^{+} and HF^{-} Multiplicity; n HF^{+}; n HF^{-}; N events", 10,  0., 10., 10,  0., 10. );
+TH2F *h_ET_Caloswc = new TH2F( "ETCaloswc", "HF^{+} and Castor; Energy HF^{+}; log_{10} Castor Signal [fC]; N events", 10,  0., 10., 50,  0., 50. );
+TH1D *h_trackswc = new TH1D("trackswc","Tracks Multiplicity; n Tracks; N events",50,0,150);
+TH1D *h_pfetamaxwc = new TH1D("pfetamaxwc","Particle Flow #eta_{max} Distribution; #eta; N events",20,0,5.5);
+TH1D *h_pfetaminwc = new TH1D("pfetaminwc","Particle Flow #eta_{min} Distribution; #eta; N events",20,-5.5,0);
+TH1D *h_aSumEwc = new TH1D("aEnergywc","Forward Backward Asymmetry Distribution ; (#sum HF^{+} - #sum HF^{-})x(#sum HF^{+} + #sum HF^{-})^{-1}; N events",50,-1,1);
+TH1D *h_deltaEtaJetswc = new TH1D("deltaEtaJetswc","#Delta#eta_{jj} Distribution; #Delta#eta_{jj}; N events",20,0.0,5.2);
+TH1D *h_deltaPhiJetswc = new TH1D("deltaPhiJetswc","#Delta#phi_{jj} Distribution; #Delta#phi_{jj}; N events",20,0.0,3.2);
+TH1D *h_deltaPtJetswc = new TH1D("deltaPtJetswc","#Delta P_{T} Distribution; #Delta P_{T} [GeV.c^{-1}]; N events",40,0,400);
+TH1D *h_dijetMasswc = new TH1D("dijetMasswc","Dijet Invariant Mass Distribution; M_{jj} [GeV]; N events",40,0,400);
+TH1D *h_pTJet1wc = new TH1D("pTJet1wc","Leading Jet - P_{T} Distribution; P_{T} [GeV.c^{-1}]; N events",100,0,2000);
+TH1D *h_pTJet2wc = new TH1D("pTJet2wc","Second Jet  - P_{T} Distribution; P_{T} [GeV.c^{-1}]; N events",100,0,2000);
 
 TH1D *h_DeltaEtaGenAll = new TH1D("DeltaEtaGenAll","#Delta#eta_{Gen} Distribution; #Delta#eta_{Gen}; N events",20,0.0,5.2);
 TH1D *h_MxGenRangeAll = new TH1D("MxGenRangeAll","Mass_{X} Gen Distribution; M_{x} Gen [GeV]; N events",50,0,5000);
@@ -150,107 +165,63 @@ TH1D *h_deltaPtJetsAtTracker1 = new TH1D("deltaPtJetsAtTracker1","#Delta P_{T} D
 TH1D *h_dijetMassAtTracker1 = new TH1D("dijetMassAtTracker1","Dijet Invariant Mass Distribution; M_{jj} [GeV]; N events",40,0,400);
 
 TH1D *h_aSumE = new TH1D("aEnergy","Forward Backward Asymmetry Distribution - Jets in |#eta| < 5.2; (#sum HF^{+} - #sum HF^{-})x(#sum HF^{+} + #sum HF^{-})^{-1}; N events",50,-1,1);
-
 TH1D *h_aSumEJetsAtTracker = new TH1D("aEnergyJetsAtTracker","Forward Backward Asymmetry Distribution - Jets in |#eta| < 2.9; (#sum HF^{+} - #sum HF^{-})x(#sum HF^{+} + #sum HF^{-})^{-1}; N events",50,-1,1);
-
-
 TH1D *h_tracks = new TH1D("tracks","Tracks Multiplicity - Jets in |#eta| < 5.2 ; n Tracks; N events",50,0,150);
 TH1D *h_tracksJetsAtTracker = new TH1D("tracksJetsAtTracker","Tracks Multiplicity - Jets in |#eta| < 2.9; nTracks; N events",50,0,150);
-
 TH2F *h_MultHF = new TH2F( "mHF", "HF^{+} and HF^{-} Multiplicity: jets in |#eta| < 5.2; n HF^{+}; n HF^{-}; N events", 10,  0., 10., 10,  0., 10. );
-
 TH2F *h_MultHFJetsAtTracker = new TH2F( "mHFJetsAtTracker", "HF^{+} and HF^{-} Multiplicity: jets in |#eta| < 2.9; n HF^{+}; n HF^{-}; N events", 10,  0., 10., 10,  0., 10. );
-
 TH2F *h_ET_Calos = new TH2F( "ETCalos", "HF^{+} and Castor: jets in |#eta| < 5.2; Energy HF^{+}; log_{10} Castor Signal [fC]; N events", 10,  0., 10., 50,  0., 50. );
-
 TH2F *h_ET_CalosJetsAtTracker = new TH2F( "ETCalosJetsAtTracker", "HF^{+} and Castor: jets in |#eta| < 2.9; Energy HF^{+}; log_{10} Castor Signal [fC]; N events", 10,  0., 10., 50,  0., 50. );
-
 TH1D *h_pfetamax = new TH1D("pfetamax","Particle Flow #eta_{max} Distribution -  jets in |#eta| < 5.2; #eta; N events",20,0,5.5);
 TH1D *h_pfetamin = new TH1D("pfetamin","Particle Flow #eta_{min} Distribution -  jets in |#eta| < 5.2; #eta; N events",20,-5.5,0);
-
 TH1D *h_pfetamaxJetsAtTracker = new TH1D("pfetamaxJetsAtTracker","Particle Flow #eta_{max} Distribution - jets in |#eta| < 2.9; #eta; N events",20,0,5.5);
 TH1D *h_pfetaminJetsAtTracker = new TH1D("pfetaminJetsAtTracker","Particle Flow #eta_{min} Distribution - jets in |#eta| < 2.9; #eta; N events",20,-5.5,0);
 
-
-//
 TH1D *h_RJJ4 = new TH1D("RJJ4","R_{jj} Distribution - Jets in |#eta| < 5.2 ; R_{jj}; N events",50,0,1);
 TH1D *h_RJJetsAtTracker4 = new TH1D("RJJetsAtTracker4","R_{jj} Distribution - Jets in |#eta| < 2.9; R_{jj}; N events",50,0,1);
-
 TH1D *h_aSumE4 = new TH1D("aEnergy4","Forward Backward Asymmetry Distribution - Jets in |#eta| < 5.2; (#sum HF^{+} - #sum HF^{-})x(#sum HF^{+} + #sum HF^{-})^{-1}; N events",50,-1,1);
-
 TH1D *h_aSumEJetsAtTracker4 = new TH1D("aEnergyJetsAtTracker4","Forward Backward Asymmetry Distribution - Jets in |#eta| < 2.9; (#sum HF^{+} - #sum HF^{-})x(#sum HF^{+} + #sum HF^{-})^{-1}; N events",50,-1,1);
-
-
 TH1D *h_tracks4 = new TH1D("tracks4","Tracks Multiplicity - Jets in |#eta| < 5.2 ; n Tracks; N events",50,0,150);
 TH1D *h_tracksJetsAtTracker4 = new TH1D("tracksJetsAtTracker4","Tracks Multiplicity - Jets in |#eta| < 2.9; nTracks; N events",50,0,150);
-
 TH2F *h_MultHF4 = new TH2F( "mHF4", "HF^{+} and HF^{-} Multiplicity: jets in |#eta| < 5.2; n HF^{+}; n HF^{-}; N events", 10,  0., 10., 10,  0., 10. );
-
 TH2F *h_MultHFJetsAtTracker4 = new TH2F( "mHFJetsAtTracker4", "HF^{+} and HF^{-} Multiplicity: jets in |#eta| < 2.9; n HF^{+}; n HF^{-}; N events", 10,  0., 10., 10,  0., 10. );
-
 TH2F *h_ET_Calos4 = new TH2F( "ETCalos4", "HF^{+} and Castor: jets in |#eta| < 5.2; Energy HF^{+}; log_{10} Castor Signal [fC]; N events", 10,  0., 10., 50,  0., 50. );
-
 TH2F *h_ET_CalosJetsAtTracker4 = new TH2F( "ETCalosJetsAtTracker4", "HF^{+} and Castor: jets in |#eta| < 2.9; Energy HF^{+}; log_{10} Castor Signal [fC]; N events", 10,  0., 10., 50,  0., 50. );
-
 
 //
 TH1D *h_RJJ3 = new TH1D("RJJ3","R_{jj} Distribution - Jets in |#eta| < 5.2 ; R_{jj}; N events",50,0,1);
 TH1D *h_RJJetsAtTracker3 = new TH1D("RJJetsAtTracker3","R_{jj} Distribution - Jets in |#eta| < 2.9; R_{jj}; N events",50,0,1);
-
 TH1D *h_aSumE3 = new TH1D("aEnergy3","Forward Backward Asymmetry Distribution - Jets in |#eta| < 5.2; (#sum HF^{+} - #sum HF^{-})x(#sum HF^{+} + #sum HF^{-})^{-1}; N events",50,-1,1);
-
 TH1D *h_aSumEJetsAtTracker3 = new TH1D("aEnergyJetsAtTracker3","Forward Backward Asymmetry Distribution - Jets in |#eta| < 2.9; (#sum HF^{+} - #sum HF^{-})x(#sum HF^{+} + #sum HF^{-})^{-1}; N events",50,-1,1);
-
-
 TH1D *h_tracks3 = new TH1D("tracks3","Tracks Multiplicity - Jets in |#eta| < 5.2 ; n Tracks; N events",50,0,150);
 TH1D *h_tracksJetsAtTracker3 = new TH1D("tracksJetsAtTracker3","Tracks Multiplicity - Jets in |#eta| < 2.9; nTracks; N events",50,0,150);
-
 TH2F *h_MultHF3 = new TH2F( "mHF3", "HF^{+} and HF^{-} Multiplicity: jets in |#eta| < 5.2; n HF^{+}; n HF^{-}; N events", 10,  0., 10., 10,  0., 10. );
-
 TH2F *h_MultHFJetsAtTracker3 = new TH2F( "mHFJetsAtTracker3", "HF^{+} and HF^{-} Multiplicity: jets in |#eta| < 2.9; n HF^{+}; n HF^{-}; N events", 10,  0., 10., 10,  0., 10. );
-
 TH2F *h_ET_Calos3 = new TH2F( "ETCalos3", "HF^{+} and Castor: jets in |#eta| < 5.2; Energy HF^{+}; log_{10} Castor Signal [fC]; N events", 10,  0., 10., 50,  0., 50. );
-
 TH2F *h_ET_CalosJetsAtTracker3 = new TH2F( "ETCalosJetsAtTracker3", "HF^{+} and Castor: jets in |#eta| < 2.9; Energy HF^{+}; log_{10} Castor Signal [fC]; N events", 10,  0., 10., 50,  0., 50. );
 
 //
 TH1D *h_RJJ2 = new TH1D("RJJ2","R_{jj} Distribution - Jets in |#eta| < 5.2 ; R_{jj}; N events",50,0,1);
 TH1D *h_RJJetsAtTracker2 = new TH1D("RJJetsAtTracker2","R_{jj} Distribution - Jets in |#eta| < 2.9; R_{jj}; N events",50,0,1);
-
 TH1D *h_aSumE2 = new TH1D("aEnergy2","Forward Backward Asymmetry Distribution - Jets in |#eta| < 5.2; (#sum HF^{+} - #sum HF^{-})x(#sum HF^{+} + #sum HF^{-})^{-1}; N events",50,-1,1);
-
 TH1D *h_aSumEJetsAtTracker2 = new TH1D("aEnergyJetsAtTracker2","Forward Backward Asymmetry Distribution - Jets in |#eta| < 2.9; (#sum HF^{+} - #sum HF^{-})x(#sum HF^{+} + #sum HF^{-})^{-1}; N events",50,-1,1);
-
-
 TH1D *h_tracks2 = new TH1D("tracks2","Tracks Multiplicity - Jets in |#eta| < 5.2 ; n Tracks; N events",50,0,150);
 TH1D *h_tracksJetsAtTracker2 = new TH1D("tracksJetsAtTracker2","Tracks Multiplicity - Jets in |#eta| < 2.9; nTracks; N events",50,0,150);
-
 TH2F *h_MultHF2 = new TH2F( "mHF2", "HF^{+} and HF^{-} Multiplicity: jets in |#eta| < 5.2; n HF^{+}; n HF^{-}; N events", 10,  0., 10., 10,  0., 10. );
-
 TH2F *h_MultHFJetsAtTracker2 = new TH2F( "mHFJetsAtTracker2", "HF^{+} and HF^{-} Multiplicity: jets in |#eta| < 2.9; n HF^{+}; n HF^{-}; N events", 10,  0., 10., 10,  0., 10. );
-
 TH2F *h_ET_Calos2 = new TH2F( "ETCalos2", "HF^{+} and Castor: jets in |#eta| < 5.2; Energy HF^{+}; log_{10} Castor Signal [fC]; N events", 10,  0., 10., 50,  0., 50.);
-
 TH2F *h_ET_CalosJetsAtTracker2 = new TH2F( "ETCalosJetsAtTracker2", "HF^{+} and Castor: jets in |#eta| < 2.9; Energy HF^{+}; log_{10} Castor Signal [fC]; N events", 10,  0., 10., 50,  0., 50. );
 
 //
 TH1D *h_RJJ1 = new TH1D("RJJ1","R_{jj} Distribution - Jets in |#eta| < 5.2 ; R_{jj}; N events",50,0,1);
 TH1D *h_RJJetsAtTracker1 = new TH1D("RJJetsAtTracker1","R_{jj} Distribution - Jets in |#eta| < 2.9; R_{jj}; N events",50,0,1);
-
 TH1D *h_aSumE1 = new TH1D("aEnergy1","Forward Backward Asymmetry Distribution - Jets in |#eta| < 5.2; (#sum HF^{+} - #sum HF^{-})x(#sum HF^{+} + #sum HF^{-})^{-1}; N events",50,-1,1);
-
 TH1D *h_aSumEJetsAtTracker1 = new TH1D("aEnergyJetsAtTracker1","Forward Backward Asymmetry Distribution - Jets in |#eta| < 2.9; (#sum HF^{+} - #sum HF^{-})x(#sum HF^{+} + #sum HF^{-})^{-1}; N events",50,-1,1);
-
-
 TH1D *h_tracks1 = new TH1D("tracks1","Tracks Multiplicity - Jets in |#eta| < 5.2 ; n Tracks; N events",50,0,150);
 TH1D *h_tracksJetsAtTracker1 = new TH1D("tracksJetsAtTracker1","Tracks Multiplicity - Jets in |#eta| < 2.9; nTracks; N events",50,0,150);
-
 TH2F *h_MultHF1 = new TH2F( "mHF1", "HF^{+} and HF^{-} Multiplicity: jets in |#eta| < 5.2; n HF^{+}; n HF^{-}; N events", 10,  0., 10., 10,  0., 10. );
-
 TH2F *h_MultHFJetsAtTracker1 = new TH2F( "mHFJetsAtTracker1", "HF^{+} and HF^{-} Multiplicity: jets in |#eta| < 2.9; n HF^{+}; n HF^{-}; N events", 10,  0., 10., 10,  0., 10. );
-
 TH2F *h_ET_Calos1 = new TH2F( "ETCalos1", "HF^{+} and Castor: jets in |#eta| < 5.2; Energy HF^{+}; log_{10} Castor Signal [fC]; N events", 10,  0., 10., 50,  0., 50.);
-
 TH2F *h_ET_CalosJetsAtTracker1 = new TH2F( "ETCalosJetsAtTracker1", "HF^{+} and Castor: jets in |#eta| < 2.9; Energy HF^{+}; log_{10} Castor Signal [fC]; N events", 10,  0., 10., 50,  0., 50.);
 
 
@@ -305,19 +276,38 @@ if (eventdiff->GetSumEnergyHFMinus() < 5 && eventdiff->GetSumEnergyHFPlus() < 5)
 deltaphi_ = fabs(eventexcl->GetLeadingJetPhi()-eventexcl->GetSecondJetPhi());
 aSumE_ = (eventdiff->GetSumEnergyHFPlus() - eventdiff->GetSumEnergyHFMinus())/(eventdiff->GetSumEnergyHFPlus() + eventdiff->GetSumEnergyHFMinus());
 
+             if (switchWeightPU_) { double weight = LumiWeights_.ITweight(eventexcl->GetNPileUpBx0());}
+             else {double weight = 1;}
+
+             if (switchWeightLumi_) { double weightlumi = weightlumi_; }
+             else {double weightlumi = 1;}
+
+             if (switchWeightEff_) { double triggereff = triggereff_;}
+             else {double triggereff = 1;}
+
+
+            // Control Histograms          
+            ////////////////////////////////////////////////
+                 h_DeltaEtaGenwc->Fill(eventexcl->GetDeltaEtaGen(),triggereff*weight*weightlumi);
+                 h_MxGenRangewc->Fill(eventexcl->GetMxGenRange(),triggereff*weight*weightlumi);
+                 h_RJJwc->Fill(eventexcl->GetRjjFromJets(),triggereff*weight*weightlumi);
+                 h_MultHFwc->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),triggereff*weight*weightlumi);
+                 h_ET_Caloswc->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())),triggereff*weight*weightlumi);
+                 h_trackswc->Fill(eventdiff->GetMultiplicityTracks(),triggereff*weight*weightlumi);
+                 h_aSumEwc->Fill(aSumE_,triggereff*weight*weightlumi);
+                 h_pfetaminwc->Fill(eventdiff->GetEtaMinFromPFCands(),triggereff*weight*weightlumi);
+                 h_pfetamaxwc->Fill(eventdiff->GetEtaMaxFromPFCands(),triggereff*weight*weightlumi);
+                 h_deltaEtaJetswc->Fill(eventexcl->GetJetsDeltaEta(),triggereff*weight*weightlumi);
+                 h_deltaPhiJetswc->Fill(deltaphi_,triggereff*weight*weightlumi);
+                 h_deltaPtJetswc->Fill(eventexcl->GetJetsDeltaPt(),triggereff*weight*weightlumi);
+                 h_dijetMasswc->Fill(eventexcl->GetMassDijets(),triggereff*weight*weightlumi);
+                 h_pTJet1wc->Fill(eventexcl->GetLeadingJetPt(),triggereff*weight*weightlumi);
+                 h_pTJet2wc->Fill(eventexcl->GetSecondJetPt(),triggereff*weight*weightlumi);
+            //////////////////////////////////////////////////
 
 
         if(eventexcl->GetNVertex() > 0 && eventexcl->GetNVertex()<= optnVertex){
         
-             if (switchWeightPU_) { double weight = LumiWeights_.ITweight(eventexcl->GetNPileUpBx0());}
-             else {double weight = 1;} 
-             
-             if (switchWeightLumi_) { double weightlumi = weightlumi_; }
-             else {double weightlumi = 1;} 
-             
-             if (switchWeightEff_) { double triggereff = triggereff_;}
-             else {double triggereff = 1;} 
-
 /*
              cout << "" << endl;
              cout << "PileUp-1: " << eventexcl->GetNPileUpBxm1() << endl;    
@@ -331,7 +321,7 @@ aSumE_ = (eventdiff->GetSumEnergyHFPlus() - eventdiff->GetSumEnergyHFMinus())/(e
 //cout << "Weight["<<i<<"]: " << weight << endl;
 //cout << "" << endl;
 
-            // Control Histograms          
+            // Vertex Cut Histograms          
             ////////////////////////////////////////////////
                  h_DeltaEtaGenAll->Fill(eventexcl->GetDeltaEtaGen(),triggereff*weight*weightlumi);
                  h_MxGenRangeAll->Fill(eventexcl->GetMxGenRange(),triggereff*weight*weightlumi);
