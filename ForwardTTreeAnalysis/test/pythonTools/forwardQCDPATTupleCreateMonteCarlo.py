@@ -545,7 +545,7 @@ output = 'QCD_Pt-120to170-Z2.root'
 triggersmc = "'HLT_Jet30_v*','HLT_Jet60_v*'"
 triggersdata = "'HLT_Jet30_v*','HLT_Jet60_v*'"
 mail='dmf@cern.ch'
-ConfigHandler(dataset,uiworkingdir,userremotedir,sewhitelist,output,triggersmc,triggersdata,mail,nevent,ejob,lumixs)
+#ConfigHandler(dataset,uiworkingdir,userremotedir,sewhitelist,output,triggersmc,triggersdata,mail,nevent,ejob,lumixs)
 
 #
 # Sample: /QCD_Pt-170to300_TuneZ2_7TeV_pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM
@@ -613,7 +613,7 @@ output = 'QCD_Pt-600to800-Z2.root'
 triggersmc = "'HLT_Jet30_v*','HLT_Jet60_v*'"
 triggersdata = "'HLT_Jet30_v*','HLT_Jet60_v*'"
 mail='dmf@cern.ch'
-#ConfigHandler(dataset,uiworkingdir,userremotedir,sewhitelist,output,triggersmc,triggersdata,mail,nevent,ejob,lumixs)
+ConfigHandler(dataset,uiworkingdir,userremotedir,sewhitelist,output,triggersmc,triggersdata,mail,nevent,ejob,lumixs)
 
 #
 # Sample: /ExHuME_CEPDijetsGG_M100_GEN_SIM_DIGI_L1_DIGI2RAW_HLT_Nov2011_02/sfonseca-ExHuME_CEPDijetsGG_M100_GEN_SIM_RECO_02-1c267b46416f12b00a8ff0f71942689c/USER 
