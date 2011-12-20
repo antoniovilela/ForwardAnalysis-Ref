@@ -28,14 +28,16 @@
 #include "LumiReweightingStandAlone.h"
 
 //For 2010 Data: normalize MC 
-#include "EventMacro2010.h"
+//#include "EventMacro2010.h"
 //#include "EventMacroMCDiff2010.h"
 
 //For 2011 Data: normalize MC
 //#include "EventMacro2011.h"
 
-//For Data: 2011
+//For Data: 
 //#include "EventMacro.h"
+//#include "EventMacroData2010.h"
+#include "EventMacroData2011.h"
 
 //TEST
 //#include "EventMacroTest.h"
