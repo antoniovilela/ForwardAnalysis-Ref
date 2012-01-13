@@ -1,5 +1,5 @@
 //-------------------------------------------------------------------------------------------------------->>
-// UUNIVERSIDADE DO ESTADO DO RIO DE JANEIRO - CMS/Brasil
+// UNIVERSIDADE DO ESTADO DO RIO DE JANEIRO - CMS/Brasil
 //-------------------------------------------------------------------------------------------------------->>
 // Project: Exclusive Dijets Analysis
 // Version: v1
@@ -14,7 +14,7 @@
 //
 // (B) COMMAND LINE
 // ----------------
-// $> root -l -b -q 'ExclDijets.C("inputfile.root","outputfile.root", pT(Jet1) Cut, pT(Jet2) Cut, Number of Vertex Cut, Trigger Order Path, Turn on(off) PU Reweight, Turn on(off) Luminosity Reweight, Turn on(off) Trigger Efficiency, Turn on(off) event-per-event Weight, Luminosity Weight, Trigger Efficiency)'
+// $> root -l -b -q 'ExclDijets.C("inputfile.root","outputfile.root", pT(Jet1) Cut, pT(Jet2) Cut, Number of Vertex Cut, Trigger Option, Turn on(off) PU Reweight, Turn on(off) Luminosity Reweight, Turn on(off) Trigger Efficiency, Turn on(off) event-per-event Weight, Luminosity Weight Factor, Trigger Efficiency Factor)'
 //
 // TURN ON  = true
 // TURN OFF = false
@@ -95,7 +95,7 @@ ExclDijets::LoadFile(filein.c_str());
 
 using namespace reweight;
 LumiReWeighting LumiWeights_;
-LumiWeights_ = LumiReWeighting("pu2010B.root","pileupmc.root","pileup","pileupmc");
+LumiWeights_ = LumiReWeighting("147146-149711-pileup_2.root ","pileup15to3000_BXs_mc.root","pileup","pileupmcBx0");
 
 if (optnVertex == 0){
 
