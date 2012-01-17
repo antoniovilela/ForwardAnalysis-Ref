@@ -50,7 +50,8 @@
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/DiffractiveEvent.h"
 #include "KKousour/QCDAnalysis/interface/QCDEvent.h"
 
-#include "LumiReweightingStandAlone.h"
+//#include "LumiReweightingStandAlone.h"
+#include "PhysicsTools/Utilities/interface/LumiReWeighting.h"
 
 //using namespace forwardAnalysis;
 using namespace diffractiveAnalysis;
@@ -59,16 +60,16 @@ using namespace reweight;
 
 void ExclDijetsComp::LoadFile(std::string fileinput){
 
-   TFile* inf = NULL;
+   inf = NULL;
    tr  = NULL;
    inf = TFile::Open(fileinput.c_str(),"read");
    tr = (TTree*)inf->Get("forwardQCDTTreeAnalysis/ProcessedTree");
    eventdiff = new DiffractiveEvent();
    eventexcl = new ExclusiveDijetsEvent();
    eventqcd = new QCDEvent();
-   TBranch *diff = tr->GetBranch("DiffractiveAnalysis");
-   TBranch *excl = tr->GetBranch("ExclusiveDijetsAnalysis");
-   TBranch *qcd = tr->GetBranch("QCDAnalysis");
+   diff = tr->GetBranch("DiffractiveAnalysis");
+   excl = tr->GetBranch("ExclusiveDijetsAnalysis");
+   qcd = tr->GetBranch("QCDAnalysis");
    diff->SetAddress(&eventdiff);
    excl->SetAddress(&eventexcl);
    qcd->SetAddress(&eventqcd);
@@ -107,10 +108,11 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
    std::cout << "triggereffpass: " << triggereffpass << std::endl;
    std::cout << "" << std::endl;
 
-   ExclDijetsComp::LoadFile(filein.c_str());  
+   LoadFile(filein);  
 
    //LumiReWeighting LumiWeights_("147146-149711-pileup_2.root ","pileup15to3000_BXs_mc.root","pileup","pileupmcBx0");
-   LumiReWeighting LumiWeights_("pileup15to3000_BXs_mc.root","147146-149711-pileup_2.root ","pileupmcBx0","pileup");
+   //LumiReWeighting LumiWeights_("pileup15to3000_BXs_mc.root","147146-149711-pileup_2.root ","pileupmcBx0","pileup");
+   edm::LumiReWeighting LumiWeights_("pileup15to3000_BXs_mc.root","147146-149711-pileup_2.root ","pileupmcBx0","pileup");
 
    if (optnVertex == 0){
 
@@ -422,8 +424,9 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
       // SET PILE-UP REWEIGHT METHOD!!!!
       // NOTE: you can use eventexcl->GetNPileUpBxm1() or eventexcl->GetNPileUpBxp1()
       double weight;
-      if (switchWeightPU) { weight = LumiWeights_.weightOOT(eventexcl->GetNPileUpBx0(),eventexcl->GetNPileUpBxm1());} 
-      //             if (switchWeightPU) { double weight = LumiWeights_.ITweight(eventexcl->GetNPileUpBx0());}
+      if (switchWeightPU) { 
+	 //weight = LumiWeights_.weightOOT(eventexcl->GetNPileUpBx0(),eventexcl->GetNPileUpBxm1());} 
+	 weight = LumiWeights_.weight( eventexcl->GetNPileUpBx0()); }
       else { weight = 1; }
       //------------------------------------------------------------------------------------------
 
@@ -455,6 +458,14 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
 
       totalweight = triggereff*weight*weightlumi*weightepw;
 
+      if( i % 1000 = 0 ){
+	 std::cout << "Event " << i << std::endl
+	    << "Pile-up weight : " << weight << std::endl
+	    << "Lumi corr.     : " << weightlumi << std::endl
+	    << "Trigger corr.  : " << triggereff << std::endl
+	    << "MC event weight: " << weightepw << std::endl
+	    << "Total weight   : " << totalweight << std::endl;
+      }
       // Without Cuts          
       ////////////////////////////////////////////////
       h_DeltaEtaGenwc->Fill(eventexcl->GetDeltaEtaGen(),totalweight);
@@ -771,12 +782,15 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
    outf->Close();
 
    //~LumiWeights_;
-   gROOT->Reset();
+   //gROOT->Reset();
 }
 
 #if !defined(__CINT__) || defined(__MAKECINT__)
+#include "FWCore/FWLite/interface/AutoLibraryLoader.h"
 int main(int argc, char **argv)
 {
+   AutoLibraryLoader::enable();
+
    const char *s1="*";
    std::string filein_;
    std::string savehistofile_;
@@ -805,8 +819,8 @@ int main(int argc, char **argv)
    if (argc > 12 && strcmp(s1,argv[12]) != 0)  triggereffpass_ = atoi(argv[12]);
 
 
-   ExclDijetsComp exclDijets;   
-   exclDijets.Run(filein_, savehistofile_, jet1PT_, jet2PT_, optnVertex_, optTrigger_, switchWeightPU_, switchWeightLumi_, switchWeightEff_, switchWeightePw_, weightlumipass_, triggereffpass_);
+   ExclDijetsComp* exclDijets = new ExclDijetsComp();   
+   exclDijets->Run(filein_, savehistofile_, jet1PT_, jet2PT_, optnVertex_, optTrigger_, switchWeightPU_, switchWeightLumi_, switchWeightEff_, switchWeightePw_, weightlumipass_, triggereffpass_);
 
    return 0;
 }
