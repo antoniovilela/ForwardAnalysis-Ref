@@ -1,0 +1,7 @@
+<flags CXXFLAGS="-g -O0"/>
+<bin   file="ExclDijetsComp.cc" name="ExclDijetsComp">
+  <use   name="root"/>
+  <use   name="ForwardAnalysis/Utilities"/>
+  <use   name="ForwardAnalysis/ForwardTTreeAnalysis"/>
+  <use   name="KKousour/QCDAnalysis"/>
+</bin>
