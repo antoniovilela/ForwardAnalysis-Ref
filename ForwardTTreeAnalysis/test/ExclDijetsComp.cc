@@ -459,7 +459,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
       totalweight = triggereff*weight*weightlumi*weightepw;
 
       if( i % 1000 == 0 ){
-	 std::cout << "Event " << i << std::endl
+	 std::cout << "Event " << i << " Nr. events Bx 0: " << eventexcl->GetNPileUpBx0() << std::endl
 	    << "Pile-up weight : " << weight << std::endl
 	    << "Lumi corr.     : " << weightlumi << std::endl
 	    << "Trigger corr.  : " << triggereff << std::endl
