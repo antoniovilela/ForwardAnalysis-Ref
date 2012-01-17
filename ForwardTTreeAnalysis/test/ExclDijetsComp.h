@@ -25,7 +25,11 @@ static loadFWLite lfw;
 
 class ExclDijetsComp {
 
+   TFile* inf;
    TTree* tr;
+   TBranch *diff;
+   TBranch *excl;
+   TBranch *qcd;
    DiffractiveEvent *eventdiff;
    ExclusiveDijetsEvent *eventexcl;
    QCDEvent *eventqcd;
@@ -46,7 +50,7 @@ class ExclDijetsComp {
 
    public :
    ExclDijetsComp() {}
-   ~ExclDijetsComp() {}
+   ~ExclDijetsComp() { inf->Close(); }
    
    void Run(std::string, std::string, double, double, int, int, bool, bool, bool, bool, double, double);
    void LoadFile(std::string);

@@ -15,5 +15,6 @@
         gSystem->Load("libDataFormatsFWLite.so");
         gSystem->Load("libDataFormatsPatCandidates.so");
         gSystem->Load("libForwardAnalysisForwardTTreeAnalysis");
+        gSystem->Load("libKKousourQCDAnalysis");
         //gSystem->Load("libUtilitiesPlottingTools");
 }
