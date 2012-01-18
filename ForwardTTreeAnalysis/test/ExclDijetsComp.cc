@@ -156,6 +156,8 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
    TH1D *h_pTJet2wc = new TH1D("pTJet2_without_cuts","Second Jet  - P_{T} Distribution; P_{T} [GeV.c^{-1}]; N events",100,0,2000);
    TH1D *h_deltaEtaPFwc = new TH1D("deltaEtaPF_without_cuts","#Delta#eta_{PF} Distribution; #eta_{max}-#eta_{min}; N events",20,-12,12);
    TH1D *h_absdeltaEtaPFwc = new TH1D("absdeltaEtaPF_without_cuts","#Delta#eta_{PF} Distribution; |#eta_{max}-#eta_{min}|; N events",20,0.0,12);
+   TH1D *h_puBx0wc = new TH1D("pileupmcBx0wc","PileUp Monte Carlo; # Pile Up; N events",25,0,25);
+   TH1D *h_vertexwc = new TH1D("vertexwc","Number of Vertex; # Vertex; N events",25,0,25);
    //------------>
 
 
@@ -177,6 +179,8 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
    TH1D *h_pTJet2wt = new TH1D("pTJet2_with_trigger","Second Jet  - P_{T} Distribution; P_{T} [GeV.c^{-1}]; N events",100,0,2000);
    TH1D *h_deltaEtaPFwt = new TH1D("deltaEtaPF_with_trigger","#Delta#eta_{PF} Distribution; #eta_{max}-#eta_{min}; N events",20,-12,12);
    TH1D *h_absdeltaEtaPFwt = new TH1D("absdeltaEtaPF_with_trigger","#Delta#eta_{PF} Distribution; |#eta_{max}-#eta_{min}|; N events",20,0.0,12);
+   TH1D *h_puBx0wt = new TH1D("pileupmcBx0wt","PileUp Monte Carlo; # Pile Up; N events",25,0,25);
+   TH1D *h_vertexwt = new TH1D("vertexwt","Number of Vertex; # Vertex; N events",25,0,25);
    //------------>
 
 
@@ -485,6 +489,8 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
       h_pTJet2wc->Fill(eventexcl->GetSecondJetPt(),totalweight);
       h_deltaEtaPFwc->Fill(deltaetapf_,totalweight);
       h_absdeltaEtaPFwc->Fill(absdeltaetapf_,totalweight);
+      h_puBx0wc->Fill(eventexcl->GetNPileUpBx0(),totalweight);
+      h_vertexwc->Fill(eventexcl->GetNVertex(), totalweight);
       //////////////////////////////////////////////////
 
 
@@ -521,6 +527,8 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
 	 h_pTJet2wt->Fill(eventexcl->GetSecondJetPt(),totalweight);
 	 h_deltaEtaPFwt->Fill(deltaetapf_,totalweight);
 	 h_absdeltaEtaPFwt->Fill(absdeltaetapf_,totalweight);
+         h_puBx0wt->Fill(eventexcl->GetNPileUpBx0(),totalweight);
+         h_vertexwt->Fill(eventexcl->GetNVertex(), totalweight);
 	 //////////////////////////////////////////////////
 
 
@@ -815,8 +823,8 @@ int main(int argc, char **argv)
    if (argc > 8 && strcmp(s1,argv[8]) != 0)  switchWeightLumi_ = atoi(argv[8]);
    if (argc > 9 && strcmp(s1,argv[9]) != 0)  switchWeightEff_ = atoi(argv[9]);
    if (argc > 10 && strcmp(s1,argv[10]) != 0)  switchWeightePw_   = atoi(argv[10]);
-   if (argc > 11 && strcmp(s1,argv[11]) != 0)  weightlumipass_  = atoi(argv[11]);
-   if (argc > 12 && strcmp(s1,argv[12]) != 0)  triggereffpass_ = atoi(argv[12]);
+   if (argc > 11 && strcmp(s1,argv[11]) != 0)  weightlumipass_  = atof(argv[11]);
+   if (argc > 12 && strcmp(s1,argv[12]) != 0)  triggereffpass_ = atof(argv[12]);
 
 
    ExclDijetsComp* exclDijets = new ExclDijetsComp();   
