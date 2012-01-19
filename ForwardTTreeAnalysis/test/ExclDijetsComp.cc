@@ -93,25 +93,31 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
    triggereffpass = triggereffpass_;
 
    std::cout << "" << std::endl;
-   std::cout << "< INPUTS >" << std::endl;
-   std::cout << "" << std::endl;
-   std::cout << "filein: " << filein << std::endl;
-   std::cout << "savehistofile: " << savehistofile << std::endl;
-   std::cout << "jet1PT: " << jet1PT << std::endl;
-   std::cout << "jet2PT: " << jet2PT << std::endl;
-   std::cout << "optnVertex: " << optnVertex << std::endl;
-   std::cout << "optTrigger: " << optTrigger << std::endl;
-   std::cout << "switchWeightPU: " << switchWeightPU << std::endl;
-   std::cout << "switchWeightLumi: " << switchWeightLumi << std::endl;
-   std::cout << "switchWeightEff: " << switchWeightEff << std::endl;
-   std::cout << "weightlumipass: " << weightlumipass << std::endl;
-   std::cout << "triggereffpass: " << triggereffpass << std::endl;
+   std::cout << "Running Data with Trigger...\n" <<std::endl;
+   std::cout << "<< INPUTS >>" << std::endl;
+   std::cout << " " << std::endl;
+   std::cout << "Input file: " << filein << std::endl;
+   std::cout << " " << std::cout;
+   std::cout << "Output file: " << savehistofile << std::endl;
+   std::cout << " " << std::cout; 
+   std::cout << "pT(Jet1): " << jet1PT << "GeV" << std::endl;
+   std::cout << "pT(Jet2): " << jet2PT << "GeV" << std::endl;
+   std::cout << "# Vertex: " << optnVertex << std::endl;
+   std::cout << "Trigger Option: " << optTrigger << std::endl;
+   std::cout << " " << std::endl;
+   std::cout << "--> TRUE = 1 FALSE = 0" << std::endl;
+   std::cout << "PU Weight: " << switchWeightPU << std::endl;
+   std::cout << "Lumi. Weight: " << switchWeightLumi << std::endl;
+   std::cout << "Eff. Corr.: " << switchWeightEff << std::endl;
+   std::cout << "Evt. - Evt. Weight: " << switchWeightePw << std::endl;
+   std::cout << " " << std::endl;
+   std::cout << "--> Factors" << std::endl;
+   std::cout << "Lumi. Weight: " << weightlumipass << std::endl;
+   std::cout << "Trigger Eff.: " << triggereffpass << std::endl;
    std::cout << "" << std::endl;
 
    LoadFile(filein);  
 
-   //LumiReWeighting LumiWeights_("147146-149711-pileup_2.root ","pileup15to3000_BXs_mc.root","pileup","pileupmcBx0");
-   //LumiReWeighting LumiWeights_("pileup15to3000_BXs_mc.root","147146-149711-pileup_2.root ","pileupmcBx0","pileup");
    edm::LumiReWeighting LumiWeights_("pileup15to3000_BXs_mc.root","147146-149711-pileup_2.root ","pileupmcBx0","pileup");
 
    if (optnVertex == 0){
@@ -120,7 +126,6 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
       std::cout << "Please, restart your setup. Respect the Condition # Vertex > 0)" << std::endl;
       std::cout << "---------------------------------------------------------------" << std::endl;
       return;
-      //exit();
 
    }
 
@@ -156,8 +161,8 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
    TH1D *h_pTJet2wc = new TH1D("pTJet2_without_cuts","Second Jet  - P_{T} Distribution; P_{T} [GeV.c^{-1}]; N events",100,0,2000);
    TH1D *h_deltaEtaPFwc = new TH1D("deltaEtaPF_without_cuts","#Delta#eta_{PF} Distribution; #eta_{max}-#eta_{min}; N events",20,-12,12);
    TH1D *h_absdeltaEtaPFwc = new TH1D("absdeltaEtaPF_without_cuts","#Delta#eta_{PF} Distribution; |#eta_{max}-#eta_{min}|; N events",20,0.0,12);
-   TH1D *h_puBx0wc = new TH1D("pileupmcBx0wc","PileUp Monte Carlo; # Pile Up; N events",25,0,25);
-   TH1D *h_vertexwc = new TH1D("vertexwc","Number of Vertex; # Vertex; N events",25,0,25);
+   TH1D *h_puBx0wc = new TH1D("pileupmcBx0_without_cuts","PileUp Monte Carlo; # Pile Up; N events",25,0,25);
+   TH1D *h_vertexwc = new TH1D("vertex_without_cuts","Number of Vertex; # Vertex; N events",25,0,25);
    //------------>
 
 
@@ -179,8 +184,8 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
    TH1D *h_pTJet2wt = new TH1D("pTJet2_with_trigger","Second Jet  - P_{T} Distribution; P_{T} [GeV.c^{-1}]; N events",100,0,2000);
    TH1D *h_deltaEtaPFwt = new TH1D("deltaEtaPF_with_trigger","#Delta#eta_{PF} Distribution; #eta_{max}-#eta_{min}; N events",20,-12,12);
    TH1D *h_absdeltaEtaPFwt = new TH1D("absdeltaEtaPF_with_trigger","#Delta#eta_{PF} Distribution; |#eta_{max}-#eta_{min}|; N events",20,0.0,12);
-   TH1D *h_puBx0wt = new TH1D("pileupmcBx0wt","PileUp Monte Carlo; # Pile Up; N events",25,0,25);
-   TH1D *h_vertexwt = new TH1D("vertexwt","Number of Vertex; # Vertex; N events",25,0,25);
+   TH1D *h_puBx0wt = new TH1D("pileupmcBx0_with_trigger","PileUp Monte Carlo; # Pile Up; N events",25,0,25);
+   TH1D *h_vertexwt = new TH1D("vertex_with_trigger","Number of Vertex; # Vertex; N events",25,0,25);
    //------------>
 
 
@@ -389,8 +394,6 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
 
    int TotalE = 0;
    int counterTrigger = 0;
-   int counterJetsAll = 0;
-   int counterJetsAtTracker = 0;
    int counterJetsstep2 = 0;
    int counterJetsAllstep3 = 0;
    int counterJetsTrackerstep3 = 0;
@@ -405,6 +408,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
       ++TotalE;
 
       //----------- Progress Report -------------
+      
       double progress = 10.0*i/(1.0*NEVENTS);
       int k = TMath::FloorNint(progress); 
       if (k > decade) 
@@ -413,10 +417,6 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
 
       //----------- Read the Event --------------
       tr->GetEntry(i);
-
-      //
-      // Define Weights
-      //
 
       deltaphi_ = fabs(eventexcl->GetLeadingJetPhi()-eventexcl->GetSecondJetPhi());
       aSumE_ = (eventdiff->GetSumEnergyHFPlus() - eventdiff->GetSumEnergyHFMinus())/(eventdiff->GetSumEnergyHFPlus() + eventdiff->GetSumEnergyHFMinus());
@@ -431,24 +431,20 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
       if (switchWeightPU) { 
 	 //weight = LumiWeights_.weightOOT(eventexcl->GetNPileUpBx0(),eventexcl->GetNPileUpBxm1());} 
 	 weight = LumiWeights_.weight( eventexcl->GetNPileUpBx0()); }
-      else { weight = 1; }
+      else { weight = 1.0;}
       //------------------------------------------------------------------------------------------
 
       double weightlumi;
       double triggereff;
       double weightepw;
       if (switchWeightLumi) { weightlumi = weightlumipass; }
-      else { weightlumi = 1; }
+      else { weightlumi = 1.0;}
 
       if (switchWeightEff) { triggereff = triggereffpass;}
-      else { triggereff = 1; }
+      else { triggereff = 1.0;}
 
       if (switchWeightePw) { weightepw = eventqcd->evtHdr().weight();}
-      else { weightepw = 1; }
-
-      // TEST 
-      // std::cout << weightepw << std::endl;
-      //---------->>
+      else { weightepw = 1.0;}
 
       //---------->>
       /*
@@ -463,7 +459,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
       totalweight = triggereff*weight*weightlumi*weightepw;
 
       if( i % 1000 == 0 ){
-	 std::cout << "Event " << i << " Nr. events Bx 0: " << eventexcl->GetNPileUpBx0() << std::endl
+	 std::cout << "\nEvent " << i << " Nr. events Bx 0: " << eventexcl->GetNPileUpBx0() << std::endl
 	    << "Pile-up weight : " << weight << std::endl
 	    << "Lumi corr.     : " << weightlumi << std::endl
 	    << "Trigger corr.  : " << triggereff << std::endl
@@ -500,13 +496,13 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
       //
       //
       // SIMULATED TRIGGER
-      if (eventdiff->GetSumEnergyHFMinus() < 50 && eventdiff->GetSumEnergyHFPlus() < 50){
+      //if (eventdiff->GetSumEnergyHFMinus() < 50 && eventdiff->GetSumEnergyHFPlus() < 50){
 	 // TRIGGER
-	 // if (eventexcl->GetHLTPath(optTrigger)){
+	 if (eventexcl->GetHLTPath(optTrigger)){
 	 //
 	 //------------------------------------------------------------------------------------------
 
-	 ++counterTrigger;
+	 counterTrigger+=totalweight;
 
 	 // With Trigger: online or emulate          
 	 ////////////////////////////////////////////////
@@ -577,7 +573,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
 	    // Setting Analysis Cut
 	    if (eventexcl->GetLeadingJetP4().Pt() > jet1PT && eventexcl->GetSecondJetP4().Pt() > jet2PT ){
 
-	       ++counterJetsstep2;
+	       counterJetsstep2+=totalweight;
 
 	       // STEP2         
 	       ////////////////////////////////////////////////
@@ -602,7 +598,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
 
 	       if (eventexcl->GetLeadingJetP4().Eta() < 5.2 && eventexcl->GetSecondJetP4().Eta() < 5.2 && eventexcl->GetLeadingJetP4().Eta() > -5.2 && eventexcl->GetSecondJetP4().Eta() > -5.2){
 
-		  ++counterJetsAllstep3;
+		  counterJetsAllstep3+=totalweight;
 
 		  // ALL - STEP3         
 		  ////////////////////////////////////////////////
@@ -686,7 +682,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
 
 	       if (eventexcl->GetLeadingJetP4().Eta() < 2.9 && eventexcl->GetSecondJetP4().Eta() < 2.9 && eventexcl->GetLeadingJetP4().Eta() > -2.9 && eventexcl->GetSecondJetP4().Eta() > -2.9){
 
-		  ++counterJetsTrackerstep3;
+		  counterJetsTrackerstep3+=totalweight;
 
 		  // Tracker - STEP3         
 		  ////////////////////////////////////////////////
@@ -775,7 +771,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
 
    }// Run All Events
 
-   /*cout << "" << endl;
+     std::cout << "" << std::endl;
      std::cout << "Trigger Info" << std::endl;
      std::cout << "------------" << std::endl;
      std::cout << "" << std::endl;
@@ -785,12 +781,9 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
      std::cout << "Selected " << counterJetsAllstep3 <<  " jets with pT(jet1) > " << jet1PT << " [GeV] " << "and pT(jet2) > " << jet2PT << " [GeV] in all CMS acceptance."<< std::endl;
      std::cout << "Selected " << counterJetsTrackerstep3 <<  " jets with pT(jet1) > " << jet1PT << " [GeV] " << "and pT(jet2) > " << jet2PT << " [GeV] in tracker acceptance."<< std::endl;
      std::cout << "" << std::endl;
-    */
+    
    outf->Write();
    outf->Close();
-
-   //~LumiWeights_;
-   //gROOT->Reset();
 }
 
 #if !defined(__CINT__) || defined(__MAKECINT__)
