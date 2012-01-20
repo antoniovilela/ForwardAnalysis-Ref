@@ -14,20 +14,20 @@
 //
 // (B) COMMAND LINE
 // ----------------
-// $> root -l -b -q 'ExclDijetsComp.C("inputfile.root","outputfile.root", pT(Jet1) Cut, pT(Jet2) Cut, Number of Vertex Cut, Trigger Option, Turn on(off) PU Reweight, Turn on(off) Luminosity Reweight, Turn on(off) Trigger Efficiency, Turn on(off) event-per-event Weight, Luminosity Weight Factor, Trigger Efficiency Factor)'
+// $> ./ExclDijetsComp "Inputfile.root" "outputfile.root" <pT(Jet1) Cut> <pT(Jet2) Cut> <Number of Vertex Cut> <Trigger Option> <Turn on(off) PU Reweight> <Turn on(off) Luminosity Reweight> <Turn on(off) Trigger Efficiency> <Turn on(off) event-per-event Weight> <Luminosity Weight Factor> <Trigger Efficiency Factor>
 //
-// TURN ON  = true
-// TURN OFF = false
+// TURN ON  = 1
+// TURN OFF = 0
 //
 // I)   If you turn off PU reweight, the default weight will be 1;
 // II)  If you turn off Luminosity reweight, the default weight will be 1;
 // III) If you turn off Trigger Efficiency, the default weight will be 1;
 // IV)  If you turn off event-per-event weight (some MC sample), the default weight will be 1;
 //
-// EXAMPLE: root -l -b -q 'ExclDijetsComp.C("inputfile.root","outputfile.root", 60, 55, 2, 1, false, true, true, 0.0003, 2.3)'
+// EXAMPLE: ./ExclDijetsComp "inputfile.root" "outputfile.root" 60 55 2 1 0 1 1 0.0003 2.3
 //
-// P.S.: DO NOT FORGET to set lines 383 or 384 for choose PU REWEIGHT METHOD: ITweight or weightOOT! You can use eventexcl->GetNPileUpBxm1() or eventexcl->GetNPileUpBxp1()
-//       DO NOT FORGET to set lines 434 or 436 for choose SIMULATED TRIGGER OR TRIGGER!
+// P.S.: DO NOT FORGET to set line 442 for choose PU REWEIGHT METHOD: ITweight or weightOOT! You can use eventexcl->GetNPileUpBxm1()
+//       DO NOT FORGET to set line 512 for choose SIMULATED TRIGGER OR TRIGGER!
 //       
 
 //#if !defined(__CINT__) || defined(__MAKECINT__)
@@ -509,7 +509,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
       //
       //
       // SIMULATED TRIGGER
-      if (eventdiff->GetSumEnergyHFMinus() < 50 && eventdiff->GetSumEnergyHFPlus() < 50 && GetLeadingJetP4().Pt() > 30 && GetSecondJetP4().Pt() > 30){
+      if (eventdiff->GetSumEnergyHFMinus() < 50 && eventdiff->GetSumEnergyHFPlus() < 50 && eventexcl->GetLeadingJetP4().Pt() > 30 && eventexcl->GetSecondJetP4().Pt() > 30){
 	 // TRIGGER
 	 //if (eventexcl->GetHLTPath(optTrigger)){
 	 //
