@@ -93,7 +93,8 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
    triggereffpass = triggereffpass_;
 
    std::cout << "" << std::endl;
-   std::cout << "Running Data with Trigger...\n" <<std::endl;
+   std::cout << "Running Montecarlo..." << std::endl;
+   std::cout << "" << std::endl;
    std::cout << "<< INPUTS >>" << std::endl;
    std::cout << " " << std::endl;
    std::cout << "Input file: " << filein << std::endl;
@@ -159,6 +160,10 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
    TH1D *h_dijetMasswc = new TH1D("dijetMass_without_cuts","Dijet Invariant Mass Distribution; M_{jj} [GeV]; N events",40,0,400);
    TH1D *h_pTJet1wc = new TH1D("pTJet1_without_cuts","Leading Jet - P_{T} Distribution; P_{T} [GeV.c^{-1}]; N events",100,0,2000);
    TH1D *h_pTJet2wc = new TH1D("pTJet2_without_cuts","Second Jet  - P_{T} Distribution; P_{T} [GeV.c^{-1}]; N events",100,0,2000);
+   TH1D *h_etaJet1wc = new TH1D("etaJet1_without_cuts","Leading Jet - #eta Distribution; #eta; N events",50,-5.5,5.5);
+   TH1D *h_etaJet2wc = new TH1D("etaJet2_without_cuts","Second Jet  - #eta Distribution; #eta; N events",50,-5.5,5.5);
+   TH1D *h_phiJet1wc = new TH1D("phiJet1_without_cuts","Leading Jet - #phi Distribution; #phi [rad]; N events",50,-3.3,3.3);
+   TH1D *h_phiJet2wc = new TH1D("phiJet2_without_cuts","Second Jet  - #phi Distribution; #phi [rad]; N events",50,-3.3,3.3);
    TH1D *h_deltaEtaPFwc = new TH1D("deltaEtaPF_without_cuts","#Delta#eta_{PF} Distribution; #eta_{max}-#eta_{min}; N events",20,-12,12);
    TH1D *h_absdeltaEtaPFwc = new TH1D("absdeltaEtaPF_without_cuts","#Delta#eta_{PF} Distribution; |#eta_{max}-#eta_{min}|; N events",20,0.0,12);
    TH1D *h_puBx0wc = new TH1D("pileupmcBx0_without_cuts","PileUp Monte Carlo; # Pile Up; N events",25,0,25);
@@ -182,6 +187,10 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
    TH1D *h_dijetMasswt = new TH1D("dijetMass_with_trigger","Dijet Invariant Mass Distribution; M_{jj} [GeV]; N events",40,0,400);
    TH1D *h_pTJet1wt = new TH1D("pTJet1_with_trigger","Leading Jet - P_{T} Distribution; P_{T} [GeV.c^{-1}]; N events",100,0,2000);
    TH1D *h_pTJet2wt = new TH1D("pTJet2_with_trigger","Second Jet  - P_{T} Distribution; P_{T} [GeV.c^{-1}]; N events",100,0,2000);
+   TH1D *h_etaJet1wt = new TH1D("etaJet1_with_trigger","Leading Jet - #eta Distribution; #eta; N events",50,-5.5,5.5);
+   TH1D *h_etaJet2wt = new TH1D("etaJet2_with_trigger","Second Jet  - #eta Distribution; #eta; N events",50,-5.5,5.5);
+   TH1D *h_phiJet1wt = new TH1D("phiJet1_with_trigger","Leading Jet - #phi Distribution; #phi [rad]; N events",50,-3.3,3.3);
+   TH1D *h_phiJet2wt = new TH1D("phiJet2_with_trigger","Second Jet  - #phi Distribution; #phi [rad]; N events",50,-3.3,3.3);
    TH1D *h_deltaEtaPFwt = new TH1D("deltaEtaPF_with_trigger","#Delta#eta_{PF} Distribution; #eta_{max}-#eta_{min}; N events",20,-12,12);
    TH1D *h_absdeltaEtaPFwt = new TH1D("absdeltaEtaPF_with_trigger","#Delta#eta_{PF} Distribution; |#eta_{max}-#eta_{min}|; N events",20,0.0,12);
    TH1D *h_puBx0wt = new TH1D("pileupmcBx0_with_trigger","PileUp Monte Carlo; # Pile Up; N events",25,0,25);
@@ -483,6 +492,10 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
       h_dijetMasswc->Fill(eventexcl->GetMassDijets(),totalweight);
       h_pTJet1wc->Fill(eventexcl->GetLeadingJetPt(),totalweight);
       h_pTJet2wc->Fill(eventexcl->GetSecondJetPt(),totalweight);
+      h_etaJet1wc->Fill(eventexcl->GetLeadingJetEta(),totalweight);
+      h_etaJet2wc->Fill(eventexcl->GetSecondJetEta(),totalweight);
+      h_phiJet1wc->Fill(eventexcl->GetLeadingJetPhi(),totalweight);
+      h_phiJet2wc->Fill(eventexcl->GetSecondJetPhi(),totalweight);
       h_deltaEtaPFwc->Fill(deltaetapf_,totalweight);
       h_absdeltaEtaPFwc->Fill(absdeltaetapf_,totalweight);
       h_puBx0wc->Fill(eventexcl->GetNPileUpBx0(),totalweight);
@@ -496,9 +509,9 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
       //
       //
       // SIMULATED TRIGGER
-      //if (eventdiff->GetSumEnergyHFMinus() < 50 && eventdiff->GetSumEnergyHFPlus() < 50){
+      if (eventdiff->GetSumEnergyHFMinus() < 50 && eventdiff->GetSumEnergyHFPlus() < 50 && GetLeadingJetP4().Pt() > 30 && GetSecondJetP4().Pt() > 30){
 	 // TRIGGER
-	 if (eventexcl->GetHLTPath(optTrigger)){
+	 //if (eventexcl->GetHLTPath(optTrigger)){
 	 //
 	 //------------------------------------------------------------------------------------------
 
@@ -521,6 +534,10 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
 	 h_dijetMasswt->Fill(eventexcl->GetMassDijets(),totalweight);
 	 h_pTJet1wt->Fill(eventexcl->GetLeadingJetPt(),totalweight);
 	 h_pTJet2wt->Fill(eventexcl->GetSecondJetPt(),totalweight);
+         h_etaJet1wt->Fill(eventexcl->GetLeadingJetEta(),totalweight);
+         h_etaJet2wt->Fill(eventexcl->GetSecondJetEta(),totalweight);
+         h_phiJet1wt->Fill(eventexcl->GetLeadingJetPhi(),totalweight);
+         h_phiJet2wt->Fill(eventexcl->GetSecondJetPhi(),totalweight);
 	 h_deltaEtaPFwt->Fill(deltaetapf_,totalweight);
 	 h_absdeltaEtaPFwt->Fill(absdeltaetapf_,totalweight);
          h_puBx0wt->Fill(eventexcl->GetNPileUpBx0(),totalweight);
@@ -767,7 +784,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
 
 	 }// If nVertex
 
-      } // Emule Trigger or Triggers
+     } // Emule Trigger or Triggers
 
    }// Run All Events
 
