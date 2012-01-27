@@ -57,7 +57,7 @@
 //using namespace forwardAnalysis;
 using namespace diffractiveAnalysis;
 using namespace exclusiveDijetsAnalysis;
-using namespace reweight;
+//using namespace reweight;
 
 void ExclDijetsComp::LoadFile(std::string fileinput){
 
