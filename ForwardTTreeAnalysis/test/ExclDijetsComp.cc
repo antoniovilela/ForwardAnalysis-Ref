@@ -7,6 +7,11 @@
 //
 // Instructions to run the code: (a) using script ro run multiple parameters or (b) bash command line. 
 //
+// First Step: compile the code.
+//             ?> scram b -r
+//
+// Second Step: copy from $CMSSW_BASE/test/slc.../Binary file to your own area with pileup root files.
+//
 // (A) SCRIPT TO RUN MULTIPLE PARAMETERS
 // -------------------------------------
 // $> python RunExclAnalysis.py
@@ -26,7 +31,6 @@
 //
 // EXAMPLE: ./ExclDijetsComp "inputfile.root" "outputfile.root" 60 55 2 1 0 1 1 0.0003 2.3
 //
-// P.S.: DO NOT FORGET to set line 442 for choose PU REWEIGHT METHOD: ITweight or weightOOT! You can use eventexcl->GetNPileUpBxm1()
 //       DO NOT FORGET to set line 512 for choose SIMULATED TRIGGER OR TRIGGER!
 //       
 
@@ -178,6 +182,9 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
    TH1D *h_vertexwc = new TH1D("vertex_without_cuts","Number of Vertex; # Vertex; N events",25,0,25);
    TH1D *h_sumEHFpluswc = new TH1D("sumEHFplus_without_cuts","HF^{+} - Sum of Energy; #sum E_{HF^{+}} [GeV]; N events",100,0,2000);
    TH1D *h_sumEHFminuswc = new TH1D("sumEHFminus_without_cuts","HF^{-} - Sum of Energy; #sum E_{HF^{-}} [GeV]; N events",100,0,2000);
+   TH1D *h_sumEHFpfpluswc = new TH1D("sumEHFpfplus_without_cuts","HF^{+} - Sum of PF Energy; #sum E_{HF^{+}_{PF}} [GeV]; N events",100,0,2000);
+   TH1D *h_sumEHFpfminuswc = new TH1D("sumEHFpfminus_without_cuts","HF^{-} - Sum of PF Energy; #sum E_{HF^{-}_{PF}} [GeV]; N events",100,0,2000);
+
    //------------>
 
    // ControlPlots B: with trigger
@@ -208,7 +215,8 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
    TH1D *h_vertexwt = new TH1D("vertex_with_trigger","Number of Vertex; # Vertex; N events",25,0,25);
    TH1D *h_sumEHFpluswt = new TH1D("sumEHFplus_with_trigger","HF^{+} - Sum of Energy; #sum E_{HF^{+}} [GeV]; N events",100,0,2000);
    TH1D *h_sumEHFminuswt = new TH1D("sumEHFminus_with_trigger","HF^{-} - Sum of Energy; #sum E_{HF^{-}} [GeV]; N events",100,0,2000);
-
+   TH1D *h_sumEHFpfpluswt = new TH1D("sumEHFpfplus_with_trigger","HF^{+} - Sum of PF Energy; #sum E_{HF^{+}_{PF}} [GeV]; N events",100,0,2000);
+   TH1D *h_sumEHFpfminuswt = new TH1D("sumEHFpfminus_with_trigger","HF^{-} - Sum of PF Energy; #sum E_{HF^{-}_{PF}} [GeV]; N events",100,0,2000);
    //------------>
 
    // STEP1: trigger + Vertex Cut
@@ -239,6 +247,8 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
    TH1D *h_vertexstep1 = new TH1D("vertex_step1","Number of Vertex; # Vertex; N events",25,0,25);
    TH1D *h_sumEHFplusstep1 = new TH1D("sumEHFplus_step1","HF^{+} - Sum of Energy; #sum E_{HF^{+}} [GeV]; N events",100,0,2000);
    TH1D *h_sumEHFminusstep1 = new TH1D("sumEHFminus_step1","HF^{-} - Sum of Energy; #sum E_{HF^{-}} [GeV]; N events",100,0,2000);
+   TH1D *h_sumEHFpfplusstep1 = new TH1D("sumEHFpfplus_step1","HF^{+} - Sum of PF Energy; #sum E_{HF^{+}_{PF}} [GeV]; N events",100,0,2000);
+   TH1D *h_sumEHFpfminusstep1 = new TH1D("sumEHFpfminus_step1","HF^{-} - Sum of PF Energy; #sum E_{HF^{-}_{PF}} [GeV]; N events",100,0,2000);
    //------------>
 
    // STEP2: trigger + Vertex Cut + pT (Jet1 and Jet2) Cut 
@@ -269,6 +279,8 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
    TH1D *h_vertexstep2 = new TH1D("vertex_step2","Number of Vertex; # Vertex; N events",25,0,25);
    TH1D *h_sumEHFplusstep2 = new TH1D("sumEHFplus_step2","HF^{+} - Sum of Energy; #sum E_{HF^{+}} [GeV]; N events",100,0,2000);
    TH1D *h_sumEHFminusstep2 = new TH1D("sumEHFminus_step2","HF^{-} - Sum of Energy; #sum E_{HF^{-}} [GeV]; N events",100,0,2000);
+   TH1D *h_sumEHFpfplusstep2 = new TH1D("sumEHFpfplus_step2","HF^{+} - Sum of PF Energy; #sum E_{HF^{+}_{PF}} [GeV]; N events",100,0,2000);
+   TH1D *h_sumEHFpfminusstep2 = new TH1D("sumEHFpfminus_step2","HF^{-} - Sum of PF Energy; #sum E_{HF^{-}_{PF}} [GeV]; N events",100,0,2000);
    //------------>
 
    // ALL STEP3: trigger + Vertex Cut + pT (Jet1 and Jet2) Cut + Jets All CMS Acceptance 
@@ -299,6 +311,8 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
    TH1D *h_vertexAllstep3 = new TH1D("vertexAll_step3","Number of Vertex; # Vertex; N events",25,0,25);
    TH1D *h_sumEHFplusAllstep3 = new TH1D("sumEHFplusAll_step3","HF^{+} - Sum of Energy; #sum E_{HF^{+}} [GeV]; N events",100,0,2000);
    TH1D *h_sumEHFminusAllstep3 = new TH1D("sumEHFminusAll_step3","HF^{-} - Sum of Energy; #sum E_{HF^{-}} [GeV]; N events",100,0,2000);
+   TH1D *h_sumEHFpfplusAllstep3 = new TH1D("sumEHFpfplusAll_step3","HF^{+} - Sum of PF Energy; #sum E_{HF^{+}_{PF}} [GeV]; N events",100,0,2000);
+   TH1D *h_sumEHFpfminusAllstep3 = new TH1D("sumEHFpfminusAll_step3","HF^{-} - Sum of PF Energy; #sum E_{HF^{-}_{PF}} [GeV]; N events",100,0,2000);
    //------------>
 
    // ALL STEP4-X: trigger + Vertex Cut + pT (Jet1 and Jet2) Cut + Jets All CMS Acceptance + |Eta Max and Eta Min| < X Cut 
@@ -328,6 +342,8 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
    TH1D *h_vertexAllstep4_4 = new TH1D("vertexAll_step4_4","Number of Vertex; # Vertex; N events",25,0,25);
    TH1D *h_sumEHFplusAllstep4_4 = new TH1D("sumEHFplusAll_step4_4","HF^{+} - Sum of Energy; #sum E_{HF^{+}} [GeV]; N events",100,0,2000);
    TH1D *h_sumEHFminusAllstep4_4 = new TH1D("sumEHFminusAll_step4_4","HF^{-} - Sum of Energy; #sum E_{HF^{-}} [GeV]; N events",100,0,2000);
+   TH1D *h_sumEHFpfplusAllstep4_4 = new TH1D("sumEHFpfplusAll_step4_4","HF^{+} - Sum of PF Energy; #sum E_{HF^{+}_{PF}} [GeV]; N events",100,0,2000);
+   TH1D *h_sumEHFpfminusAllstep4_4 = new TH1D("sumEHFpfminusAll_step4_4","HF^{-} - Sum of PF Energy; #sum E_{HF^{-}_{PF}} [GeV]; N events",100,0,2000);
 
    // |Eta max and Eta min| < 3
    TH1D *h_RJJAllstep4_3 = new TH1D("RJJAll_step4_3","R_{jj} Distribution; R_{jj}; N events",50,0,1);
@@ -355,6 +371,8 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
    TH1D *h_vertexAllstep4_3 = new TH1D("vertexAll_step4_3","Number of Vertex; # Vertex; N events",25,0,25);
    TH1D *h_sumEHFplusAllstep4_3 = new TH1D("sumEHFplusAll_step4_3","HF^{+} - Sum of Energy; #sum E_{HF^{+}} [GeV]; N events",100,0,2000);
    TH1D *h_sumEHFminusAllstep4_3 = new TH1D("sumEHFminusAll_step4_3","HF^{-} - Sum of Energy; #sum E_{HF^{-}} [GeV]; N events",100,0,2000);
+   TH1D *h_sumEHFpfplusAllstep4_3 = new TH1D("sumEHFpfplusAll_step4_3","HF^{+} - Sum of PF Energy; #sum E_{HF^{+}_{PF}} [GeV]; N events",100,0,2000);
+   TH1D *h_sumEHFpfminusAllstep4_3 = new TH1D("sumEHFpfminusAll_step4_3","HF^{-} - Sum of PF Energy; #sum E_{HF^{-}_{PF}} [GeV]; N events",100,0,2000);
 
    // |Eta max and Eta min| < 2
    TH1D *h_RJJAllstep4_2 = new TH1D("RJJAll_step4_2","R_{jj} Distribution; R_{jj}; N events",50,0,1);
@@ -382,7 +400,8 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
    TH1D *h_vertexAllstep4_2 = new TH1D("vertexAll_step4_2","Number of Vertex; # Vertex; N events",25,0,25);
    TH1D *h_sumEHFplusAllstep4_2 = new TH1D("sumEHFplusAll_step4_2","HF^{+} - Sum of Energy; #sum E_{HF^{+}} [GeV]; N events",100,0,2000);
    TH1D *h_sumEHFminusAllstep4_2 = new TH1D("sumEHFminusAll_step4_2","HF^{-} - Sum of Energy; #sum E_{HF^{-}} [GeV]; N events",100,0,2000);
-
+   TH1D *h_sumEHFpfplusAllstep4_2 = new TH1D("sumEHFpfplusAll_step4_2","HF^{+} - Sum of PF Energy; #sum E_{HF^{+}_{PF}} [GeV]; N events",100,0,2000);
+   TH1D *h_sumEHFpfminusAllstep4_2 = new TH1D("sumEHFpfminusAll_step4_2","HF^{-} - Sum of PF Energy; #sum E_{HF^{-}_{PF}} [GeV]; N events",100,0,2000);
 
    // |Eta max and Eta min| < 1
    TH1D *h_RJJAllstep4_1 = new TH1D("RJJAll_step4_1","R_{jj} Distribution; R_{jj}; N events",50,0,1);
@@ -410,6 +429,8 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
    TH1D *h_vertexAllstep4_1 = new TH1D("vertexAll_step4_1","Number of Vertex; # Vertex; N events",25,0,25);
    TH1D *h_sumEHFplusAllstep4_1 = new TH1D("sumEHFplusAll_step4_1","HF^{+} - Sum of Energy; #sum E_{HF^{+}} [GeV]; N events",100,0,2000);
    TH1D *h_sumEHFminusAllstep4_1 = new TH1D("sumEHFminusAll_step4_1","HF^{-} - Sum of Energy; #sum E_{HF^{-}} [GeV]; N events",100,0,2000);
+   TH1D *h_sumEHFpfplusAllstep4_1 = new TH1D("sumEHFpfplusAll_step4_1","HF^{+} - Sum of PF Energy; #sum E_{HF^{+}_{PF}} [GeV]; N events",100,0,2000);
+   TH1D *h_sumEHFpfminusAllstep4_1 = new TH1D("sumEHFpfminusAll_step4_1","HF^{-} - Sum of PF Energy; #sum E_{HF^{-}_{PF}} [GeV]; N events",100,0,2000);
    //------------>
 
    // Tracker STEP3: trigger + Vertex Cut + pT (Jet1 and Jet2) Cut + Jets All CMS Acceptance 
@@ -440,6 +461,8 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
    TH1D *h_vertexTrackerstep3 = new TH1D("vertexTracker_step3","Number of Vertex; # Vertex; N events",25,0,25);
    TH1D *h_sumEHFplusTrackerstep3 = new TH1D("sumEHFplusTracker_step3","HF^{+} - Sum of Energy; #sum E_{HF^{+}} [GeV]; N events",100,0,2000);
    TH1D *h_sumEHFminusTrackerstep3 = new TH1D("sumEHFminusTracker_step3","HF^{-} - Sum of Energy; #sum E_{HF^{-}} [GeV]; N events",100,0,2000);
+   TH1D *h_sumEHFpfplusTrackerstep3 = new TH1D("sumEHFpfplusTracker_step3","HF^{+} - Sum of PF Energy; #sum E_{HF^{+}_{PF}} [GeV]; N events",100,0,2000);
+   TH1D *h_sumEHFpfminusTrackerstep3 = new TH1D("sumEHFpfminusTracker_step3","HF^{-} - Sum of PF Energy; #sum E_{HF^{-}_{PF}} [GeV]; N events",100,0,2000);
    //------------>
 
    // Tracker STEP4-X: trigger + Vertex Cut + pT (Jet1 and Jet2) Cut + Jets at CMS Tracker Acceptance + |Eta Max and Eta Min| < X Cut 
@@ -469,7 +492,8 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
    TH1D *h_vertexTrackerstep4_4 = new TH1D("vertexTracker_step4_4","Number of Vertex; # Vertex; N events",25,0,25);
    TH1D *h_sumEHFplusTrackerstep4_4 = new TH1D("sumEHFplusTracker_step4_4","HF^{+} - Sum of Energy; #sum E_{HF^{+}} [GeV]; N events",100,0,2000);
    TH1D *h_sumEHFminusTrackerstep4_4 = new TH1D("sumEHFminusTracker_step4_4","HF^{-} - Sum of Energy; #sum E_{HF^{-}} [GeV]; N events",100,0,2000);
-
+   TH1D *h_sumEHFpfplusTrackerstep4_4 = new TH1D("sumEHFpfplusTracker_step4_4","HF^{+} - Sum of PF Energy; #sum E_{HF^{+}_{PF}} [GeV]; N events",100,0,2000);
+   TH1D *h_sumEHFpfminusTrackerstep4_4 = new TH1D("sumEHFpfminusTracker_step4_4","HF^{-} - Sum of PF Energy; #sum E_{HF^{-}_{PF}} [GeV]; N events",100,0,2000);
 
    // |Eta max and Eta min| < 3
    TH1D *h_RJJTrackerstep4_3 = new TH1D("RJJTracker_step4_3","R_{jj} Distribution; R_{jj}; N events",50,0,1);
@@ -497,6 +521,8 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
    TH1D *h_vertexTrackerstep4_3 = new TH1D("vertexTracker_step4_3","Number of Vertex; # Vertex; N events",25,0,25);
    TH1D *h_sumEHFplusTrackerstep4_3 = new TH1D("sumEHFplusTracker_step4_3","HF^{+} - Sum of Energy; #sum E_{HF^{+}} [GeV]; N events",100,0,2000);
    TH1D *h_sumEHFminusTrackerstep4_3 = new TH1D("sumEHFminusTracker_step4_3","HF^{-} - Sum of Energy; #sum E_{HF^{-}} [GeV]; N events",100,0,2000);
+   TH1D *h_sumEHFpfplusTrackerstep4_3 = new TH1D("sumEHFpfplusTracker_step4_3","HF^{+} - Sum of PF Energy; #sum E_{HF^{+}_{PF}} [GeV]; N events",100,0,2000);
+   TH1D *h_sumEHFpfminusTrackerstep4_3 = new TH1D("sumEHFpfminusTracker_step4_3","HF^{-} - Sum of PF Energy; #sum E_{HF^{-}_{PF}} [GeV]; N events",100,0,2000);
 
    // |Eta max and Eta min| < 2
    TH1D *h_RJJTrackerstep4_2 = new TH1D("RJJTracker_step4_2","R_{jj} Distribution; R_{jj}; N events",50,0,1);
@@ -524,6 +550,8 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
    TH1D *h_vertexTrackerstep4_2 = new TH1D("vertexTracker_step4_2","Number of Vertex; # Vertex; N events",25,0,25);
    TH1D *h_sumEHFplusTrackerstep4_2 = new TH1D("sumEHFplusTracker_step4_2","HF^{+} - Sum of Energy; #sum E_{HF^{+}} [GeV]; N events",100,0,2000);
    TH1D *h_sumEHFminusTrackerstep4_2 = new TH1D("sumEHFminusTracker_step4_2","HF^{-} - Sum of Energy; #sum E_{HF^{-}} [GeV]; N events",100,0,2000);
+   TH1D *h_sumEHFpfplusTrackerstep4_2 = new TH1D("sumEHFpfplusTracker_step4_2","HF^{+} - Sum of PF Energy; #sum E_{HF^{+}_{PF}} [GeV]; N events",100,0,2000);
+   TH1D *h_sumEHFpfminusTrackerstep4_2 = new TH1D("sumEHFpfminusTracker_step4_2","HF^{-} - Sum of PF Energy; #sum E_{HF^{-}_{PF}} [GeV]; N events",100,0,2000);
 
    // |Eta max and Eta min| < 1
    TH1D *h_RJJTrackerstep4_1 = new TH1D("RJJTracker_step4_1","R_{jj} Distribution; R_{jj}; N events",50,0,1);
@@ -551,6 +579,160 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
    TH1D *h_vertexTrackerstep4_1 = new TH1D("vertexTracker_step4_1","Number of Vertex; # Vertex; N events",25,0,25);
    TH1D *h_sumEHFplusTrackerstep4_1 = new TH1D("sumEHFplusTracker_step4_1","HF^{+} - Sum of Energy; #sum E_{HF^{+}} [GeV]; N events",100,0,2000);
    TH1D *h_sumEHFminusTrackerstep4_1 = new TH1D("sumEHFminusTracker_step4_1","HF^{-} - Sum of Energy; #sum E_{HF^{-}} [GeV]; N events",100,0,2000);
+   TH1D *h_sumEHFpfplusTrackerstep4_1 = new TH1D("sumEHFpfplusTracker_step4_1","HF^{+} - Sum of PF Energy; #sum E_{HF^{+}_{PF}} [GeV]; N events",100,0,2000);
+   TH1D *h_sumEHFpfminusTrackerstep4_1 = new TH1D("sumEHFpfminusTracker_step4_1","HF^{-} - Sum of PF Energy; #sum E_{HF^{-}_{PF}} [GeV]; N events",100,0,2000);
+   //------------>
+
+ // Jets Eta 2 STEP3: trigger + Vertex Cut + pT (Jet1 and Jet2) Cut + (Eta(jets) < 2 and Eta(jets) > -2) 
+   TH1D *h_DeltaEtaGenjetseta2step3 = new TH1D("DeltaEtaGenjetseta2_step3","#Delta#eta_{Gen} Distribution; #Delta#eta_{Gen}; N events",20,0.0,5.2);
+   TH1D *h_MxGenRangejetseta2step3 = new TH1D("MxGenRangejetseta2_step3","Mass_{X} Gen Distribution; M_{x} Gen [GeV]; N events",50,0,5000);
+   TH1D *h_RJJjetseta2step3 = new TH1D("RJJjetseta2_step3","R_{jj} Distribution; R_{jj}; N events",50,0,1);
+   TH2F *h_MultHFjetseta2step3 = new TH2F( "mHFjetseta2_step3", "HF^{+} and HF^{-} Multiplicity; n HF^{+}; n HF^{-}; N events", 10,  0., 10., 10,  0., 10. );
+   TH2F *h_ET_Calosjetseta2step3 = new TH2F( "ETCalosjetseta2_step3", "HF^{+} and Castor; #sum Energy HF^{+}; log_{10} #sum Castor Signal [fC]; N events", 10,  0., 10., 50,  0., 50. );
+   TH1D *h_tracksjetseta2step3 = new TH1D("tracksjetseta2_step3","Tracks Multiplicity; n Tracks; N events",50,0,150);
+   TH1D *h_pfetamaxjetseta2step3 = new TH1D("pfetamaxjetseta2_step3","Particle Flow #eta_{max} Distribution; #eta; N events",20,0,5.5);
+   TH1D *h_pfetaminjetseta2step3 = new TH1D("pfetaminjetseta2_step3","Particle Flow #eta_{min} Distribution; #eta; N events",20,-5.5,0);
+   TH1D *h_aSumEjetseta2step3 = new TH1D("aEnergyjetseta2_step3","Forward Backward Asymmetry Distribution ; (#sum HF^{+} - #sum HF^{-})x(#sum HF^{+} + #sum HF^{-})^{-1}; N events",50,-1,1);
+   TH1D *h_deltaEtaJetsjetseta2step3 = new TH1D("deltaEtaJetsjetseta2_step3","#Delta#eta_{jj} Distribution; #Delta#eta_{jj}; N events",20,0.0,5.2);
+   TH1D *h_deltaPhiJetsjetseta2step3 = new TH1D("deltaPhiJetsjetseta2_step3","#Delta#phi_{jj} Distribution; #Delta#phi_{jj}; N events",20,0.0,3.2);
+   TH1D *h_deltaPtJetsjetseta2step3 = new TH1D("deltaPtJetsjetseta2_step3","#Delta P_{T} Distribution; #Delta P_{T} [GeV.c^{-1}]; N events",40,0,400);
+   TH1D *h_dijetMassjetseta2step3 = new TH1D("dijetMassjetseta2_step3","Dijet Invariant Mass Distribution; M_{jj} [GeV]; N events",40,0,400);
+   TH1D *h_pTJet1jetseta2step3 = new TH1D("pTJet1jetseta2_step3","Leading Jet - P_{T} Distribution; P_{T} [GeV.c^{-1}]; N events",100,0,2000);
+   TH1D *h_pTJet2jetseta2step3 = new TH1D("pTJet2jetseta2_step3","Second Jet  - P_{T} Distribution; P_{T} [GeV.c^{-1}]; N events",100,0,2000);
+   TH1D *h_deltaEtaPFjetseta2step3 = new TH1D("deltaEtaPFjetseta2_step3","#Delta#eta_{PF} Distribution; #eta_{max}-#eta_{min}; N events",20,-12,12);
+   TH1D *h_absdeltaEtaPFjetseta2step3 = new TH1D("absdeltaEtaPFjetseta2_step3","#Delta#eta_{PF} Distribution; |#eta_{max}-#eta_{min}|; N events",20,0.0,12);
+   TH1D *h_etaJet1jetseta2step3 = new TH1D("etaJet1jetseta2_step3","Leading Jet - #eta Distribution; #eta; N events",50,-5.5,5.5);
+   TH1D *h_etaJet2jetseta2step3 = new TH1D("etaJet2jetseta2_step3","Second Jet  - #eta Distribution; #eta; N events",50,-5.5,5.5);
+   TH1D *h_phiJet1jetseta2step3 = new TH1D("phiJet1jetseta2_step3","Leading Jet - #phi Distribution; #phi [rad]; N events",50,-3.3,3.3);
+   TH1D *h_phiJet2jetseta2step3 = new TH1D("phiJet2jetseta2_step3","Second Jet  - #phi Distribution; #phi [rad]; N events",50,-3.3,3.3);
+   TH1D *h_puBx0jetseta2step3 = new TH1D("pileupmcBx0jetseta2_step3","PileUp Monte Carlo; # Pile Up; N events",25,0,25);
+   TH1D *h_puBxm1jetseta2step3 = new TH1D("pileupmcBxm1jetseta2_step3","PileUp Monte Carlo; # Pile Up; N events",25,0,25);
+   TH1D *h_puBxp1jetseta2step3 = new TH1D("pileupmcBxp1jetseta2_step3","PileUp Monte Carlo; # Pile Up; N events",25,0,25);
+   TH1D *h_vertexjetseta2step3 = new TH1D("vertexjetseta2_step3","Number of Vertex; # Vertex; N events",25,0,25);
+   TH1D *h_sumEHFplusjetseta2step3 = new TH1D("sumEHFplusjetseta2_step3","HF^{+} - Sum of Energy; #sum E_{HF^{+}} [GeV]; N events",100,0,2000);
+   TH1D *h_sumEHFminusjetseta2step3 = new TH1D("sumEHFminusjetseta2_step3","HF^{-} - Sum of Energy; #sum E_{HF^{-}} [GeV]; N events",100,0,2000);
+   TH1D *h_sumEHFpfplusjetseta2step3 = new TH1D("sumEHFpfplusjetseta2_step3","HF^{+} - Sum of PF Energy; #sum E_{HF^{+}_{PF}} [GeV]; N events",100,0,2000);
+   TH1D *h_sumEHFpfminusjetseta2step3 = new TH1D("sumEHFpfminusjetseta2_step3","HF^{-} - Sum of PF Energy; #sum E_{HF^{-}_{PF}} [GeV]; N events",100,0,2000);
+
+   //------------>
+
+   // Jets Eta 2 STEP4-X: trigger + Vertex Cut + pT (Jet1 and Jet2) Cut + Jets at CMS Jets Eta 2 Acceptance + |Eta Max and Eta Min| < X Cut 
+   // |Eta max and Eta min| < 4
+   TH1D *h_RJJjetseta2step4_4 = new TH1D("RJJjetseta2_step4_4","R_{jj} Distribution; R_{jj}; N events",50,0,1);
+   TH2F *h_MultHFjetseta2step4_4 = new TH2F( "mHFjetseta2_step4_4", "HF^{+} and HF^{-} Multiplicity; n HF^{+}; n HF^{-}; N events", 10,  0., 10., 10,  0., 10. );
+   TH2F *h_ET_Calosjetseta2step4_4 = new TH2F( "ETCalosjetseta2_step4_4", "HF^{+} and Castor; #sum Energy HF^{+}; log_{10} #sum Castor Signal [fC]; N events", 10,  0., 10., 50,  0., 50. );
+   TH1D *h_tracksjetseta2step4_4 = new TH1D("tracksjetseta2_step4_4","Tracks Multiplicity; n Tracks; N events",50,0,150);
+   TH1D *h_aSumEjetseta2step4_4 = new TH1D("aEnergyjetseta2_step4_4","Forward Backward Asymmetry Distribution ; (#sum HF^{+} - #sum HF^{-})x(#sum HF^{+} + #sum HF^{-})^{-1}; N events",50,-1,1);
+   TH1D *h_deltaEtaJetsjetseta2step4_4 = new TH1D("deltaEtaJetsjetseta2_step4_4","#Delta#eta_{jj} Distribution; #Delta#eta_{jj}; N events",20,0.0,5.2);
+   TH1D *h_deltaPhiJetsjetseta2step4_4 = new TH1D("deltaPhiJetsjetseta2_step4_4","#Delta#phi_{jj} Distribution; #Delta#phi_{jj}; N events",20,0.0,3.2);
+   TH1D *h_deltaPtJetsjetseta2step4_4 = new TH1D("deltaPtJetsjetseta2_step4_4","#Delta P_{T} Distribution; #Delta P_{T} [GeV.c^{-1}]; N events",40,0,400);
+   TH1D *h_dijetMassjetseta2step4_4 = new TH1D("dijetMassjetseta2_step4_4","Dijet Invariant Mass Distribution; M_{jj} [GeV]; N events",40,0,400);
+   TH1D *h_pTJet1jetseta2step4_4 = new TH1D("pTJet1jetseta2_step4_4","Leading Jet - P_{T} Distribution; P_{T} [GeV.c^{-1}]; N events",100,0,2000);
+   TH1D *h_pTJet2jetseta2step4_4 = new TH1D("pTJet2jetseta2_step4_4","Second Jet  - P_{T} Distribution; P_{T} [GeV.c^{-1}]; N events",100,0,2000);
+   TH1D *h_etaJet1jetseta2step4_4 = new TH1D("etaJet1jetseta2_step4_4","Leading Jet - #eta Distribution; #eta; N events",50,-5.5,5.5);
+   TH1D *h_etaJet2jetseta2step4_4 = new TH1D("etaJet2jetseta2_step4_4","Second Jet  - #eta Distribution; #eta; N events",50,-5.5,5.5);
+   TH1D *h_phiJet1jetseta2step4_4 = new TH1D("phiJet1jetseta2_step4_4","Leading Jet - #phi Distribution; #phi [rad]; N events",50,-3.3,3.3);
+   TH1D *h_phiJet2jetseta2step4_4 = new TH1D("phiJet2jetseta2_step4_4","Second Jet  - #phi Distribution; #phi [rad]; N events",50,-3.3,3.3);
+   TH1D *h_deltaEtaPFjetseta2step4_4 = new TH1D("deltaEtaPFjetseta2_step4_4","#Delta#eta_{PF} Distribution; #eta_{max}-#eta_{min}; N events",20,-12,12);
+   TH1D *h_absdeltaEtaPFjetseta2step4_4 = new TH1D("absdeltaEtaPFjetseta2_step4_4","#Delta#eta_{PF} Distribution; |#eta_{max}-#eta_{min}|; N events",20,0.0,12);
+   TH1D *h_pfetamaxjetseta2step4_4 = new TH1D("pfetamaxjetseta2_step4_4","Particle Flow #eta_{max} Distribution; #eta; N events",20,0,5.5);
+   TH1D *h_pfetaminjetseta2step4_4 = new TH1D("pfetaminjetseta2_step4_4","Particle Flow #eta_{min} Distribution; #eta; N events",20,-5.5,0);
+   TH1D *h_puBx0jetseta2step4_4 = new TH1D("pileupmcBx0jetseta2_step4_4","PileUp Monte Carlo; # Pile Up; N events",25,0,25);
+   TH1D *h_puBxm1jetseta2step4_4 = new TH1D("pileupmcBxm1jetseta2_step4_4","PileUp Monte Carlo; # Pile Up; N events",25,0,25);
+   TH1D *h_puBxp1jetseta2step4_4 = new TH1D("pileupmcBxp1jetseta2_step4_4","PileUp Monte Carlo; # Pile Up; N events",25,0,25);
+   TH1D *h_vertexjetseta2step4_4 = new TH1D("vertexjetseta2_step4_4","Number of Vertex; # Vertex; N events",25,0,25);
+   TH1D *h_sumEHFplusjetseta2step4_4 = new TH1D("sumEHFplusjetseta2_step4_4","HF^{+} - Sum of Energy; #sum E_{HF^{+}} [GeV]; N events",100,0,2000);
+   TH1D *h_sumEHFminusjetseta2step4_4 = new TH1D("sumEHFminusjetseta2_step4_4","HF^{-} - Sum of Energy; #sum E_{HF^{-}} [GeV]; N events",100,0,2000);
+   TH1D *h_sumEHFpfplusjetseta2step4_4 = new TH1D("sumEHFpfplusjetseta2_step4_4","HF^{+} - Sum of PF Energy; #sum E_{HF^{+}_{PF}} [GeV]; N events",100,0,2000);
+   TH1D *h_sumEHFpfminusjetseta2step4_4 = new TH1D("sumEHFpfminusjetseta2_step4_4","HF^{-} - Sum of PF Energy; #sum E_{HF^{-}_{PF}} [GeV]; N events",100,0,2000);
+
+
+   // |Eta max and Eta min| < 3
+   TH1D *h_RJJjetseta2step4_3 = new TH1D("RJJjetseta2_step4_3","R_{jj} Distribution; R_{jj}; N events",50,0,1);
+   TH2F *h_MultHFjetseta2step4_3 = new TH2F( "mHFjetseta2_step4_3", "HF^{+} and HF^{-} Multiplicity; n HF^{+}; n HF^{-}; N events", 10,  0., 10., 10,  0., 10. );
+   TH2F *h_ET_Calosjetseta2step4_3 = new TH2F( "ETCalosjetseta2_step4_3", "HF^{+} and Castor; #sum Energy HF^{+}; log_{10} #sum Castor Signal [fC]; N events", 10,  0., 10., 50,  0., 50. );
+   TH1D *h_tracksjetseta2step4_3 = new TH1D("tracksjetseta2_step4_3","Tracks Multiplicity; n Tracks; N events",50,0,150);
+   TH1D *h_aSumEjetseta2step4_3 = new TH1D("aEnergyjetseta2_step4_3","Forward Backward Asymmetry Distribution ; (#sum HF^{+} - #sum HF^{-})x(#sum HF^{+} + #sum HF^{-})^{-1}; N events",50,-1,1);
+   TH1D *h_deltaEtaJetsjetseta2step4_3 = new TH1D("deltaEtaJetsjetseta2_step4_3","#Delta#eta_{jj} Distribution; #Delta#eta_{jj}; N events",20,0.0,5.2);
+   TH1D *h_deltaPhiJetsjetseta2step4_3 = new TH1D("deltaPhiJetsjetseta2_step4_3","#Delta#phi_{jj} Distribution; #Delta#phi_{jj}; N events",20,0.0,3.2);
+   TH1D *h_deltaPtJetsjetseta2step4_3 = new TH1D("deltaPtJetsjetseta2_step4_3","#Delta P_{T} Distribution; #Delta P_{T} [GeV.c^{-1}]; N events",40,0,400);
+   TH1D *h_dijetMassjetseta2step4_3 = new TH1D("dijetMassjetseta2_step4_3","Dijet Invariant Mass Distribution; M_{jj} [GeV]; N events",40,0,400);
+   TH1D *h_pTJet1jetseta2step4_3 = new TH1D("pTJet1jetseta2_step4_3","Leading Jet - P_{T} Distribution; P_{T} [GeV.c^{-1}]; N events",100,0,2000);
+   TH1D *h_pTJet2jetseta2step4_3 = new TH1D("pTJet2jetseta2_step4_3","Second Jet  - P_{T} Distribution; P_{T} [GeV.c^{-1}]; N events",100,0,2000);
+   TH1D *h_etaJet1jetseta2step4_3 = new TH1D("etaJet1jetseta2_step4_3","Leading Jet - #eta Distribution; #eta; N events",50,-5.5,5.5);
+   TH1D *h_etaJet2jetseta2step4_3 = new TH1D("etaJet2jetseta2_step4_3","Second Jet  - #eta Distribution; #eta; N events",50,-5.5,5.5);
+   TH1D *h_phiJet1jetseta2step4_3 = new TH1D("phiJet1jetseta2_step4_3","Leading Jet - #phi Distribution; #phi [rad]; N events",50,-3.3,3.3);
+   TH1D *h_phiJet2jetseta2step4_3 = new TH1D("phiJet2jetseta2_step4_3","Second Jet  - #phi Distribution; #phi [rad]; N events",50,-3.3,3.3);
+   TH1D *h_deltaEtaPFjetseta2step4_3 = new TH1D("deltaEtaPFjetseta2_step4_3","#Delta#eta_{PF} Distribution; #eta_{max}-#eta_{min}; N events",20,-12,12);
+   TH1D *h_absdeltaEtaPFjetseta2step4_3 = new TH1D("absdeltaEtaPFjetseta2_step4_3","#Delta#eta_{PF} Distribution; |#eta_{max}-#eta_{min}|; N events",20,0.0,12);
+   TH1D *h_pfetamaxjetseta2step4_3 = new TH1D("pfetamaxjetseta2_step4_3","Particle Flow #eta_{max} Distribution; #eta; N events",20,0,5.5);
+   TH1D *h_pfetaminjetseta2step4_3 = new TH1D("pfetaminjetseta2_step4_3","Particle Flow #eta_{min} Distribution; #eta; N events",20,-5.5,0);
+   TH1D *h_puBx0jetseta2step4_3 = new TH1D("pileupmcBx0jetseta2_step4_3","PileUp Monte Carlo; # Pile Up; N events",25,0,25);
+   TH1D *h_puBxm1jetseta2step4_3 = new TH1D("pileupmcBxm1jetseta2_step4_3","PileUp Monte Carlo; # Pile Up; N events",25,0,25);
+   TH1D *h_puBxp1jetseta2step4_3 = new TH1D("pileupmcBxp1jetseta2_step4_3","PileUp Monte Carlo; # Pile Up; N events",25,0,25);
+   TH1D *h_vertexjetseta2step4_3 = new TH1D("vertexjetseta2_step4_3","Number of Vertex; # Vertex; N events",25,0,25);
+   TH1D *h_sumEHFplusjetseta2step4_3 = new TH1D("sumEHFplusjetseta2_step4_3","HF^{+} - Sum of Energy; #sum E_{HF^{+}} [GeV]; N events",100,0,2000);
+   TH1D *h_sumEHFminusjetseta2step4_3 = new TH1D("sumEHFminusjetseta2_step4_3","HF^{-} - Sum of Energy; #sum E_{HF^{-}} [GeV]; N events",100,0,2000);
+   TH1D *h_sumEHFpfplusjetseta2step4_3 = new TH1D("sumEHFpfplusjetseta2_step4_3","HF^{+} - Sum of PF Energy; #sum E_{HF^{+}_{PF}} [GeV]; N events",100,0,2000);
+   TH1D *h_sumEHFpfminusjetseta2step4_3 = new TH1D("sumEHFpfminusjetseta2_step4_3","HF^{-} - Sum of PF Energy; #sum E_{HF^{-}_{PF}} [GeV]; N events",100,0,2000);
+
+   // |Eta max and Eta min| < 2
+   TH1D *h_RJJjetseta2step4_2 = new TH1D("RJJjetseta2_step4_2","R_{jj} Distribution; R_{jj}; N events",50,0,1);
+   TH2F *h_MultHFjetseta2step4_2 = new TH2F( "mHFjetseta2_step4_2", "HF^{+} and HF^{-} Multiplicity; n HF^{+}; n HF^{-}; N events", 10,  0., 10., 10,  0., 10. );
+   TH2F *h_ET_Calosjetseta2step4_2 = new TH2F( "ETCalosjetseta2_step4_2", "HF^{+} and Castor; #sum Energy HF^{+}; log_{10} #sum Castor Signal [fC]; N events", 10,  0., 10., 50,  0., 50. );
+   TH1D *h_tracksjetseta2step4_2 = new TH1D("tracksjetseta2_step4_2","Tracks Multiplicity; n Tracks; N events",50,0,150);
+   TH1D *h_aSumEjetseta2step4_2 = new TH1D("aEnergyjetseta2_step4_2","Forward Backward Asymmetry Distribution ; (#sum HF^{+} - #sum HF^{-})x(#sum HF^{+} + #sum HF^{-})^{-1}; N events",50,-1,1);
+   TH1D *h_deltaEtaJetsjetseta2step4_2 = new TH1D("deltaEtaJetsjetseta2_step4_2","#Delta#eta_{jj} Distribution; #Delta#eta_{jj}; N events",20,0.0,5.2);
+   TH1D *h_deltaPhiJetsjetseta2step4_2 = new TH1D("deltaPhiJetsjetseta2_step4_2","#Delta#phi_{jj} Distribution; #Delta#phi_{jj}; N events",20,0.0,3.2);
+   TH1D *h_deltaPtJetsjetseta2step4_2 = new TH1D("deltaPtJetsjetseta2_step4_2","#Delta P_{T} Distribution; #Delta P_{T} [GeV.c^{-1}]; N events",40,0,400);
+   TH1D *h_dijetMassjetseta2step4_2 = new TH1D("dijetMassjetseta2_step4_2","Dijet Invariant Mass Distribution; M_{jj} [GeV]; N events",40,0,400);
+   TH1D *h_pTJet1jetseta2step4_2 = new TH1D("pTJet1jetseta2_step4_2","Leading Jet - P_{T} Distribution; P_{T} [GeV.c^{-1}]; N events",100,0,2000);
+   TH1D *h_pTJet2jetseta2step4_2 = new TH1D("pTJet2jetseta2_step4_2","Second Jet  - P_{T} Distribution; P_{T} [GeV.c^{-1}]; N events",100,0,2000);
+   TH1D *h_etaJet1jetseta2step4_2 = new TH1D("etaJet1jetseta2_step4_2","Leading Jet - #eta Distribution; #eta; N events",50,-5.5,5.5);
+   TH1D *h_etaJet2jetseta2step4_2 = new TH1D("etaJet2jetseta2_step4_2","Second Jet  - #eta Distribution; #eta; N events",50,-5.5,5.5);
+   TH1D *h_phiJet1jetseta2step4_2 = new TH1D("phiJet1jetseta2_step4_2","Leading Jet - #phi Distribution; #phi [rad]; N events",50,-3.3,3.3);
+   TH1D *h_phiJet2jetseta2step4_2 = new TH1D("phiJet2jetseta2_step4_2","Second Jet  - #phi Distribution; #phi [rad]; N events",50,-3.3,3.3);
+   TH1D *h_deltaEtaPFjetseta2step4_2 = new TH1D("deltaEtaPFjetseta2_step4_2","#Delta#eta_{PF} Distribution; #eta_{max}-#eta_{min}; N events",20,-12,12);
+   TH1D *h_absdeltaEtaPFjetseta2step4_2 = new TH1D("absdeltaEtaPFjetseta2_step4_2","#Delta#eta_{PF} Distribution; |#eta_{max}-#eta_{min}|; N events",20,0.0,12);
+   TH1D *h_pfetamaxjetseta2step4_2 = new TH1D("pfetamaxjetseta2_step4_2","Particle Flow #eta_{max} Distribution; #eta; N events",20,0,5.5);
+   TH1D *h_pfetaminjetseta2step4_2 = new TH1D("pfetaminjetseta2_step4_2","Particle Flow #eta_{min} Distribution; #eta; N events",20,-5.5,0);
+   TH1D *h_puBx0jetseta2step4_2 = new TH1D("pileupmcBx0jetseta2_step4_2","PileUp Monte Carlo; # Pile Up; N events",25,0,25);
+   TH1D *h_puBxm1jetseta2step4_2 = new TH1D("pileupmcBxm1jetseta2_step4_2","PileUp Monte Carlo; # Pile Up; N events",25,0,25);
+   TH1D *h_puBxp1jetseta2step4_2 = new TH1D("pileupmcBxp1jetseta2_step4_2","PileUp Monte Carlo; # Pile Up; N events",25,0,25);
+   TH1D *h_vertexjetseta2step4_2 = new TH1D("vertexjetseta2_step4_2","Number of Vertex; # Vertex; N events",25,0,25);
+   TH1D *h_sumEHFplusjetseta2step4_2 = new TH1D("sumEHFplusjetseta2_step4_2","HF^{+} - Sum of Energy; #sum E_{HF^{+}} [GeV]; N events",100,0,2000);
+   TH1D *h_sumEHFminusjetseta2step4_2 = new TH1D("sumEHFminusjetseta2_step4_2","HF^{-} - Sum of Energy; #sum E_{HF^{-}} [GeV]; N events",100,0,2000);
+   TH1D *h_sumEHFpfplusjetseta2step4_2 = new TH1D("sumEHFpfplusjetseta2_step4_2","HF^{+} - Sum of PF Energy; #sum E_{HF^{+}_{PF}} [GeV]; N events",100,0,2000);
+   TH1D *h_sumEHFpfminusjetseta2step4_2 = new TH1D("sumEHFpfminusjetseta2_step4_2","HF^{-} - Sum of PF Energy; #sum E_{HF^{-}_{PF}} [GeV]; N events",100,0,2000);
+
+   // |Eta max and Eta min| < 1
+   TH1D *h_RJJjetseta2step4_1 = new TH1D("RJJjetseta2_step4_1","R_{jj} Distribution; R_{jj}; N events",50,0,1);
+   TH2F *h_MultHFjetseta2step4_1 = new TH2F( "mHFjetseta2_step4_1", "HF^{+} and HF^{-} Multiplicity; n HF^{+}; n HF^{-}; N events", 10,  0., 10., 10,  0., 10. );
+   TH2F *h_ET_Calosjetseta2step4_1 = new TH2F( "ETCalosjetseta2_step4_1", "HF^{+} and Castor; #sum Energy HF^{+}; log_{10} #sum Castor Signal [fC]; N events", 10,  0., 10., 50,  0., 50. );
+   TH1D *h_tracksjetseta2step4_1 = new TH1D("tracksjetseta2_step4_1","Tracks Multiplicity; n Tracks; N events",50,0,150);
+   TH1D *h_aSumEjetseta2step4_1 = new TH1D("aEnergyjetseta2_step4_1","Forward Backward Asymmetry Distribution ; (#sum HF^{+} - #sum HF^{-})x(#sum HF^{+} + #sum HF^{-})^{-1}; N events",50,-1,1);
+   TH1D *h_deltaEtaJetsjetseta2step4_1 = new TH1D("deltaEtaJetsjetseta2_step4_1","#Delta#eta_{jj} Distribution; #Delta#eta_{jj}; N events",20,0.0,5.2);
+   TH1D *h_deltaPhiJetsjetseta2step4_1 = new TH1D("deltaPhiJetsjetseta2_step4_1","#Delta#phi_{jj} Distribution; #Delta#phi_{jj}; N events",20,0.0,3.2);
+   TH1D *h_deltaPtJetsjetseta2step4_1 = new TH1D("deltaPtJetsjetseta2_step4_1","#Delta P_{T} Distribution; #Delta P_{T} [GeV.c^{-1}]; N events",40,0,400);
+   TH1D *h_dijetMassjetseta2step4_1 = new TH1D("dijetMassjetseta2_step4_1","Dijet Invariant Mass Distribution; M_{jj} [GeV]; N events",40,0,400);
+   TH1D *h_pTJet1jetseta2step4_1 = new TH1D("pTJet1jetseta2_step4_1","Leading Jet - P_{T} Distribution; P_{T} [GeV.c^{-1}]; N events",100,0,2000);
+   TH1D *h_pTJet2jetseta2step4_1 = new TH1D("pTJet2jetseta2_step4_1","Second Jet  - P_{T} Distribution; P_{T} [GeV.c^{-1}]; N events",100,0,2000);
+   TH1D *h_etaJet1jetseta2step4_1 = new TH1D("etaJet1jetseta2_step4_1","Leading Jet - #eta Distribution; #eta; N events",50,-5.5,5.5);
+   TH1D *h_etaJet2jetseta2step4_1 = new TH1D("etaJet2jetseta2_step4_1","Second Jet  - #eta Distribution; #eta; N events",50,-5.5,5.5);
+   TH1D *h_phiJet1jetseta2step4_1 = new TH1D("phiJet1jetseta2_step4_1","Leading Jet - #phi Distribution; #phi [rad]; N events",50,-3.3,3.3);
+   TH1D *h_phiJet2jetseta2step4_1 = new TH1D("phiJet2jetseta2_step4_1","Second Jet  - #phi Distribution; #phi [rad]; N events",50,-3.3,3.3);
+   TH1D *h_deltaEtaPFjetseta2step4_1 = new TH1D("deltaEtaPFjetseta2_step4_1","#Delta#eta_{PF} Distribution; #eta_{max}-#eta_{min}; N events",20,-12,12);
+   TH1D *h_absdeltaEtaPFjetseta2step4_1 = new TH1D("absdeltaEtaPFjetseta2_step4_1","#Delta#eta_{PF} Distribution; |#eta_{max}-#eta_{min}|; N events",20,0.0,12);
+   TH1D *h_pfetamaxjetseta2step4_1 = new TH1D("pfetamaxjetseta2_step4_1","Particle Flow #eta_{max} Distribution; #eta; N events",20,0,5.5);
+   TH1D *h_pfetaminjetseta2step4_1 = new TH1D("pfetaminjetseta2_step4_1","Particle Flow #eta_{min} Distribution; #eta; N events",20,-5.5,0);
+   TH1D *h_puBx0jetseta2step4_1 = new TH1D("pileupmcBx0jetseta2_step4_1","PileUp Monte Carlo; # Pile Up; N events",25,0,25);
+   TH1D *h_puBxm1jetseta2step4_1 = new TH1D("pileupmcBxm1jetseta2_step4_1","PileUp Monte Carlo; # Pile Up; N events",25,0,25);
+   TH1D *h_puBxp1jetseta2step4_1 = new TH1D("pileupmcBxp1jetseta2_step4_1","PileUp Monte Carlo; # Pile Up; N events",25,0,25);
+   TH1D *h_vertexjetseta2step4_1 = new TH1D("vertexjetseta2_step4_1","Number of Vertex; # Vertex; N events",25,0,25);
+   TH1D *h_sumEHFplusjetseta2step4_1 = new TH1D("sumEHFplusjetseta2_step4_1","HF^{+} - Sum of Energy; #sum E_{HF^{+}} [GeV]; N events",100,0,2000);
+   TH1D *h_sumEHFminusjetseta2step4_1 = new TH1D("sumEHFminusjetseta2_step4_1","HF^{-} - Sum of Energy; #sum E_{HF^{-}} [GeV]; N events",100,0,2000);
+   TH1D *h_sumEHFpfplusjetseta2step4_1 = new TH1D("sumEHFpfplusjetseta2_step4_1","HF^{+} - Sum of PF Energy; #sum E_{HF^{+}_{PF}} [GeV]; N events",100,0,2000);
+   TH1D *h_sumEHFpfminusjetseta2step4_1 = new TH1D("sumEHFpfminusjetseta2_step4_1","HF^{-} - Sum of PF Energy; #sum E_{HF^{-}_{PF}} [GeV]; N events",100,0,2000);
    //------------>
 
    unsigned NEntries = tr->GetEntries();
@@ -559,7 +741,6 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
    std::cout << "" << std::endl;
 
    int decade = 0;
-
 
    // Event by Event Analysis
    //////////////////////////
@@ -578,7 +759,11 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
    double counterJetsTrackerstep4_3 = 0.;
    double counterJetsTrackerstep4_2 = 0.;
    double counterJetsTrackerstep4_1 = 0.;
-
+   double counterJetsjetseta2step3 = 0.;
+   double counterJetsjetseta2step4_4 = 0.;
+   double counterJetsjetseta2step4_3 = 0.;
+   double counterJetsjetseta2step4_2 = 0.;
+   double counterJetsjetseta2step4_1 = 0.;
    double deltaphi_ = 0.;
    double aSumE_ = 0.;
    double absdeltaetapf_ = 0.;
@@ -694,6 +879,8 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
       h_vertexwc->Fill(eventexcl->GetNVertex(), totalweight);
       h_sumEHFpluswc->Fill(eventdiff->GetSumEnergyHFPlus(), totalweight);
       h_sumEHFminuswc->Fill(eventdiff->GetSumEnergyHFMinus(), totalweight);
+      h_sumEHFpfpluswc->Fill(eventexcl->GetSumEHFPFlowPlus(), totalweight);
+      h_sumEHFpfminuswc->Fill(eventexcl->GetSumEHFPFlowMinus(), totalweight);
       //////////////////////////////////////////////////
 
 
@@ -708,7 +895,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
          // if (eventexcl->GetLeadingJetP4().Pt() > 30 && eventexcl->GetSecondJetP4().Pt() > 30){
 
          // TRIGGER
-	 //if (eventexcl->GetHLTPath(optTrigger)){
+	 if (eventexcl->GetHLTPath(optTrigger)){
 	 //
 	 //------------------------------------------------------------------------------------------
 
@@ -743,6 +930,8 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
          h_vertexwt->Fill(eventexcl->GetNVertex(), totalweight);
          h_sumEHFpluswt->Fill(eventdiff->GetSumEnergyHFPlus(), totalweight);
          h_sumEHFminuswt->Fill(eventdiff->GetSumEnergyHFMinus(), totalweight);
+         h_sumEHFpfpluswt->Fill(eventexcl->GetSumEHFPFlowPlus(), totalweight);
+         h_sumEHFpfminuswt->Fill(eventexcl->GetSumEHFPFlowMinus(), totalweight);
          //////////////////////////////////////////////////
 
 
@@ -796,6 +985,8 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
             h_vertexstep1->Fill(eventexcl->GetNVertex(), totalweight);
             h_sumEHFplusstep1->Fill(eventdiff->GetSumEnergyHFPlus(), totalweight);
             h_sumEHFminusstep1->Fill(eventdiff->GetSumEnergyHFMinus(), totalweight);
+            h_sumEHFpfplusstep1->Fill(eventexcl->GetSumEHFPFlowPlus(), totalweight);
+            h_sumEHFpfminusstep1->Fill(eventexcl->GetSumEHFPFlowMinus(), totalweight);
 	    //////////////////////////////////////////////////
 
 
@@ -833,6 +1024,8 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
                h_vertexstep2->Fill(eventexcl->GetNVertex(), totalweight);
                h_sumEHFplusstep2->Fill(eventdiff->GetSumEnergyHFPlus(), totalweight);
                h_sumEHFminusstep2->Fill(eventdiff->GetSumEnergyHFMinus(), totalweight);
+               h_sumEHFpfplusstep2->Fill(eventexcl->GetSumEHFPFlowPlus(), totalweight);
+               h_sumEHFpfminusstep2->Fill(eventexcl->GetSumEHFPFlowMinus(), totalweight);
 	       //////////////////////////////////////////////////
 
 	       if (eventexcl->GetLeadingJetP4().Eta() < 5.2 && eventexcl->GetSecondJetP4().Eta() < 5.2 && eventexcl->GetLeadingJetP4().Eta() > -5.2 && eventexcl->GetSecondJetP4().Eta() > -5.2){
@@ -868,6 +1061,8 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
                   h_vertexAllstep3->Fill(eventexcl->GetNVertex(), totalweight);
                   h_sumEHFplusAllstep3->Fill(eventdiff->GetSumEnergyHFPlus(), totalweight);
                   h_sumEHFminusAllstep3->Fill(eventdiff->GetSumEnergyHFMinus(), totalweight);
+                  h_sumEHFpfplusAllstep3->Fill(eventexcl->GetSumEHFPFlowPlus(), totalweight);
+                  h_sumEHFpfminusAllstep3->Fill(eventexcl->GetSumEHFPFlowMinus(), totalweight);
 
 		  // Eta max and Eta min cut
 		  if (eventdiff->GetEtaMinFromPFCands() > -4. && eventdiff->GetEtaMaxFromPFCands() < 4.){
@@ -899,6 +1094,8 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
                      h_vertexAllstep4_4->Fill(eventexcl->GetNVertex(), totalweight);
                      h_sumEHFplusAllstep4_4->Fill(eventdiff->GetSumEnergyHFPlus(), totalweight);
                      h_sumEHFminusAllstep4_4->Fill(eventdiff->GetSumEnergyHFMinus(), totalweight);
+                     h_sumEHFpfplusAllstep4_4->Fill(eventexcl->GetSumEHFPFlowPlus(), totalweight);
+                     h_sumEHFpfminusAllstep4_4->Fill(eventexcl->GetSumEHFPFlowMinus(), totalweight);
                   }
 
 		  if (eventdiff->GetEtaMinFromPFCands() > -3. && eventdiff->GetEtaMaxFromPFCands() < 3.){
@@ -930,6 +1127,8 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
                      h_vertexAllstep4_3->Fill(eventexcl->GetNVertex(), totalweight);
                      h_sumEHFplusAllstep4_3->Fill(eventdiff->GetSumEnergyHFPlus(), totalweight);
                      h_sumEHFminusAllstep4_3->Fill(eventdiff->GetSumEnergyHFMinus(), totalweight);
+                     h_sumEHFpfplusAllstep4_3->Fill(eventexcl->GetSumEHFPFlowPlus(), totalweight);
+                     h_sumEHFpfminusAllstep4_3->Fill(eventexcl->GetSumEHFPFlowMinus(), totalweight);
 		  }
 
 		  if (eventdiff->GetEtaMinFromPFCands() > -2. && eventdiff->GetEtaMaxFromPFCands() < 2.){
@@ -961,6 +1160,8 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
                      h_vertexAllstep4_2->Fill(eventexcl->GetNVertex(), totalweight);
                      h_sumEHFplusAllstep4_2->Fill(eventdiff->GetSumEnergyHFPlus(), totalweight);
                      h_sumEHFminusAllstep4_2->Fill(eventdiff->GetSumEnergyHFMinus(), totalweight);
+                     h_sumEHFpfplusAllstep4_2->Fill(eventexcl->GetSumEHFPFlowPlus(), totalweight);
+                     h_sumEHFpfminusAllstep4_2->Fill(eventexcl->GetSumEHFPFlowMinus(), totalweight);
 		  }
 
 		  if (eventdiff->GetEtaMinFromPFCands() > -1. && eventdiff->GetEtaMaxFromPFCands() < 1.){
@@ -992,6 +1193,8 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
                      h_vertexAllstep4_1->Fill(eventexcl->GetNVertex(), totalweight);
                      h_sumEHFplusAllstep4_1->Fill(eventdiff->GetSumEnergyHFPlus(), totalweight);
                      h_sumEHFminusAllstep4_1->Fill(eventdiff->GetSumEnergyHFMinus(), totalweight);
+                     h_sumEHFpfplusAllstep4_1->Fill(eventexcl->GetSumEHFPFlowPlus(), totalweight);
+                     h_sumEHFpfminusAllstep4_1->Fill(eventexcl->GetSumEHFPFlowMinus(), totalweight);
                    }
 
 	       }  
@@ -1030,6 +1233,8 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
                   h_vertexTrackerstep3->Fill(eventexcl->GetNVertex(), totalweight);
                   h_sumEHFplusTrackerstep3->Fill(eventdiff->GetSumEnergyHFPlus(), totalweight);
                   h_sumEHFminusTrackerstep3->Fill(eventdiff->GetSumEnergyHFMinus(), totalweight);
+                  h_sumEHFpfplusTrackerstep3->Fill(eventexcl->GetSumEHFPFlowPlus(), totalweight);
+                  h_sumEHFpfminusTrackerstep3->Fill(eventexcl->GetSumEHFPFlowMinus(), totalweight);
 
 		  // Eta max and Eta min cut
 		  if (eventdiff->GetEtaMinFromPFCands() > -4. && eventdiff->GetEtaMaxFromPFCands() < 4.){
@@ -1061,6 +1266,8 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
                      h_vertexTrackerstep4_4->Fill(eventexcl->GetNVertex(), totalweight);
                      h_sumEHFplusTrackerstep4_4->Fill(eventdiff->GetSumEnergyHFPlus(), totalweight);
                      h_sumEHFminusTrackerstep4_4->Fill(eventdiff->GetSumEnergyHFMinus(), totalweight);
+                     h_sumEHFpfplusTrackerstep4_4->Fill(eventexcl->GetSumEHFPFlowPlus(), totalweight);
+                     h_sumEHFpfminusTrackerstep4_4->Fill(eventexcl->GetSumEHFPFlowMinus(), totalweight);
 		  }
 
 		  if (eventdiff->GetEtaMinFromPFCands() > -3. && eventdiff->GetEtaMaxFromPFCands() < 3.){
@@ -1092,6 +1299,8 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
                      h_vertexTrackerstep4_3->Fill(eventexcl->GetNVertex(), totalweight);
                      h_sumEHFplusTrackerstep4_3->Fill(eventdiff->GetSumEnergyHFPlus(), totalweight);
                      h_sumEHFminusTrackerstep4_3->Fill(eventdiff->GetSumEnergyHFMinus(), totalweight);
+                     h_sumEHFpfplusTrackerstep4_3->Fill(eventexcl->GetSumEHFPFlowPlus(), totalweight);
+                     h_sumEHFpfminusTrackerstep4_3->Fill(eventexcl->GetSumEHFPFlowMinus(), totalweight);
 		  }
 
 		  if (eventdiff->GetEtaMinFromPFCands() > -2. && eventdiff->GetEtaMaxFromPFCands() < 2.){
@@ -1123,6 +1332,8 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
                      h_vertexTrackerstep4_2->Fill(eventexcl->GetNVertex(), totalweight);
                      h_sumEHFplusTrackerstep4_2->Fill(eventdiff->GetSumEnergyHFPlus(), totalweight);
                      h_sumEHFminusTrackerstep4_2->Fill(eventdiff->GetSumEnergyHFMinus(), totalweight);
+                     h_sumEHFpfplusTrackerstep4_2->Fill(eventexcl->GetSumEHFPFlowPlus(), totalweight);
+                     h_sumEHFpfminusTrackerstep4_2->Fill(eventexcl->GetSumEHFPFlowMinus(), totalweight);
 		  }
 
 		  if (eventdiff->GetEtaMinFromPFCands() > -1. && eventdiff->GetEtaMaxFromPFCands() < 1.){
@@ -1154,15 +1365,190 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
                      h_vertexTrackerstep4_1->Fill(eventexcl->GetNVertex(), totalweight);
                      h_sumEHFplusTrackerstep4_1->Fill(eventdiff->GetSumEnergyHFPlus(), totalweight);
                      h_sumEHFminusTrackerstep4_1->Fill(eventdiff->GetSumEnergyHFMinus(), totalweight);
+                     h_sumEHFpfplusTrackerstep4_1->Fill(eventexcl->GetSumEHFPFlowPlus(), totalweight);
+                     h_sumEHFpfminusTrackerstep4_1->Fill(eventexcl->GetSumEHFPFlowMinus(), totalweight);
                   }
 
 	       } // end jets at tracker
+
+
+	       if (eventexcl->GetLeadingJetP4().Eta() < 2. && eventexcl->GetSecondJetP4().Eta() < 2. && eventexcl->GetLeadingJetP4().Eta() > -2. && eventexcl->GetSecondJetP4().Eta() > -2.){
+
+		  counterJetsjetseta2step3+=totalweight;
+
+		  // jetseta2 - STEP3         
+		  ////////////////////////////////////////////////
+		  h_DeltaEtaGenjetseta2step3->Fill(eventexcl->GetDeltaEtaGen(),totalweight);
+		  h_MxGenRangejetseta2step3->Fill(eventexcl->GetMxGenRange(),totalweight);
+		  h_RJJjetseta2step3->Fill(eventexcl->GetRjjFromJets(),totalweight);
+		  h_MultHFjetseta2step3->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),totalweight);
+		  h_ET_Calosjetseta2step3->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())),totalweight);
+		  h_tracksjetseta2step3->Fill(eventdiff->GetMultiplicityTracks(),totalweight);
+		  h_aSumEjetseta2step3->Fill(aSumE_,totalweight);
+		  h_pfetaminjetseta2step3->Fill(eventdiff->GetEtaMinFromPFCands(),totalweight);
+		  h_pfetamaxjetseta2step3->Fill(eventdiff->GetEtaMaxFromPFCands(),totalweight);
+		  h_deltaEtaJetsjetseta2step3->Fill(eventexcl->GetJetsDeltaEta(),totalweight);
+		  h_deltaPhiJetsjetseta2step3->Fill(deltaphi_,totalweight);
+		  h_deltaPtJetsjetseta2step3->Fill(eventexcl->GetJetsDeltaPt(),totalweight);
+		  h_dijetMassjetseta2step3->Fill(eventexcl->GetMassDijets(),totalweight);
+		  h_pTJet1jetseta2step3->Fill(eventexcl->GetLeadingJetPt(),totalweight);
+		  h_pTJet2jetseta2step3->Fill(eventexcl->GetSecondJetPt(),totalweight);
+		  h_deltaEtaPFjetseta2step3->Fill(deltaetapf_,totalweight);
+		  h_absdeltaEtaPFjetseta2step3->Fill(absdeltaetapf_,totalweight);
+                  h_etaJet1jetseta2step3->Fill(eventexcl->GetLeadingJetEta(),totalweight);
+                  h_etaJet2jetseta2step3->Fill(eventexcl->GetSecondJetEta(),totalweight);
+                  h_phiJet1jetseta2step3->Fill(eventexcl->GetLeadingJetPhi(),totalweight);
+                  h_phiJet2jetseta2step3->Fill(eventexcl->GetSecondJetPhi(),totalweight);
+                  h_puBx0jetseta2step3->Fill(eventexcl->GetNPileUpBx0(),totalweight);
+                  h_puBxm1jetseta2step3->Fill(eventexcl->GetNPileUpBxm1(),totalweightbxm1);
+                  h_puBxp1jetseta2step3->Fill(eventexcl->GetNPileUpBxp1(),totalweightbxp1);
+                  h_vertexjetseta2step3->Fill(eventexcl->GetNVertex(), totalweight);
+                  h_sumEHFplusjetseta2step3->Fill(eventdiff->GetSumEnergyHFPlus(), totalweight);
+                  h_sumEHFminusjetseta2step3->Fill(eventdiff->GetSumEnergyHFMinus(), totalweight);
+                  h_sumEHFpfplusjetseta2step3->Fill(eventexcl->GetSumEHFPFlowPlus(), totalweight);
+                  h_sumEHFpfminusjetseta2step3->Fill(eventexcl->GetSumEHFPFlowMinus(), totalweight);
+
+
+		  // Eta max and Eta min cut
+		  if (eventdiff->GetEtaMinFromPFCands() > -4. && eventdiff->GetEtaMaxFromPFCands() < 4.){
+
+                     counterJetsjetseta2step4_4+=totalweight;
+
+		     h_RJJjetseta2step4_4->Fill(eventexcl->GetRjjFromJets(),totalweight);
+		     h_MultHFjetseta2step4_4->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),totalweight);
+		     h_ET_Calosjetseta2step4_4->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())),totalweight);
+		     h_tracksjetseta2step4_4->Fill(eventdiff->GetMultiplicityTracks(),totalweight);
+		     h_aSumEjetseta2step4_4->Fill(aSumE_,totalweight);
+		     h_deltaEtaJetsjetseta2step4_4->Fill(eventexcl->GetJetsDeltaEta(),totalweight);
+		     h_deltaPhiJetsjetseta2step4_4->Fill(deltaphi_,totalweight);
+		     h_deltaPtJetsjetseta2step4_4->Fill(eventexcl->GetJetsDeltaPt(),totalweight);
+		     h_dijetMassjetseta2step4_4->Fill(eventexcl->GetMassDijets(),totalweight);
+		     h_pTJet1jetseta2step4_4->Fill(eventexcl->GetLeadingJetPt(),totalweight);
+		     h_pTJet2jetseta2step4_4->Fill(eventexcl->GetSecondJetPt(),totalweight);
+                     h_etaJet1jetseta2step4_4->Fill(eventexcl->GetLeadingJetEta(),totalweight);
+                     h_etaJet2jetseta2step4_4->Fill(eventexcl->GetSecondJetEta(),totalweight);
+                     h_phiJet1jetseta2step4_4->Fill(eventexcl->GetLeadingJetPhi(),totalweight);
+                     h_phiJet2jetseta2step4_4->Fill(eventexcl->GetSecondJetPhi(),totalweight);
+                     h_deltaEtaPFjetseta2step4_4->Fill(deltaetapf_,totalweight);
+                     h_absdeltaEtaPFjetseta2step4_4->Fill(absdeltaetapf_,totalweight);
+                     h_pfetaminjetseta2step4_4->Fill(eventdiff->GetEtaMinFromPFCands(),totalweight);
+                     h_pfetamaxjetseta2step4_4->Fill(eventdiff->GetEtaMaxFromPFCands(),totalweight);
+                     h_puBx0jetseta2step4_4->Fill(eventexcl->GetNPileUpBx0(),totalweight);
+                     h_puBxm1jetseta2step4_4->Fill(eventexcl->GetNPileUpBxm1(),totalweightbxm1);
+                     h_puBxp1jetseta2step4_4->Fill(eventexcl->GetNPileUpBxp1(),totalweightbxp1);
+                     h_vertexjetseta2step4_4->Fill(eventexcl->GetNVertex(), totalweight);
+                     h_sumEHFplusjetseta2step4_4->Fill(eventdiff->GetSumEnergyHFPlus(), totalweight);
+                     h_sumEHFminusjetseta2step4_4->Fill(eventdiff->GetSumEnergyHFMinus(), totalweight);
+                     h_sumEHFpfplusjetseta2step4_4->Fill(eventexcl->GetSumEHFPFlowPlus(), totalweight);
+                     h_sumEHFpfminusjetseta2step4_4->Fill(eventexcl->GetSumEHFPFlowMinus(), totalweight);
+		  }
+
+		  if (eventdiff->GetEtaMinFromPFCands() > -3. && eventdiff->GetEtaMaxFromPFCands() < 3.){
+
+                     counterJetsjetseta2step4_3+=totalweight;
+
+		     h_RJJjetseta2step4_3->Fill(eventexcl->GetRjjFromJets(),totalweight);
+		     h_MultHFjetseta2step4_3->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),totalweight);
+		     h_ET_Calosjetseta2step4_3->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())),totalweight);
+		     h_tracksjetseta2step4_3->Fill(eventdiff->GetMultiplicityTracks(),totalweight);
+		     h_aSumEjetseta2step4_3->Fill(aSumE_,totalweight);
+		     h_deltaEtaJetsjetseta2step4_3->Fill(eventexcl->GetJetsDeltaEta(),totalweight);
+		     h_deltaPhiJetsjetseta2step4_3->Fill(deltaphi_,totalweight);
+		     h_deltaPtJetsjetseta2step4_3->Fill(eventexcl->GetJetsDeltaPt(),totalweight);
+		     h_dijetMassjetseta2step4_3->Fill(eventexcl->GetMassDijets(),totalweight);
+		     h_pTJet1jetseta2step4_3->Fill(eventexcl->GetLeadingJetPt(),totalweight);
+		     h_pTJet2jetseta2step4_3->Fill(eventexcl->GetSecondJetPt(),totalweight);
+                     h_etaJet1jetseta2step4_3->Fill(eventexcl->GetLeadingJetEta(),totalweight);
+                     h_etaJet2jetseta2step4_3->Fill(eventexcl->GetSecondJetEta(),totalweight);
+                     h_phiJet1jetseta2step4_3->Fill(eventexcl->GetLeadingJetPhi(),totalweight);
+                     h_phiJet2jetseta2step4_3->Fill(eventexcl->GetSecondJetPhi(),totalweight);
+                     h_deltaEtaPFjetseta2step4_3->Fill(deltaetapf_,totalweight);
+                     h_absdeltaEtaPFjetseta2step4_3->Fill(absdeltaetapf_,totalweight);
+                     h_pfetaminjetseta2step4_3->Fill(eventdiff->GetEtaMinFromPFCands(),totalweight);
+                     h_pfetamaxjetseta2step4_3->Fill(eventdiff->GetEtaMaxFromPFCands(),totalweight);
+                     h_puBx0jetseta2step4_3->Fill(eventexcl->GetNPileUpBx0(),totalweight);
+                     h_puBxm1jetseta2step4_3->Fill(eventexcl->GetNPileUpBxm1(),totalweightbxm1);
+                     h_puBxp1jetseta2step4_3->Fill(eventexcl->GetNPileUpBxp1(),totalweightbxp1);
+                     h_vertexjetseta2step4_3->Fill(eventexcl->GetNVertex(), totalweight);
+                     h_sumEHFplusjetseta2step4_3->Fill(eventdiff->GetSumEnergyHFPlus(), totalweight);
+                     h_sumEHFminusjetseta2step4_3->Fill(eventdiff->GetSumEnergyHFMinus(), totalweight);
+                     h_sumEHFpfplusjetseta2step4_3->Fill(eventexcl->GetSumEHFPFlowPlus(), totalweight);
+                     h_sumEHFpfminusjetseta2step4_3->Fill(eventexcl->GetSumEHFPFlowMinus(), totalweight);
+		  }
+
+		  if (eventdiff->GetEtaMinFromPFCands() > -2. && eventdiff->GetEtaMaxFromPFCands() < 2.){
+
+                     counterJetsjetseta2step4_2+=totalweight;
+
+		     h_RJJjetseta2step4_2->Fill(eventexcl->GetRjjFromJets(),totalweight);
+		     h_MultHFjetseta2step4_2->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),totalweight);
+		     h_ET_Calosjetseta2step4_2->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())),totalweight);
+		     h_tracksjetseta2step4_2->Fill(eventdiff->GetMultiplicityTracks(),totalweight);
+		     h_aSumEjetseta2step4_2->Fill(aSumE_,totalweight);
+		     h_deltaEtaJetsjetseta2step4_2->Fill(eventexcl->GetJetsDeltaEta(),totalweight);
+		     h_deltaPhiJetsjetseta2step4_2->Fill(deltaphi_,totalweight);
+		     h_deltaPtJetsjetseta2step4_2->Fill(eventexcl->GetJetsDeltaPt(),totalweight);
+		     h_dijetMassjetseta2step4_2->Fill(eventexcl->GetMassDijets(),totalweight);
+		     h_pTJet1jetseta2step4_2->Fill(eventexcl->GetLeadingJetPt(),totalweight);
+		     h_pTJet2jetseta2step4_2->Fill(eventexcl->GetSecondJetPt(),totalweight);
+                     h_etaJet1jetseta2step4_2->Fill(eventexcl->GetLeadingJetEta(),totalweight);
+                     h_etaJet2jetseta2step4_2->Fill(eventexcl->GetSecondJetEta(),totalweight);
+                     h_phiJet1jetseta2step4_2->Fill(eventexcl->GetLeadingJetPhi(),totalweight);
+                     h_phiJet2jetseta2step4_2->Fill(eventexcl->GetSecondJetPhi(),totalweight);
+                     h_deltaEtaPFjetseta2step4_2->Fill(deltaetapf_,totalweight);
+                     h_absdeltaEtaPFjetseta2step4_2->Fill(absdeltaetapf_,totalweight);
+                     h_pfetaminjetseta2step4_2->Fill(eventdiff->GetEtaMinFromPFCands(),totalweight);
+                     h_pfetamaxjetseta2step4_2->Fill(eventdiff->GetEtaMaxFromPFCands(),totalweight);
+                     h_puBx0jetseta2step4_2->Fill(eventexcl->GetNPileUpBx0(),totalweight);
+                     h_puBxm1jetseta2step4_2->Fill(eventexcl->GetNPileUpBxm1(),totalweightbxm1);
+                     h_puBxp1jetseta2step4_2->Fill(eventexcl->GetNPileUpBxp1(),totalweightbxp1);
+                     h_vertexjetseta2step4_2->Fill(eventexcl->GetNVertex(), totalweight);
+                     h_sumEHFplusjetseta2step4_2->Fill(eventdiff->GetSumEnergyHFPlus(), totalweight);
+                     h_sumEHFminusjetseta2step4_2->Fill(eventdiff->GetSumEnergyHFMinus(), totalweight);
+                     h_sumEHFpfplusjetseta2step4_2->Fill(eventexcl->GetSumEHFPFlowPlus(), totalweight);
+                     h_sumEHFpfminusjetseta2step4_2->Fill(eventexcl->GetSumEHFPFlowMinus(), totalweight);
+		  }
+
+		  if (eventdiff->GetEtaMinFromPFCands() > -1. && eventdiff->GetEtaMaxFromPFCands() < 1.){
+
+                     counterJetsjetseta2step4_1+=totalweight;
+
+		     h_RJJjetseta2step4_1->Fill(eventexcl->GetRjjFromJets(),totalweight);
+		     h_MultHFjetseta2step4_1->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),totalweight);
+		     h_ET_Calosjetseta2step4_1->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())),totalweight);
+		     h_tracksjetseta2step4_1->Fill(eventdiff->GetMultiplicityTracks(),totalweight);
+		     h_aSumEjetseta2step4_1->Fill(aSumE_,totalweight);
+		     h_deltaEtaJetsjetseta2step4_1->Fill(eventexcl->GetJetsDeltaEta(),totalweight);
+		     h_deltaPhiJetsjetseta2step4_1->Fill(deltaphi_,totalweight);
+		     h_deltaPtJetsjetseta2step4_1->Fill(eventexcl->GetJetsDeltaPt(),totalweight);
+		     h_dijetMassjetseta2step4_1->Fill(eventexcl->GetMassDijets(),totalweight);
+		     h_pTJet1jetseta2step4_1->Fill(eventexcl->GetLeadingJetPt(),totalweight);
+		     h_pTJet2jetseta2step4_1->Fill(eventexcl->GetSecondJetPt(),totalweight);
+                     h_etaJet1jetseta2step4_1->Fill(eventexcl->GetLeadingJetEta(),totalweight);
+                     h_etaJet2jetseta2step4_1->Fill(eventexcl->GetSecondJetEta(),totalweight);
+                     h_phiJet1jetseta2step4_1->Fill(eventexcl->GetLeadingJetPhi(),totalweight);
+                     h_phiJet2jetseta2step4_1->Fill(eventexcl->GetSecondJetPhi(),totalweight);
+                     h_deltaEtaPFjetseta2step4_1->Fill(deltaetapf_,totalweight);
+                     h_absdeltaEtaPFjetseta2step4_1->Fill(absdeltaetapf_,totalweight);
+                     h_pfetaminjetseta2step4_1->Fill(eventdiff->GetEtaMinFromPFCands(),totalweight);
+                     h_pfetamaxjetseta2step4_1->Fill(eventdiff->GetEtaMaxFromPFCands(),totalweight);
+                     h_puBx0jetseta2step4_1->Fill(eventexcl->GetNPileUpBx0(),totalweight);
+                     h_puBxm1jetseta2step4_1->Fill(eventexcl->GetNPileUpBxm1(),totalweightbxm1);
+                     h_puBxp1jetseta2step4_1->Fill(eventexcl->GetNPileUpBxp1(),totalweightbxp1);
+                     h_vertexjetseta2step4_1->Fill(eventexcl->GetNVertex(), totalweight);
+                     h_sumEHFplusjetseta2step4_1->Fill(eventdiff->GetSumEnergyHFPlus(), totalweight);
+                     h_sumEHFminusjetseta2step4_1->Fill(eventdiff->GetSumEnergyHFMinus(), totalweight);
+                     h_sumEHFpfplusjetseta2step4_1->Fill(eventexcl->GetSumEHFPFlowPlus(), totalweight);
+                     h_sumEHFpfminusjetseta2step4_1->Fill(eventexcl->GetSumEHFPFlowMinus(), totalweight);
+                  }
+
+	       } // end jets at jetseta2
 
 	    }// Jets Cuts
 
 	 }// If nVertex
 
-    //  } // Emule Trigger or Triggers
+      } // Emule Trigger or Triggers
 
    }// Run All Events
 
@@ -1205,6 +1591,12 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
      outstring << "STEP4_3 (Tracker Acceptance): " << counterJetsTrackerstep4_3 << std::endl;
      outstring << "STEP4_2 (Tracker Acceptance): " << counterJetsTrackerstep4_2 << std::endl;
      outstring << "STEP4_1 (Tracker Acceptance): " << counterJetsTrackerstep4_1 << std::endl;
+     outstring << " " << std::endl;
+     outstring << "STEP3 (eta < 2 and eta > -2 Acceptance): " << counterJetsjetseta2step3 << std::endl;
+     outstring << "STEP4_4 (eta < 2 and eta > -2 Acceptance): " << counterJetsjetseta2step4_4 << std::endl;
+     outstring << "STEP4_3 (eta < 2 and eta > -2 Acceptance): " << counterJetsjetseta2step4_3 << std::endl;
+     outstring << "STEP4_2 (eta < 2 and eta > -2 Acceptance): " << counterJetsjetseta2step4_2 << std::endl;
+     outstring << "STEP4_1 (eta < 2 and eta > -2 Acceptance): " << counterJetsjetseta2step4_1 << std::endl;
      outstring << " " << std::endl;
      outstring << "<< LEGEND >> " << std::endl;
      outstring << "STEP1: # Vertex selection." << std::endl;
