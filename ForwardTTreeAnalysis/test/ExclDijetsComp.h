@@ -5,6 +5,8 @@
 #include <TTree.h>
 
 #include <string>
+#include <vector>
+
 class DiffractiveEvent;
 class ExclusiveDijetsEvent;
 class QCDEvent;
@@ -47,10 +49,21 @@ class ExclDijetsComp {
    bool switchWeightePw;
    double weightlumipass;
    double triggereffpass;
+   //std::vector<TH1D*> m_hVector[1];
+   std::vector<std::vector<TH1D*> > m_hVector;
 
    public :
    ExclDijetsComp() {}
-   ~ExclDijetsComp() { inf->Close(); }
+   ~ExclDijetsComp() { 
+
+       //for (std::vector<TH1D*>::const_iterator i(m_hVector.begin()); i != m_hVector.end(); ++i) {
+       //  delete (*i);
+       // }
+
+      //m_hVector.resize(0);
+      inf->Close(); 
+
+   }
    
    void Run(std::string, std::string, double, double, int, int, bool, bool, bool, bool, double, double);
    void LoadFile(std::string);

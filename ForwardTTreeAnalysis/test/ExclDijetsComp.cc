@@ -47,7 +47,6 @@
 #include <stdlib.h>
 #include <string>
 #include <iostream>
-#include <vector>
 #include <fstream>
 
 #include "ExclDijetsComp.h"
@@ -124,7 +123,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
 
    LoadFile(filein);  
 
-   edm::LumiReWeighting LumiWeights_("pileup15to3000_BXs_mc.root","147146-149711-pileup_2.root ","pileupmcBx0","pileup");
+   edm::LumiReWeighting LumiWeights_("pileup15to3000_BXs_mc.root","pu_exclusive_complete.root","pileupmcBx0","pileup");
 
    if (optnVertex == 0){
 
@@ -806,6 +805,44 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
    double absdeltaetapf_ = 0.;
    double deltaetapf_ = .0;
 
+   if (switchWeightPU || switchWeightLumi || switchWeightePw){
+
+   std::vector <std::string> Folders;
+   Folders.push_back("without_cuts");
+   Folders.push_back("with_trigger");
+   Folders.push_back("step1");
+   Folders.push_back("step2");
+   Folders.push_back("All_step3");
+   Folders.push_back("All_step4_4");
+   Folders.push_back("All_step4_3");
+   Folders.push_back("All_step4_2");
+   Folders.push_back("All_step4_1");
+   Folders.push_back("Tracker_step3");
+   Folders.push_back("Tracker_step4_4");
+   Folders.push_back("Tracker_step4_3");
+   Folders.push_back("Tracker_step4_2");
+   Folders.push_back("Tracker_step4_1");
+   Folders.push_back("JetsAtEta2_step3");
+   Folders.push_back("JetsAtEta2_step4_4");
+   Folders.push_back("JetsAtEta2_step4_3");
+   Folders.push_back("JetsAtEta2_step4_2");
+   Folders.push_back("JetsAtEta2_step4_1");
+
+   for (int j=0; j<19; j++)
+    {
+
+       m_hVector.push_back( std::vector<TH1D*>() );
+
+       for (int k=0;k<21;k++){
+       char name[300];
+       sprintf(name,"RJJ_PU_%i_%s",k,Folders.at(j).c_str());
+       TH1D *histo = new TH1D(name,"R_{jj} Distribution; R_{jj}; N events",20,0,1.2);
+       m_hVector[j].push_back(histo);
+       }
+    }
+
+   }
+
    for(int i=0;i<NEVENTS;i++) {
       double totalweight = -999.;
       double totalweightbxm1 = -999.;
@@ -920,6 +957,11 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
       h_sumEHEminuswc->Fill(eventdiff->GetSumEnergyHEMinus(), totalweight);
       h_sumEHFpfpluswc->Fill(eventexcl->GetSumEHFPFlowPlus(), totalweight);
       h_sumEHFpfminuswc->Fill(eventexcl->GetSumEHFPFlowMinus(), totalweight);
+
+      if(eventexcl->GetNPileUpBx0() < 21 && (switchWeightPU || switchWeightLumi || switchWeightePw)){
+         m_hVector[0].at(eventexcl->GetNPileUpBx0())->Fill(eventexcl->GetRjjFromJets(),totalweight);
+      }
+
       //////////////////////////////////////////////////
 
 
@@ -929,8 +971,8 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
       //
       //
       // SIMULATED TRIGGER
-      //if (eventexcl->GetSumEHFPFlowPlus() < 50 && eventexcl->GetSumEHFPFlowMinus() < 50 && eventexcl->GetLeadingJetP4().Pt() > 30 && eventexcl->GetSecondJetP4().Pt() > 30){
-	
+      //if (eventexcl->GetSumEHFPFlowPlus() < 30 && eventexcl->GetSumEHFPFlowMinus() < 30 && eventexcl->GetLeadingJetP4().Pt() > 30 && eventexcl->GetSecondJetP4().Pt() > 30){
+
          // TRIGGER
 	 if (eventexcl->GetHLTPath(optTrigger)){
 	 //
@@ -971,6 +1013,11 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
          h_sumEHEminuswt->Fill(eventdiff->GetSumEnergyHEMinus(), totalweight);
          h_sumEHFpfpluswt->Fill(eventexcl->GetSumEHFPFlowPlus(), totalweight);
          h_sumEHFpfminuswt->Fill(eventexcl->GetSumEHFPFlowMinus(), totalweight);
+
+         if(eventexcl->GetNPileUpBx0() < 21 && (switchWeightPU || switchWeightLumi || switchWeightePw)){
+           m_hVector[1].at(eventexcl->GetNPileUpBx0())->Fill(eventexcl->GetRjjFromJets(),totalweight);
+         }
+
          //////////////////////////////////////////////////
 
 
@@ -978,6 +1025,9 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
 
             counterJetsstep1+=totalweight; 
 
+            if(eventexcl->GetNPileUpBx0() < 21 && (switchWeightPU || switchWeightLumi || switchWeightePw)){
+              m_hVector[2].at(eventexcl->GetNPileUpBx0())->Fill(eventexcl->GetRjjFromJets(),totalweight);
+            }
 	    //---------->>
 
 	    /*
@@ -1069,6 +1119,11 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
                h_sumEHEminusstep2->Fill(eventdiff->GetSumEnergyHEMinus(), totalweight);
                h_sumEHFpfplusstep2->Fill(eventexcl->GetSumEHFPFlowPlus(), totalweight);
                h_sumEHFpfminusstep2->Fill(eventexcl->GetSumEHFPFlowMinus(), totalweight);
+
+               if(eventexcl->GetNPileUpBx0() < 21 && (switchWeightPU || switchWeightLumi || switchWeightePw)){
+                 m_hVector[3].at(eventexcl->GetNPileUpBx0())->Fill(eventexcl->GetRjjFromJets(),totalweight);
+               }
+
 	       //////////////////////////////////////////////////
 
 	       if (eventexcl->GetLeadingJetP4().Eta() < 5.2 && eventexcl->GetSecondJetP4().Eta() < 5.2 && eventexcl->GetLeadingJetP4().Eta() > -5.2 && eventexcl->GetSecondJetP4().Eta() > -5.2){
@@ -1109,6 +1164,10 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
                   h_sumEHFpfplusAllstep3->Fill(eventexcl->GetSumEHFPFlowPlus(), totalweight);
                   h_sumEHFpfminusAllstep3->Fill(eventexcl->GetSumEHFPFlowMinus(), totalweight);
 
+                  if(eventexcl->GetNPileUpBx0() < 21 && (switchWeightPU || switchWeightLumi || switchWeightePw)){
+                    m_hVector[4].at(eventexcl->GetNPileUpBx0())->Fill(eventexcl->GetRjjFromJets(),totalweight);
+                  }
+
 		  // Eta max and Eta min cut
 		  if (eventdiff->GetEtaMinFromPFCands() > -4. && eventdiff->GetEtaMaxFromPFCands() < 4.){
 
@@ -1143,6 +1202,11 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
                      h_sumEHEminusAllstep4_4->Fill(eventdiff->GetSumEnergyHEMinus(), totalweight);
                      h_sumEHFpfplusAllstep4_4->Fill(eventexcl->GetSumEHFPFlowPlus(), totalweight);
                      h_sumEHFpfminusAllstep4_4->Fill(eventexcl->GetSumEHFPFlowMinus(), totalweight);
+
+                     if(eventexcl->GetNPileUpBx0() < 21 && (switchWeightPU || switchWeightLumi || switchWeightePw)){
+                       m_hVector[5].at(eventexcl->GetNPileUpBx0())->Fill(eventexcl->GetRjjFromJets(),totalweight);
+                     }
+
                   }
 
 		  if (eventdiff->GetEtaMinFromPFCands() > -3. && eventdiff->GetEtaMaxFromPFCands() < 3.){
@@ -1178,6 +1242,11 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
                      h_sumEHEminusAllstep4_3->Fill(eventdiff->GetSumEnergyHEMinus(), totalweight);
                      h_sumEHFpfplusAllstep4_3->Fill(eventexcl->GetSumEHFPFlowPlus(), totalweight);
                      h_sumEHFpfminusAllstep4_3->Fill(eventexcl->GetSumEHFPFlowMinus(), totalweight);
+
+                     if(eventexcl->GetNPileUpBx0() < 21 && (switchWeightPU || switchWeightLumi || switchWeightePw)){
+                       m_hVector[6].at(eventexcl->GetNPileUpBx0())->Fill(eventexcl->GetRjjFromJets(),totalweight);
+                     }
+
 		  }
 
 		  if (eventdiff->GetEtaMinFromPFCands() > -2. && eventdiff->GetEtaMaxFromPFCands() < 2.){
@@ -1213,6 +1282,12 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
                      h_sumEHEminusAllstep4_2->Fill(eventdiff->GetSumEnergyHEMinus(), totalweight);
                      h_sumEHFpfplusAllstep4_2->Fill(eventexcl->GetSumEHFPFlowPlus(), totalweight);
                      h_sumEHFpfminusAllstep4_2->Fill(eventexcl->GetSumEHFPFlowMinus(), totalweight);
+
+                     if(eventexcl->GetNPileUpBx0() < 21 && (switchWeightPU || switchWeightLumi || switchWeightePw)){
+                       m_hVector[7].at(eventexcl->GetNPileUpBx0())->Fill(eventexcl->GetRjjFromJets(),totalweight);
+                     }
+
+
 		  }
 
 		  if (eventdiff->GetEtaMinFromPFCands() > -1. && eventdiff->GetEtaMaxFromPFCands() < 1.){
@@ -1248,6 +1323,11 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
                      h_sumEHEminusAllstep4_1->Fill(eventdiff->GetSumEnergyHEMinus(), totalweight);
                      h_sumEHFpfplusAllstep4_1->Fill(eventexcl->GetSumEHFPFlowPlus(), totalweight);
                      h_sumEHFpfminusAllstep4_1->Fill(eventexcl->GetSumEHFPFlowMinus(), totalweight);
+
+                     if(eventexcl->GetNPileUpBx0() < 21 && (switchWeightPU || switchWeightLumi || switchWeightePw)){
+                       m_hVector[8].at(eventexcl->GetNPileUpBx0())->Fill(eventexcl->GetRjjFromJets(),totalweight);
+                     }
+
                    }
 
 	       }  
@@ -1291,6 +1371,11 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
                   h_sumEHFpfplusTrackerstep3->Fill(eventexcl->GetSumEHFPFlowPlus(), totalweight);
                   h_sumEHFpfminusTrackerstep3->Fill(eventexcl->GetSumEHFPFlowMinus(), totalweight);
 
+                  if(eventexcl->GetNPileUpBx0() < 21 && (switchWeightPU || switchWeightLumi || switchWeightePw)){
+                    m_hVector[9].at(eventexcl->GetNPileUpBx0())->Fill(eventexcl->GetRjjFromJets(),totalweight);
+                  }
+
+
 		  // Eta max and Eta min cut
 		  if (eventdiff->GetEtaMinFromPFCands() > -4. && eventdiff->GetEtaMaxFromPFCands() < 4.){
 
@@ -1325,6 +1410,11 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
                      h_sumEHEminusTrackerstep4_4->Fill(eventdiff->GetSumEnergyHEMinus(), totalweight);
                      h_sumEHFpfplusTrackerstep4_4->Fill(eventexcl->GetSumEHFPFlowPlus(), totalweight);
                      h_sumEHFpfminusTrackerstep4_4->Fill(eventexcl->GetSumEHFPFlowMinus(), totalweight);
+
+                     if(eventexcl->GetNPileUpBx0() < 21 && (switchWeightPU || switchWeightLumi || switchWeightePw)){
+                       m_hVector[10].at(eventexcl->GetNPileUpBx0())->Fill(eventexcl->GetRjjFromJets(),totalweight);
+                     }
+
 		  }
 
 		  if (eventdiff->GetEtaMinFromPFCands() > -3. && eventdiff->GetEtaMaxFromPFCands() < 3.){
@@ -1360,6 +1450,12 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
                      h_sumEHEminusTrackerstep4_3->Fill(eventdiff->GetSumEnergyHEMinus(), totalweight);
                      h_sumEHFpfplusTrackerstep4_3->Fill(eventexcl->GetSumEHFPFlowPlus(), totalweight);
                      h_sumEHFpfminusTrackerstep4_3->Fill(eventexcl->GetSumEHFPFlowMinus(), totalweight);
+
+                     if(eventexcl->GetNPileUpBx0() < 21 && (switchWeightPU || switchWeightLumi || switchWeightePw)){
+                       m_hVector[11].at(eventexcl->GetNPileUpBx0())->Fill(eventexcl->GetRjjFromJets(),totalweight);
+                     }
+
+
 		  }
 
 		  if (eventdiff->GetEtaMinFromPFCands() > -2. && eventdiff->GetEtaMaxFromPFCands() < 2.){
@@ -1395,6 +1491,11 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
                      h_sumEHEminusTrackerstep4_2->Fill(eventdiff->GetSumEnergyHEMinus(), totalweight);
                      h_sumEHFpfplusTrackerstep4_2->Fill(eventexcl->GetSumEHFPFlowPlus(), totalweight);
                      h_sumEHFpfminusTrackerstep4_2->Fill(eventexcl->GetSumEHFPFlowMinus(), totalweight);
+
+                     if(eventexcl->GetNPileUpBx0() < 21 && (switchWeightPU || switchWeightLumi || switchWeightePw)){
+                       m_hVector[12].at(eventexcl->GetNPileUpBx0())->Fill(eventexcl->GetRjjFromJets(),totalweight);
+                     }
+
 		  }
 
 		  if (eventdiff->GetEtaMinFromPFCands() > -1. && eventdiff->GetEtaMaxFromPFCands() < 1.){
@@ -1430,6 +1531,11 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
                      h_sumEHEminusTrackerstep4_1->Fill(eventdiff->GetSumEnergyHEMinus(), totalweight);
                      h_sumEHFpfplusTrackerstep4_1->Fill(eventexcl->GetSumEHFPFlowPlus(), totalweight);
                      h_sumEHFpfminusTrackerstep4_1->Fill(eventexcl->GetSumEHFPFlowMinus(), totalweight);
+
+                     if(eventexcl->GetNPileUpBx0() < 21 && (switchWeightPU || switchWeightLumi || switchWeightePw)){
+                       m_hVector[13].at(eventexcl->GetNPileUpBx0())->Fill(eventexcl->GetRjjFromJets(),totalweight);
+                     }
+
                   }
 
 	       } // end jets at tracker
@@ -1473,6 +1579,11 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
                   h_sumEHFpfplusJetsEta2step3->Fill(eventexcl->GetSumEHFPFlowPlus(), totalweight);
                   h_sumEHFpfminusJetsEta2step3->Fill(eventexcl->GetSumEHFPFlowMinus(), totalweight);
 
+                  if(eventexcl->GetNPileUpBx0() < 21 && (switchWeightPU || switchWeightLumi || switchWeightePw)){
+                    m_hVector[14].at(eventexcl->GetNPileUpBx0())->Fill(eventexcl->GetRjjFromJets(),totalweight);
+                  }
+
+
 		  // Eta max and Eta min cut
 		  if (eventdiff->GetEtaMinFromPFCands() > -4. && eventdiff->GetEtaMaxFromPFCands() < 4.){
 
@@ -1507,6 +1618,11 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
                      h_sumEHEminusJetsEta2step4_4->Fill(eventdiff->GetSumEnergyHEMinus(), totalweight);
                      h_sumEHFpfplusJetsEta2step4_4->Fill(eventexcl->GetSumEHFPFlowPlus(), totalweight);
                      h_sumEHFpfminusJetsEta2step4_4->Fill(eventexcl->GetSumEHFPFlowMinus(), totalweight);
+
+                     if(eventexcl->GetNPileUpBx0() < 21 && (switchWeightPU || switchWeightLumi || switchWeightePw)){
+                       m_hVector[15].at(eventexcl->GetNPileUpBx0())->Fill(eventexcl->GetRjjFromJets(),totalweight);
+                     }
+
 		  }
 
 		  if (eventdiff->GetEtaMinFromPFCands() > -3. && eventdiff->GetEtaMaxFromPFCands() < 3.){
@@ -1542,6 +1658,11 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
                      h_sumEHEminusJetsEta2step4_3->Fill(eventdiff->GetSumEnergyHEMinus(), totalweight);
                      h_sumEHFpfplusJetsEta2step4_3->Fill(eventexcl->GetSumEHFPFlowPlus(), totalweight);
                      h_sumEHFpfminusJetsEta2step4_3->Fill(eventexcl->GetSumEHFPFlowMinus(), totalweight);
+
+                     if(eventexcl->GetNPileUpBx0() < 21 && (switchWeightPU || switchWeightLumi || switchWeightePw)){
+                       m_hVector[16].at(eventexcl->GetNPileUpBx0())->Fill(eventexcl->GetRjjFromJets(),totalweight);
+                     }
+
 		  }
 
 		  if (eventdiff->GetEtaMinFromPFCands() > -2. && eventdiff->GetEtaMaxFromPFCands() < 2.){
@@ -1577,6 +1698,11 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
                      h_sumEHEminusJetsEta2step4_2->Fill(eventdiff->GetSumEnergyHEMinus(), totalweight);
                      h_sumEHFpfplusJetsEta2step4_2->Fill(eventexcl->GetSumEHFPFlowPlus(), totalweight);
                      h_sumEHFpfminusJetsEta2step4_2->Fill(eventexcl->GetSumEHFPFlowMinus(), totalweight);
+
+                     if(eventexcl->GetNPileUpBx0() < 21 && (switchWeightPU || switchWeightLumi || switchWeightePw)){
+                       m_hVector[17].at(eventexcl->GetNPileUpBx0())->Fill(eventexcl->GetRjjFromJets(),totalweight);
+                     }
+
 		  }
 
 		  if (eventdiff->GetEtaMinFromPFCands() > -1. && eventdiff->GetEtaMaxFromPFCands() < 1.){
@@ -1612,6 +1738,12 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
                      h_sumEHEminusJetsEta2step4_1->Fill(eventdiff->GetSumEnergyHEMinus(), totalweight);
                      h_sumEHFpfplusJetsEta2step4_1->Fill(eventexcl->GetSumEHFPFlowPlus(), totalweight);
                      h_sumEHFpfminusJetsEta2step4_1->Fill(eventexcl->GetSumEHFPFlowMinus(), totalweight);
+
+                     if(eventexcl->GetNPileUpBx0() < 21 && (switchWeightPU || switchWeightLumi || switchWeightePw)){
+                       m_hVector[18].at(eventexcl->GetNPileUpBx0())->Fill(eventexcl->GetRjjFromJets(),totalweight);
+                     }
+
+
                   }
 
 	       } // end jets at JetsEta2
