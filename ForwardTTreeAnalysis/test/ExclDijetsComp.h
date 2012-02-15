@@ -4,26 +4,14 @@
 #include <TFile.h>
 #include <TTree.h>
 
+#include <stdio.h>
+#include <stdlib.h>
 #include <string>
 #include <vector>
 
 class DiffractiveEvent;
 class ExclusiveDijetsEvent;
 class QCDEvent;
-
-//class loadFWLite {
-/*    public:
-       loadFWLite() {
-            gSystem->Load("libFWCoreFWLite.so");
-            gSystem->Load("libPhysicsToolsUtilities.so");
-            AutoLibraryLoader::enable();
-            gSystem->Load("libCintex.so");
-            ROOT::Cintex::Cintex::Enable();
-       }
-};
- 
-static loadFWLite lfw;
-*/
 
 class ExclDijetsComp {
 
@@ -47,26 +35,48 @@ class ExclDijetsComp {
    bool switchWeightLumi;
    bool switchWeightEff;
    bool switchWeightePw;
+   bool switchMultiple;
    double weightlumipass;
    double triggereffpass;
-   //std::vector<TH1D*> m_hVector[1];
-   std::vector<std::vector<TH1D*> > m_hVector;
+   std::vector<std::vector<TH1D*> > m_hVector_rjj;
+   std::vector<std::vector<TH1D*> > m_hVector_detagen;
+   std::vector<std::vector<TH1D*> > m_hVector_mxGen;
+   std::vector<std::vector<TH2F*> > m_hVector_multhf;
+   std::vector<std::vector<TH2F*> > m_hVector_etcalos;
+   std::vector<std::vector<TH1D*> > m_hVector_tracks;
+   std::vector<std::vector<TH1D*> > m_hVector_pfetamax;
+   std::vector<std::vector<TH1D*> > m_hVector_pfetamin;
+   std::vector<std::vector<TH1D*> > m_hVector_asumE;
+   std::vector<std::vector<TH1D*> > m_hVector_deltaetajets;
+   std::vector<std::vector<TH1D*> > m_hVector_deltaphijets;
+   std::vector<std::vector<TH1D*> > m_hVector_deltaptjets;
+   std::vector<std::vector<TH1D*> > m_hVector_dijetmass;
+   std::vector<std::vector<TH1D*> > m_hVector_ptjet1;
+   std::vector<std::vector<TH1D*> > m_hVector_ptjet2;
+   std::vector<std::vector<TH1D*> > m_hVector_etajet1;
+   std::vector<std::vector<TH1D*> > m_hVector_etajet2;
+   std::vector<std::vector<TH1D*> > m_hVector_phijet1;
+   std::vector<std::vector<TH1D*> > m_hVector_phijet2;
+   std::vector<std::vector<TH1D*> > m_hVector_pumcbx0;
+   std::vector<std::vector<TH1D*> > m_hVector_pumcbxm1;
+   std::vector<std::vector<TH1D*> > m_hVector_pumcbxp1;
+   std::vector<std::vector<TH1D*> > m_hVector_sumEHFplus;
+   std::vector<std::vector<TH1D*> > m_hVector_sumEHFminus;
+   std::vector<std::vector<TH1D*> > m_hVector_sumEHEplus;
+   std::vector<std::vector<TH1D*> > m_hVector_sumEHEminus;
+   std::vector<std::vector<TH1D*> > m_hVector_sumEHFpfplus;
+   std::vector<std::vector<TH1D*> > m_hVector_sumEHFpfminus;
+   std::vector<std::vector<TH1D*> > m_hVector_deltaEtaPF;
+   std::vector<std::vector<TH1D*> > m_hVector_absdeltaEtaPF;
+   std::vector<std::vector<TH1D*> > m_hVector_vertex;
 
    public :
    ExclDijetsComp() {}
-   ~ExclDijetsComp() { 
-
-       //for (std::vector<TH1D*>::const_iterator i(m_hVector.begin()); i != m_hVector.end(); ++i) {
-       //  delete (*i);
-       // }
-
-      //m_hVector.resize(0);
-      inf->Close(); 
-
-   }
+   ~ExclDijetsComp() { inf->Close(); }
    
-   void Run(std::string, std::string, double, double, int, int, bool, bool, bool, bool, double, double);
+   void Run(std::string, std::string, double, double, int, int, bool, bool, bool, bool, bool, double, double);
    void LoadFile(std::string);
+   void FillHistograms();
 
 };
 #endif
