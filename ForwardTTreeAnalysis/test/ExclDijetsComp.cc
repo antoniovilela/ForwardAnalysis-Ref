@@ -27,7 +27,6 @@
 // II)  If you turn off Luminosity reweight, the default weight will be 1;
 // III) If you turn off Trigger Efficiency, the default weight will be 1;
 // IV)  If you turn off event-per-event weight (some MC sample), the default weight will be 1;
-//  V)  If you turn off Multiple PU Histograms, will be generated histograms with all #PU events.
 //
 // EXAMPLE: ./ExclDijetsComp "inputfile.root" "outputfile.root" 60 55 2 1 0 1 1 1 0.0003 2.3
 //
@@ -1068,10 +1067,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
                      m_hVector_sumEHEminus[12].at(indexV)->Fill(eventdiff->GetSumEnergyHEMinus(),totalweight);
                      m_hVector_sumEHFpfplus[12].at(indexV)->Fill(eventexcl->GetSumEHFPFlowPlus(),totalweight);
                      m_hVector_sumEHFpfminus[12].at(indexV)->Fill(eventexcl->GetSumEHFPFlowMinus(),totalweight);
-                     
-
-
-m_hVector_deltaEtaPF[12].at(indexV)->Fill(deltaetapf_,totalweight);
+                     m_hVector_deltaEtaPF[12].at(indexV)->Fill(deltaetapf_,totalweight);
                      m_hVector_absdeltaEtaPF[12].at(indexV)->Fill(absdeltaetapf_,totalweight);
                      m_hVector_vertex[12].at(indexV)->Fill(eventexcl->GetNVertex(),totalweight);
 		  }
