@@ -75,7 +75,8 @@ void ExclDijetsComp::LoadFile(std::string fileinput, std::string processinput){
 
 }
 
-void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::string processname_, double jet1PT_, double jet2PT_, int optnVertex_, int optTrigger_, bool switchWeightPU_, bool switchWeightLumi_, bool switchWeightEff_, bool switchWeightePw_, bool switchMultiple_, double weightlumipass_, double triggereffpass_){
+void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::string processname_, double jet1PT_, double jet2PT_, int optnVertex_, int optTrigger_, bool switchWeightPU_, bool switchWeightLumi_, bool switchWeightEff_, bool switchWeightePw_, bool switchMultiple_, bool switchPreSel_, bool switchTrigger_, double weightlumipass_, double triggereffpass_){
+
 
    filein = filein_;
    savehistofile = savehistofile_;
@@ -89,6 +90,8 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
    switchWeightLumi = switchWeightLumi_;
    switchWeightEff = switchWeightEff_;
    switchWeightePw = switchWeightePw_;
+   switchPreSel = switchPreSel_;
+   switchTrigger = switchTrigger_;
    weightlumipass = weightlumipass_;
    triggereffpass = triggereffpass_;
    switchMultiple = switchMultiple_;
@@ -113,6 +116,8 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
    std::cout << "Eff. Corr.: " << switchWeightEff << std::endl;
    std::cout << "Evt. - Evt. Weight: " << switchWeightePw << std::endl;
    std::cout << "Multiple PU Histograms: " << switchMultiple << std::endl;
+   std::cout << "Trigger Switch: " << switchTrigger << std::endl;
+   std::cout << "Pre-Selection Switch: " << switchPreSel << std::endl;
    std::cout << " " << std::endl;
    std::cout << "--> Factors" << std::endl;
    std::cout << "Lumi. Weight: " << weightlumipass << std::endl;
@@ -483,7 +488,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
      indexV = 0;
     }
  
-    if (eventexcl->GetNPileUpBx0() < 21){
+    if (!switchMultiple || (switchMultiple && eventexcl->GetNPileUpBx0() < 21)){    
 
       deltaphi_ = fabs(eventexcl->GetLeadingJetPhi()-eventexcl->GetSecondJetPhi());
       aSumE_ = (eventdiff->GetSumEnergyHFPlus() - eventdiff->GetSumEnergyHFMinus())/(eventdiff->GetSumEnergyHFPlus() + eventdiff->GetSumEnergyHFMinus());
@@ -596,10 +601,10 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
       //
       //
       // SIMULATED TRIGGER
-      //if (eventexcl->GetSumEHFPFlowPlus() < 30 && eventexcl->GetSumEHFPFlowMinus() < 30 && eventexcl->GetLeadingJetP4().Pt() > 30 && eventexcl->GetSecondJetP4().Pt() > 30){
+      if ( !switchPreSel || (switchPreSel && eventexcl->GetSumEHFPFlowPlus() < 30 && eventexcl->GetSumEHFPFlowMinus() < 30 && eventexcl->GetLeadingJetP4().Pt() > 30 && eventexcl->GetSecondJetP4().Pt() > 30)){
 
          // TRIGGER
-	 if (eventexcl->GetHLTPath(optTrigger)){
+	 if (!switchTrigger || (switchTrigger && eventexcl->GetHLTPath(optTrigger))){
 	 //
 	 //------------------------------------------------------------------------------------------
 
@@ -1298,11 +1303,13 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
 
 	       } // end jets at JetsEta2
 
-	    }// Jets Cuts
+	    } // Jets Cuts
 
-	 }// If nVertex
+	 } // If nVertex
+       
+       } // Trigger  
 
-      } // Emule Trigger or Triggers
+      } // PreSelection
 
      } // Vector Defense: GetNPileUp()
 
@@ -1324,6 +1331,9 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
      outstring << "Lumi. Weight: " << switchWeightLumi << std::endl;
      outstring << "Eff. Corr.: " << switchWeightEff << std::endl;
      outstring << "Evt. - Evt. Weight: " << switchWeightePw << std::endl;
+     outstring << "Multiple PU Histograms: " << switchMultiple << std::endl;
+     outstring << "Trigger Switch: " << switchTrigger << std::endl;
+     outstring << "Pre-Selection Switch: " << switchPreSel << std::endl;
      outstring << " " << std::endl;
      outstring << "--> Factors" << std::endl;
      outstring << "Lumi. Weight: " << weightlumipass << std::endl;
@@ -1386,6 +1396,8 @@ int main(int argc, char **argv)
    bool switchWeightEff_;
    bool switchWeightePw_;
    bool switchMultiple_;
+   bool switchPreSel_;
+   bool switchTrigger_;
    double weightlumipass_;
    double triggereffpass_;
 
@@ -1401,12 +1413,14 @@ int main(int argc, char **argv)
    if (argc > 10 && strcmp(s1,argv[10]) != 0)  switchWeightEff_ = atoi(argv[10]);
    if (argc > 11 && strcmp(s1,argv[11]) != 0)  switchWeightePw_   = atoi(argv[11]);
    if (argc > 12 && strcmp(s1,argv[12]) != 0)  switchMultiple_   = atoi(argv[12]);
-   if (argc > 13 && strcmp(s1,argv[13]) != 0)  weightlumipass_  = atof(argv[13]);
-   if (argc > 14 && strcmp(s1,argv[14]) != 0)  triggereffpass_ = atof(argv[14]);
+   if (argc > 13 && strcmp(s1,argv[13]) != 0)  switchPreSel_   = atoi(argv[13]);
+   if (argc > 14 && strcmp(s1,argv[14]) != 0)  switchTrigger_   = atoi(argv[14]);
+   if (argc > 15 && strcmp(s1,argv[15]) != 0)  weightlumipass_  = atof(argv[15]);
+   if (argc > 16 && strcmp(s1,argv[16]) != 0)  triggereffpass_ = atof(argv[16]);
 
 
    ExclDijetsComp* exclDijets = new ExclDijetsComp();   
-   exclDijets->Run(filein_, savehistofile_, processname_, jet1PT_, jet2PT_, optnVertex_, optTrigger_, switchWeightPU_, switchWeightLumi_, switchWeightEff_, switchWeightePw_, switchMultiple_, weightlumipass_, triggereffpass_);
+   exclDijets->Run(filein_, savehistofile_, processname_, jet1PT_, jet2PT_, optnVertex_, optTrigger_, switchWeightPU_, switchWeightLumi_, switchWeightEff_, switchWeightePw_, switchMultiple_, switchPreSel_, switchTrigger_, weightlumipass_, triggereffpass_);
 
    return 0;
 }
