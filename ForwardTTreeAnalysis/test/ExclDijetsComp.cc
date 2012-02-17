@@ -57,12 +57,12 @@ using namespace diffractiveAnalysis;
 using namespace exclusiveDijetsAnalysis;
 using namespace reweight;
 
-void ExclDijetsComp::LoadFile(std::string fileinput){
+void ExclDijetsComp::LoadFile(std::string fileinput, std::string processinput){
 
    inf = NULL;
    tr  = NULL;
    inf = TFile::Open(fileinput.c_str(),"read");
-   tr = (TTree*)inf->Get("forwardQCDTTreeAnalysis/ProcessedTree");
+   tr = (TTree*)inf->Get(processinput.c_str());
    eventdiff = new DiffractiveEvent();
    eventexcl = new ExclusiveDijetsEvent();
    eventqcd = new QCDEvent();
@@ -75,10 +75,11 @@ void ExclDijetsComp::LoadFile(std::string fileinput){
 
 }
 
-void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double jet1PT_, double jet2PT_, int optnVertex_, int optTrigger_, bool switchWeightPU_, bool switchWeightLumi_, bool switchWeightEff_, bool switchWeightePw_, bool switchMultiple_, double weightlumipass_, double triggereffpass_){
+void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::string processname_, double jet1PT_, double jet2PT_, int optnVertex_, int optTrigger_, bool switchWeightPU_, bool switchWeightLumi_, bool switchWeightEff_, bool switchWeightePw_, bool switchMultiple_, double weightlumipass_, double triggereffpass_){
 
    filein = filein_;
    savehistofile = savehistofile_;
+   processname = processname_;
    filein = filein_;
    jet1PT = jet1PT_;
    jet2PT = jet2PT_;
@@ -164,7 +165,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, double
 
    }
 
-   LoadFile(filein);  
+   LoadFile(filein,processname);  
    edm::LumiReWeighting LumiWeights_("pileup15to3000_BXs_mc.root","pu_exclusive_complete.root","pileupmcBx0","pileup");
 
    std::cout << " " << std::endl;
@@ -1375,6 +1376,7 @@ int main(int argc, char **argv)
    const char *s1="*";
    std::string filein_;
    std::string savehistofile_;
+   std::string processname_;
    double jet1PT_;
    double jet2PT_;
    int optnVertex_;
@@ -1389,21 +1391,22 @@ int main(int argc, char **argv)
 
    if (argc > 1 && strcmp(s1,argv[1]) != 0)  filein_ = argv[1];
    if (argc > 2 && strcmp(s1,argv[2]) != 0)  savehistofile_  = argv[2];
-   if (argc > 3 && strcmp(s1,argv[3]) != 0)  jet1PT_  = atoi(argv[3]);
-   if (argc > 4 && strcmp(s1,argv[4]) != 0)  jet2PT_ = atoi(argv[4]);
-   if (argc > 5 && strcmp(s1,argv[5]) != 0)  optnVertex_ = atoi(argv[5]);
-   if (argc > 6 && strcmp(s1,argv[6]) != 0)  optTrigger_   = atoi(argv[6]);
-   if (argc > 7 && strcmp(s1,argv[7]) != 0)  switchWeightPU_  = atoi(argv[7]);
-   if (argc > 8 && strcmp(s1,argv[8]) != 0)  switchWeightLumi_ = atoi(argv[8]);
-   if (argc > 9 && strcmp(s1,argv[9]) != 0)  switchWeightEff_ = atoi(argv[9]);
-   if (argc > 10 && strcmp(s1,argv[10]) != 0)  switchWeightePw_   = atoi(argv[10]);
-   if (argc > 11 && strcmp(s1,argv[11]) != 0)  switchMultiple_   = atoi(argv[11]);
-   if (argc > 12 && strcmp(s1,argv[12]) != 0)  weightlumipass_  = atof(argv[12]);
-   if (argc > 13 && strcmp(s1,argv[13]) != 0)  triggereffpass_ = atof(argv[13]);
+   if (argc > 3 && strcmp(s1,argv[3]) != 0)  processname_  = argv[3];
+   if (argc > 4 && strcmp(s1,argv[4]) != 0)  jet1PT_  = atoi(argv[4]);
+   if (argc > 5 && strcmp(s1,argv[5]) != 0)  jet2PT_ = atoi(argv[5]);
+   if (argc > 6 && strcmp(s1,argv[6]) != 0)  optnVertex_ = atoi(argv[6]);
+   if (argc > 7 && strcmp(s1,argv[7]) != 0)  optTrigger_   = atoi(argv[7]);
+   if (argc > 8 && strcmp(s1,argv[8]) != 0)  switchWeightPU_  = atoi(argv[8]);
+   if (argc > 9 && strcmp(s1,argv[9]) != 0)  switchWeightLumi_ = atoi(argv[9]);
+   if (argc > 10 && strcmp(s1,argv[10]) != 0)  switchWeightEff_ = atoi(argv[10]);
+   if (argc > 11 && strcmp(s1,argv[11]) != 0)  switchWeightePw_   = atoi(argv[11]);
+   if (argc > 12 && strcmp(s1,argv[12]) != 0)  switchMultiple_   = atoi(argv[12]);
+   if (argc > 13 && strcmp(s1,argv[13]) != 0)  weightlumipass_  = atof(argv[13]);
+   if (argc > 14 && strcmp(s1,argv[14]) != 0)  triggereffpass_ = atof(argv[14]);
 
 
    ExclDijetsComp* exclDijets = new ExclDijetsComp();   
-   exclDijets->Run(filein_, savehistofile_, jet1PT_, jet2PT_, optnVertex_, optTrigger_, switchWeightPU_, switchWeightLumi_, switchWeightEff_, switchWeightePw_, switchMultiple_, weightlumipass_, triggereffpass_);
+   exclDijets->Run(filein_, savehistofile_, processname_, jet1PT_, jet2PT_, optnVertex_, optTrigger_, switchWeightPU_, switchWeightLumi_, switchWeightEff_, switchWeightePw_, switchMultiple_, weightlumipass_, triggereffpass_);
 
    return 0;
 }

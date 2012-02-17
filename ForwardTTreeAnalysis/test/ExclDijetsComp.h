@@ -26,6 +26,8 @@ class ExclDijetsComp {
 
    std::string filein;
    std::string fileinput;
+   std::string processname;
+   std::string processinput; 
    std::string savehistofile;
    double jet1PT;
    double jet2PT;
@@ -74,8 +76,8 @@ class ExclDijetsComp {
    ExclDijetsComp() {}
    ~ExclDijetsComp() { inf->Close(); }
    
-   void Run(std::string, std::string, double, double, int, int, bool, bool, bool, bool, bool, double, double);
-   void LoadFile(std::string);
+   void Run(std::string, std::string, std::string, double, double, int, int, bool, bool, bool, bool, bool, double, double);
+   void LoadFile(std::string,std::string);
    void FillHistograms();
 
 };
