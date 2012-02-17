@@ -18,7 +18,7 @@
 //
 // (B) COMMAND LINE
 // ----------------
-// $> ./ExclDijetsComp "Inputfile.root" "outputfile.root" <pT(Jet1) Cut> <pT(Jet2) Cut> <Number of Vertex Cut> <Trigger Option> <Turn on(off) PU Reweight> <Turn on(off) Luminosity Reweight> <Turn on(off) Trigger Efficiency> <Turn on(off) event-per-event Weight> <Turn on(off) Multiple PU Histograms> <Luminosity Weight Factor> <Trigger Efficiency Factor>
+// $> ./ExclDijetsComp "Inputfile.root" "outputfile.root" "CMSSW Process_Name/TTree_name"<pT(Jet1) Cut> <pT(Jet2) Cut> <Number of Vertex Cut> <Trigger Option> <Turn on(off) PU Reweight> <Turn on(off) Luminosity Reweight> <Turn on(off) Trigger Efficiency> <Turn on(off) event-per-event Weight> <Turn on(off) Multiple PU Histograms> <Turn on(off) Pre Selection> <Turn on(off) Trigger> <Luminosity Weight Factor> <Trigger Efficiency Factor>
 //
 // TURN ON  = 1
 // TURN OFF = 0
@@ -28,9 +28,10 @@
 // III) If you turn off Trigger Efficiency, the default weight will be 1;
 // IV)  If you turn off event-per-event weight (some MC sample), the default weight will be 1;
 //
-// EXAMPLE: ./ExclDijetsComp "inputfile.root" "outputfile.root" 60 55 2 1 0 1 1 1 0.0003 2.3
+// EXAMPLE: ./ExclDijetsComp "inputfile.root" "outputfile.root" "forwardQCDTTreeAnalysis/ProcessedTree" 60 55 1 0 1 1 0 1 1 1 0 0.0003 2.3
 //
-
+// Twiki: https://twiki.cern.ch/twiki/bin/view/CMS/FwdPhysicsExclusiveDijetsAnalysis#Example_Analysis_Macro
+//
 
 //#if !defined(__CINT__) || defined(__MAKECINT__)
 #include <TROOT.h>
@@ -76,7 +77,6 @@ void ExclDijetsComp::LoadFile(std::string fileinput, std::string processinput){
 }
 
 void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::string processname_, double jet1PT_, double jet2PT_, int optnVertex_, int optTrigger_, bool switchWeightPU_, bool switchWeightLumi_, bool switchWeightEff_, bool switchWeightePw_, bool switchMultiple_, bool switchPreSel_, bool switchTrigger_, double weightlumipass_, double triggereffpass_){
-
 
    filein = filein_;
    savehistofile = savehistofile_;
