@@ -38,6 +38,8 @@ class ExclDijetsComp {
    bool switchWeightEff;
    bool switchWeightePw;
    bool switchMultiple;
+   bool switchPreSel;
+   bool switchTrigger;
    double weightlumipass;
    double triggereffpass;
    std::vector<std::vector<TH1D*> > m_hVector_rjj;
@@ -76,7 +78,7 @@ class ExclDijetsComp {
    ExclDijetsComp() {}
    ~ExclDijetsComp() { inf->Close(); }
    
-   void Run(std::string, std::string, std::string, double, double, int, int, bool, bool, bool, bool, bool, double, double);
+   void Run(std::string, std::string, std::string, double, double, int, int, bool, bool, bool, bool, bool, bool, bool, double, double);
    void LoadFile(std::string,std::string);
    void FillHistograms();
 
