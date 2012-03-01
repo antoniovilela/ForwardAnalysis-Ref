@@ -290,7 +290,7 @@ datasetpath=@@DATASET@@
 pset=pset.py
 output_file=@@OUTPUT@@
 # For Sandro(ExumE) Dataset
-dbs_url = http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_02/servlet/DBSServlet
+#dbs_url = http://cmsdbsprod.cern.ch/cms_dbs_ph_analysis_02/servlet/DBSServlet
 
 [USER]
 ui_working_dir=@@UIWORKINGDIR@@
@@ -312,10 +312,12 @@ email = dmf@cern.ch
 [GRID]
 proxy_server = myproxy.cern.ch
 @@USESEWHITELIST@@se_white_list = @@SEWHITELIST@@
-se_black_list = T3_US_COLORADO, T3_US_FNALLPC, T2_UK_SGrid_RALPP
+#se_black_list = T1_US_FNAL_MSS, T1_US_FNAL, T3_US_COLORADO, T3_US_FNALLPC
+#ce_black_list = T1_US_FNAL_MSS, T1_US_FNAL, T3_US_COLORADO, T3_US_FNALLPC
 virtual_organization = cms
 # For Sandro Sample
-ce_white_list = T2_DE_DESY
+#ce_white_list = T2_DE_DESY, T2_UK_SGrid_RALPP
+ce_white_list = T2_BR_UERJ
 
 """
     print ''
@@ -420,13 +422,14 @@ uiworkingdir = 'crab_QCD_Pt-15to3000-Z2'
 userremotedir = '/crab_QCD_Pt-15to3000-Z2'
 lumixs = ''
 nevent ='10000000'
-ejob = '10000'
-sewhitelist = ''
+ejob = '15000'
+#sewhitelist = 'T2_DE_DESY, T2_UK_SGrid_RALPP'
+sewhitelist = 'T2_BR_UERJ' 
 output = 'QCD_Pt-15to3000-Z2.root'
 triggersmc = "'HLT_Jet30_v*','HLT_Jet60_v*'"
 triggersdata = "'HLT_Jet30_v*','HLT_Jet60_v*'"
 mail='dmf@cern.ch'
-#ConfigHandler(dataset,uiworkingdir,userremotedir,sewhitelist,output,triggersmc,triggersdata,mail,nevent,ejob,lumixs)
+ConfigHandler(dataset,uiworkingdir,userremotedir,sewhitelist,output,triggersmc,triggersdata,mail,nevent,ejob,lumixs)
 
 #
 # Sample: /QCD_Pt-0to5_TuneZ2_7TeV_pythia6/Summer11-PU_S3_START42_V11-v2/AODSIM 
@@ -613,7 +616,7 @@ output = 'QCD_Pt-600to800-Z2.root'
 triggersmc = "'HLT_Jet30_v*','HLT_Jet60_v*'"
 triggersdata = "'HLT_Jet30_v*','HLT_Jet60_v*'"
 mail='dmf@cern.ch'
-ConfigHandler(dataset,uiworkingdir,userremotedir,sewhitelist,output,triggersmc,triggersdata,mail,nevent,ejob,lumixs)
+#ConfigHandler(dataset,uiworkingdir,userremotedir,sewhitelist,output,triggersmc,triggersdata,mail,nevent,ejob,lumixs)
 
 #
 # Sample: /ExHuME_CEPDijetsGG_M100_GEN_SIM_DIGI_L1_DIGI2RAW_HLT_Nov2011_02/sfonseca-ExHuME_CEPDijetsGG_M100_GEN_SIM_RECO_02-1c267b46416f12b00a8ff0f71942689c/USER 

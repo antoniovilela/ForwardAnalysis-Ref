@@ -281,6 +281,7 @@ datasetpath=@@DATASET@@
 pset=pset.py
 output_file=@@OUTPUT@@
 lumi_mask=@@JSONFILE@@
+runselection = 147146-149711
 total_number_of_lumis =@@LUMIS@@
 lumis_per_job = @@LUMISJOB@@
 runselection = @@RUNSEL@@
@@ -430,7 +431,7 @@ dataset = '/Jet/Run2010B-Apr21ReReco-v1/AOD'
 uiworkingdir = 'crab_Jet-Run2010B-Apr21ReReco-v1-AOD'
 userremotedir = '/Data/crab_Jet-Run2010B-Apr21ReReco-v1-AOD'
 jsonfile = 'Intersection_Castor_GOOD_146240-148068.json'
-lumis ='1'
+lumis ='-1'
 lumisjob = '15'
 runsel = '146240-148068'
 lumixs = 'lumibylsXing_Cert_136033-149442_7TeV_Apr21ReReco_Collisions10_JSON.root'
@@ -459,9 +460,9 @@ mail = 'dmf@cern.ch'
 
 ## /MultiJet/Run2010B-Apr21ReReco-v1/AOD
 dataset = '/MultiJet/Run2010B-Apr21ReReco-v1/AOD'  
-uiworkingdir = 'crab_MultiJet_Run2010A_PATTuple'
-userremotedir = '/Data/crab_MultiJet_Run2010A'
-jsonfile = 'Intersection_Castor_GOOD_147146-149711.json'
+uiworkingdir = 'crab_MultiJet_Run2010B_PATTuple'
+userremotedir = '/Data/crab_MultiJet_Run2010B'
+jsonfile = 'Cert_136033-149442_7TeV_Apr21ReReco_Collisions10.json'
 lumis ='-1'
 lumisjob = '15'
 runsel = '147146-149442'
@@ -471,7 +472,7 @@ output = 'MultiJetPATTuple.root'
 triggersmc = "'HLT_ExclDiJet30U_HFAND_v*','HLT_ExclDiJet30U_HFOR_v*','HLT_Jet30U*'"
 triggersdata = "'HLT_ExclDiJet30U_HFAND_v*','HLT_ExclDiJet30U_HFOR_v*','HLT_Jet30U*'"
 mail = 'dmf@cern.ch'
-#ConfigHandler(dataset,uiworkingdir,userremotedir,jsonfile,lumis,lumisjob,runsel,lumixs,sewhitelist,output,triggersmc,triggersdata,mail)
+ConfigHandler(dataset,uiworkingdir,userremotedir,jsonfile,lumis,lumisjob,runsel,lumixs,sewhitelist,output,triggersmc,triggersdata,mail)
 
 ## TEST
 dataset = '/JetMETTau/Run2010A-Apr21ReReco-v1/AOD '  
@@ -555,7 +556,7 @@ output = 'MultiJetPATTuple-v6.root'
 triggersmc = "'HLT_ExclDiJet60U_HFAND_v*','HLT_ExclDiJet60U_HFOR_v*','HLT_Jet60U*'"
 triggersdata = "'HLT_ExclDiJet60U_HFAND_v*','HLT_ExclDiJet60U_HFOR_v*','HLT_Jet60U*'"
 mail = 'dmf@cern.ch'
-ConfigHandler(dataset,uiworkingdir,userremotedir,jsonfile,lumis,lumisjob,runsel,lumixs,sewhitelist,output,triggersmc,triggersdata,mail)
+#ConfigHandler(dataset,uiworkingdir,userremotedir,jsonfile,lumis,lumisjob,runsel,lumixs,sewhitelist,output,triggersmc,triggersdata,mail)
 
 
 print ''
