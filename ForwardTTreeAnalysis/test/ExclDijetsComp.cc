@@ -124,6 +124,8 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
    std::cout << "Trigger Eff.: " << triggereffpass << std::endl;
    std::cout << "" << std::endl;
 
+
+   // Code Protection
    if (optnVertex == 0){
 
       std::cout << "---------------------------------------------------------------" << std::endl;
@@ -169,8 +171,9 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
       return;
 
    }
+   //--------------------------------------------------------------------------------------------------------------------------
 
-   LoadFile(filein,processname);  
+   LoadFile(filein,processname);
    edm::LumiReWeighting LumiWeights_("pileup15to3000_BXs_mc.root","pu_exclusive_complete.root","pileupmcBx0","pileup");
 
    std::cout << " " << std::endl;
@@ -199,6 +202,24 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
 
    int decade = 0;
 
+   //Protection Code
+   for(int m=0;m<2;m++) {
+
+       tr->GetEntry(m);
+
+       if ( switchMultiple && (eventexcl->GetNPileUpBx0()==-1 && eventexcl->GetNPileUpBxm1()==-1 && eventexcl->GetNPileUpBxp1()==-1 )){
+        std::cout << "--------------------------------------------------------------" << std::endl;
+        std::cout << " There is no Pile Up TTree information in your PATTuplefile."   << std::endl;
+        std::cout << " Please, use another PATTuple with PU information to run mul- " << std::endl;
+        std::cout << " tiple PU option." << std::endl;
+        std::cout << "--------------------------------------------------------------" << std::endl;
+        return;
+       }
+
+    }
+    //--------------------------------------------------------------------------------------------------------------------------
+
+
    // Event by Event Analysis
    //////////////////////////
 
@@ -224,7 +245,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
    double deltaphi_ = 0.;
    double aSumE_ = 0.;
    double absdeltaetapf_ = 0.;
-   double deltaetapf_ = .0;
+   double deltaetapf_ = 0.;
 
    std::vector <std::string> Folders;
    Folders.push_back("without_cuts");
@@ -462,6 +483,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
     }
 
   for(int i=0;i<NEVENTS;i++) {
+
       double totalweight = -999.;
       double totalweightbxm1 = -999.;
       double totalweightbxp1 = -999.;
