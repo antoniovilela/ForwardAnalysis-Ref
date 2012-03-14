@@ -18,7 +18,7 @@
 //
 // (B) COMMAND LINE
 // ----------------
-// $> ./MC_PU_DistributionsCom "Inputfile.root" "outputfile.root" "CMSSW Process_Name/TTree_name"<pT(Jet1) Cut> <pT(Jet2) Cut> <Number of Vertex Cut> <Trigger Option> <Turn on(off) Luminosity Reweight> <Turn on(off) event-per-event Weight> <Turn on(off) Pre Selection> <Turn on(off) Trigger> <Luminosity Weight Factor> 
+// $> ./MC_PU_DistributionsCom "Inputfile.root" "outputfile.root" "CMSSW Process_Name/TTree_name"<pT(Jet1) Cut> <pT(Jet2) Cut> <Number of Vertex Cut> <Trigger Option> <Turn on(off) Luminosity Reweight> <Turn on(off) event-per-event Weight> <Turn on(off) Pre Selection> <Turn on(off) Trigger> <Luminosity Weight Factor> <# bins PU Distribution>
 //
 // TURN ON  = 1
 // TURN OFF = 0
@@ -28,7 +28,7 @@
 // III) If you turn off Trigger Efficiency, the default weight will be 1;
 // IV)  If you turn off event-per-event weight (some MC sample), the default weight will be 1;
 //
-// EXAMPLE: ./MC_PU_DistributionsCom "inputfile.root" "outputfile.root" "forwardQCDTTreeAnalysis/ProcessedTree" 60 55 1 1 1 1 1 1 2.3
+// EXAMPLE: ./MC_PU_DistributionsCom "inputfile.root" "outputfile.root" "forwardQCDTTreeAnalysis/ProcessedTree" 60 55 1 1 1 1 1 1 2.3 25
 //
 // Twiki: https://twiki.cern.ch/twiki/bin/view/CMS/FwdPhysicsExclusiveDijetsAnalysis#For_MonteCarlo
 //
@@ -76,7 +76,7 @@ void MC_PU_Distributions::LoadFile(std::string fileinput, std::string processinp
 
 }
 
-void MC_PU_Distributions::Run(std::string filein_, std::string savehistofile_, std::string processname_, double jet1PT_, double jet2PT_, int optnVertex_, int optTrigger_, bool switchWeightLumi_, bool switchWeightePw_, bool switchPreSel_, bool switchTrigger_, double weightlumipass_){
+void MC_PU_Distributions::Run(std::string filein_, std::string savehistofile_, std::string processname_, double jet1PT_, double jet2PT_, int optnVertex_, int optTrigger_, bool switchWeightLumi_, bool switchWeightePw_, bool switchPreSel_, bool switchTrigger_, double weightlumipass_, int nbins_){
 
    filein = filein_;
    savehistofile = savehistofile_;
@@ -91,6 +91,7 @@ void MC_PU_Distributions::Run(std::string filein_, std::string savehistofile_, s
    switchPreSel = switchPreSel_;
    switchTrigger = switchTrigger_;
    weightlumipass = weightlumipass_;
+   nbins = nbins_;
 
    std::cout << "" << std::endl;
    std::cout << "Running..." << std::endl;
@@ -111,6 +112,7 @@ void MC_PU_Distributions::Run(std::string filein_, std::string savehistofile_, s
    std::cout << "Evt. - Evt. Weight: " << switchWeightePw << std::endl;
    std::cout << "Trigger Switch: " << switchTrigger << std::endl;
    std::cout << "Pre-Selection Switch: " << switchPreSel << std::endl;
+   std::cout << "N Bins PU Distributions: " << nbins << std::endl;
    std::cout << " " << std::endl;
    std::cout << "--> Factors" << std::endl;
    std::cout << "Lumi. Weight: " << weightlumipass << std::endl;
@@ -240,17 +242,17 @@ void MC_PU_Distributions::Run(std::string filein_, std::string savehistofile_, s
 
        char name1[300];
        sprintf(name1,"pileUpBx0_complete_%s",Folders.at(j).c_str());
-       TH1D *histo_pumcbx0 = new TH1D(name1,"PileUp Monte Carlo; # Pile Up; N events",25,0,25);
+       TH1D *histo_pumcbx0 = new TH1D(name1,"PileUp Monte Carlo; # Pile Up; N events",nbins,0,nbins);
        m_hVector_pumcbx0.push_back(histo_pumcbx0);
 
        char name2[300];
        sprintf(name2,"pileUpBxm1_complete_%s",Folders.at(j).c_str());
-       TH1D *histo_pumcbxm1 = new TH1D(name2,"PileUp Monte Carlo; # Pile Up; N events",25,0,25);
+       TH1D *histo_pumcbxm1 = new TH1D(name2,"PileUp Monte Carlo; # Pile Up; N events",nbins,0,nbins);
        m_hVector_pumcbxm1.push_back(histo_pumcbxm1);
 
        char name3[300];
        sprintf(name3,"pileUpBxp1_complete_%s",Folders.at(j).c_str());
-       TH1D *histo_pumcbxp1 = new TH1D(name3,"PileUp Monte Carlo; # Pile Up; N events",25,0,25);
+       TH1D *histo_pumcbxp1 = new TH1D(name3,"PileUp Monte Carlo; # Pile Up; N events",nbins,0,nbins);
        m_hVector_pumcbxp1.push_back(histo_pumcbxp1);
        
     }
@@ -514,6 +516,7 @@ void MC_PU_Distributions::Run(std::string filein_, std::string savehistofile_, s
      outstring << "Evt. - Evt. Weight: " << switchWeightePw << std::endl;
      outstring << "Trigger Switch: " << switchTrigger << std::endl;
      outstring << "Pre-Selection Switch: " << switchPreSel << std::endl;
+     outstring << "N Bins PU Distributions: " << nbins << std::endl;
      outstring << " " << std::endl;
      outstring << "--> Factors" << std::endl;
      outstring << "Lumi. Weight: " << weightlumipass << std::endl;
@@ -575,6 +578,7 @@ int main(int argc, char **argv)
    bool switchPreSel_;
    bool switchTrigger_;
    double weightlumipass_;
+   int nbins_;
 
    if (argc > 1 && strcmp(s1,argv[1]) != 0)  filein_ = argv[1];
    if (argc > 2 && strcmp(s1,argv[2]) != 0)  savehistofile_  = argv[2];
@@ -588,10 +592,11 @@ int main(int argc, char **argv)
    if (argc > 10 && strcmp(s1,argv[10]) != 0)  switchPreSel_   = atoi(argv[10]);
    if (argc > 11 && strcmp(s1,argv[11]) != 0)  switchTrigger_   = atoi(argv[11]);
    if (argc > 12 && strcmp(s1,argv[12]) != 0)  weightlumipass_  = atof(argv[12]);
+   if (argc > 13 && strcmp(s1,argv[13]) != 0)  nbins_ = atoi(argv[13]);
 
 
    MC_PU_Distributions* exclDijets = new MC_PU_Distributions();   
-   exclDijets->Run(filein_, savehistofile_, processname_, jet1PT_, jet2PT_, optnVertex_, optTrigger_, switchWeightLumi_, switchWeightePw_, switchPreSel_, switchTrigger_, weightlumipass_);
+   exclDijets->Run(filein_, savehistofile_, processname_, jet1PT_, jet2PT_, optnVertex_, optTrigger_, switchWeightLumi_, switchWeightePw_, switchPreSel_, switchTrigger_, weightlumipass_, nbins_);
 
    return 0;
 }

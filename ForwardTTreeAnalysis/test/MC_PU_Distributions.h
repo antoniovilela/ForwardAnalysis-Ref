@@ -38,6 +38,7 @@ class MC_PU_Distributions {
    bool switchPreSel;
    bool switchTrigger;
    double weightlumipass;
+   int nbins;
    std::vector<TH1D*> m_hVector_pumcbx0;
    std::vector<TH1D*> m_hVector_pumcbxm1;
    std::vector<TH1D*> m_hVector_pumcbxp1;
@@ -46,7 +47,7 @@ class MC_PU_Distributions {
    MC_PU_Distributions() {}
    ~MC_PU_Distributions() { inf->Close(); }
    
-   void Run(std::string, std::string, std::string, double, double, int, int, bool, bool, bool, bool, double);
+   void Run(std::string, std::string, std::string, double, double, int, int, bool, bool, bool, bool, double, int);
    void LoadFile(std::string,std::string);
    void FillHistograms();
 
