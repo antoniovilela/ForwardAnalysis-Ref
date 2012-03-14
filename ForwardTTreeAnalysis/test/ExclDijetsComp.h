@@ -61,9 +61,6 @@ class ExclDijetsComp {
    std::vector<std::vector<TH1D*> > m_hVector_etajet2;
    std::vector<std::vector<TH1D*> > m_hVector_phijet1;
    std::vector<std::vector<TH1D*> > m_hVector_phijet2;
-   std::vector<std::vector<TH1D*> > m_hVector_pumcbx0;
-   std::vector<std::vector<TH1D*> > m_hVector_pumcbxm1;
-   std::vector<std::vector<TH1D*> > m_hVector_pumcbxp1;
    std::vector<std::vector<TH1D*> > m_hVector_sumEHFplus;
    std::vector<std::vector<TH1D*> > m_hVector_sumEHFminus;
    std::vector<std::vector<TH1D*> > m_hVector_sumEHEplus;

@@ -300,9 +300,6 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
        m_hVector_etajet2.push_back( std::vector<TH1D*>() );
        m_hVector_phijet1.push_back( std::vector<TH1D*>() );
        m_hVector_phijet2.push_back( std::vector<TH1D*>() );
-       m_hVector_pumcbx0.push_back( std::vector<TH1D*>() );
-       m_hVector_pumcbxm1.push_back( std::vector<TH1D*>() );
-       m_hVector_pumcbxp1.push_back( std::vector<TH1D*>() );
        m_hVector_sumEHFplus.push_back( std::vector<TH1D*>() );
        m_hVector_sumEHFminus.push_back( std::vector<TH1D*>() );
        m_hVector_sumEHEplus.push_back( std::vector<TH1D*>() );
@@ -420,63 +417,48 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
        m_hVector_phijet2[j].push_back(histo_phijet2);
 
        char name20[300];
-       sprintf(name20,"pileUpBx0_PU_%s_%s",tag,Folders.at(j).c_str());
-       TH1D *histo_pumcbx0 = new TH1D(name20,"PileUp Monte Carlo; # Pile Up; N events",25,0,25);
-       m_hVector_pumcbx0[j].push_back(histo_pumcbx0);
-
-       char name21[300];
-       sprintf(name21,"pileUpBxm1_PU_%s_%s",tag,Folders.at(j).c_str());
-       TH1D *histo_pumcbxm1 = new TH1D(name21,"PileUp Monte Carlo; # Pile Up; N events",25,0,25);
-       m_hVector_pumcbxm1[j].push_back(histo_pumcbxm1);
-
-       char name22[300];
-       sprintf(name22,"pileUpBxp1_PU_%s_%s",tag,Folders.at(j).c_str());
-       TH1D *histo_pumcbxp1 = new TH1D(name22,"PileUp Monte Carlo; # Pile Up; N events",25,0,25);
-       m_hVector_pumcbxp1[j].push_back(histo_pumcbxp1);
-
-       char name23[300];
-       sprintf(name23,"sumEHFplus_PU_%s_%s",tag,Folders.at(j).c_str());
-       TH1D *histo_sumEHFplus = new TH1D(name23,"HF^{+} - Sum of Energy; #sum E_{HF^{+}} [GeV]; N events",100,0,2000);
+       sprintf(name20,"sumEHFplus_PU_%s_%s",tag,Folders.at(j).c_str());
+       TH1D *histo_sumEHFplus = new TH1D(name20,"HF^{+} - Sum of Energy; #sum E_{HF^{+}} [GeV]; N events",100,0,2000);
        m_hVector_sumEHFplus[j].push_back(histo_sumEHFplus);
-
-       char name24[300];
-       sprintf(name24,"sumEHFminus_PU_%s_%s",tag,Folders.at(j).c_str());
-       TH1D *histo_sumEHFminus = new TH1D(name24,"HF^{-} - Sum of Energy; #sum E_{HF^{-}} [GeV]; N events",100,0,2000);
+   
+       char name21[300];
+       sprintf(name21,"sumEHFminus_PU_%s_%s",tag,Folders.at(j).c_str());
+       TH1D *histo_sumEHFminus = new TH1D(name21,"HF^{-} - Sum of Energy; #sum E_{HF^{-}} [GeV]; N events",100,0,2000);
        m_hVector_sumEHFminus[j].push_back(histo_sumEHFminus);
 
-       char name25[300];
-       sprintf(name25,"sumEHEplus_PU_%s_%s",tag,Folders.at(j).c_str());
-       TH1D *histo_sumEHEplus = new TH1D(name25,"HE^{+} - Sum of Energy; #sum E_{HE^{+}} [GeV]; N events",100,0,2000);
+       char name22[300];
+       sprintf(name22,"sumEHEplus_PU_%s_%s",tag,Folders.at(j).c_str());
+       TH1D *histo_sumEHEplus = new TH1D(name22,"HE^{+} - Sum of Energy; #sum E_{HE^{+}} [GeV]; N events",100,0,2000);
        m_hVector_sumEHEplus[j].push_back(histo_sumEHEplus);
 
-       char name26[300];
-       sprintf(name26,"sumEHEminus_PU_%s_%s",tag,Folders.at(j).c_str());
-       TH1D *histo_sumEHEminus = new TH1D(name26,"HE^{-} - Sum of Energy; #sum E_{HE^{-}} [GeV]; N events",100,0,2000);
+       char name23[300];
+       sprintf(name23,"sumEHEminus_PU_%s_%s",tag,Folders.at(j).c_str());
+       TH1D *histo_sumEHEminus = new TH1D(name23,"HE^{-} - Sum of Energy; #sum E_{HE^{-}} [GeV]; N events",100,0,2000);
        m_hVector_sumEHEminus[j].push_back(histo_sumEHEminus);
 
-       char name27[300];
-       sprintf(name27,"sumEHFpfplus_PU_%s_%s",tag,Folders.at(j).c_str());
-       TH1D *histo_sumEHFpfplus = new TH1D(name27,"HF^{+} - Sum of PF Energy; #sum E_{HF^{+}_{PF}} [GeV]; N events",100,0,2000);
+       char name24[300];
+       sprintf(name24,"sumEHFpfplus_PU_%s_%s",tag,Folders.at(j).c_str());
+       TH1D *histo_sumEHFpfplus = new TH1D(name24,"HF^{+} - Sum of PF Energy; #sum E_{HF^{+}_{PF}} [GeV]; N events",100,0,2000);
        m_hVector_sumEHFpfplus[j].push_back(histo_sumEHFpfplus);
 
-       char name28[300];
-       sprintf(name28,"sumEHFpfminus_PU_%s_%s",tag,Folders.at(j).c_str());
-       TH1D *histo_sumEHFpfminus = new TH1D(name28,"HF^{-} - Sum of PF Energy; #sum E_{HF^{-}_{PF}} [GeV]; N events",100,0,2000);
+       char name25[300];
+       sprintf(name25,"sumEHFpfminus_PU_%s_%s",tag,Folders.at(j).c_str());
+       TH1D *histo_sumEHFpfminus = new TH1D(name25,"HF^{-} - Sum of PF Energy; #sum E_{HF^{-}_{PF}} [GeV]; N events",100,0,2000);
        m_hVector_sumEHFpfminus[j].push_back(histo_sumEHFpfminus);
 
-       char name29[300];
-       sprintf(name29,"deltaEtamaxminPF_PU_%s_%s",tag,Folders.at(j).c_str());
-       TH1D *histo_deltaEtaPF = new TH1D(name29,"#Delta#eta_{PF} Distribution; #eta_{max}-#eta_{min}; N events",20,0,10);
+       char name26[300];
+       sprintf(name26,"deltaEtamaxminPF_PU_%s_%s",tag,Folders.at(j).c_str());
+       TH1D *histo_deltaEtaPF = new TH1D(name26,"#Delta#eta_{PF} Distribution; #eta_{max}-#eta_{min}; N events",20,0,10);
        m_hVector_deltaEtaPF[j].push_back(histo_deltaEtaPF);
 
-       char name30[300];
-       sprintf(name30,"absdeltaEtamaxminPF_PU_%s_%s",tag,Folders.at(j).c_str());
-       TH1D *histo_absdeltaEtaPF = new TH1D(name30,"|#Delta#eta_{PF}| Distribution; |#eta_{max}-#eta_{min}|; N events",20,0,10);
+       char name27[300];
+       sprintf(name27,"absdeltaEtamaxminPF_PU_%s_%s",tag,Folders.at(j).c_str());
+       TH1D *histo_absdeltaEtaPF = new TH1D(name27,"|#Delta#eta_{PF}| Distribution; |#eta_{max}-#eta_{min}|; N events",20,0,10);
        m_hVector_absdeltaEtaPF[j].push_back(histo_absdeltaEtaPF);
 
-       char name31[300];
-       sprintf(name31,"vertex_PU_%s_%s",tag,Folders.at(j).c_str());
-       TH1D *histo_vertex = new TH1D(name31,"Number of Vertex; # Vertex; N events",25,0,25);
+       char name28[300];
+       sprintf(name28,"vertex_PU_%s_%s",tag,Folders.at(j).c_str());
+       TH1D *histo_vertex = new TH1D(name28,"Number of Vertex; # Vertex; N events",25,0,25);
        m_hVector_vertex[j].push_back(histo_vertex);
 
        }
@@ -600,9 +582,6 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
        m_hVector_etajet2[0].at(indexV)->Fill(eventexcl->GetSecondJetEta(),totalweight);
        m_hVector_phijet1[0].at(indexV)->Fill(eventexcl->GetLeadingJetPhi(),totalweight);
        m_hVector_phijet2[0].at(indexV)->Fill(eventexcl->GetSecondJetPhi(),totalweight);
-       m_hVector_pumcbx0[0].at(indexV)->Fill(eventexcl->GetNPileUpBx0(),totalweight);
-       m_hVector_pumcbxm1[0].at(indexV)->Fill(eventexcl->GetNPileUpBxm1(),totalweight);
-       m_hVector_pumcbxp1[0].at(indexV)->Fill(eventexcl->GetNPileUpBxp1(),totalweight);
        m_hVector_sumEHFplus[0].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight);
        m_hVector_sumEHFminus[0].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight);
        m_hVector_sumEHEplus[0].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus(),totalweight);
@@ -653,9 +632,6 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
          m_hVector_etajet2[1].at(indexV)->Fill(eventexcl->GetSecondJetEta(),totalweight);
          m_hVector_phijet1[1].at(indexV)->Fill(eventexcl->GetLeadingJetPhi(),totalweight);
          m_hVector_phijet2[1].at(indexV)->Fill(eventexcl->GetSecondJetPhi(),totalweight);
-         m_hVector_pumcbx0[1].at(indexV)->Fill(eventexcl->GetNPileUpBx0(),totalweight);
-         m_hVector_pumcbxm1[1].at(indexV)->Fill(eventexcl->GetNPileUpBxm1(),totalweight);
-         m_hVector_pumcbxp1[1].at(indexV)->Fill(eventexcl->GetNPileUpBxp1(),totalweight);
          m_hVector_sumEHFplus[1].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight);
          m_hVector_sumEHFminus[1].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight);
          m_hVector_sumEHEplus[1].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus(),totalweight);
@@ -711,9 +687,6 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
             m_hVector_etajet2[2].at(indexV)->Fill(eventexcl->GetSecondJetEta(),totalweight);
             m_hVector_phijet1[2].at(indexV)->Fill(eventexcl->GetLeadingJetPhi(),totalweight);
             m_hVector_phijet2[2].at(indexV)->Fill(eventexcl->GetSecondJetPhi(),totalweight);
-            m_hVector_pumcbx0[2].at(indexV)->Fill(eventexcl->GetNPileUpBx0(),totalweight);
-            m_hVector_pumcbxm1[2].at(indexV)->Fill(eventexcl->GetNPileUpBxm1(),totalweight);
-            m_hVector_pumcbxp1[2].at(indexV)->Fill(eventexcl->GetNPileUpBxp1(),totalweight);
             m_hVector_sumEHFplus[2].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight);
             m_hVector_sumEHFminus[2].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight);
             m_hVector_sumEHEplus[2].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus(),totalweight);
@@ -752,9 +725,6 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
                m_hVector_etajet2[3].at(indexV)->Fill(eventexcl->GetSecondJetEta(),totalweight);
                m_hVector_phijet1[3].at(indexV)->Fill(eventexcl->GetLeadingJetPhi(),totalweight);
                m_hVector_phijet2[3].at(indexV)->Fill(eventexcl->GetSecondJetPhi(),totalweight);
-               m_hVector_pumcbx0[3].at(indexV)->Fill(eventexcl->GetNPileUpBx0(),totalweight);
-               m_hVector_pumcbxm1[3].at(indexV)->Fill(eventexcl->GetNPileUpBxm1(),totalweight);
-               m_hVector_pumcbxp1[3].at(indexV)->Fill(eventexcl->GetNPileUpBxp1(),totalweight);
                m_hVector_sumEHFplus[3].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight);
                m_hVector_sumEHFminus[3].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight);
                m_hVector_sumEHEplus[3].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus(),totalweight);
@@ -791,9 +761,6 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
 		  m_hVector_etajet2[4].at(indexV)->Fill(eventexcl->GetSecondJetEta(),totalweight);
 		  m_hVector_phijet1[4].at(indexV)->Fill(eventexcl->GetLeadingJetPhi(),totalweight);
 	          m_hVector_phijet2[4].at(indexV)->Fill(eventexcl->GetSecondJetPhi(),totalweight);
-		  m_hVector_pumcbx0[4].at(indexV)->Fill(eventexcl->GetNPileUpBx0(),totalweight);
-		  m_hVector_pumcbxm1[4].at(indexV)->Fill(eventexcl->GetNPileUpBxm1(),totalweight);
-		  m_hVector_pumcbxp1[4].at(indexV)->Fill(eventexcl->GetNPileUpBxp1(),totalweight);
 		  m_hVector_sumEHFplus[4].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight);
 		  m_hVector_sumEHFminus[4].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight);
 		  m_hVector_sumEHEplus[4].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus(),totalweight);
@@ -828,9 +795,6 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
 		     m_hVector_etajet2[5].at(indexV)->Fill(eventexcl->GetSecondJetEta(),totalweight);
 		     m_hVector_phijet1[5].at(indexV)->Fill(eventexcl->GetLeadingJetPhi(),totalweight);
 		     m_hVector_phijet2[5].at(indexV)->Fill(eventexcl->GetSecondJetPhi(),totalweight);
-		     m_hVector_pumcbx0[5].at(indexV)->Fill(eventexcl->GetNPileUpBx0(),totalweight);
-		     m_hVector_pumcbxm1[5].at(indexV)->Fill(eventexcl->GetNPileUpBxm1(),totalweight);
-		     m_hVector_pumcbxp1[5].at(indexV)->Fill(eventexcl->GetNPileUpBxp1(),totalweight);
 		     m_hVector_sumEHFplus[5].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight);
 		     m_hVector_sumEHFminus[5].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight);
 		     m_hVector_sumEHEplus[5].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus(),totalweight);
@@ -864,9 +828,6 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
 		     m_hVector_etajet2[6].at(indexV)->Fill(eventexcl->GetSecondJetEta(),totalweight);
 		     m_hVector_phijet1[6].at(indexV)->Fill(eventexcl->GetLeadingJetPhi(),totalweight);
                      m_hVector_phijet2[6].at(indexV)->Fill(eventexcl->GetSecondJetPhi(),totalweight);
-                     m_hVector_pumcbx0[6].at(indexV)->Fill(eventexcl->GetNPileUpBx0(),totalweight);
-                     m_hVector_pumcbxm1[6].at(indexV)->Fill(eventexcl->GetNPileUpBxm1(),totalweight);
-                     m_hVector_pumcbxp1[6].at(indexV)->Fill(eventexcl->GetNPileUpBxp1(),totalweight);
                      m_hVector_sumEHFplus[6].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight);
                      m_hVector_sumEHFminus[6].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight);
                      m_hVector_sumEHEplus[6].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus(),totalweight);
@@ -900,9 +861,6 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
 		     m_hVector_etajet2[7].at(indexV)->Fill(eventexcl->GetSecondJetEta(),totalweight);
 		     m_hVector_phijet1[7].at(indexV)->Fill(eventexcl->GetLeadingJetPhi(),totalweight);
                      m_hVector_phijet2[7].at(indexV)->Fill(eventexcl->GetSecondJetPhi(),totalweight);
-                     m_hVector_pumcbx0[7].at(indexV)->Fill(eventexcl->GetNPileUpBx0(),totalweight);
-                     m_hVector_pumcbxm1[7].at(indexV)->Fill(eventexcl->GetNPileUpBxm1(),totalweight);
-                     m_hVector_pumcbxp1[7].at(indexV)->Fill(eventexcl->GetNPileUpBxp1(),totalweight);
                      m_hVector_sumEHFplus[7].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight);
                      m_hVector_sumEHFminus[7].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight);
                      m_hVector_sumEHEplus[7].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus(),totalweight);
@@ -936,9 +894,6 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
 		     m_hVector_etajet2[8].at(indexV)->Fill(eventexcl->GetSecondJetEta(),totalweight);
 		     m_hVector_phijet1[8].at(indexV)->Fill(eventexcl->GetLeadingJetPhi(),totalweight);
                      m_hVector_phijet2[8].at(indexV)->Fill(eventexcl->GetSecondJetPhi(),totalweight);
-                     m_hVector_pumcbx0[8].at(indexV)->Fill(eventexcl->GetNPileUpBx0(),totalweight);
-                     m_hVector_pumcbxm1[8].at(indexV)->Fill(eventexcl->GetNPileUpBxm1(),totalweight);
-                     m_hVector_pumcbxp1[8].at(indexV)->Fill(eventexcl->GetNPileUpBxp1(),totalweight);
                      m_hVector_sumEHFplus[8].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight);
                      m_hVector_sumEHFminus[8].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight);
                      m_hVector_sumEHEplus[8].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus(),totalweight);
@@ -978,9 +933,6 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
 		  m_hVector_etajet2[9].at(indexV)->Fill(eventexcl->GetSecondJetEta(),totalweight);
 		  m_hVector_phijet1[9].at(indexV)->Fill(eventexcl->GetLeadingJetPhi(),totalweight);
                   m_hVector_phijet2[9].at(indexV)->Fill(eventexcl->GetSecondJetPhi(),totalweight);
-                  m_hVector_pumcbx0[9].at(indexV)->Fill(eventexcl->GetNPileUpBx0(),totalweight);
-                  m_hVector_pumcbxm1[9].at(indexV)->Fill(eventexcl->GetNPileUpBxm1(),totalweight);
-                  m_hVector_pumcbxp1[9].at(indexV)->Fill(eventexcl->GetNPileUpBxp1(),totalweight);
                   m_hVector_sumEHFplus[9].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight);
                   m_hVector_sumEHFminus[9].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight);
                   m_hVector_sumEHEplus[9].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus(),totalweight);
@@ -1014,9 +966,6 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
                      m_hVector_etajet2[10].at(indexV)->Fill(eventexcl->GetSecondJetEta(),totalweight);
                      m_hVector_phijet1[10].at(indexV)->Fill(eventexcl->GetLeadingJetPhi(),totalweight);
                      m_hVector_phijet2[10].at(indexV)->Fill(eventexcl->GetSecondJetPhi(),totalweight);
-                     m_hVector_pumcbx0[10].at(indexV)->Fill(eventexcl->GetNPileUpBx0(),totalweight);
-                     m_hVector_pumcbxm1[10].at(indexV)->Fill(eventexcl->GetNPileUpBxm1(),totalweight);
-                     m_hVector_pumcbxp1[10].at(indexV)->Fill(eventexcl->GetNPileUpBxp1(),totalweight);
                      m_hVector_sumEHFplus[10].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight);
                      m_hVector_sumEHFminus[10].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight);
                      m_hVector_sumEHEplus[10].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus(),totalweight);
@@ -1050,9 +999,6 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
                      m_hVector_etajet2[11].at(indexV)->Fill(eventexcl->GetSecondJetEta(),totalweight);
                      m_hVector_phijet1[11].at(indexV)->Fill(eventexcl->GetLeadingJetPhi(),totalweight);
                      m_hVector_phijet2[11].at(indexV)->Fill(eventexcl->GetSecondJetPhi(),totalweight);
-                     m_hVector_pumcbx0[11].at(indexV)->Fill(eventexcl->GetNPileUpBx0(),totalweight);
-                     m_hVector_pumcbxm1[11].at(indexV)->Fill(eventexcl->GetNPileUpBxm1(),totalweight);
-                     m_hVector_pumcbxp1[11].at(indexV)->Fill(eventexcl->GetNPileUpBxp1(),totalweight);
                      m_hVector_sumEHFplus[11].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight);
                      m_hVector_sumEHFminus[11].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight);
                      m_hVector_sumEHEplus[11].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus(),totalweight);
@@ -1086,9 +1032,6 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
                      m_hVector_etajet2[12].at(indexV)->Fill(eventexcl->GetSecondJetEta(),totalweight);
                      m_hVector_phijet1[12].at(indexV)->Fill(eventexcl->GetLeadingJetPhi(),totalweight);
                      m_hVector_phijet2[12].at(indexV)->Fill(eventexcl->GetSecondJetPhi(),totalweight);
-                     m_hVector_pumcbx0[12].at(indexV)->Fill(eventexcl->GetNPileUpBx0(),totalweight);
-                     m_hVector_pumcbxm1[12].at(indexV)->Fill(eventexcl->GetNPileUpBxm1(),totalweight);
-                     m_hVector_pumcbxp1[12].at(indexV)->Fill(eventexcl->GetNPileUpBxp1(),totalweight);
                      m_hVector_sumEHFplus[12].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight);
                      m_hVector_sumEHFminus[12].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight);
                      m_hVector_sumEHEplus[12].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus(),totalweight);
@@ -1122,9 +1065,6 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
                      m_hVector_etajet2[13].at(indexV)->Fill(eventexcl->GetSecondJetEta(),totalweight);
                      m_hVector_phijet1[13].at(indexV)->Fill(eventexcl->GetLeadingJetPhi(),totalweight);
                      m_hVector_phijet2[13].at(indexV)->Fill(eventexcl->GetSecondJetPhi(),totalweight);
-                     m_hVector_pumcbx0[13].at(indexV)->Fill(eventexcl->GetNPileUpBx0(),totalweight);
-                     m_hVector_pumcbxm1[13].at(indexV)->Fill(eventexcl->GetNPileUpBxm1(),totalweight);
-                     m_hVector_pumcbxp1[13].at(indexV)->Fill(eventexcl->GetNPileUpBxp1(),totalweight);
                      m_hVector_sumEHFplus[13].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight);
                      m_hVector_sumEHFminus[13].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight);
                      m_hVector_sumEHEplus[13].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus(),totalweight);
@@ -1164,9 +1104,6 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
 		  m_hVector_etajet2[14].at(indexV)->Fill(eventexcl->GetSecondJetEta(),totalweight);
 		  m_hVector_phijet1[14].at(indexV)->Fill(eventexcl->GetLeadingJetPhi(),totalweight);
                   m_hVector_phijet2[14].at(indexV)->Fill(eventexcl->GetSecondJetPhi(),totalweight);
-                  m_hVector_pumcbx0[14].at(indexV)->Fill(eventexcl->GetNPileUpBx0(),totalweight);
-                  m_hVector_pumcbxm1[14].at(indexV)->Fill(eventexcl->GetNPileUpBxm1(),totalweight);
-                  m_hVector_pumcbxp1[14].at(indexV)->Fill(eventexcl->GetNPileUpBxp1(),totalweight);
                   m_hVector_sumEHFplus[14].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight);
                   m_hVector_sumEHFminus[14].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight);
                   m_hVector_sumEHEplus[14].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus(),totalweight);
@@ -1201,9 +1138,6 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
                      m_hVector_etajet2[15].at(indexV)->Fill(eventexcl->GetSecondJetEta(),totalweight);
                      m_hVector_phijet1[15].at(indexV)->Fill(eventexcl->GetLeadingJetPhi(),totalweight);
                      m_hVector_phijet2[15].at(indexV)->Fill(eventexcl->GetSecondJetPhi(),totalweight);
-                     m_hVector_pumcbx0[15].at(indexV)->Fill(eventexcl->GetNPileUpBx0(),totalweight);
-                     m_hVector_pumcbxm1[15].at(indexV)->Fill(eventexcl->GetNPileUpBxm1(),totalweight);
-                     m_hVector_pumcbxp1[15].at(indexV)->Fill(eventexcl->GetNPileUpBxp1(),totalweight);
                      m_hVector_sumEHFplus[15].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight);
                      m_hVector_sumEHFminus[15].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight);
                      m_hVector_sumEHEplus[15].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus(),totalweight);
@@ -1237,9 +1171,6 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
                      m_hVector_etajet2[16].at(indexV)->Fill(eventexcl->GetSecondJetEta(),totalweight);
                      m_hVector_phijet1[16].at(indexV)->Fill(eventexcl->GetLeadingJetPhi(),totalweight);
                      m_hVector_phijet2[16].at(indexV)->Fill(eventexcl->GetSecondJetPhi(),totalweight);
-                     m_hVector_pumcbx0[16].at(indexV)->Fill(eventexcl->GetNPileUpBx0(),totalweight);
-                     m_hVector_pumcbxm1[16].at(indexV)->Fill(eventexcl->GetNPileUpBxm1(),totalweight);
-                     m_hVector_pumcbxp1[16].at(indexV)->Fill(eventexcl->GetNPileUpBxp1(),totalweight);
                      m_hVector_sumEHFplus[16].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight);
                      m_hVector_sumEHFminus[16].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight);
                      m_hVector_sumEHEplus[16].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus(),totalweight);
@@ -1273,9 +1204,6 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
                      m_hVector_etajet2[17].at(indexV)->Fill(eventexcl->GetSecondJetEta(),totalweight);
                      m_hVector_phijet1[17].at(indexV)->Fill(eventexcl->GetLeadingJetPhi(),totalweight);
                      m_hVector_phijet2[17].at(indexV)->Fill(eventexcl->GetSecondJetPhi(),totalweight);
-                     m_hVector_pumcbx0[17].at(indexV)->Fill(eventexcl->GetNPileUpBx0(),totalweight);
-                     m_hVector_pumcbxm1[17].at(indexV)->Fill(eventexcl->GetNPileUpBxm1(),totalweight);
-                     m_hVector_pumcbxp1[17].at(indexV)->Fill(eventexcl->GetNPileUpBxp1(),totalweight);
                      m_hVector_sumEHFplus[17].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight);
                      m_hVector_sumEHFminus[17].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight);
                      m_hVector_sumEHEplus[17].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus(),totalweight);
@@ -1309,9 +1237,6 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
                      m_hVector_etajet2[18].at(indexV)->Fill(eventexcl->GetSecondJetEta(),totalweight);
                      m_hVector_phijet1[18].at(indexV)->Fill(eventexcl->GetLeadingJetPhi(),totalweight);
                      m_hVector_phijet2[18].at(indexV)->Fill(eventexcl->GetSecondJetPhi(),totalweight);
-                     m_hVector_pumcbx0[18].at(indexV)->Fill(eventexcl->GetNPileUpBx0(),totalweight);
-                     m_hVector_pumcbxm1[18].at(indexV)->Fill(eventexcl->GetNPileUpBxm1(),totalweight);
-                     m_hVector_pumcbxp1[18].at(indexV)->Fill(eventexcl->GetNPileUpBxp1(),totalweight);
                      m_hVector_sumEHFplus[18].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight);
                      m_hVector_sumEHFminus[18].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight);
                      m_hVector_sumEHEplus[18].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus(),totalweight);
