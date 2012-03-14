@@ -1,8 +1,8 @@
 #ifndef ExclusiveDijetsEvent_h
 #define ExclusiveDijetsEvent_h
 
-#include "DataFormats/JetReco/interface/Jet.h"
-
+//#include "DataFormats/JetReco/interface/Jet.h"
+#include "DataFormats/Candidate/interface/Particle.h"
 
 namespace exclusiveDijetsAnalysis {
   class ExclusiveDijetsAnalysis;
