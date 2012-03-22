@@ -240,7 +240,7 @@ void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string 
       tr->GetEntry(i);
 
       if( i % 1000 == 0 ){
-	    std::cout << "\nEvent " << i << std::endl
+	    std::cout << "\nEvent " << i << std::endl;
       }
 
       // Without Cuts          
