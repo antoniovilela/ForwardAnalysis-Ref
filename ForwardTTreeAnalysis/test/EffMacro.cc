@@ -18,19 +18,15 @@
 //
 // (B) COMMAND LINE
 // ----------------
-// $> ./EffMacroCom "Inputfile.root" "outputfile.root" "CMSSW Process_Name/TTree_name"<pT(Jet1) Cut> <pT(Jet2) Cut> <Number of Vertex Cut> <Trigger Option> <Turn on(off) Luminosity Reweight> <Turn on(off) event-per-event Weight> <Turn on(off) Pre Selection> <Turn on(off) Trigger> <Luminosity Weight Factor> <# bins PU Distribution>
+// $> ./EffMacroCom "Inputfile.root" "outputfile.root" "CMSSW Process_Name/TTree_name"<pT(Jet1) Cut> <pT(Jet2) Cut> <Number of Vertex Cut> <Trigger Option> <Turn on(off) Pre Selection> <Turn on(off) Trigger> <# bins PU Distribution>
 //
 // TURN ON  = 1
 // TURN OFF = 0
 //
-// I)   If you turn off PU reweight, the default weight will be 1;
-// II)  If you turn off Luminosity reweight, the default weight will be 1;
-// III) If you turn off Trigger Efficiency, the default weight will be 1;
-// IV)  If you turn off event-per-event weight (some MC sample), the default weight will be 1;
 //
-// EXAMPLE: ./EffMacroCom "inputfile.root" "outputfile.root" "forwardQCDTTreeAnalysis/ProcessedTree" 60 55 1 1 1 1 1 1 2.3 25
+// EXAMPLE: ./EffMacroCom "inputfile.root" "outputfile.root" "forwardQCDTTreeAnalysis/ProcessedTree" 60 55 1 1 1 1 25
 //
-// Twiki: https://twiki.cern.ch/twiki/bin/view/CMS/FwdPhysicsExclusiveDijetsAnalysis#For_MonteCarlo
+// Twiki: https://twiki.cern.ch/twiki/bin/view/CMS/FwdPhysicsExclusiveDijetsAnalysis
 //
 
 //#if !defined(__CINT__) || defined(__MAKECINT__)
@@ -76,7 +72,7 @@ void EffMacro::LoadFile(std::string fileinput, std::string processinput){
 
 }
 
-void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string processname_, double jet1PT_, double jet2PT_, int optnVertex_, int optTrigger_, bool switchWeightLumi_, bool switchWeightePw_, bool switchPreSel_, bool switchTrigger_, double weightlumipass_, int nbins_){
+void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string processname_, double jet1PT_, double jet2PT_, int optnVertex_, int optTrigger_, bool switchPreSel_, bool switchTrigger_, int nbins_){
 
    filein = filein_;
    savehistofile = savehistofile_;
@@ -86,11 +82,8 @@ void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string 
    jet2PT = jet2PT_;
    optnVertex = optnVertex_;
    optTrigger = optTrigger_;
-   switchWeightLumi = switchWeightLumi_;
-   switchWeightePw = switchWeightePw_;
    switchPreSel = switchPreSel_;
    switchTrigger = switchTrigger_;
-   weightlumipass = weightlumipass_;
    nbins = nbins_;
 
    std::cout << "" << std::endl;
@@ -108,15 +101,10 @@ void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string 
    std::cout << "Trigger Option: " << optTrigger << std::endl;
    std::cout << " " << std::endl;
    std::cout << "--> TRUE = 1 FALSE = 0" << std::endl;
-   std::cout << "Lumi. Weight: " << switchWeightLumi << std::endl;
-   std::cout << "Evt. - Evt. Weight: " << switchWeightePw << std::endl;
    std::cout << "Trigger Switch: " << switchTrigger << std::endl;
    std::cout << "Pre-Selection Switch: " << switchPreSel << std::endl;
-   std::cout << "N Bins PU Distributions: " << nbins << std::endl;
+   std::cout << "N Bins: " << nbins << std::endl;
    std::cout << " " << std::endl;
-   std::cout << "--> Factors" << std::endl;
-   std::cout << "Lumi. Weight: " << weightlumipass << std::endl;
-   std::cout << "" << std::endl;
 
 
    // Code Protection
@@ -171,30 +159,14 @@ void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string 
 
    int decade = 0;
 
-   //Protection Code
-   for(int m=0;m<2;m++) {
-
-       tr->GetEntry(m);
-
-       if (eventexcl->GetNPileUpBx0()==-1 && eventexcl->GetNPileUpBxm1()==-1 && eventexcl->GetNPileUpBxp1()==-1 ){
-        std::cout << "--------------------------------------------------------------" << std::endl;
-        std::cout << " There is no Pile Up TTree information in your PATTuplefile."   << std::endl;
-        std::cout << " Please, use another PATTuple with PU information to run mul- " << std::endl;
-        std::cout << " tiple PU option." << std::endl;
-        std::cout << "--------------------------------------------------------------" << std::endl;
-        return;
-       }
-
-    }
-    //--------------------------------------------------------------------------------------------------------------------------
+   //--------------------------------------------------------------------------------------------------------------------------
 
 
    // Event by Event Analysis
    //////////////////////////
 
-   int TotalE = 0;
-   double counterEventsWeighted;
-   double counterTrigger = 0.;
+   double TotalE = 0.;
+   double counterTrigger=0.;
    double counterJetsstep1 = 0.;
    double counterJetsstep2 = 0.;
    double counterJetsAllstep3 = 0.;
@@ -251,7 +223,6 @@ void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string 
 
   for(int i=0;i<NEVENTS;i++) {
 
-      double totalweight = -999.;
       ++TotalE;
         
       //----------- Progress Report -------------
@@ -268,34 +239,16 @@ void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string 
       //----------- Read the Event --------------
       tr->GetEntry(i);
 
-      double weightlumi;
-      double weightepw;
-
-      if (switchWeightLumi) { weightlumi = weightlumipass; }
-      else { weightlumi = 1.0;}
-
-      if (switchWeightePw) { weightepw = eventqcd->evtHdr().weight();}
-      else { weightepw = 1.0;}
-
-      totalweight = weightlumi*weightepw;
-
       if( i % 1000 == 0 ){
 	    std::cout << "\nEvent " << i << std::endl
-            << "Nr. events Bx 0   : " << eventexcl->GetNPileUpBx0() << std::endl
-            << "Nr. events Bxm1   : " << eventexcl->GetNPileUpBxm1() << std::endl
-            << "Nr. events Bxp1   : " << eventexcl->GetNPileUpBxp1() << std::endl
-	    << "Lumi corr.        : " << weightlumi << std::endl
-	    << "MC event weight   : " << weightepw << std::endl
-	    << "Total weight  : " << totalweight << std::endl;
       }
 
       // Without Cuts          
       ////////////////////////////////////////////////
-       m_hVector_Evt_lumis.at(0)->Fill(eventexcl->GetInstLumiBunch(),totalweight);
-       m_hVector_Eff_lumis.at(0)->Fill(eventexcl->GetInstLumiBunch(),totalweight);
+       m_hVector_Evt_lumis.at(0)->Fill(eventexcl->GetInstLumiBunch());
+       m_hVector_Eff_lumis.at(0)->Fill(eventexcl->GetInstLumiBunch());
       //////////////////////////////////////////////////
-       counterEventsWeighted+=totalweight;
-
+       
       //------------------------------------------------------------------------------------------
       //
       // SET TRIGGER OR TRIGGER EMULATOR!!!!
@@ -309,74 +262,74 @@ void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string 
 	 //
 	 //------------------------------------------------------------------------------------------
 
-	 counterTrigger+=totalweight;
+	 ++counterTrigger;
 
 	 // With Trigger: online or emulate          
 	 ////////////////////////////////////////////////
-         m_hVector_Evt_lumis.at(1)->Fill(eventexcl->GetInstLumiBunch(),totalweight);
-         m_hVector_Eff_lumis.at(1)->Fill(eventexcl->GetInstLumiBunch(),totalweight);
+         m_hVector_Evt_lumis.at(1)->Fill(eventexcl->GetInstLumiBunch());
+         m_hVector_Eff_lumis.at(1)->Fill(eventexcl->GetInstLumiBunch());
          //////////////////////////////////////////////////
 
 
 	 if(eventexcl->GetNVertex() > 0 && eventexcl->GetNVertex()<= optnVertex){
 
-            counterJetsstep1+=totalweight; 
+            ++counterJetsstep1; 
 
 	    // STEP1        
 	    //////////////////////////////////////////////////
-            m_hVector_Evt_lumis.at(2)->Fill(eventexcl->GetInstLumiBunch(),totalweight);
-            m_hVector_Eff_lumis.at(2)->Fill(eventexcl->GetInstLumiBunch(),totalweight);
+            m_hVector_Evt_lumis.at(2)->Fill(eventexcl->GetInstLumiBunch());
+            m_hVector_Eff_lumis.at(2)->Fill(eventexcl->GetInstLumiBunch());
             //////////////////////////////////////////////////
 
 
 	    // Setting Analysis Cut
 	    if (eventexcl->GetLeadingJetP4().Pt() > jet1PT && eventexcl->GetSecondJetP4().Pt() > jet2PT ){
 
-	       counterJetsstep2+=totalweight;
+	       ++counterJetsstep2;
 
 	       // STEP2         
 	       ////////////////////////////////////////////////
-               m_hVector_Evt_lumis.at(3)->Fill(eventexcl->GetInstLumiBunch(),totalweight);
-               m_hVector_Eff_lumis.at(3)->Fill(eventexcl->GetInstLumiBunch(),totalweight);
+               m_hVector_Evt_lumis.at(3)->Fill(eventexcl->GetInstLumiBunch());
+               m_hVector_Eff_lumis.at(3)->Fill(eventexcl->GetInstLumiBunch());
                ////////////////////////////////////////////////
  
 	       if (eventexcl->GetLeadingJetP4().Eta() < 5.2 && eventexcl->GetSecondJetP4().Eta() < 5.2 && eventexcl->GetLeadingJetP4().Eta() > -5.2 && eventexcl->GetSecondJetP4().Eta() > -5.2){
 
-		  counterJetsAllstep3+=totalweight;
+		  ++counterJetsAllstep3;
 
 		  // ALL - STEP3         
 		  ////////////////////////////////////////////////
-                  m_hVector_Evt_lumis.at(4)->Fill(eventexcl->GetInstLumiBunch(),totalweight);
-		  m_hVector_Eff_lumis.at(4)->Fill(eventexcl->GetInstLumiBunch(),totalweight);
+                  m_hVector_Evt_lumis.at(4)->Fill(eventexcl->GetInstLumiBunch());
+		  m_hVector_Eff_lumis.at(4)->Fill(eventexcl->GetInstLumiBunch());
 		  //////////////////////////////////////////////////////////////////////////////////////////
 
 		  // Eta max and Eta min cut
 		  if (eventdiff->GetEtaMinFromPFCands() > -4. && eventdiff->GetEtaMaxFromPFCands() < 4.){
 
-                     counterJetsAllstep4_4+=totalweight;
-		     m_hVector_Evt_lumis.at(5)->Fill(eventexcl->GetInstLumiBunch(),totalweight);
-		     m_hVector_Eff_lumis.at(5)->Fill(eventexcl->GetInstLumiBunch(),totalweight);
+                     ++counterJetsAllstep4_4;
+		     m_hVector_Evt_lumis.at(5)->Fill(eventexcl->GetInstLumiBunch());
+		     m_hVector_Eff_lumis.at(5)->Fill(eventexcl->GetInstLumiBunch());
 		  }
 
 		  if (eventdiff->GetEtaMinFromPFCands() > -3. && eventdiff->GetEtaMaxFromPFCands() < 3.){
 
-                     counterJetsAllstep4_3+=totalweight;
-		     m_hVector_Evt_lumis[6]->Fill(eventexcl->GetInstLumiBunch(),totalweight);
-                     m_hVector_Eff_lumis[6]->Fill(eventexcl->GetInstLumiBunch(),totalweight);
+                     ++counterJetsAllstep4_3;
+		     m_hVector_Evt_lumis[6]->Fill(eventexcl->GetInstLumiBunch());
+                     m_hVector_Eff_lumis[6]->Fill(eventexcl->GetInstLumiBunch());
                   }
 
 		  if (eventdiff->GetEtaMinFromPFCands() > -2. && eventdiff->GetEtaMaxFromPFCands() < 2.){
 
-                     counterJetsAllstep4_2+=totalweight;
-		     m_hVector_Evt_lumis.at(7)->Fill(eventexcl->GetInstLumiBunch(),totalweight);
-                     m_hVector_Eff_lumis.at(7)->Fill(eventexcl->GetInstLumiBunch(),totalweight);
+                     ++counterJetsAllstep4_2;
+		     m_hVector_Evt_lumis.at(7)->Fill(eventexcl->GetInstLumiBunch());
+                     m_hVector_Eff_lumis.at(7)->Fill(eventexcl->GetInstLumiBunch());
                   }
 
 		  if (eventdiff->GetEtaMinFromPFCands() > -1. && eventdiff->GetEtaMaxFromPFCands() < 1.){
 
-                     counterJetsAllstep4_1+=totalweight;
-		     m_hVector_Evt_lumis.at(8)->Fill(eventexcl->GetInstLumiBunch(),totalweight);
-                     m_hVector_Eff_lumis.at(8)->Fill(eventexcl->GetInstLumiBunch(),totalweight);
+                     ++counterJetsAllstep4_1;
+		     m_hVector_Evt_lumis.at(8)->Fill(eventexcl->GetInstLumiBunch());
+                     m_hVector_Eff_lumis.at(8)->Fill(eventexcl->GetInstLumiBunch());
                    }
 
 	       }  
@@ -384,40 +337,40 @@ void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string 
 
 	       if (eventexcl->GetLeadingJetP4().Eta() < 2.9 && eventexcl->GetSecondJetP4().Eta() < 2.9 && eventexcl->GetLeadingJetP4().Eta() > -2.9 && eventexcl->GetSecondJetP4().Eta() > -2.9){
 
-		  counterJetsTrackerstep3+=totalweight;
+		  ++counterJetsTrackerstep3;
 
 		  // Tracker - STEP3         
 		  ////////////////////////////////////////////////
-                  m_hVector_Evt_lumis.at(9)->Fill(eventexcl->GetInstLumiBunch(),totalweight);
-                  m_hVector_Eff_lumis.at(9)->Fill(eventexcl->GetInstLumiBunch(),totalweight);
+                  m_hVector_Evt_lumis.at(9)->Fill(eventexcl->GetInstLumiBunch());
+                  m_hVector_Eff_lumis.at(9)->Fill(eventexcl->GetInstLumiBunch());
                 
                  // Eta max and Eta min cut
 		  if (eventdiff->GetEtaMinFromPFCands() > -4. && eventdiff->GetEtaMaxFromPFCands() < 4.){
 
-                     counterJetsTrackerstep4_4+=totalweight;
-                     m_hVector_Evt_lumis.at(10)->Fill(eventexcl->GetInstLumiBunch(),totalweight);
-                     m_hVector_Eff_lumis.at(10)->Fill(eventexcl->GetInstLumiBunch(),totalweight);
+                     ++counterJetsTrackerstep4_4;
+                     m_hVector_Evt_lumis.at(10)->Fill(eventexcl->GetInstLumiBunch());
+                     m_hVector_Eff_lumis.at(10)->Fill(eventexcl->GetInstLumiBunch());
                   }
 
 		  if (eventdiff->GetEtaMinFromPFCands() > -3. && eventdiff->GetEtaMaxFromPFCands() < 3.){
 
-                     counterJetsTrackerstep4_3+=totalweight;
-                     m_hVector_Evt_lumis.at(11)->Fill(eventexcl->GetInstLumiBunch(),totalweight);
-                     m_hVector_Eff_lumis.at(11)->Fill(eventexcl->GetInstLumiBunch(),totalweight);
+                     ++counterJetsTrackerstep4_3;
+                     m_hVector_Evt_lumis.at(11)->Fill(eventexcl->GetInstLumiBunch());
+                     m_hVector_Eff_lumis.at(11)->Fill(eventexcl->GetInstLumiBunch());
                   }
 
 		  if (eventdiff->GetEtaMinFromPFCands() > -2. && eventdiff->GetEtaMaxFromPFCands() < 2.){
 
-                     counterJetsTrackerstep4_2+=totalweight;
-                     m_hVector_Evt_lumis.at(12)->Fill(eventexcl->GetInstLumiBunch(),totalweight);
-                     m_hVector_Eff_lumis.at(12)->Fill(eventexcl->GetInstLumiBunch(),totalweight);
+                     ++counterJetsTrackerstep4_2;
+                     m_hVector_Evt_lumis.at(12)->Fill(eventexcl->GetInstLumiBunch());
+                     m_hVector_Eff_lumis.at(12)->Fill(eventexcl->GetInstLumiBunch());
                   }
 
 		  if (eventdiff->GetEtaMinFromPFCands() > -1. && eventdiff->GetEtaMaxFromPFCands() < 1.){
 
-                     counterJetsTrackerstep4_1+=totalweight;
-                     m_hVector_Evt_lumis.at(13)->Fill(eventexcl->GetInstLumiBunch(),totalweight);
-                     m_hVector_Eff_lumis.at(13)->Fill(eventexcl->GetInstLumiBunch(),totalweight);
+                     ++counterJetsTrackerstep4_1;
+                     m_hVector_Evt_lumis.at(13)->Fill(eventexcl->GetInstLumiBunch());
+                     m_hVector_Eff_lumis.at(13)->Fill(eventexcl->GetInstLumiBunch());
                   }
 
 	       } // end jets at tracker
@@ -425,40 +378,40 @@ void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string 
 
 	       if (eventexcl->GetLeadingJetP4().Eta() < 2. && eventexcl->GetSecondJetP4().Eta() < 2. && eventexcl->GetLeadingJetP4().Eta() > -2. && eventexcl->GetSecondJetP4().Eta() > -2.){
 
-		  counterJetsEta2step3+=totalweight;
+		  ++counterJetsEta2step3;
 
 		  // JetsEta2 - STEP3         
 		  ////////////////////////////////////////////////
-		  m_hVector_Evt_lumis.at(14)->Fill(eventexcl->GetInstLumiBunch(),totalweight);
-                  m_hVector_Eff_lumis.at(14)->Fill(eventexcl->GetInstLumiBunch(),totalweight);
+		  m_hVector_Evt_lumis.at(14)->Fill(eventexcl->GetInstLumiBunch());
+                  m_hVector_Eff_lumis.at(14)->Fill(eventexcl->GetInstLumiBunch());
                 
 		  // Eta max and Eta min cut
 		  if (eventdiff->GetEtaMinFromPFCands() > -4. && eventdiff->GetEtaMaxFromPFCands() < 4.){
 
-                     counterJetsEta2step4_4+=totalweight;
-                     m_hVector_Evt_lumis.at(15)->Fill(eventexcl->GetInstLumiBunch(),totalweight);
-                     m_hVector_Eff_lumis.at(15)->Fill(eventexcl->GetInstLumiBunch(),totalweight);
+                     ++counterJetsEta2step4_4;
+                     m_hVector_Evt_lumis.at(15)->Fill(eventexcl->GetInstLumiBunch());
+                     m_hVector_Eff_lumis.at(15)->Fill(eventexcl->GetInstLumiBunch());
                   }
 
 		  if (eventdiff->GetEtaMinFromPFCands() > -3. && eventdiff->GetEtaMaxFromPFCands() < 3.){
 
-                     counterJetsEta2step4_3+=totalweight;
-                     m_hVector_Evt_lumis.at(16)->Fill(eventexcl->GetInstLumiBunch(),totalweight);
-                     m_hVector_Eff_lumis.at(16)->Fill(eventexcl->GetInstLumiBunch(),totalweight);
+                     ++counterJetsEta2step4_3;
+                     m_hVector_Evt_lumis.at(16)->Fill(eventexcl->GetInstLumiBunch());
+                     m_hVector_Eff_lumis.at(16)->Fill(eventexcl->GetInstLumiBunch());
                   }
 
 		  if (eventdiff->GetEtaMinFromPFCands() > -2. && eventdiff->GetEtaMaxFromPFCands() < 2.){
 
-                     counterJetsEta2step4_2+=totalweight;
-                     m_hVector_Evt_lumis.at(17)->Fill(eventexcl->GetInstLumiBunch(),totalweight);
-                     m_hVector_Eff_lumis.at(17)->Fill(eventexcl->GetInstLumiBunch(),totalweight);
+                     ++counterJetsEta2step4_2;
+                     m_hVector_Evt_lumis.at(17)->Fill(eventexcl->GetInstLumiBunch());
+                     m_hVector_Eff_lumis.at(17)->Fill(eventexcl->GetInstLumiBunch());
                   }
 
 		  if (eventdiff->GetEtaMinFromPFCands() > -1. && eventdiff->GetEtaMaxFromPFCands() < 1.){
 
-                     counterJetsEta2step4_1+=totalweight;
-                     m_hVector_Evt_lumis.at(18)->Fill(eventexcl->GetInstLumiBunch(),totalweight);
-                     m_hVector_Eff_lumis.at(18)->Fill(eventexcl->GetInstLumiBunch(),totalweight);
+                     ++counterJetsEta2step4_1;
+                     m_hVector_Evt_lumis.at(18)->Fill(eventexcl->GetInstLumiBunch());
+                     m_hVector_Eff_lumis.at(18)->Fill(eventexcl->GetInstLumiBunch());
                   }
 
 	       } // end jets at JetsEta2
@@ -475,7 +428,7 @@ void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string 
 
   //Scalling Plots
    for (int k=0; k<19; k++){
-     m_hVector_Eff_lumis.at(k)->Scale(1./counterEventsWeighted);
+     m_hVector_Eff_lumis.at(k)->Scale(1./TotalE);
    }
 
      outstring << "" << std::endl;
@@ -490,19 +443,13 @@ void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string 
      outstring << "Trigger Option: " << optTrigger << std::endl;
      outstring << " " << std::endl;
      outstring << "--> TRUE = 1 FALSE = 0" << std::endl;
-     outstring << "Lumi. Weight: " << switchWeightLumi << std::endl;
-     outstring << "Evt. - Evt. Weight: " << switchWeightePw << std::endl;
      outstring << "Trigger Switch: " << switchTrigger << std::endl;
      outstring << "Pre-Selection Switch: " << switchPreSel << std::endl;
-     outstring << "N Bins PU Distributions: " << nbins << std::endl;
-     outstring << " " << std::endl;
-     outstring << "--> Factors" << std::endl;
-     outstring << "Lumi. Weight: " << weightlumipass << std::endl;
+     outstring << "N Bins PU: " << nbins << std::endl;
      outstring << "" << std::endl;
      outstring << "<< EVENT INFO >> " << std::endl;
      outstring << " " << std::endl;
      outstring << "Total # of Events without Weight: " << TotalE << std::endl;
-     outstring << "Total # of Events with Weight: " << counterEventsWeighted << std::endl;
      outstring << " " << std::endl;
      outstring << "Triggered: " << counterTrigger << std::endl;
      outstring << "STEP1: " << counterJetsstep1 << std::endl;
@@ -552,11 +499,8 @@ int main(int argc, char **argv)
    double jet2PT_;
    int optnVertex_;
    int optTrigger_;
-   bool switchWeightLumi_;
-   bool switchWeightePw_;
    bool switchPreSel_;
    bool switchTrigger_;
-   double weightlumipass_;
    int nbins_;
 
    if (argc > 1 && strcmp(s1,argv[1]) != 0)  filein_ = argv[1];
@@ -566,16 +510,13 @@ int main(int argc, char **argv)
    if (argc > 5 && strcmp(s1,argv[5]) != 0)  jet2PT_ = atoi(argv[5]);
    if (argc > 6 && strcmp(s1,argv[6]) != 0)  optnVertex_ = atoi(argv[6]);
    if (argc > 7 && strcmp(s1,argv[7]) != 0)  optTrigger_   = atoi(argv[7]);
-   if (argc > 8 && strcmp(s1,argv[8]) != 0)  switchWeightLumi_ = atoi(argv[8]);
-   if (argc > 9 && strcmp(s1,argv[9]) != 0)  switchWeightePw_   = atoi(argv[9]);
-   if (argc > 10 && strcmp(s1,argv[10]) != 0)  switchPreSel_   = atoi(argv[10]);
-   if (argc > 11 && strcmp(s1,argv[11]) != 0)  switchTrigger_   = atoi(argv[11]);
-   if (argc > 12 && strcmp(s1,argv[12]) != 0)  weightlumipass_  = atof(argv[12]);
-   if (argc > 13 && strcmp(s1,argv[13]) != 0)  nbins_ = atoi(argv[13]);
+   if (argc > 8 && strcmp(s1,argv[8]) != 0)  switchPreSel_   = atoi(argv[8]);
+   if (argc > 9 && strcmp(s1,argv[9]) != 0)  switchTrigger_   = atoi(argv[9]);
+   if (argc > 10 && strcmp(s1,argv[10]) != 0)  nbins_ = atoi(argv[10]);
 
 
    EffMacro* exclDijets = new EffMacro();   
-   exclDijets->Run(filein_, savehistofile_, processname_, jet1PT_, jet2PT_, optnVertex_, optTrigger_, switchWeightLumi_, switchWeightePw_, switchPreSel_, switchTrigger_, weightlumipass_, nbins_);
+   exclDijets->Run(filein_, savehistofile_, processname_, jet1PT_, jet2PT_, optnVertex_, optTrigger_, switchPreSel_, switchTrigger_, nbins_);
 
    return 0;
 }

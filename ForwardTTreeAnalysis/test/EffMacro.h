@@ -33,11 +33,8 @@ class EffMacro {
    double jet2PT;
    int optnVertex;
    int optTrigger;
-   bool switchWeightLumi;
-   bool switchWeightePw;
    bool switchPreSel;
    bool switchTrigger;
-   double weightlumipass;
    int nbins;
    std::vector<TH1D*> m_hVector_Evt_lumis;
    std::vector<TH1D*> m_hVector_Eff_lumis;
@@ -46,7 +43,7 @@ class EffMacro {
    EffMacro() {}
    ~EffMacro() { inf->Close(); }
    
-   void Run(std::string, std::string, std::string, double, double, int, int, bool, bool, bool, bool, double, int);
+   void Run(std::string, std::string, std::string, double, double, int, int, bool, bool, int);
    void LoadFile(std::string,std::string);
    void FillHistograms();
 
