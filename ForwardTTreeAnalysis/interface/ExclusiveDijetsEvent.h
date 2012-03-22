@@ -31,6 +31,7 @@ class ExclusiveDijetsEvent {
   void SetLumiSection(int flumiSection)         { lumiSection_      = flumiSection;}
   void SetBunchCrossing(int fbunchCrossing)     { bunchCrossing_    = fbunchCrossing;}
   void SetLumiWeight(double flumiWeight)        { lumiWeight_       = flumiWeight;}
+   void SetInstLumiBunch(float finstLumiBunchOCC1) {instLumiBunchOCC1_ = finstLumiBunchOCC1;}
   //void SetHLT_Jet15U(int fHLT_Jet15U)           { HLT_Jet15U_       = fHLT_Jet15U;}
   //void SetHLT_L1Jet6U(int fHLT_L1Jet6U)         { HLT_L1Jet6U_      = fHLT_L1Jet6U;}
   void SetHLTPath(int idx, int fHLTBit)         { hltTrigResults_[idx] = fHLTBit;}
@@ -294,6 +295,7 @@ class ExclusiveDijetsEvent {
   int  GetEventNumber()                      const {return eventNumber_;}
   int  GetBunchCrossing()                    const {return bunchCrossing_;}
   double GetLumiWeight()                     const { return lumiWeight_;}
+  float GetInstLumiBunch()                   const {return instLumiBunchOCC1_;}
   //int  GetHLT_Jet15U()                       const {return HLT_Jet15U_;}
   //int  GetHLT_L1Jet6U()                      const {return HLT_L1Jet6U_;}
   int GetHLTPath(int idx)                    const { return hltTrigResults_[idx]; }  
@@ -527,7 +529,7 @@ class ExclusiveDijetsEvent {
 
      double SumEHFPFlowPlus_;
      double SumEHFPFlowMinus_;
-     
+     float instLumiBunchOCC1_;      
 //////////////////////////////////
 };
 
