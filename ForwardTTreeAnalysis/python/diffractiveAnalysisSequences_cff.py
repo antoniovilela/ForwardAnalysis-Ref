@@ -42,7 +42,7 @@ pfStrCut2 = PFCandidateNoiseStringCut(pfThresholds).cut()
 pfStrCut = '%s & %s' % (pfStrCut1,pfStrCut2)
 pfCandidateNoiseThresholds.cut = pfStrCut
 # Change to no pile-up collection
-pfCandidateNoiseThresholds.src = "pfNoPileUpPFlow" 
+#pfCandidateNoiseThresholds.src = "pfNoPileUpPFlow" 
 
 from ForwardAnalysis.Utilities.etaMaxCandViewSelector_cfi import etaMaxCandViewSelector as etaMaxPFCands
 from ForwardAnalysis.Utilities.etaMinCandViewSelector_cfi import etaMinCandViewSelector as etaMinPFCands

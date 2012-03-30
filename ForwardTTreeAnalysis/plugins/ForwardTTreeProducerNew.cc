@@ -4,11 +4,13 @@
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/ExclusiveDijetsAnalysis.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/PATInfo.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/DijetsTriggerAnalysis.h"
+#include "ForwardAnalysis/ForwardTTreeAnalysis/interface/HeavyFlavorAnalysis.h"
 
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/DiffractiveEvent.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/ExclusiveDijetsEvent.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/PATInfoEvent.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/DijetsTriggerEvent.h"
+#include "ForwardAnalysis/ForwardTTreeAnalysis/interface/HeavyFlavorEvent.h"
 
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/ForwardTTreeProducer.h"
 
@@ -36,4 +38,8 @@ typedef forwardTTreeAnalysis::ForwardTTreeProducer<diffractiveAnalysis::Diffract
                                                    exclusiveDijetsAnalysis::ExclusiveDijetsAnalysis,
                                                    patInfo::PATInfo> DiffractiveExclusiveDijetsAnalysisPATInfoTTree;
 DEFINE_FWK_MODULE(DiffractiveExclusiveDijetsAnalysisPATInfoTTree);
+
+typedef forwardTTreeAnalysis::ForwardTTreeProducer<diffractiveAnalysis::DiffractiveAnalysis,
+                                                   heavyFlavorAnalysis::HeavyFlavorAnalysis> DiffractiveHeavyFlavorAnalysisTTree;
+DEFINE_FWK_MODULE(DiffractiveHeavyFlavorAnalysisTTree);
 

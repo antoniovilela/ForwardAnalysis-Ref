@@ -2,10 +2,10 @@ import FWCore.ParameterSet.Config as cms
 
 DiffractiveAnalysis = cms.PSet(
     # Input tags
-    vertexTag = cms.InputTag("goodOfflinePrimaryVertices"),
-    trackTag = cms.InputTag("analysisTracks"),
-    jetTag = cms.InputTag("selectedPatJetsPFlow"),
-    metTag = cms.InputTag("patMETsPFlow"),
+    vertexTag = cms.InputTag("offlinePrimaryVertices"),
+    trackTag = cms.InputTag(""),
+    jetTag = cms.InputTag(""),
+    metTag = cms.InputTag("met"),
     caloTowerTag = cms.InputTag("towerMaker"), 
     castorRecHitTag = cms.InputTag("castorRecHitCorrector"),
     particleFlowTag = cms.InputTag("pfCandidateNoiseThresholds"),

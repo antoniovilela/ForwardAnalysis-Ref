@@ -44,7 +44,7 @@ process.MessageLogger.cerr.Analysis = cms.untracked.PSet(limit = cms.untracked.i
 process.options = cms.untracked.PSet( wantSummary = cms.untracked.bool(True),
 SkipEvent = cms.untracked.vstring('ProductNotFound') )
 
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(3000) )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(100) )
 
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring( 'file:%s' % config.inputFileName )
