@@ -135,13 +135,13 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
 
    }
 
-   TFile check1("pileup15to3000_BXs_mc.root");
-   TFile check2("pu_exclusive_complete.root");
+   TFile check1("pu_mc_QCD15-3000.root");
+   TFile check2("pu_147196-148058.root");
    TFile check3(filein.c_str());
 
    if (check1.IsZombie()){
 
-      std::cout << "----------------------------------------------" << std::endl;
+      std::cout << "\n----------------------------------------------" << std::endl;
       std::cout << " There is no Pile-Up Monte Carlo file or the"   << std::endl;
       std::cout << " path is not correct." << std::endl;
       std::cout << " Edit the source and recompile." << std::endl;
@@ -152,7 +152,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
 
    if (check2.IsZombie()){
 
-      std::cout << "----------------------------------------------" << std::endl;
+      std::cout << "\n----------------------------------------------" << std::endl;
       std::cout << " There is no Pile-Up Estimated file or the"   << std::endl;
       std::cout << " path is not correct." << std::endl;
       std::cout << " Edit the source and recompile." << std::endl;
@@ -163,7 +163,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
 
    if (check3.IsZombie()){
 
-      std::cout << "----------------------------------------------" << std::endl;
+      std::cout << "\n----------------------------------------------" << std::endl;
       std::cout << " There is no PatTuple file or the"   << std::endl;
       std::cout << " path is not correct." << std::endl;
       std::cout << " Edit the source and recompile." << std::endl;
@@ -174,7 +174,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
    //--------------------------------------------------------------------------------------------------------------------------
 
    LoadFile(filein,processname);
-   edm::LumiReWeighting LumiWeights_("pileup15to3000_BXs_mc.root","pu_exclusive_complete.root","pileupmcBx0","pileup");
+   edm::LumiReWeighting LumiWeights_("pu_mc_QCD15-3000.root","pu_147196-148058.root","pileUpBx0_complete_without_cuts","pileup");
 
    std::cout << " " << std::endl;
    std::cout << "pT(jet1) > " << jet1PT << std::endl;
@@ -188,7 +188,17 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
    TString outtxt = savehistofile;
    outtxt.ReplaceAll("root","txt");  
    std::ofstream outstring(outtxt); 
-   
+
+   // Put "Gold Selected Event" in sum-up text file to be used by PickEvent Tool:
+   outstring << "" << std::endl;
+   outstring << "<< Gold Events >>" << std::endl;
+   outstring << "" << std::endl;
+   outstring << "Please, insert this events in another text file to be used by PickEvent Tool. " << std::endl;
+   outstring << "Twiki: https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookPickEvents " << std::endl;
+   outstring << ">>---------------------------------------------------------------------- " << std::endl;
+   outstring << "Selected Events: Jets At Tracker ( |Eta| < 2) & step4_2. " << std::endl; 
+
+
    //int NEVENTS = tr->GetEntriesFast();
    int NEVENTS = tr->GetEntries();
 
@@ -602,7 +612,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
       //
       //
       // SIMULATED TRIGGER
-      if ( !switchPreSel || (switchPreSel && eventexcl->GetSumEHFPFlowPlus() < 30 && eventexcl->GetSumEHFPFlowMinus() < 30 && eventexcl->GetLeadingJetP4().Pt() > 30 && eventexcl->GetSecondJetP4().Pt() > 30)){
+      if ( !switchPreSel || (switchPreSel && eventdiff->GetSumEnergyHFPlus() < 30 && eventdiff->GetSumEnergyHFMinus() < 30)){
 
          // TRIGGER
 	 if (!switchTrigger || (switchTrigger && eventexcl->GetHLTPath(optTrigger))){
@@ -1183,7 +1193,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
 		  }
 
 		  if (eventdiff->GetEtaMinFromPFCands() > -2. && eventdiff->GetEtaMaxFromPFCands() < 2.){
-
+                     outstring << eventdiff->GetRunNumber() << ":" << eventdiff->GetLumiSection() << ":" << eventdiff->GetEventNumber() << std::endl;
                      counterJetsEta2step4_2+=totalweight;
                      m_hVector_rjj[17].at(indexV)->Fill(eventexcl->GetRjjFromJets(),totalweight);
                      m_hVector_detagen[17].at(indexV)->Fill(eventexcl->GetDeltaEtaGen(),totalweight);
@@ -1262,6 +1272,8 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
 
    }// Run All Events
 
+     outstring << " >>----------------------End Info for Pick Events------------------------ " << std::endl;
+     outstring << "" << std::endl;
      outstring << "" << std::endl;
      outstring << "<< INPUTS >>" << std::endl;
      outstring << " " << std::endl;
@@ -1317,6 +1329,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
      outstring << "STEP3: # Vertex selection + Two Jets + Jets in Tracker Acceptance or All CMS." << std::endl;
      outstring << "STEP4_X: # Vertex selection + Two Jets + Jets in Tracker Acceptance or All CMS + Eta_max < X and Eta_min > X." << std::endl;
      outstring << " " << std::endl;
+     
 
    outf->Write();
    outf->Close();
