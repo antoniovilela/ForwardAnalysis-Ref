@@ -1,37 +1,35 @@
+data_py = """
 import FWCore.ParameterSet.Config as cms
 
 # Settings
 class config: pass
 config.verbose = True
 config.writeEdmOutput = False
-config.runOnMC = True
+config.runOnMC = False
 config.runPATSequences = True
 config.usePAT = False
 config.globalTagNameData = 'GR_R_42_V19::All' 
-config.instLumiROOTFile='/storage2/eliza/lumibyXing_Cert_160404-176023_7TeV_PromptReco_Collisions11_JSON.root'
+config.instLumiROOTFile = '@@ADDITIONALFILE@@'
 config.globalTagNameMC = 'START42_V14A::All'
 config.comEnergy = 7000.0
 config.trackAnalyzerName = 'trackHistoAnalyzer'
 config.trackTagName = 'analysisTracks'
 
 if config.runOnMC:
-    config.hltPaths =('HLT_Jet30*','HLT_Jet60*','HLT_Jet80*','HLT_Jet110*','HLT_Jet150*','HLT_Jet190*','HLT_Jet240_v*','HLT_Jet370_v*')
-
+    config.hltPaths =(@@TRIGGERS@@)
 else:
-    #config.hltPaths = ('HLT_ExclDiJet60_HFAND_v*','HLT_ExclDiJet60_HFOR_v*','HLT_Jet60_v*')
-    config.hltPaths = ('HLT_ExclDiJet30U_HFAND_v*','HLT_ExclDiJet30U_HFOR_v*','HLT_Jet30U*')
+    #config.hltPaths = (@@TRIGGERS@@)
+    config.hltPaths = (@@TRIGGERS@@)
 
 #config.generator = 'Pythia6'
 
-#config.outputEdmFile = 'DijetsAnalysis.root'
-config.outputTTreeFile = "teste.root"
+#config.outputEdmFile = '@@OUTPUT@@'
+config.outputTTreeFile = '@@OUTPUT@@'
 
 if config.runOnMC:
-    config.inputFileName = '/storage2/dilson/ntuples/pompyt_SDplus_QCD30to_START42_V13_RAW2DIGI_L1Reco_RECO_98K.root'
-   # config.inputFileName = '/storage2/eliza/samples_test/QCD_Pt-15to30_TuneZ2_7TeV_pythia6AODSIMS_3.root'# MC
+    config.inputFileName = '@@INPUT@@'
 else:
-    #config.inputFileName = '/storage2/eliza/samples_test/MultiJetPromptReco_v4.root'#data 2011
-    config.inputFileName = '/storage2/antoniov/data1/MultiJet_Run2010B_Apr21ReReco-v1_AOD/MultiJet_Run2010B_Apr21ReReco-v1_AOD_7EA7B611-7371-E011-B164-002354EF3BDB.root' 
+    config.inputFileName = '@@INPUT@@' 
 
 
 process = cms.Process("Analysis")
@@ -46,7 +44,7 @@ process.MessageLogger.cerr.Analysis = cms.untracked.PSet(limit = cms.untracked.i
 process.options = cms.untracked.PSet( wantSummary = cms.untracked.bool(True),
 SkipEvent = cms.untracked.vstring('ProductNotFound') )
 
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(1000) )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(-1) )
 
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring( 'file:%s' % config.inputFileName )
@@ -88,16 +86,15 @@ if not config.runOnMC:
 ####################################################################################
 # Analysis modules
 #--------------------------------
-
-#
-# Added by Diego
-#
-
 from ForwardAnalysis.Utilities.countsAnalyzer_cfi import countsAnalyzer
 process.countsAll = countsAnalyzer.clone()
 process.countsAfterTrigger = countsAnalyzer.clone()
 process.countsAfterPATFWD = countsAnalyzer.clone()
-
+process.countsAfterPATFWDHF0 = countsAnalyzer.clone()
+process.countsAfterPATFWDHF4 = countsAnalyzer.clone()
+process.countsAfterPATFWDHF6 = countsAnalyzer.clone()
+process.countsAfterPATFWDHF8 = countsAnalyzer.clone()
+process.countsAfterPATFWDHF10 = countsAnalyzer.clone()
 
 if not config.runOnMC:
     process.load('ForwardAnalysis.Utilities.lumiWeight_cfi')
@@ -116,8 +113,7 @@ if not config.runOnMC:
 process.load("ForwardAnalysis.ForwardTTreeAnalysis.exclusiveDijetsAnalysisSequences_cff")
 
 if config.runOnMC:
-#    process.exclusiveDijetsHLTFilter.HLTPaths = config.hltPaths 
-     process.exclusiveDijetsHLTFilter.HLTPaths = ['HLT*']
+    process.exclusiveDijetsHLTFilter.HLTPaths = config.hltPaths 
 else:
     process.exclusiveDijetsHLTFilter.HLTPaths = config.hltPaths 
 
@@ -201,6 +197,16 @@ if config.runOnMC:
 else:
     process.forwardQCDTTreeAnalysis.exclusiveDijetsAnalysis.AccessMCInfo = False
 
+process.forwardQCDTTreeAnalysis_HF0 = process.forwardQCDTTreeAnalysis.clone()
+process.forwardQCDTTreeAnalysis_HF0.diffractiveAnalysis.energyThresholdHF = 0.0
+process.forwardQCDTTreeAnalysis_HF4 = process.forwardQCDTTreeAnalysis.clone()
+process.forwardQCDTTreeAnalysis_HF4.diffractiveAnalysis.energyThresholdHF = 4.0
+process.forwardQCDTTreeAnalysis_HF6 = process.forwardQCDTTreeAnalysis.clone()
+process.forwardQCDTTreeAnalysis_HF6.diffractiveAnalysis.energyThresholdHF = 6.0
+process.forwardQCDTTreeAnalysis_HF8 = process.forwardQCDTTreeAnalysis.clone()
+process.forwardQCDTTreeAnalysis_HF8.diffractiveAnalysis.energyThresholdHF = 8.0
+process.forwardQCDTTreeAnalysis_HF10 = process.forwardQCDTTreeAnalysis.clone()
+process.forwardQCDTTreeAnalysis_HF10.diffractiveAnalysis.energyThresholdHF = 10.0
 
 ############# Turn-on the fastjet area calculation needed for the L1Fastjet ##############
 ############# applied only to PFJets because if CaloJets are re-recoed the JetID map will be lost #####
@@ -239,11 +245,11 @@ if config.runOnMC:
                                process.genStableParticles*
                                process.etaMaxGen+process.etaMinGen*
                                process.edmNtupleEtaMaxGen+process.edmNtupleEtaMinGen)
-
-
-#process.countEvents_step = cms.Path(process.countsAll + process.countshltJetFilter)
 process.analysis_reco_step = cms.Path(process.analysisSequences)
-process.analysis_forwardQCDAnalysis_step = cms.Path(process.countsAll + process.eventSelectionHLT + process.countsAfterTrigger + process.forwardQCDTTreeAnalysis + process.countsAfterPATFWD)
+#process.analysis_forwardQCDAnalysis_step = cms.Path(process.eventSelectionHLT+
+#                                                    process.forwardQCDTTreeAnalysis)
 
-#process.analysis_forwardQCDAnalysis_step = cms.Path(process.forwardQCDTTreeAnalysis)
+#process.analysis_forwardQCDAnalysis_step = cms.Path(process.countsAll + process.eventSelectionHLT + process.countsAfterTrigger + process.forwardQCDTTreeAnalysis + process.countsAfterPATFWD)
 
+process.analysis_forwardQCDAnalysis_step = cms.Path(process.countsAll + process.eventSelection + process.countsAfterTrigger + process.forwardQCDTTreeAnalysis + process.countsAfterPATFWD + process.forwardQCDTTreeAnalysis_HF0 + process.countsAfterPATFWDHF0 + process.forwardQCDTTreeAnalysis_HF4 + process.countsAfterPATFWDHF4 + process.forwardQCDTTreeAnalysis_HF6 + process.countsAfterPATFWDHF6 + process.forwardQCDTTreeAnalysis_HF8 + process.countsAfterPATFWDHF8 + process.forwardQCDTTreeAnalysis_HF10 + process.countsAfterPATFWDHF10)
+"""
