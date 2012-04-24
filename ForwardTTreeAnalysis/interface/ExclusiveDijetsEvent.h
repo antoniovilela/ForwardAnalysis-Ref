@@ -31,7 +31,8 @@ class ExclusiveDijetsEvent {
   void SetLumiSection(int flumiSection)         { lumiSection_      = flumiSection;}
   void SetBunchCrossing(int fbunchCrossing)     { bunchCrossing_    = fbunchCrossing;}
   void SetLumiWeight(double flumiWeight)        { lumiWeight_       = flumiWeight;}
-   void SetInstLumiBunch(float finstLumiBunchOCC1) {instLumiBunchOCC1_ = finstLumiBunchOCC1;}
+  void SetInstDelLumiLS(float finstLumiLS)      { instLumiLS_       = finstLumiLS;}
+  void SetInstLumiBunch(float finstLumiBunchOCC1) {instLumiBunchOCC1_ = finstLumiBunchOCC1;}
   //void SetHLT_Jet15U(int fHLT_Jet15U)           { HLT_Jet15U_       = fHLT_Jet15U;}
   //void SetHLT_L1Jet6U(int fHLT_L1Jet6U)         { HLT_L1Jet6U_      = fHLT_L1Jet6U;}
   void SetHLTPath(int idx, int fHLTBit)         { hltTrigResults_[idx] = fHLTBit;}
@@ -296,6 +297,7 @@ class ExclusiveDijetsEvent {
   int  GetBunchCrossing()                    const {return bunchCrossing_;}
   double GetLumiWeight()                     const { return lumiWeight_;}
   float GetInstLumiBunch()                   const {return instLumiBunchOCC1_;}
+  float GetInstDelLumiLS()                   const {return instLumiLS_;}
   //int  GetHLT_Jet15U()                       const {return HLT_Jet15U_;}
   //int  GetHLT_L1Jet6U()                      const {return HLT_L1Jet6U_;}
   int GetHLTPath(int idx)                    const { return hltTrigResults_[idx]; }  
@@ -382,6 +384,8 @@ class ExclusiveDijetsEvent {
      int lumiSection_;
      int bunchCrossing_; 
      double lumiWeight_;
+     float instLumiLS_;
+     float instLumiBunchOCC1_;
      int hltTrigResults_[20];
 //------ jet 4-momentum vector------------------
      LorentzVector leadingJetP4_;
@@ -529,7 +533,7 @@ class ExclusiveDijetsEvent {
 
      double SumEHFPFlowPlus_;
      double SumEHFPFlowMinus_;
-     float instLumiBunchOCC1_;      
+           
 //////////////////////////////////
 };
 
