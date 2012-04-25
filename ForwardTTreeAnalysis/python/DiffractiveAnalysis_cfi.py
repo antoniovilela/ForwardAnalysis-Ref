@@ -17,7 +17,7 @@ DiffractiveAnalysis = cms.PSet(
     energyThresholdHE = cms.double(2.0),
     energyThresholdHF = cms.double(4.0),
     # Options
-    comEnergy = cms.double(8000.),
+    comEnergy = cms.double(7000.),
     applyEnergyScaleHCAL = cms.bool(False),
     energyScaleFactorHCAL = cms.double(1.0),
     hltPath = cms.string("HLT_L1Tech_BSC_minBias_OR"),

@@ -47,6 +47,6 @@ ExclusiveDijetsAnalysis = cms.PSet(
     #JetCorrectionService = cms.string("ak5PFL2L3"),
     # If accessing the pile-up info
     AccessPileUpInfo = cms.bool(True),
-    EBeam = cms.untracked.double(4000.),
+    EBeam = cms.untracked.double(3500.),
     #RunOnData = cms.untracked.bool(True)
 )
