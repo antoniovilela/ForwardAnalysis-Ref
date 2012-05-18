@@ -14,6 +14,18 @@
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 #include "FWCore/Utilities/interface/Exception.h"
 
+#include "DataFormats/JetReco/interface/CaloJetCollection.h"
+#include "DataFormats/JetReco/interface/PFJetCollection.h"
+#include "DataFormats/JetReco/interface/GenJetCollection.h"
+ 
+#include "DataFormats/HepMCCandidate/interface/GenParticle.h"
+#include "DataFormats/JetReco/interface/Jet.h"
+#include "DataFormats/ParticleFlowCandidate/interface/PFCandidate.h"
+
+#include "DataFormats/CaloTowers/interface/CaloTower.h"
+#include "DataFormats/CaloTowers/interface/CaloTowerFwd.h"
+//#include "ForwardAnalysis/ForwardTTreeAnalysis/interface/FWLiteTools.h"
+
 //#include "DataFormats/L1GlobalCaloTrigger/interface/L1GctHFRingEtSums.h"
 //#include "DataFormats/L1GlobalCaloTrigger/interface/L1GctHFBitCounts.h"
 //#include "DataFormats/L1GlobalCaloTrigger/interface/L1GctJetCounts.h"
@@ -33,12 +45,17 @@
 #include <map>
 #include <cmath>
 #include <sstream>
+#include <algorithm>
+#include <iostream>
 
 using dijetsTriggerAnalysis::DijetsTriggerAnalysis;
 
 const char* DijetsTriggerAnalysis::name = "DijetsTriggerAnalysis";
 
 DijetsTriggerAnalysis::DijetsTriggerAnalysis(const edm::ParameterSet& pset):
+     jetTag_(pset.getParameter<edm::InputTag>("jetTag")),
+     particleFlowTag_(pset.getParameter<edm::InputTag>("particleFlowTag")),
+     caloTowerTag_(pset.getParameter<edm::InputTag>("caloTowerTag")),
      gctDigisTag_(pset.getParameter<edm::InputTag>("gctDigisTag")),
      thresholdHFRingEtSum_(pset.getParameter<unsigned int>("hfRingEtSumThreshold")),
      thresholdHFRingBitCount_(pset.getParameter<unsigned int>("hfRingBitCountThreshold")),
@@ -126,6 +143,8 @@ void DijetsTriggerAnalysis::fillEventData(DijetsTriggerEvent& eventData, const e
   eventData.l1Prescale_.resize(l1TriggerNames_.size());
   eventData.l1AlgoName_.resize(l1TriggerNames_.size());
   dijetsTriggerInfo(eventData,event,setup);
+  dijetsTriggerJetInfo(eventData,event,setup); 
+  dijetsTriggerCaloTowerInfo(eventData,event,setup);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -268,4 +287,90 @@ bool DijetsTriggerAnalysis::acceptHFRingEtSum(std::vector<TH1F*>& histosRingSum,
    }
 
    return accept;
+}  
+void DijetsTriggerAnalysis::dijetsTriggerJetInfo(DijetsTriggerEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
+  edm::Handle<edm::View<reco::Jet> > jetCollectionH;
+  event.getByLabel(jetTag_,jetCollectionH);
+  
+  eventData.nJet_ = jetCollectionH->size();
+
+  if(jetCollectionH->size() > 0){
+     const reco::Jet& leadingJet = (*jetCollectionH)[0];
+     const reco::Jet& secondJet = (*jetCollectionH)[1];
+     const reco::Jet& thirdJet = (*jetCollectionH)[2];     
+ 
+     eventData.leadingJetPt_ = leadingJet.pt();
+     eventData.leadingJetEta_ = leadingJet.eta();
+     eventData.leadingJetPhi_ = leadingJet.phi();
+     
+     eventData.secondJetPt_ = secondJet.pt();
+     eventData.secondJetEta_ = secondJet.eta();
+     eventData.secondJetPhi_ = secondJet.phi();
+ 
+     eventData.thirdJetPt_ = thirdJet.pt();
+     eventData.thirdJetEta_ = thirdJet.eta();
+     eventData.thirdJetPhi_ = thirdJet.phi(); 
+
+  } else{
+     eventData.leadingJetPt_ = -999.;
+     eventData.leadingJetEta_ = -999.;
+     eventData.leadingJetPhi_ = -999.;
+     
+     eventData.secondJetPt_ = -999.;
+     eventData.secondJetEta_ = -999.;
+     eventData.secondJetPhi_ = -999.;
+
+     eventData.thirdJetPt_ = -999.;
+     eventData.thirdJetEta_ = -999.;
+     eventData.thirdJetPhi_ = -999.;
+  }  
+}
+void DijetsTriggerAnalysis::dijetsTriggerCaloTowerInfo(DijetsTriggerEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
+
+  edm::Handle<CaloTowerCollection> caloTowerCollectionH;
+  event.getByLabel(caloTowerTag_,caloTowerCollectionH);
+  const CaloTowerCollection& caloTower = *caloTowerCollectionH;
+  CaloTowerCollection::const_iterator tower = caloTower.begin();
+  CaloTowerCollection::const_iterator tower_end = caloTower.end();
+
+  if( caloTowerCollectionH.isValid() ){
+   //ntowcal = caloTowerTag->size();
+   int jtow = 0;
+   float towet=0.; float toweta=0.; float towphi=0.; float towen=0.; 
+   float towem=0.; float towhd=0.; float towoe=0.;
+   for(; tower != tower_end; ++tower){
+  
+     if(tower->energy() > 4.0)
+       {
+         towet += tower->et();
+         toweta = tower->eta();
+         towphi = tower->phi();
+         towen += tower->energy();
+         towem += tower->emEnergy();
+         towhd += tower->hadEnergy();
+         towoe += tower->outerEnergy();
+         eventData.towEta_ = toweta;
+         eventData.towPhi_ = towphi;
+         ++jtow;
+       }
+   }
+  eventData.ntowCal_ = jtow;
+  eventData.towET_ = towet;
+  //eventData.towEta_ = toweta;
+  //eventData.towPhi_ = towphi;
+  eventData.towE_ = towen;
+  eventData.towEm_ = towem;
+  eventData.towHad_ = towhd;
+  eventData.towOe_ = towoe;
+ }else {
+   eventData.ntowCal_ = 0;
+   eventData.towET_ = -999.;
+   eventData.towEta_ = -999.;
+   eventData.towPhi_ = -999.;
+   eventData.towE_ = -999.;
+   eventData.towEm_ = -999.;
+   eventData.towHad_ = -999.;
+   eventData.towOe_ = -999.;
+  }
+
 }

@@ -32,10 +32,20 @@ namespace dijetsTriggerAnalysis {
 	 void setBeginRun(const edm::Run&, const edm::EventSetup&);
 	 void fillEventData(DijetsTriggerEvent&, const edm::Event&, const edm::EventSetup&);
       private:
+//         unsigned int nHFSlice(const std::map<unsigned int, std::vector<unsigned int> >& mapTreshToiEta, unsigned int thresholdHF, unsigned int ieta);
+       
 	 bool acceptHFRingEtSum(std::vector<TH1F*>&, const L1GctHFRingEtSumsCollection*);
 	 bool acceptHFRingEtSum(std::vector<TH1F*>&, const L1GctHFBitCountsCollection*);
          void setTFileService();
 	 void dijetsTriggerInfo(DijetsTriggerEvent&, const edm::Event&, const edm::EventSetup&); 
+         void dijetsTriggerJetInfo(DijetsTriggerEvent&, const edm::Event&, const edm::EventSetup&);
+         void dijetsTriggerCaloTowerInfo(DijetsTriggerEvent&, const edm::Event&, const edm::EventSetup&);
+
+         //unsigned int nHCALiEta(const std::map<unsigned int, std::vector<unsigned int> >&,
+         //                    unsigned int, unsigned int);
+
+         //double sumEHCALiEta(const std::map<unsigned int, std::vector<double> >&,
+         ///                 unsigned int, unsigned int);  
 
 	 class Correlation{
 	    public:
@@ -57,9 +67,20 @@ namespace dijetsTriggerAnalysis {
 	       double sumXY_;
 	 };
 
+
+         edm::InputTag jetTag_;
+         edm::InputTag particleFlowTag_;
+         edm::InputTag caloTowerTag_;
 	 edm::InputTag gtDigisTag_;
 	 edm::InputTag l1GtObjectMapTag_; 
 	 edm::InputTag gctDigisTag_;
+         //edm::InputTag hcalTowerSummaryTag_;
+         //double energyThresholdHB_;
+         //double energyThresholdHE_;
+         //double energyThresholdHF_;
+         //double comEnergy_,Ebeam_;
+         //bool applyEnergyScaleHCAL_;
+         //double energyScaleHCAL_;         
 
 	 L1GtUtils l1GtUtils_;
 
