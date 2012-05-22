@@ -189,6 +189,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
    outtxt.ReplaceAll("root","txt");  
    std::ofstream outstring(outtxt); 
 
+
    // Put "Gold Selected Event" in sum-up text file to be used by PickEvent Tool:
    outstring << "" << std::endl;
    outstring << "<< Gold Events >>" << std::endl;
@@ -320,11 +321,13 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
        m_hVector_absdeltaEtaPF.push_back( std::vector<TH1D*>() );
        m_hVector_vertex.push_back( std::vector<TH1D*>() );
 
+
        for (int k=0;k<nloop;k++){
          
        char tag[300];
  
-       if (nloop == 1 ) {
+       //if (nloop == 1 ) {
+       if (!switchMultiple){
         sprintf(tag,"Complete");
        }
        else {
@@ -519,7 +522,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
       double weightbxm1;
  
       if (switchWeightPU) { 
-	 //weight = LumiWeights_.weightOOT(eventexcl->GetNPileUpBx0(),eventexcl->GetNPileUpBxm1());} 
+	 //weight = LumiWeights_.weightOOT(eventexcl->GetNPileUpBx0(),eventexcl->GetNPileUpBxm1()); 
 	 weight = LumiWeights_.weight( eventexcl->GetNPileUpBx0()); 
          weightbxp1 = LumiWeights_.weight( eventexcl->GetNPileUpBxp1()); 
          weightbxm1 = LumiWeights_.weight( eventexcl->GetNPileUpBxm1()); 
@@ -611,6 +614,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
       // SET TRIGGER OR TRIGGER EMULATOR!!!!
       //
       //
+
       // SIMULATED TRIGGER
       if ( !switchPreSel || (switchPreSel && eventdiff->GetSumEnergyHFPlus() < 30 && eventdiff->GetSumEnergyHFMinus() < 30)){
 
@@ -651,6 +655,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
          m_hVector_deltaEtaPF[1].at(indexV)->Fill(deltaetapf_,totalweight);
          m_hVector_absdeltaEtaPF[1].at(indexV)->Fill(absdeltaetapf_,totalweight);
          m_hVector_vertex[1].at(indexV)->Fill(eventexcl->GetNVertex(),totalweight);
+
 
          //////////////////////////////////////////////////
 
@@ -1270,7 +1275,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
 
      } // Vector Defense: GetNPileUp()
 
-   }// Run All Events
+    }// Run All Events
 
      outstring << " >>----------------------End Info for Pick Events------------------------ " << std::endl;
      outstring << "" << std::endl;
