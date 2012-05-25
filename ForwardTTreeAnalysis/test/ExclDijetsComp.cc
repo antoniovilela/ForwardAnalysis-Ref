@@ -135,8 +135,12 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
 
    }
 
-   TFile check1("pu_mc_QCD15-3000.root");
-   TFile check2("pu_147196-148058.root");
+   //TFile check1("pu_mc_QCD15-3000.root");
+   //TFile check2("pu_147196-148058.root");
+   /////////////////////////////////////////////
+   TFile check1("pileup15to3000_BXs_mc.root");
+   TFile check2("pu_exclusive_complete.root");
+   /////////////////////////////////////////////
    TFile check3(filein.c_str());
 
    if (check1.IsZombie()){
@@ -175,7 +179,9 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
 
    LoadFile(filein,processname);
    edm::LumiReWeighting LumiWeights_("pu_mc_QCD15-3000.root","pu_147196-148058.root","pileUpBx0_complete_without_cuts","pileup");
+   
 
+   /////////////////////////////////////////////////////////// 
    std::cout << " " << std::endl;
    std::cout << "pT(jet1) > " << jet1PT << std::endl;
    std::cout << "pT(jet2) > " << jet2PT << std::endl;
@@ -228,7 +234,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
        }
 
     }
-    //--------------------------------------------------------------------------------------------------------------------------
+   //--------------------------------------------------------------------------------------------------------------------------
 
 
    // Event by Event Analysis
@@ -278,7 +284,8 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
    Folders.push_back("JetsAtEta2_step4_3");
    Folders.push_back("JetsAtEta2_step4_2");
    Folders.push_back("JetsAtEta2_step4_1");
-
+   /////////////////////////////////////////
+   //////////////////////////////////////// 
    int nloop;
    int indexV;
   
@@ -289,7 +296,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
      nloop = 1;
    }
 
-   for (int j=0; j<19; j++)
+   for (int j=0; j<21; j++)
     {
 
        m_hVector_rjj.push_back( std::vector<TH1D*>() );
@@ -320,6 +327,26 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
        m_hVector_deltaEtaPF.push_back( std::vector<TH1D*>() );
        m_hVector_absdeltaEtaPF.push_back( std::vector<TH1D*>() );
        m_hVector_vertex.push_back( std::vector<TH1D*>() );
+      
+       //===================
+       m_hVector_sumEHFplusVsiEta.push_back( std::vector<TH1D*>() );
+       m_hVector_sumEHFminusVsiEta.push_back( std::vector<TH1D*>() );
+
+       char name_ieta[300];
+       for(int ieta = 29; ieta <= 41; ++ieta){
+          sprintf(name_ieta,"sumEHFplus_iEta_%d_PU_%s_%s",ieta,"Complete",Folders.at(j).c_str());
+          TH1D *histo_sumEHFplus_ieta = new TH1D(name_ieta,"HF^{+} - Sum of Energy; #sum E_{HF^{+}} [GeV]; N events",500,0,500);
+          m_hVector_sumEHFplusVsiEta[j].push_back(histo_sumEHFplus_ieta);
+
+          sprintf(name_ieta,"sumEHFminus_iEta_%d_PU_%s_%s",ieta,"Complete",Folders.at(j).c_str());
+          TH1D *histo_sumEHFminus_ieta = new TH1D(name_ieta,"HF^{-} - Sum of Energy; #sum E_{HF^{-}} [GeV]; N events",500,0,500);
+          m_hVector_sumEHFminusVsiEta[j].push_back(histo_sumEHFminus_ieta);
+       }
+       //===================
+
+
+       //////////////////////////////////////////////////////
+
 
 
        for (int k=0;k<nloop;k++){
@@ -604,8 +631,15 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
        m_hVector_deltaEtaPF[0].at(indexV)->Fill(deltaetapf_,totalweight);
        m_hVector_absdeltaEtaPF[0].at(indexV)->Fill(absdeltaetapf_,totalweight);
        m_hVector_vertex[0].at(indexV)->Fill(eventexcl->GetNVertex(),totalweight);
-   
-
+       
+       //================================
+       //if(eventexcl->GetNPileUpBx0() == 0  ){
+         for(int ieta = 29,iring = 0; ieta <= 41; ++ieta,++iring){
+             m_hVector_sumEHFplusVsiEta[0][iring]->Fill(eventdiff->GetSumEHFPlusVsiEta(iring),totalweight);
+             m_hVector_sumEHFminusVsiEta[0][iring]->Fill(eventdiff->GetSumEHFMinusVsiEta(iring),totalweight);}
+        //}
+       
+      //================================
       //////////////////////////////////////////////////
 
 
@@ -616,8 +650,10 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
       //
 
       // SIMULATED TRIGGER
-      if ( !switchPreSel || (switchPreSel && eventdiff->GetSumEnergyHFPlus() < 30 && eventdiff->GetSumEnergyHFMinus() < 30)){
-
+      //if ( !switchPreSel || (switchPreSel && eventdiff->GetSumEnergyHFPlus() < 30 && eventdiff->GetSumEnergyHFMinus() < 30)){
+      ////////////////////////////////////////
+        if ( !switchPreSel || (switchPreSel && eventexcl->GetLeadingJetP4().Pt() > 30)){
+      ////////////////////////////////////////
          // TRIGGER
 	 if (!switchTrigger || (switchTrigger && eventexcl->GetHLTPath(optTrigger))){
 	 //
@@ -660,7 +696,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
          //////////////////////////////////////////////////
 
 
-	 if(eventexcl->GetNVertex() > 0 && eventexcl->GetNVertex()<= optnVertex){
+	 if(eventexcl->GetNVertex() > 0 && eventexcl->GetNVertex()>= optnVertex){
 
             counterJetsstep1+=totalweight; 
 
@@ -885,6 +921,15 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
                      m_hVector_deltaEtaPF[7].at(indexV)->Fill(deltaetapf_,totalweight);
                      m_hVector_absdeltaEtaPF[7].at(indexV)->Fill(absdeltaetapf_,totalweight);
                      m_hVector_vertex[7].at(indexV)->Fill(eventexcl->GetNVertex(),totalweight);
+                     //=========================================
+                     //if(eventexcl->GetNPileUpBx0() == 0  ){
+  
+                       for(int ieta = 29,iring = 0; ieta <= 41; ++ieta,++iring){
+                          m_hVector_sumEHFplusVsiEta[7][iring]->Fill(eventdiff->GetSumEHFPlusVsiEta(iring),totalweight);
+                          m_hVector_sumEHFminusVsiEta[7][iring]->Fill(eventdiff->GetSumEHFMinusVsiEta(iring),totalweight);
+                       }
+                      //}
+                     //=========================================
 		  }
 
 		  if (eventdiff->GetEtaMinFromPFCands() > -1. && eventdiff->GetEtaMaxFromPFCands() < 1.){
@@ -918,6 +963,16 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
                      m_hVector_deltaEtaPF[8].at(indexV)->Fill(deltaetapf_,totalweight);
                      m_hVector_absdeltaEtaPF[8].at(indexV)->Fill(absdeltaetapf_,totalweight);
                      m_hVector_vertex[8].at(indexV)->Fill(eventexcl->GetNVertex(),totalweight);
+                     //==========================================
+                     //if(eventexcl->GetNPileUpBx0() == 0  ){
+
+                     for(int ieta = 29,iring = 0; ieta <= 41; ++ieta,++iring){
+                        m_hVector_sumEHFplusVsiEta[8][iring]->Fill(eventdiff->GetSumEHFPlusVsiEta(iring),totalweight);
+                        m_hVector_sumEHFminusVsiEta[8][iring]->Fill(eventdiff->GetSumEHFMinusVsiEta(iring),totalweight);
+                        }
+                     //}
+                     //==========================================
+                    
                    }
 
 	       }  
@@ -957,6 +1012,13 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
                   m_hVector_deltaEtaPF[9].at(indexV)->Fill(deltaetapf_,totalweight);
                   m_hVector_absdeltaEtaPF[9].at(indexV)->Fill(absdeltaetapf_,totalweight);
                   m_hVector_vertex[9].at(indexV)->Fill(eventexcl->GetNVertex(),totalweight);
+
+                  //if(eventexcl->GetNPileUpBx0() == 0  ){
+
+                    for(int ieta = 29,iring = 0; ieta <= 41; ++ieta,++iring){
+                      m_hVector_sumEHFplusVsiEta[9][iring]->Fill(eventdiff->GetSumEHFPlusVsiEta(iring),totalweight);
+                      m_hVector_sumEHFminusVsiEta[9][iring]->Fill(eventdiff->GetSumEHFMinusVsiEta(iring),totalweight);}
+                  // }
 
 		  // Eta max and Eta min cut
 		  if (eventdiff->GetEtaMinFromPFCands() > -4. && eventdiff->GetEtaMaxFromPFCands() < 4.){
@@ -1129,6 +1191,15 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
                   m_hVector_absdeltaEtaPF[14].at(indexV)->Fill(absdeltaetapf_,totalweight);
                   m_hVector_vertex[14].at(indexV)->Fill(eventexcl->GetNVertex(),totalweight);
 
+                //=====================================
+    
+                //if(eventexcl->GetNPileUpBx0() == 0  ){
+
+                  for(int ieta = 29,iring = 0; ieta <= 41; ++ieta,++iring){
+                     m_hVector_sumEHFplusVsiEta[14][iring]->Fill(eventdiff->GetSumEHFPlusVsiEta(iring),totalweight);
+                     m_hVector_sumEHFminusVsiEta[14][iring]->Fill(eventdiff->GetSumEHFMinusVsiEta(iring),totalweight);}
+                 // }
+                //=====================================
 
 		  // Eta max and Eta min cut
 		  if (eventdiff->GetEtaMinFromPFCands() > -4. && eventdiff->GetEtaMaxFromPFCands() < 4.){
@@ -1195,7 +1266,20 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
                      m_hVector_deltaEtaPF[16].at(indexV)->Fill(deltaetapf_,totalweight);
                      m_hVector_absdeltaEtaPF[16].at(indexV)->Fill(absdeltaetapf_,totalweight);
                      m_hVector_vertex[16].at(indexV)->Fill(eventexcl->GetNVertex(),totalweight);
+
+                    //=====================================
+                    //if(eventexcl->GetNPileUpBx0() == 0  ){
+
+                      for(int ieta = 29,iring = 0; ieta <= 41; ++ieta,++iring){
+                         m_hVector_sumEHFplusVsiEta[16][iring]->Fill(eventdiff->GetSumEHFPlusVsiEta(iring),totalweight);
+                         m_hVector_sumEHFminusVsiEta[16][iring]->Fill(eventdiff->GetSumEHFMinusVsiEta(iring),totalweight);}
+                    // }
+                    //=====================================
+
+
 		  }
+
+
 
 		  if (eventdiff->GetEtaMinFromPFCands() > -2. && eventdiff->GetEtaMaxFromPFCands() < 2.){
                      outstring << eventdiff->GetRunNumber() << ":" << eventdiff->GetLumiSection() << ":" << eventdiff->GetEventNumber() << std::endl;
@@ -1228,7 +1312,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
                      m_hVector_deltaEtaPF[17].at(indexV)->Fill(deltaetapf_,totalweight);
                      m_hVector_absdeltaEtaPF[17].at(indexV)->Fill(absdeltaetapf_,totalweight);
                      m_hVector_vertex[17].at(indexV)->Fill(eventexcl->GetNVertex(),totalweight);
-		  }
+                     		  }
 
 		  if (eventdiff->GetEtaMinFromPFCands() > -1. && eventdiff->GetEtaMaxFromPFCands() < 1.){
 
