@@ -231,7 +231,6 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
     }
    //--------------------------------------------------------------------------------------------------------------------------
 
-
    // Event by Event Analysis
    //////////////////////////
 
@@ -290,7 +289,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
      nloop = 1;
    }
 
-   for (int j=0; j<21; j++)
+   for (int j=0; j<19; j++)
     {
 
        m_hVector_rjj.push_back( std::vector<TH1D*>() );
@@ -324,17 +323,19 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
        m_hVector_sumEHFplusVsiEta.push_back( std::vector<TH1D*>() );
        m_hVector_sumEHFminusVsiEta.push_back( std::vector<TH1D*>() );
 
+/*
        char name_ieta[300];
-       for(int ieta = 29; ieta <= 41; ++ieta){
-          sprintf(name_ieta,"sumEHFplus_iEta_%d_PU_%s_%s",ieta,"Complete",Folders.at(j).c_str());
-          TH1D *histo_sumEHFplus_ieta = new TH1D(name_ieta,"HF^{+} - Sum of Energy; #sum E_{HF^{+}} [GeV]; N events",500,0,500);
-          m_hVector_sumEHFplusVsiEta[j].push_back(histo_sumEHFplus_ieta);
+         for(int ieta = 29; ieta <= 41; ++ieta){
+            sprintf(name_ieta,"sumEHFplus_iEta_%d_PU_%s_%s",ieta,"TT",Folders.at(j).c_str());
+            TH1D *histo_sumEHFplus_ieta = new TH1D(name_ieta,"HF^{+} - Sum of Energy; #sum E_{HF^{+}} [GeV]; N events",500,0,500);
+            m_hVector_sumEHFplusVsiEta[j].push_back(histo_sumEHFplus_ieta);
 
-          sprintf(name_ieta,"sumEHFminus_iEta_%d_PU_%s_%s",ieta,"Complete",Folders.at(j).c_str());
-          TH1D *histo_sumEHFminus_ieta = new TH1D(name_ieta,"HF^{-} - Sum of Energy; #sum E_{HF^{-}} [GeV]; N events",500,0,500);
-          m_hVector_sumEHFminusVsiEta[j].push_back(histo_sumEHFminus_ieta);
-       }
-       
+            sprintf(name_ieta,"sumEHFminus_iEta_%d_PU_%s_%s",ieta,"TT",Folders.at(j).c_str());
+            TH1D *histo_sumEHFminus_ieta = new TH1D(name_ieta,"HF^{-} - Sum of Energy; #sum E_{HF^{-}} [GeV]; N events",500,0,500);
+            m_hVector_sumEHFminusVsiEta[j].push_back(histo_sumEHFminus_ieta);
+         }
+*/  
+   
        for (int k=0;k<nloop;k++){
          
        char tag[300];
@@ -486,6 +487,17 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
        TH1D *histo_vertex = new TH1D(name28,"Number of Vertex; # Vertex; N events",25,0,25);
        m_hVector_vertex[j].push_back(histo_vertex);
 
+       char name_ieta[300];
+         for(int ieta = 29; ieta <= 41; ++ieta){
+            sprintf(name_ieta,"sumEHFplus_iEta_%d_PU_%s_%s",ieta,tag,Folders.at(j).c_str());
+            TH1D *histo_sumEHFplus_ieta = new TH1D(name_ieta,"HF^{+} - Sum of Energy; #sum E_{HF^{+}} [GeV]; N events",500,0,500);
+            m_hVector_sumEHFplusVsiEta[j].push_back(histo_sumEHFplus_ieta);
+
+            sprintf(name_ieta,"sumEHFminus_iEta_%d_PU_%s_%s",ieta,tag,Folders.at(j).c_str());
+            TH1D *histo_sumEHFminus_ieta = new TH1D(name_ieta,"HF^{-} - Sum of Energy; #sum E_{HF^{-}} [GeV]; N events",500,0,500);
+            m_hVector_sumEHFminusVsiEta[j].push_back(histo_sumEHFminus_ieta);
+         }
+
        }
     }
 
@@ -497,7 +509,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
       ++TotalE;
         
       //----------- Progress Report -------------
-      
+     
       double progress = 10.0*i/(1.0*NEVENTS);
       int l = TMath::FloorNint(progress); 
       if (l > decade){
@@ -532,7 +544,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
       double weight;
       double weightbxp1;
       double weightbxm1;
- 
+      
       if (switchWeightPU) { 
 	 //weight = LumiWeights_.weightOOT(eventexcl->GetNPileUpBx0(),eventexcl->GetNPileUpBxm1()); 
 	 weight = LumiWeights_.weight( eventexcl->GetNPileUpBx0()); 
@@ -543,6 +555,8 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
              weightbxp1 = 1.0;
              weightbxm1 = 1.0;
       }
+
+
       //------------------------------------------------------------------------------------------
 
       double weightlumi;
@@ -616,7 +630,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
        m_hVector_deltaEtaPF[0].at(indexV)->Fill(deltaetapf_,totalweight);
        m_hVector_absdeltaEtaPF[0].at(indexV)->Fill(absdeltaetapf_,totalweight);
        m_hVector_vertex[0].at(indexV)->Fill(eventexcl->GetNVertex(),totalweight);
-         
+       
        for(int ieta = 29,iring = 0; ieta <= 41; ++ieta,++iring){
              m_hVector_sumEHFplusVsiEta[0][iring]->Fill(eventdiff->GetSumEHFPlusVsiEta(iring),totalweight);
              m_hVector_sumEHFminusVsiEta[0][iring]->Fill(eventdiff->GetSumEHFMinusVsiEta(iring),totalweight);
@@ -679,7 +693,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
          //////////////////////////////////////////////////
 
 	 if(eventexcl->GetNVertex() > 0 && eventexcl->GetNVertex()<= optnVertex){
-         //if(eventexcl->GetNVertex() > 0 && eventexcl->GetNVertex()>= optnVertex){
+//         if(eventexcl->GetNVertex() > 0 && eventexcl->GetNVertex()>= optnVertex){
 
             counterJetsstep1+=totalweight; 
 
@@ -1398,7 +1412,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
 
      } // Vector Defense: GetNPileUp()
 
-    }// Run All Events
+    } // Run All Events
 
      outstring << " >>----------------------End Info for Pick Events------------------------ " << std::endl;
      outstring << "" << std::endl;
