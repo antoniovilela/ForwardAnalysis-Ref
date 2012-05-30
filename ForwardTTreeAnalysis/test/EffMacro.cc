@@ -169,27 +169,27 @@ void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string 
    // Event by Event Analysis
    //////////////////////////
 
-   double TotalE = 0.;
-   double counterTrigger=0.;
-   double counterTriggerRef = 0.;
-   double counterPreSel = 0.;
-   double counterJetsstep1 = 0.;
-   double counterJetsstep2 = 0.;
-   double counterJetsAllstep3 = 0.;
-   double counterJetsAllstep4_4 = 0.;
-   double counterJetsAllstep4_3 = 0.;
-   double counterJetsAllstep4_2 = 0.;
-   double counterJetsAllstep4_1 = 0.;
-   double counterJetsTrackerstep3 = 0.;
-   double counterJetsTrackerstep4_4 = 0.;
-   double counterJetsTrackerstep4_3 = 0.;
-   double counterJetsTrackerstep4_2 = 0.;
-   double counterJetsTrackerstep4_1 = 0.;
-   double counterJetsEta2step3 = 0.;
-   double counterJetsEta2step4_4 = 0.;
-   double counterJetsEta2step4_3 = 0.;
-   double counterJetsEta2step4_2 = 0.;
-   double counterJetsEta2step4_1 = 0.;
+   int TotalE = 0;
+   int counterTrigger=0;
+   int counterTriggerRef = 0;
+   int counterPreSel = 0;
+   int counterJetsstep1 = 0;
+   int counterJetsstep2 = 0;
+   int counterJetsAllstep3 = 0;
+   int counterJetsAllstep4_4 = 0;
+   int counterJetsAllstep4_3 = 0;
+   int counterJetsAllstep4_2 = 0;
+   int counterJetsAllstep4_1 = 0;
+   int counterJetsTrackerstep3 = 0;
+   int counterJetsTrackerstep4_4 = 0;
+   int counterJetsTrackerstep4_3 = 0;
+   int counterJetsTrackerstep4_2 = 0;
+   int counterJetsTrackerstep4_1 = 0;
+   int counterJetsEta2step3 = 0;
+   int counterJetsEta2step4_4 = 0;
+   int counterJetsEta2step4_3 = 0;
+   int counterJetsEta2step4_2 = 0;
+   int counterJetsEta2step4_1 = 0;
 
    std::vector <std::string> Folders;
    Folders.push_back("without_cuts");
