@@ -72,7 +72,7 @@ void EffMacro::LoadFile(std::string fileinput, std::string processinput){
 
 }
 
-void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string processname_, double jet1PT_, double jet2PT_, int optnVertex_, int optTrigger_, bool switchPreSel_, bool switchTrigger_, int nbins_){
+void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string processname_, double jet1PT_, double jet2PT_, int optnVertex_, int optTriggerRef_, int optTrigger_,  bool switchPreSel_, bool switchTriggerRef_, bool switchTrigger_, int nbins_){
 
    filein = filein_;
    savehistofile = savehistofile_;
@@ -81,8 +81,10 @@ void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string 
    jet1PT = jet1PT_;
    jet2PT = jet2PT_;
    optnVertex = optnVertex_;
+   optTriggerRef= optTriggerRef_;
    optTrigger = optTrigger_;
    switchPreSel = switchPreSel_;
+   switchTriggerRef = switchTriggerRef_;
    switchTrigger = switchTrigger_;
    nbins = nbins_;
 
@@ -98,9 +100,11 @@ void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string 
    std::cout << "pT(Jet1): " << jet1PT << "GeV" << std::endl;
    std::cout << "pT(Jet2): " << jet2PT << "GeV" << std::endl;
    std::cout << "# Vertex: " << optnVertex << std::endl;
+   std::cout << "Trigger Ref. Option: " << optTriggerRef << std::endl;
    std::cout << "Trigger Option: " << optTrigger << std::endl;
    std::cout << " " << std::endl;
    std::cout << "--> TRUE = 1 FALSE = 0" << std::endl;
+   std::cout << "Trigger Ref. Switch: " << switchTriggerRef << std::endl;
    std::cout << "Trigger Switch: " << switchTrigger << std::endl;
    std::cout << "Pre-Selection Switch: " << switchPreSel << std::endl;
    std::cout << "N Bins: " << nbins << std::endl;
@@ -167,6 +171,8 @@ void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string 
 
    double TotalE = 0.;
    double counterTrigger=0.;
+   double counterTriggerRef = 0.;
+   double counterPreSel = 0.;
    double counterJetsstep1 = 0.;
    double counterJetsstep2 = 0.;
    double counterJetsAllstep3 = 0.;
@@ -254,15 +260,21 @@ void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string 
       // SET TRIGGER OR TRIGGER EMULATOR!!!!
       //
       //
-      // SIMULATED TRIGGER
-      if ( !switchPreSel || (switchPreSel && eventexcl->GetSumEHFPFlowPlus() < 30 && eventexcl->GetSumEHFPFlowMinus() < 30 && eventexcl->GetLeadingJetP4().Pt() > 30 && eventexcl->GetSecondJetP4().Pt() > 30)){
+
+      // REF. TRIGGER
+      if (!switchTriggerRef || (switchTriggerRef && eventexcl->GetHLTPath(optTriggerRef))){
+
+         ++counterTriggerRef;
 
          // TRIGGER
-	 if (!switchTrigger || (switchTrigger && eventexcl->GetHLTPath(optTrigger))){
-	 //
-	 //------------------------------------------------------------------------------------------
+         if (!switchTrigger || (switchTrigger && eventexcl->GetHLTPath(optTrigger))){
 
-	 ++counterTrigger;
+           ++counterTrigger;
+
+         // Pre Selection
+           if ( !switchPreSel || (switchPreSel && eventexcl->GetSumEHFPFlowPlus() < 30 && eventexcl->GetSumEHFPFlowMinus() < 30)){
+ 
+   	     ++counterPreSel;
 
 	 // With Trigger: online or emulate          
 	 ////////////////////////////////////////////////
@@ -420,9 +432,11 @@ void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string 
 
 	 } // If nVertex
        
-       } // Trigger  
+       } // Preselection 
 
-     } // PreSelection
+     } // Trigger
+
+    } // Ref. Trigger 
 
    }// Run All Events
 
@@ -440,9 +454,11 @@ void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string 
      outstring << "pT(Jet1): " << jet1PT << "GeV" << std::endl;
      outstring << "pT(Jet2): " << jet2PT << "GeV" << std::endl;
      outstring << "# Vertex: " << optnVertex << std::endl;
+     outstring << "Trigger Ref. Option: " << optTriggerRef << std::endl;
      outstring << "Trigger Option: " << optTrigger << std::endl;
      outstring << " " << std::endl;
      outstring << "--> TRUE = 1 FALSE = 0" << std::endl;
+     outstring << "Trigger Ref. Switch: " << switchTriggerRef << std::endl;
      outstring << "Trigger Switch: " << switchTrigger << std::endl;
      outstring << "Pre-Selection Switch: " << switchPreSel << std::endl;
      outstring << "N Bins PU: " << nbins << std::endl;
@@ -451,7 +467,9 @@ void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string 
      outstring << " " << std::endl;
      outstring << "Total # of Events without Weight: " << TotalE << std::endl;
      outstring << " " << std::endl;
+     outstring << "Ref. Triggered: " << counterTriggerRef << std::endl;
      outstring << "Triggered: " << counterTrigger << std::endl;
+     outstring << "Pre. Selection: " << counterPreSel << std::endl;
      outstring << "STEP1: " << counterJetsstep1 << std::endl;
      outstring << "STEP2: " << counterJetsstep2 << std::endl;
      outstring << "STEP3 (CMS Acceptance): " << counterJetsAllstep3 << std::endl;
@@ -498,9 +516,11 @@ int main(int argc, char **argv)
    double jet1PT_;
    double jet2PT_;
    int optnVertex_;
+   int optTriggerRef_;
    int optTrigger_;
    bool switchPreSel_;
    bool switchTrigger_;
+   bool switchTriggerRef_;
    int nbins_;
 
    if (argc > 1 && strcmp(s1,argv[1]) != 0)  filein_ = argv[1];
@@ -509,14 +529,16 @@ int main(int argc, char **argv)
    if (argc > 4 && strcmp(s1,argv[4]) != 0)  jet1PT_  = atoi(argv[4]);
    if (argc > 5 && strcmp(s1,argv[5]) != 0)  jet2PT_ = atoi(argv[5]);
    if (argc > 6 && strcmp(s1,argv[6]) != 0)  optnVertex_ = atoi(argv[6]);
-   if (argc > 7 && strcmp(s1,argv[7]) != 0)  optTrigger_   = atoi(argv[7]);
-   if (argc > 8 && strcmp(s1,argv[8]) != 0)  switchPreSel_   = atoi(argv[8]);
-   if (argc > 9 && strcmp(s1,argv[9]) != 0)  switchTrigger_   = atoi(argv[9]);
-   if (argc > 10 && strcmp(s1,argv[10]) != 0)  nbins_ = atoi(argv[10]);
+   if (argc > 7 && strcmp(s1,argv[7]) != 0)  optTriggerRef_  = atoi(argv[7]);
+   if (argc > 8 && strcmp(s1,argv[8]) != 0)  optTrigger_   = atoi(argv[8]);
+   if (argc > 9 && strcmp(s1,argv[9]) != 0)  switchPreSel_   = atoi(argv[9]);
+   if (argc > 10 && strcmp(s1,argv[10]) != 0)  switchTriggerRef_   = atoi(argv[10]);
+   if (argc > 11 && strcmp(s1,argv[11]) != 0)  switchTrigger_   = atoi(argv[11]);
+   if (argc > 12 && strcmp(s1,argv[12]) != 0)  nbins_ = atoi(argv[12]);
 
 
    EffMacro* exclDijets = new EffMacro();   
-   exclDijets->Run(filein_, savehistofile_, processname_, jet1PT_, jet2PT_, optnVertex_, optTrigger_, switchPreSel_, switchTrigger_, nbins_);
+   exclDijets->Run(filein_, savehistofile_, processname_, jet1PT_, jet2PT_, optnVertex_, optTriggerRef_, optTrigger_, switchPreSel_, switchTriggerRef_, switchTrigger_, nbins_);
 
    return 0;
 }
