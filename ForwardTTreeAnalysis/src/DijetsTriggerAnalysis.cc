@@ -60,12 +60,20 @@ DijetsTriggerAnalysis::DijetsTriggerAnalysis(const edm::ParameterSet& pset):
      thresholdHFRingEtSum_(pset.getParameter<unsigned int>("hfRingEtSumThreshold")),
      thresholdHFRingBitCount_(pset.getParameter<unsigned int>("hfRingBitCountThreshold")),
      l1TriggerNames_(pset.getParameter<std::vector<std::string> >("l1TriggerNames")) {
-  ringNames_.push_back("Ring 1 HF-plus");
-  ringNames_.push_back("Ring 1 HF-minus");
-  ringNames_.push_back("Ring 2 HF-plus");
-  ringNames_.push_back("Ring 2 HF-minus");
-  setTFileService(); 
+     ringNames_.push_back("Ring 1 HF-plus");
+     ringNames_.push_back("Ring 1 HF-minus");
+     ringNames_.push_back("Ring 2 HF-plus");
+     ringNames_.push_back("Ring 2 HF-minus");
+     setTFileService(); 
 }
+   /*const int nMaxTower = 10000;
+   float towET_[nMaxTower] ;
+   float towEta_[nMaxTower];
+   float towPhi_[nMaxTower];
+   float towE_[nMaxTower];
+   float towEm_[nMaxTower];
+   float towHad_[nMaxTower];
+   float towOe_[nMaxTower];*/
 
 void DijetsTriggerAnalysis::setTFileService(){
   edm::Service<TFileService> fs;
@@ -296,12 +304,21 @@ void DijetsTriggerAnalysis::dijetsTriggerJetInfo(DijetsTriggerEvent& eventData, 
 
   if(jetCollectionH->size() > 0){
      const reco::Jet& leadingJet = (*jetCollectionH)[0];
-     const reco::Jet& secondJet = (*jetCollectionH)[1];
-     const reco::Jet& thirdJet = (*jetCollectionH)[2];     
+     //const reco::Jet& secondJet = (*jetCollectionH)[1];
+     //const reco::Jet& thirdJet = (*jetCollectionH)[2];     
  
      eventData.leadingJetPt_ = leadingJet.pt();
      eventData.leadingJetEta_ = leadingJet.eta();
      eventData.leadingJetPhi_ = leadingJet.phi();
+   } else{
+     eventData.leadingJetPt_ = -999.;
+     eventData.leadingJetEta_ = -999.;
+     eventData.leadingJetPhi_ = -999.;}  
+  
+  if(jetCollectionH->size() > 1){
+     //const reco::Jet& leadingJet = (*jetCollectionH)[0];
+     const reco::Jet& secondJet = (*jetCollectionH)[1];
+     const reco::Jet& thirdJet = (*jetCollectionH)[2];    
      
      eventData.secondJetPt_ = secondJet.pt();
      eventData.secondJetEta_ = secondJet.eta();
@@ -312,10 +329,7 @@ void DijetsTriggerAnalysis::dijetsTriggerJetInfo(DijetsTriggerEvent& eventData, 
      eventData.thirdJetPhi_ = thirdJet.phi(); 
 
   } else{
-     eventData.leadingJetPt_ = -999.;
-     eventData.leadingJetEta_ = -999.;
-     eventData.leadingJetPhi_ = -999.;
-     
+        
      eventData.secondJetPt_ = -999.;
      eventData.secondJetEta_ = -999.;
      eventData.secondJetPhi_ = -999.;
@@ -333,44 +347,37 @@ void DijetsTriggerAnalysis::dijetsTriggerCaloTowerInfo(DijetsTriggerEvent& event
   CaloTowerCollection::const_iterator tower = caloTower.begin();
   CaloTowerCollection::const_iterator tower_end = caloTower.end();
 
+  double sumEHFMinus = 0.;
+  double sumEHFPlus  = 0.;
   if( caloTowerCollectionH.isValid() ){
-   //ntowcal = caloTowerTag->size();
-   int jtow = 0;
-   float towet=0.; float toweta=0.; float towphi=0.; float towen=0.; 
-   float towem=0.; float towhd=0.; float towoe=0.;
-   for(; tower != tower_end; ++tower){
-  
-     if(tower->energy() > 4.0)
-       {
-         towet += tower->et();
-         toweta = tower->eta();
-         towphi = tower->phi();
-         towen += tower->energy();
-         towem += tower->emEnergy();
-         towhd += tower->hadEnergy();
-         towoe += tower->outerEnergy();
-         eventData.towEta_ = toweta;
-         eventData.towPhi_ = towphi;
-         ++jtow;
-       }
-   }
-  eventData.ntowCal_ = jtow;
-  eventData.towET_ = towet;
-  //eventData.towEta_ = toweta;
-  //eventData.towPhi_ = towphi;
-  eventData.towE_ = towen;
-  eventData.towEm_ = towem;
-  eventData.towHad_ = towhd;
-  eventData.towOe_ = towoe;
- }else {
-   eventData.ntowCal_ = 0;
-   eventData.towET_ = -999.;
-   eventData.towEta_ = -999.;
-   eventData.towPhi_ = -999.;
-   eventData.towE_ = -999.;
-   eventData.towEm_ = -999.;
-   eventData.towHad_ = -999.;
-   eventData.towOe_ = -999.;
-  }
 
+
+   for(; tower != tower_end; tower++){
+      double eta = tower->eta();
+      double energy = tower->energy();
+      //double pt = tower->pt();
+     
+      if((3.0 < eta) && (eta < 5.0) ){
+        sumEHFPlus += energy;
+      }
+      if((-5.0 < eta) && (eta < -3.0) ){
+        sumEHFMinus += energy;
+      }
+     
+     //eventData.SetEtaAllTowers(eta); 
+     //eventData.SetEnergyAllTowers(energy); 
+     //eventData.SetPtAllTowers(pt);
+   }
+
+   eventData.SetSumEHFPlus(sumEHFPlus);
+   eventData.SetSumEHFMinus(sumEHFMinus);
+  }else{
+   eventData.SetSumEHFPlus(-999.);
+   eventData.SetSumEHFMinus(-999.);
+ 
+  }
 }
+
+
+  
+ 

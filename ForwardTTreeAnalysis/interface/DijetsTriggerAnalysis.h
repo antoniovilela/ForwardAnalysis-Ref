@@ -41,11 +41,7 @@ namespace dijetsTriggerAnalysis {
          void dijetsTriggerJetInfo(DijetsTriggerEvent&, const edm::Event&, const edm::EventSetup&);
          void dijetsTriggerCaloTowerInfo(DijetsTriggerEvent&, const edm::Event&, const edm::EventSetup&);
 
-         //unsigned int nHCALiEta(const std::map<unsigned int, std::vector<unsigned int> >&,
-         //                    unsigned int, unsigned int);
-
-         //double sumEHCALiEta(const std::map<unsigned int, std::vector<double> >&,
-         ///                 unsigned int, unsigned int);  
+           
 
 	 class Correlation{
 	    public:
@@ -74,13 +70,7 @@ namespace dijetsTriggerAnalysis {
 	 edm::InputTag gtDigisTag_;
 	 edm::InputTag l1GtObjectMapTag_; 
 	 edm::InputTag gctDigisTag_;
-         //edm::InputTag hcalTowerSummaryTag_;
-         //double energyThresholdHB_;
-         //double energyThresholdHE_;
-         //double energyThresholdHF_;
-         //double comEnergy_,Ebeam_;
-         //bool applyEnergyScaleHCAL_;
-         //double energyScaleHCAL_;         
+       
 
 	 L1GtUtils l1GtUtils_;
 
@@ -98,6 +88,9 @@ namespace dijetsTriggerAnalysis {
 
 	 TH2F* h_correlations_;
 	 std::map<std::pair<int,int>,Correlation> correlations_;
+
+         //int jtow;         
+         //std::vector<double>towET_;
    };
 } // namespace
 #endif //end code

@@ -71,6 +71,7 @@ process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
 process.load('CommonTools/RecoAlgos/HBHENoiseFilterResultProducer_cfi')
 ###Fragmento do menu de 2012
 process.load('ForwardAnalysis.ForwardTTreeAnalysis.HLT2012_cff')
+
 # create the jetMET HLT reco path
 process.DoHLTJets = cms.Path(
     process.HLTBeginSequence +

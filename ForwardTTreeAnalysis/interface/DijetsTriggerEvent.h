@@ -35,20 +35,25 @@ class DijetsTriggerEvent {
 
       void SetThirdJetPt(double fthirdJetPt)        { thirdJetPt_        = fthirdJetPt;}
       void SetThirdJetEta(double fthirdJetEta)      { thirdJetEta_       = fthirdJetEta;}
-      void SetThirdJetPhi(double fthirdJetPhi)      { thirdJetPhi_       = fthirdJetPhi;} 
+      void SetThirdJetPhi(double fthirdJetPhi)      { thirdJetPhi_       = fthirdJetPhi;}
+
+      void SetSumEHFPlus(double fSumEHFPlus)       { SumEHFPlus_ =fSumEHFPlus;}
+      void SetSumEHFMinus(double fSumEHFMinus)     { SumEHFMinus_ =fSumEHFMinus;} 
+
+       
 
       void SetNJet(int fnJet)                       { nJet_ =  fnJet;}
 
-      void SetNtowCal(int fntowCal)                 { ntowCal_ = fntowCal;}
+      /*void SetNtowCal(int fntowCal)                 { ntowCal_ = fntowCal;}
 
 
-      void SetTowET(float ftowET)                   { towET_        = ftowET;}
-      void SetTowEta(float ftowEta)                 { towEta_        = ftowEta;}
-      void SetTowPhi(float ftowPhi)                 { towPhi_        = ftowPhi;}
-      void SetTowE(float ftowE)                     { towE_        = ftowE;}
-      void SetTowEm(float ftowEm)                   { towEm_        = ftowEm;}
-      void SetTowHad(float ftowHad)                 { towHad_        = ftowHad;}
-      void SetTowOe(float ftowOe)                   { towOe_        = ftowOe;}
+      void SetTowET(int jtow, double ftowET)         { towET_[jtow]        = ftowET;}
+      void SetTowEta(int jtow, double ftowEta)       { towEta_[jtow]        = ftowEta;}
+      void SetTowPhi(int jtow, double ftowPhi)       { towPhi_[jtow]        = ftowPhi;}
+      void SetTowE(int jtow, double ftowE)           { towE_[jtow]        = ftowE;}
+      void SetTowEm(int jtow, double ftowEm)         { towEm_[jtow]        = ftowEm;}
+      void SetTowHad(int jtow, double ftowHad)       { towHad_[jtow]        = ftowHad;}
+      void SetTowOe(int jtow, double ftowOe)         { towOe_[jtow]        = ftowOe;}*/
 
    
       //
@@ -73,16 +78,19 @@ class DijetsTriggerEvent {
       double GetThirdJetEta()         const { return thirdJetEta_;}
       double GetThirdJetPhi()         const { return thirdJetPhi_;}
       
+      double GetSumEHFPlus()                const {return SumEHFPlus_;}
+      double GetSumEHFMinus()               const {return SumEHFMinus_;}
+      
       int GetNJet()                   const { return nJet_;}
-      int GetNtowCal()                const { return ntowCal_;} 
+      /*int GetNtowCal()                const { return ntowCal_;} 
 
-      float GetTowET()                const { return towET_;}
-      float GetTowEta()               const { return towEta_;}
-      float GetTowPhi()               const { return towPhi_;}     
-      float GetTowE()                 const { return towE_;}
-      float GetTowEm()                const { return towEm_;}
-      float GetTowHad()               const { return towHad_;}
-      float GetTowOe()                const { return towOe_;}
+      double GetTowET(int jtow)       const { return towET_[jtow];}
+      double GetTowEta(int jtow)      const { return towEta_[jtow];}
+      double GetTowPhi(int jtow)      const { return towPhi_[jtow];}     
+      double GetTowE(int jtow)        const { return towE_[jtow];}
+      double GetTowEm(int jtow)       const { return towEm_[jtow];}
+      double GetTowHad(int jtow)      const { return towHad_[jtow];}
+      double GetTowOe(int jtow)       const { return towOe_[jtow];}*/
 
    private:
       friend class dijetsTriggerAnalysis::DijetsTriggerAnalysis;
@@ -107,18 +115,31 @@ class DijetsTriggerEvent {
       double thirdJetEta_;
       double thirdJetPhi_;
       
-      float ntowCal_;
-      float towET_;
-      float towEta_;
-      float towPhi_;
-      float towE_;
-      float towEm_;
-      float towHad_;
-      float towOe_;
+      int nJet_ , jtow;
+      /*int ntowCal_;
+      std::vector<double> towET_;
+      std::vector<double> towEta_;
+      std::vector<double> towPhi_;
+      std::vector<double> towE_;
+      std::vector<double> towEm_;
+      std::vector<double> towHad_;
+      std::vector<double> towOe_;
+      //int nMaxTower = 100000000;
+      //double towET_[100000];
+     */
 
-      int nJet_; 
+      /*float towEta_[nMaxTower];
+      float towPhi_[nMaxTower];
+      float towE_[nMaxTower];
+      float towEm_[nMaxTower];
+      float towHad_[nMaxTower];
+      float towOe_[nMaxTower];*/
 
+     double SumEHFPlus_;
+     double SumEHFMinus_;
+      
 
+     
 
 };//end code
 

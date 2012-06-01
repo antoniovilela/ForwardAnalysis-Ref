@@ -31,14 +31,28 @@ void DijetsTriggerEvent::reset(){
    thirdJetEta_ = -999.;
    thirdJetPhi_ = -999.; 
   
-   ntowCal_ = 0;
-   towET_ = -999.;
+   //ntowCal_ = 0;
+   nJet_ = 0;
+  
+   /*size_t len_towET = sizeof(towET_)/sizeof(int);
+
+   for(size_t k=0; k<len_towET;++k){ 
+   towET_[k] = 0.; 
+  
+  }*/
+ /*towET_ = -999.;
    towEta_ = -999.;
    towPhi_ = -999.;
    towE_ = -999.;
    towEm_ = -999.;
    towHad_ = -999.;
-   towOe_ = -999.;
-
-   nJet_ = 0;
+   towOe_ = -999.;*/
+   /*const int nMaxTower = 10000;
+   towET_[nMaxTower] = -999.;
+   towEta_[nMaxTower] = -999.;
+   towPhi_[nMaxTower] = -999.;
+   towE_[nMaxTower] = -999.;
+   towEm_[nMaxTower] = -999.;
+   towHad_[nMaxTower] = -999.;
+   towOe_[nMaxTower] = -999.;*/
 }
