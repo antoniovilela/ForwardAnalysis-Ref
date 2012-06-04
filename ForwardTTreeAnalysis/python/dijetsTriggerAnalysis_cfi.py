@@ -28,7 +28,9 @@ DijetsTriggerAnalysis = cms.PSet(
   #comEnergy = cms.double(8000.),
   #applyEnergyScaleHCAL = cms.bool(False),
   #energyScaleFactorHCAL = cms.double(1.0), 
-  l1TriggerNames = cms.vstring('L1_SingleJet36','L1_SingleJet16','L1_DoubleJetC56')
+  l1TriggerNames = cms.vstring('L1_SingleJet36','L1_SingleJet16','L1_DoubleJetC56'),
+  TriggerResultsTag = cms.InputTag("TriggerResults::HLT"),
+  hltPaths = cms.vstring('HLT_ExclDiJet80_HFAND_v*','HLT_ExclDiJet35_HFAND_v*','HLT_ExclDiJet35_HFOR_v*','HLT_PFJet40_v*','HLT_L1SingleJet16_v*','HLT_DiPFJetAve80_v*','HLT_L1SingleJet36_v*') 
   # ('L1_SingleJet36_FwdVeto','L1_SingleJet36','L1_DoubleJet36_Central','L1_DoubleEG5') 
 )
 #	)

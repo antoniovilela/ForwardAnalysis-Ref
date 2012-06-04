@@ -13,7 +13,11 @@
 #include "FWCore/Framework/interface/MakerMacros.h"
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 #include "FWCore/Utilities/interface/Exception.h"
-
+//HLT
+#include "DataFormats/Common/interface/TriggerResults.h"
+#include "FWCore/Common/interface/TriggerNames.h"
+#include "FWCore/Utilities/interface/RegexMatch.h"
+//
 #include "DataFormats/JetReco/interface/CaloJetCollection.h"
 #include "DataFormats/JetReco/interface/PFJetCollection.h"
 #include "DataFormats/JetReco/interface/GenJetCollection.h"
@@ -59,7 +63,9 @@ DijetsTriggerAnalysis::DijetsTriggerAnalysis(const edm::ParameterSet& pset):
      gctDigisTag_(pset.getParameter<edm::InputTag>("gctDigisTag")),
      thresholdHFRingEtSum_(pset.getParameter<unsigned int>("hfRingEtSumThreshold")),
      thresholdHFRingBitCount_(pset.getParameter<unsigned int>("hfRingBitCountThreshold")),
-     l1TriggerNames_(pset.getParameter<std::vector<std::string> >("l1TriggerNames")) {
+     l1TriggerNames_(pset.getParameter<std::vector<std::string> >("l1TriggerNames")),
+     triggerResultsTag_(pset.getParameter<edm::InputTag>("TriggerResultsTag")), 
+     hltPathNames_(pset.getParameter<std::vector<std::string> >("hltPaths")) {
      ringNames_.push_back("Ring 1 HF-plus");
      ringNames_.push_back("Ring 1 HF-minus");
      ringNames_.push_back("Ring 2 HF-plus");
@@ -201,6 +207,34 @@ void DijetsTriggerAnalysis::dijetsTriggerInfo(DijetsTriggerEvent& eventData, con
         corr.Fill(x,y);
      }
   }
+//////////////////////////////////////////////
+  edm::Handle<edm::TriggerResults> triggerResults;
+  event.getByLabel(triggerResultsTag_, triggerResults);
+
+  const edm::TriggerNames& triggerNames = event.triggerNames(*triggerResults);
+
+  size_t idxpath = 0;
+  std::vector<std::string>::const_iterator hltpath = hltPathNames_.begin();
+  std::vector<std::string>::const_iterator hltpaths_end = hltPathNames_.end(); 
+  for(; hltpath != hltpaths_end; ++hltpath,++idxpath){
+     std::string resolvedPathName; 
+     if( edm::is_glob( *hltpath ) ){
+        std::vector< std::vector<std::string>::const_iterator > matches = edm::regexMatch(triggerNames.triggerNames(), *hltpath);
+
+        if( matches.empty() )
+           throw cms::Exception("Configuration") << "Could not find any HLT path of type " << *hltpath << "\n";
+        else if( matches.size() > 1)
+           throw cms::Exception("Configuration") << "HLT path type " << *hltpath << " not unique\n";
+        else resolvedPathName = *(matches[0]);
+     } else{
+        resolvedPathName = *hltpath;
+     }
+
+     int idx_HLT = triggerNames.triggerIndex(resolvedPathName);
+     int accept_HLT = ( triggerResults->wasrun(idx_HLT) && triggerResults->accept(idx_HLT) ) ? 1 : 0;
+     eventData.SetHLTPath(idxpath, accept_HLT);
+  }
+//////////////////////////////////////////////
 
   const L1GctHFRingEtSumsCollection* gctHFRingEtSumsCollection = 0;
   const L1GctHFBitCountsCollection* gctHFBitCountsCollection = 0;

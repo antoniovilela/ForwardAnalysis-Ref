@@ -22,6 +22,8 @@ class DijetsTriggerEvent {
       void SetL1Prescale(int idx, int prescale) { l1Prescale_[idx] = prescale; }
       void SetL1AlgoName(int idx, std::string const& name) { l1AlgoName_[idx] = name; }
 
+      void SetHLTPath(int idx, int fHLTBit)         { hltTrigResults_[idx] = fHLTBit;}
+
       void SetEtSum(int ring,int etSum) { hfRingEtSum_[ring] = etSum;}
       void SetBitCount(int ring,int bitCount) { hfRingBitCount_[ring] = bitCount;}
  
@@ -64,6 +66,8 @@ class DijetsTriggerEvent {
       int GetL1Prescale(int idx) const { return l1Prescale_[idx]; }
       std::string GetL1AlgoName(int idx) const { return l1AlgoName_[idx]; }
 
+      int GetHLTPath(int idx)                    const { return hltTrigResults_[idx]; }        
+
       int GetEtSum(int ring) const { return hfRingEtSum_[ring]; }
       int GetBitCount(int ring) const { return hfRingBitCount_[ring]; }
       double GetLeadingJetPt()        const { return leadingJetPt_ ;}
@@ -100,6 +104,7 @@ class DijetsTriggerEvent {
       std::vector<int> l1Decision_;
       std::vector<int> l1Prescale_;
       std::vector<std::string> l1AlgoName_;
+      int hltTrigResults_[20]; 
       std::vector<int> hfRingEtSum_;
       std::vector<int> hfRingBitCount_;
     

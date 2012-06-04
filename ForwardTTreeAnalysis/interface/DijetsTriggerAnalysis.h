@@ -86,6 +86,9 @@ namespace dijetsTriggerAnalysis {
 
 	 std::vector<std::string> l1TriggerNames_;
 
+         std::vector<std::string> hltPathNames_;
+         edm::InputTag triggerResultsTag_;
+
 	 TH2F* h_correlations_;
 	 std::map<std::pair<int,int>,Correlation> correlations_;
 

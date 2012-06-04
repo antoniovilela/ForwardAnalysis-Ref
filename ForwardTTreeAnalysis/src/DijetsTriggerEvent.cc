@@ -13,7 +13,10 @@ void DijetsTriggerEvent::reset(){
    l1Decision_.clear();
    l1Prescale_.clear();
    l1AlgoName_.clear();
-   
+  
+   size_t len_hltTrigResults = sizeof(hltTrigResults_)/sizeof(int);
+   for(size_t k = 0; k < len_hltTrigResults; ++k) hltTrigResults_[k] = 0;
+ 
    hfRingEtSum_.clear();
    hfRingBitCount_.clear();
    hfRingEtSum_ = std::vector<int>(4,-1);
