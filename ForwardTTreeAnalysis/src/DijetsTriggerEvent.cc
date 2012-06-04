@@ -14,8 +14,10 @@ void DijetsTriggerEvent::reset(){
    l1Prescale_.clear();
    l1AlgoName_.clear();
   
-   size_t len_hltTrigResults = sizeof(hltTrigResults_)/sizeof(int);
-   for(size_t k = 0; k < len_hltTrigResults; ++k) hltTrigResults_[k] = 0;
+   /*size_t len_hltTrigResults = sizeof(hltTrigResults_)/sizeof(int);
+   for(size_t k = 0; k < len_hltTrigResults; ++k) hltTrigResults_[k] = 0;*/
+   hltTrigResults_.clear(); 
+   hltTrigNames_.clear(); 
  
    hfRingEtSum_.clear();
    hfRingBitCount_.clear();
