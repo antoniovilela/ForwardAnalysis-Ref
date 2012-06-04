@@ -61,10 +61,10 @@ DijetsTriggerAnalysis::DijetsTriggerAnalysis(const edm::ParameterSet& pset):
      particleFlowTag_(pset.getParameter<edm::InputTag>("particleFlowTag")),
      caloTowerTag_(pset.getParameter<edm::InputTag>("caloTowerTag")),
      gctDigisTag_(pset.getParameter<edm::InputTag>("gctDigisTag")),
+     triggerResultsTag_(pset.getParameter<edm::InputTag>("TriggerResultsTag")), 
      thresholdHFRingEtSum_(pset.getParameter<unsigned int>("hfRingEtSumThreshold")),
      thresholdHFRingBitCount_(pset.getParameter<unsigned int>("hfRingBitCountThreshold")),
      l1TriggerNames_(pset.getParameter<std::vector<std::string> >("l1TriggerNames")),
-     triggerResultsTag_(pset.getParameter<edm::InputTag>("TriggerResultsTag")), 
      hltPathNames_(pset.getParameter<std::vector<std::string> >("hltPaths")) {
      ringNames_.push_back("Ring 1 HF-plus");
      ringNames_.push_back("Ring 1 HF-minus");
@@ -112,7 +112,7 @@ void DijetsTriggerAnalysis::setTFileService(){
   }
 
   size_t nTriggers = l1TriggerNames_.size();
-  h_correlations_ = fs->make<TH2F>("correlations","correlations",nTriggers,0,nTriggers,nTriggers,0,nTriggers);
+  h_correlations_ = fs->make<TH2F>("Correlations","Correlations",nTriggers,0,nTriggers,nTriggers,0,nTriggers);
   for(size_t i = 0; i < nTriggers; ++i){
      for(size_t j = 0; j < nTriggers; ++j){
         h_correlations_->GetXaxis()->SetBinLabel(i+1,l1TriggerNames_[i].c_str());
@@ -120,6 +120,17 @@ void DijetsTriggerAnalysis::setTFileService(){
         correlations_.insert(std::make_pair(std::make_pair(i,j),Correlation()));
      }
   }
+
+  hltTriggerNamesHisto_ = fs->make<TH1F>("HLTTriggerNames","HLTTriggerNames",1,0,1);
+  hltTriggerNamesHisto_->SetBit(TH1::kCanRebin);
+  for(unsigned k=0; k < hltPathNames_.size(); ++k){
+    oss << "Using HLT reference trigger " << hltPathNames_[k] << std::endl;
+    hltTriggerNamesHisto_->Fill(hltPathNames_[k].c_str(),1);
+  }
+
+  hltTriggerPassHisto_ = fs->make<TH1F>("HLTTriggerPass","HLTTriggerPass",1,0,1);
+  hltTriggerPassHisto_->SetBit(TH1::kCanRebin);
+
   edm::LogInfo("Analysis") << oss.str();
 }
 
@@ -156,6 +167,8 @@ void DijetsTriggerAnalysis::fillEventData(DijetsTriggerEvent& eventData, const e
   eventData.l1Decision_.resize(l1TriggerNames_.size());
   eventData.l1Prescale_.resize(l1TriggerNames_.size());
   eventData.l1AlgoName_.resize(l1TriggerNames_.size());
+  eventData.hltTrigResults_.resize(hltPathNames_.size());
+  eventData.hltTrigNames_.resize(hltPathNames_.size());
   dijetsTriggerInfo(eventData,event,setup);
   dijetsTriggerJetInfo(eventData,event,setup); 
   dijetsTriggerCaloTowerInfo(eventData,event,setup);
@@ -233,6 +246,8 @@ void DijetsTriggerAnalysis::dijetsTriggerInfo(DijetsTriggerEvent& eventData, con
      int idx_HLT = triggerNames.triggerIndex(resolvedPathName);
      int accept_HLT = ( triggerResults->wasrun(idx_HLT) && triggerResults->accept(idx_HLT) ) ? 1 : 0;
      eventData.SetHLTPath(idxpath, accept_HLT);
+     eventData.SetHLTPathName(idxpath, resolvedPathName);
+     hltTriggerPassHisto_->Fill( (*hltpath).c_str(), 1 );
   }
 //////////////////////////////////////////////
 

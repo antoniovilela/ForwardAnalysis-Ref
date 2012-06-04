@@ -70,8 +70,8 @@ namespace dijetsTriggerAnalysis {
 	 edm::InputTag gtDigisTag_;
 	 edm::InputTag l1GtObjectMapTag_; 
 	 edm::InputTag gctDigisTag_;
+         edm::InputTag triggerResultsTag_;
        
-
 	 L1GtUtils l1GtUtils_;
 
 	 unsigned int thresholdHFRingEtSum_;
@@ -87,11 +87,11 @@ namespace dijetsTriggerAnalysis {
 	 std::vector<std::string> l1TriggerNames_;
 
          std::vector<std::string> hltPathNames_;
-         edm::InputTag triggerResultsTag_;
 
 	 TH2F* h_correlations_;
 	 std::map<std::pair<int,int>,Correlation> correlations_;
 
+         TH1F *hltTriggerPassHisto_,*hltTriggerNamesHisto_;
          //int jtow;         
          //std::vector<double>towET_;
    };
