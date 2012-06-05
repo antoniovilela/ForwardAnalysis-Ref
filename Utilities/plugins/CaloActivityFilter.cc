@@ -2,8 +2,6 @@
 #include "FWCore/Framework/interface/EDFilter.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 
-namespace old { // Hide this name 
-
 class CaloActivityFilter : public edm::EDFilter {
     public:
        explicit CaloActivityFilter( edm::ParameterSet const& );
@@ -54,7 +52,6 @@ class CaloActivityFilter : public edm::EDFilter {
        double sumETEEMaxPlus_;
        double sumETEEMaxMinus_;
 };
-} // namespace
 
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "FWCore/Framework/interface/Event.h"
@@ -68,8 +65,6 @@ class CaloActivityFilter : public edm::EDFilter {
 #include "DataFormats/HcalDetId/interface/HcalDetId.h"
 #include "DataFormats/HcalDetId/interface/HcalSubdetector.h"
 #include "DataFormats/EcalDetId/interface/EcalSubdetector.h"
-
-namespace old {
 
 CaloActivityFilter::CaloActivityFilter(edm::ParameterSet const& pset):
   //hcalTowerSummaryTag_(pset.getParameter<edm::InputTag>("HCALTowerSummaryTag")),
@@ -328,5 +323,5 @@ bool CaloActivityFilter::filter(edm::Event& event, edm::EventSetup const& setup)
 
   return accept;
 }
-}// namespace
-//DEFINE_FWK_MODULE(CaloActivityFilter);
+
+DEFINE_FWK_MODULE(CaloActivityFilter);
