@@ -40,7 +40,7 @@ const char* PATInfo::name = "PATInfo";
 
 PATInfo::PATInfo(const edm::ParameterSet& pset):
   runOnData_(true),
-  runALLTriggerPath_(pset.getUntrackedParameter<bool>("runALLTriggerPath",false)),
+  runALLTriggerPath_(pset.getParameter<bool>("runALLTriggerPath")),
   /*vertexTag_(pset.getParameter<edm::InputTag>("vertexTag")),
   trackTag_(pset.getParameter<edm::InputTag>("trackTag")),
   jetTag_(pset.getParameter<edm::InputTag>("jetTag")),
@@ -64,15 +64,17 @@ void PATInfo::fillEventData(PATInfoEvent& eventData, const edm::Event& event, co
   eventData.reset();
 
   runOnData_ = event.isRealData();
- if (runALLTriggerPath_ == true){ 
- std::cout<<"Selection All Trigger Paths that avaliable in file"<< std::endl;
-   patL1TriggerInfo(eventData,event,setup);
+  /*if (runALLTriggerPath_ == true){ 
+     std::cout<<"Selection All Trigger Paths that avaliable in file"<< std::endl;
+     patL1TriggerInfo(eventData,event,setup);
+     patHLTTriggerInfo(eventData,event,setup);
+  } else{
+     std::cout<< "Using Path Info default"<< std::endl;
+     patL1TriggerInfoSelection(eventData,event,setup);
+     patHLTTriggerInfoSelection(eventData,event,setup);
+  }*/
+  patL1TriggerInfo(eventData,event,setup);
   patHLTTriggerInfo(eventData,event,setup);
-} else{
-  std::cout<< "Using Path Info default"<< std::endl;
-  patL1TriggerInfoSelection(eventData,event,setup);
-  patHLTTriggerInfoSelection(eventData,event,setup);
-}
 
 }
 
@@ -100,26 +102,24 @@ void PATInfo::patL1TriggerInfo(PATInfoEvent& eventData, const edm::Event& event,
       //std::string l1TriggerName( (*itrBit)->name() );
       std::string l1TriggerName( (*itrBit)->alias() );
       //std::string l1TriggerNameFake("ALL");
-      //std::cout <<"L1algoBitname_: " << L1algoBitname_[0]<< std::endl; 
-      //std::cout << l1TriggerName << std::endl;
-//     std::cout << l1TriggerNameFake << std::endl;
 
 
-    //  if( std::find(L1algoBitname_.begin(),L1algoBitname_.end(),l1TriggerName) != L1algoBitname_.end() ) continue;
+      if( !runALLTriggerPath_ && 
+          std::find(L1algoBitname_.begin(),L1algoBitname_.end(),l1TriggerName) != L1algoBitname_.end() ) continue;
 
       //std::cout << L1algoBitname_[0] <<"Trigger Name: " <<  (*itrBit)->name() << std::endl;
 
-   //    std::cout <<" looping over algoBits: " << nbit << '\t' 
-// 	 <<" L1 Bit: " << (*itrBit)->techTrigger() << '\t' 
-// 	 <<" Trigger Name: " <<  (*itrBit)->name() << '\n'
-// 	 <<" Trigger alias: " <<  (*itrBit)->alias() << '\n'
-// 	 <<" Logical Expression:  " << (*itrBit)->logicalExpression() << '\n'
-// 	 <<" Trigger Condition Keys:" <<  (*itrBit)->conditionKeys().size() << '\t'
-// 	 <<" GT L1 Result:  " <<  (*itrBit)->gtlResult() << '\t'
-// 	 <<" Trigger Decision:  " <<  (*itrBit)->decision() << '\t'
-// 	 <<" Trigger Decision Before Mask: " <<  (*itrBit)->decisionBeforeMask() << '\t'
-// 	 <<" Trigger Decision After Mask: " << (*itrBit)->decisionAfterMask() << '\t'
-// 	 << '\n';
+      /*std::cout <<" looping over algoBits: " << nbit << '\t' 
+ 	 <<" L1 Bit: " << (*itrBit)->techTrigger() << '\t' 
+ 	 <<" Trigger Name: " <<  (*itrBit)->name() << '\n'
+ 	 <<" Trigger alias: " <<  (*itrBit)->alias() << '\n'
+ 	 <<" Logical Expression:  " << (*itrBit)->logicalExpression() << '\n'
+ 	 <<" Trigger Condition Keys:" <<  (*itrBit)->conditionKeys().size() << '\t'
+ 	 <<" GT L1 Result:  " <<  (*itrBit)->gtlResult() << '\t'
+ 	 <<" Trigger Decision:  " <<  (*itrBit)->decision() << '\t'
+ 	 <<" Trigger Decision Before Mask: " <<  (*itrBit)->decisionBeforeMask() << '\t'
+ 	 <<" Trigger Decision After Mask: " << (*itrBit)->decisionAfterMask() << '\t'
+ 	 << '\n';*/
       
 
       PATL1Trigger patL1TrigInfo;
@@ -133,19 +133,15 @@ void PATInfo::patL1TriggerInfo(PATInfoEvent& eventData, const edm::Event& event,
       patL1TrigInfo.SetL1Prescale( (*itrBit)->prescale() );
 
       eventData.SetL1Trigger(patL1TrigInfo);
-
-
-
-
-
    } // L1 trigger algos
    eventData.SetNBit(nbit);
+
 }//end
 
 
 //
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void PATInfo::patL1TriggerInfoSelection(PATInfoEvent& eventData, const edm::Event& event, const edm::EventSetup& setup)
+/*void PATInfo::patL1TriggerInfoSelection(PATInfoEvent& eventData, const edm::Event& event, const edm::EventSetup& setup)
 { 
    //Ref:http://cmssw.cvs.cern.ch/cgi-bin/cmssw.cgi/UserCode/Bromo/TopAnalysis/TopAnalyzer/src/JetTrigger.cc
 
@@ -196,54 +192,52 @@ void PATInfo::patL1TriggerInfoSelection(PATInfoEvent& eventData, const edm::Even
    } // L1 trigger algos
    eventData.SetNBit(nbit);
 }//end
-
+*/
 //
 
 void PATInfo::patHLTTriggerInfo(PATInfoEvent& eventData, const edm::Event& event, const edm::EventSetup& setup)
 { 
-
   // PAT trigger event
   edm::Handle< TriggerEvent > triggerEvent;
   event.getByLabel( patTriggerEvent_ , triggerEvent );
 
-  pat::TriggerPathRefVector HLTalgoBits = triggerEvent->acceptedPaths();
+  //pat::TriggerPathRefVector HLTalgoBits = triggerEvent->acceptedPaths();
+  pat::TriggerPathRefVector HLTalgoBits = triggerEvent->pathRefs();
   pat::TriggerPathRefVector::const_iterator HLT_Bit = HLTalgoBits.begin(); 
   pat::TriggerPathRefVector::const_iterator HLT_Bit_end = HLTalgoBits.end(); 
   
   int nHLTbit = 0;
   for(; HLT_Bit != HLT_Bit_end; ++HLT_Bit){
-  nHLTbit++ ;
-  
+     ++nHLTbit;
 
      std::string HLTTriggerName( (*HLT_Bit)->name() );
 
-    
-
-     //if( std::find( HLTalgoBitname_.begin(),HLTalgoBitname_.end(),HLTTriggerName) != HLTalgoBitname_.end() ) continue;
+     if( !runALLTriggerPath_ &&
+	 std::find( HLTalgoBitname_.begin(),HLTalgoBitname_.end(),HLTTriggerName) != HLTalgoBitname_.end() ) continue;
      //     std::cout << " HLT Name : " << HLTTriggerName << std::endl;
 
      //  std::string AcceptedL1SeedName((*HLT_Bit)->acceptedL1Seeds() );
 
-        PATHLTTrigger patHLTTrigInfo;
-       
-        patHLTTrigInfo.SetHLTPrescale((*HLT_Bit)->prescale());
-        patHLTTrigInfo.SetHLTWasRun((*HLT_Bit)->wasRun());
-        patHLTTrigInfo.SetHLTWasAccept((*HLT_Bit)->wasAccept());
-        patHLTTrigInfo.SetHLTWasError((*HLT_Bit)->wasError());
-        patHLTTrigInfo.SetHLTName(HLTTriggerName);
+     PATHLTTrigger patHLTTrigInfo;
 
-	//  patHLTTrigInfo.SetAcceptedL1SeedName( AcceptedL1SeedName );
-	//  patHLTTrigInfo.SetFailedL1SeedName((*HLT_Bit)->failedL1Seeds());
+     patHLTTrigInfo.SetHLTPrescale((*HLT_Bit)->prescale());
+     patHLTTrigInfo.SetHLTWasRun((*HLT_Bit)->wasRun());
+     patHLTTrigInfo.SetHLTWasAccept((*HLT_Bit)->wasAccept());
+     patHLTTrigInfo.SetHLTWasError((*HLT_Bit)->wasError());
+     patHLTTrigInfo.SetHLTName(HLTTriggerName);
 
-        eventData.SetHLTTrigger(patHLTTrigInfo);
-     }//end for
+     //  patHLTTrigInfo.SetAcceptedL1SeedName( AcceptedL1SeedName );
+     //  patHLTTrigInfo.SetFailedL1SeedName((*HLT_Bit)->failedL1Seeds());
+
+     eventData.SetHLTTrigger(patHLTTrigInfo);
+  }//end for
      eventData.SetNHLTBit(nHLTbit);
 }//end
 
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void PATInfo::patHLTTriggerInfoSelection(PATInfoEvent& eventData, const edm::Event& event, const edm::EventSetup& setup)
+/*void PATInfo::patHLTTriggerInfoSelection(PATInfoEvent& eventData, const edm::Event& event, const edm::EventSetup& setup)
 { 
 
   // PAT trigger event
@@ -283,7 +277,7 @@ void PATInfo::patHLTTriggerInfoSelection(PATInfoEvent& eventData, const edm::Eve
      }//end for
      eventData.SetNHLTBit(nHLTbit);
 }//end
-
+*/
 
 
 
