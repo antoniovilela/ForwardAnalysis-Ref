@@ -9,6 +9,8 @@
 #include <map>
 #include <vector>
 
+class TH1F;
+class TH2F;
 class JetCorrector;
 class ExclusiveDijetsEvent;
 
@@ -37,6 +39,7 @@ class ExclusiveDijetsAnalysis {
      unsigned int nHFSlice(const std::map<unsigned int, std::vector<unsigned int> >& mapTreshToiEta, unsigned int thresholdHF, unsigned int ieta);
  
      //void setGenInfo(const edm::Event&, const edm::EventSetup&);
+     void setTFileService();
      void fillEventInfo(ExclusiveDijetsEvent&, const edm::Event&, const edm::EventSetup&); //added by eliza 
      void fillTriggerInfo(ExclusiveDijetsEvent&, const edm::Event&, const edm::EventSetup&); //added by eliza
      void fillPileUpInfo(ExclusiveDijetsEvent&, const edm::Event&, const edm::EventSetup&);
@@ -103,7 +106,7 @@ class ExclusiveDijetsAnalysis {
     
      std::string jetCorrectionService_;
      const JetCorrector* corrector_;
-     
+     TH1F *hltTriggerPassHisto_,*hltTriggerNamesHisto_;
 };
 
 } // namespace

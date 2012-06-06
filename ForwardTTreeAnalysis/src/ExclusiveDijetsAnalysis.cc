@@ -36,6 +36,12 @@
 #include "DataFormats/Candidate/interface/Candidate.h"
 #include "DataFormats/Math/interface/deltaR.h"
 #include "FWCore/Utilities/interface/RegexMatch.h"
+
+#include "FWCore/ServiceRegistry/interface/Service.h"
+#include "CommonTools/UtilAlgos/interface/TFileService.h"
+
+#include "TH1F.h"
+#include "TH2F.h"
 #include <cmath>
 #include <vector>
 #include <string>
@@ -81,6 +87,7 @@ ExclusiveDijetsAnalysis::ExclusiveDijetsAnalysis(const edm::ParameterSet& pset):
   resetPFThresholds(thresholdsPFlowEndcap_);
   resetPFThresholds(thresholdsPFlowTransition_);
   resetPFThresholds(thresholdsPFlowForward_);
+  setTFileService(); 
   if(pset.exists("PFlowThresholds")){ 
      edm::ParameterSet const& thresholdsPFPset = pset.getParameter<edm::ParameterSet>("PFlowThresholds");
  
@@ -125,7 +132,21 @@ ExclusiveDijetsAnalysis::ExclusiveDijetsAnalysis(const edm::ParameterSet& pset):
  
 }
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void ExclusiveDijetsAnalysis::setTFileService(){
+  edm::Service<TFileService> fs;
+  std::ostringstream oss;
+  hltTriggerNamesHisto_ = fs->make<TH1F>("HLTTriggerNames","HLTTriggerNames",1,0,1);
+  hltTriggerNamesHisto_->SetBit(TH1::kCanRebin);
+  for(unsigned k=0; k < hltPathNames_.size(); ++k){
+    oss << "Using HLT reference trigger " << hltPathNames_[k] << std::endl;
+    hltTriggerNamesHisto_->Fill(hltPathNames_[k].c_str(),1);
+  }
+
+  hltTriggerPassHisto_ = fs->make<TH1F>("HLTTriggerPass","HLTTriggerPass",1,0,1);
+  hltTriggerPassHisto_->SetBit(TH1::kCanRebin);
+}
+//////
 ExclusiveDijetsAnalysis::~ExclusiveDijetsAnalysis(){}
 
 void ExclusiveDijetsAnalysis::setBeginRun(const edm::Run& run, const edm::EventSetup& setup){
@@ -243,6 +264,8 @@ void ExclusiveDijetsAnalysis::fillTriggerInfo(ExclusiveDijetsEvent& eventData, c
      int idx_HLT = triggerNames.triggerIndex(resolvedPathName);
      int accept_HLT = ( triggerResults->wasrun(idx_HLT) && triggerResults->accept(idx_HLT) ) ? 1 : 0;
      eventData.SetHLTPath(idxpath, accept_HLT);
+     eventData.SetHLTPathName(idxpath, resolvedPathName);
+     hltTriggerPassHisto_->Fill( (*hltpath).c_str(), 1 ); 
   }
   
  

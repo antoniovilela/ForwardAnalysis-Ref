@@ -36,6 +36,8 @@ class ExclusiveDijetsEvent {
   //void SetHLT_Jet15U(int fHLT_Jet15U)           { HLT_Jet15U_       = fHLT_Jet15U;}
   //void SetHLT_L1Jet6U(int fHLT_L1Jet6U)         { HLT_L1Jet6U_      = fHLT_L1Jet6U;}
   void SetHLTPath(int idx, int fHLTBit)         { hltTrigResults_[idx] = fHLTBit;}
+  void SetHLTPathName(int idx, std::string const& path) { hltTrigNames_[idx] = path;}
+
 
   void SetSumEnergyHEPlusGen(double fsumEnergyHEPlusGen)                       { sumEnergyHEPlusGen_  =fsumEnergyHEPlusGen;}
   void SetSumEnergyHEMinusGen(double fsumEnergyHEMinusGen)                     { sumEnergyHEMinusGen_ =fsumEnergyHEMinusGen;}
@@ -301,6 +303,8 @@ class ExclusiveDijetsEvent {
   //int  GetHLT_Jet15U()                       const {return HLT_Jet15U_;}
   //int  GetHLT_L1Jet6U()                      const {return HLT_L1Jet6U_;}
   int GetHLTPath(int idx)                    const { return hltTrigResults_[idx]; }  
+  std::string GetHLTPathName(int idx)        const { return hltTrigNames_[idx]; }        
+
  
   double GetSumEnergyHEPlusGen()             const {return sumEnergyHEPlusGen_;}
   double GetSumEnergyHEMinusGen()            const {return sumEnergyHEMinusGen_;}
@@ -386,7 +390,9 @@ class ExclusiveDijetsEvent {
      double lumiWeight_;
      float instLumiLS_;
      float instLumiBunchOCC1_;
-     int hltTrigResults_[20];
+     //int hltTrigResults_[20];
+     std::vector<int> hltTrigResults_; 
+     std::vector<std::string> hltTrigNames_; 
 //------ jet 4-momentum vector------------------
      LorentzVector leadingJetP4_;
      LorentzVector secondJetP4_;
