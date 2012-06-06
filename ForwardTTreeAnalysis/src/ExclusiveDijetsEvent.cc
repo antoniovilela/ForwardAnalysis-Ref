@@ -10,6 +10,8 @@ ExclusiveDijetsEvent::~ExclusiveDijetsEvent() {}
 void ExclusiveDijetsEvent::reset(){
   size_t len_hltTrigResults = sizeof(hltTrigResults_)/sizeof(int);
   for(size_t k = 0; k < len_hltTrigResults; ++k) hltTrigResults_[k] = 0;
+  //hltTrigResults_.clear(); 
+  //hltTrigNames_.clear();  
    
   nPileUpBx0_ = -1;
   nPileUpBxm1_ = -1;

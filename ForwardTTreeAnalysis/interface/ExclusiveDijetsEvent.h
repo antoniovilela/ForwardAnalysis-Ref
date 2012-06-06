@@ -25,7 +25,7 @@ class ExclusiveDijetsEvent {
   void SetNPileUpBxp1(int fnPileUpBxp1)           { nPileUpBxp1_       = fnPileUpBxp1;}
   void SetNVertex(int fnVertex)                 { nVertex_          = fnVertex;}
 
-  //added by eliza
+  
   void SetRunNumber(int frunNumber)             { runNumber_        = frunNumber;}   
   void SetEventNumber(int feventNumber)         { eventNumber_      = feventNumber;}
   void SetLumiSection(int flumiSection)         { lumiSection_      = flumiSection;}
@@ -33,9 +33,8 @@ class ExclusiveDijetsEvent {
   void SetLumiWeight(double flumiWeight)        { lumiWeight_       = flumiWeight;}
   void SetInstDelLumiLS(float finstLumiLS)      { instLumiLS_       = finstLumiLS;}
   void SetInstLumiBunch(float finstLumiBunchOCC1) {instLumiBunchOCC1_ = finstLumiBunchOCC1;}
-  //void SetHLT_Jet15U(int fHLT_Jet15U)           { HLT_Jet15U_       = fHLT_Jet15U;}
-  //void SetHLT_L1Jet6U(int fHLT_L1Jet6U)         { HLT_L1Jet6U_      = fHLT_L1Jet6U;}
   void SetHLTPath(int idx, int fHLTBit)         { hltTrigResults_[idx] = fHLTBit;}
+  //void SetHLTPathName(int idx, std::string const& path) { hltTrigNames_[idx] = path;}
 
   void SetSumEnergyHEPlusGen(double fsumEnergyHEPlusGen)                       { sumEnergyHEPlusGen_  =fsumEnergyHEPlusGen;}
   void SetSumEnergyHEMinusGen(double fsumEnergyHEMinusGen)                     { sumEnergyHEMinusGen_ =fsumEnergyHEMinusGen;}
@@ -46,7 +45,7 @@ class ExclusiveDijetsEvent {
   void SetMissingMassFromXiFromPFCands(double fmissingMassFromXiFromPFCands)   { missingMassFromXiFromPFCands_ =fmissingMassFromXiFromPFCands;}
   void SetEPlusPzFromPFCands(double fEPlusPzFromPFCands)                       { EPlusPzFromPFCands_ =fEPlusPzFromPFCands;}
   void SetEMinusPzFromPFCands(double fEMinusPzFromPFCands)                     { EMinusPzFromPFCands_ =fEMinusPzFromPFCands;}
-  //eliza
+  
   void SetMxGenDiss(double fMxGenDiss)                                         { MxGenDiss_ =fMxGenDiss;} 
   void SetMxGenRange(double fMxGenRange)                                       { MxGenRange_ =fMxGenRange;}
  
@@ -301,6 +300,8 @@ class ExclusiveDijetsEvent {
   //int  GetHLT_Jet15U()                       const {return HLT_Jet15U_;}
   //int  GetHLT_L1Jet6U()                      const {return HLT_L1Jet6U_;}
   int GetHLTPath(int idx)                    const { return hltTrigResults_[idx]; }  
+  //std::string GetHLTPathName(int idx)        const { return hltTrigNames_[idx]; }        
+
  
   double GetSumEnergyHEPlusGen()             const {return sumEnergyHEPlusGen_;}
   double GetSumEnergyHEMinusGen()            const {return sumEnergyHEMinusGen_;}
@@ -378,7 +379,7 @@ class ExclusiveDijetsEvent {
      int nPileUpBxp1_;
      int nVertex_;
 
-     //added by eliza
+     
      int runNumber_;
      int eventNumber_;
      int lumiSection_;
@@ -387,6 +388,8 @@ class ExclusiveDijetsEvent {
      float instLumiLS_;
      float instLumiBunchOCC1_;
      int hltTrigResults_[20];
+     //std::vector<int> hltTrigResults_; 
+     //std::vector<std::string> hltTrigNames_; 
 //------ jet 4-momentum vector------------------
      LorentzVector leadingJetP4_;
      LorentzVector secondJetP4_;
@@ -454,23 +457,23 @@ class ExclusiveDijetsEvent {
      double xiMinusFromJets_;
      double xiPlusFromPFCands_;
      double xiMinusFromPFCands_;
-     double missingMassFromXi_; //redundant
-     double massJets_;        //eliza
+     double missingMassFromXi_; 
+     double massJets_;        
      double massDijets_;       
-     double massTrijets_;       //eliza
+     double massTrijets_;       
      double massDijetsGen_;
      double MxFromJets_;
      double MxFromPFCands_;
      double MxGen_;
-     double RjFromJets_;       //eliza     
+     double RjFromJets_;            
      double RjjFromJets_;
-     double RjjjFromJets_;     //eliza
-     double RjFromPFCands_;    //eliza
+     double RjjjFromJets_;     
+     double RjFromPFCands_;    
      double RjjFromPFCands_;
-     double RjjjFromPFCands_;  //eliza
+     double RjjjFromPFCands_;  
      double RjjGen_;
 //////////////////////////////////
-/////added by eliza
+
      double sumEnergyHEPlusGen_;
      double sumEnergyHEMinusGen_;
      double sumEnergyHFPlusGen_;

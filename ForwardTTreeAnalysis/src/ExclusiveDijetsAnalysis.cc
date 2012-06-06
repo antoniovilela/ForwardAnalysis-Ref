@@ -20,7 +20,7 @@
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/ExclusiveDijetsEvent.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/FWLiteTools.h"
 
-//added by eliza
+//LumiDetails
 #include "DataFormats/Common/interface/TriggerResults.h"
 #include "FWCore/Common/interface/TriggerNames.h"
 #include "FWCore/Framework/interface/LuminosityBlock.h"
@@ -36,6 +36,13 @@
 #include "DataFormats/Candidate/interface/Candidate.h"
 #include "DataFormats/Math/interface/deltaR.h"
 #include "FWCore/Utilities/interface/RegexMatch.h"
+
+#include "FWCore/ServiceRegistry/interface/Service.h"
+#include "CommonTools/UtilAlgos/interface/TFileService.h"
+
+#include "TH1F.h"
+#include "TH2F.h"
+
 #include <cmath>
 #include <vector>
 #include <string>
@@ -52,35 +59,36 @@ const char* ExclusiveDijetsAnalysis::name = "ExclusiveDijetsAnalysis";
 
 ExclusiveDijetsAnalysis::ExclusiveDijetsAnalysis(const edm::ParameterSet& pset):
   runOnData_(true), 
-  vertexTag_(pset.getParameter<edm::InputTag>("VertexTag")),//ok
+  vertexTag_(pset.getParameter<edm::InputTag>("VertexTag")),
   trackTag_(pset.getParameter<edm::InputTag>("TrackTag")),
   metTag_(pset.getParameter<edm::InputTag>("METTag")),
-  jetTag_(pset.getParameter<edm::InputTag>("JetTag")),//ok
-  jetNonCorrTag_(pset.getParameter<edm::InputTag>("JetNonCorrTag")), //ok
-  particleFlowTag_(pset.getParameter<edm::InputTag>("ParticleFlowTag")),//ok
-  castorRecHitTag_(pset.getParameter<edm::InputTag>("CastorRecHitTag")), //added by liz
-  genChargedTag_(pset.getParameter<edm::InputTag>("GenChargedParticlesTag")),//old My dijets analysis
-  triggerResultsTag_(pset.getParameter<edm::InputTag>("TriggerResultsTag")),//old My dijets analysis
-  trackMultiplicityTag_(pset.getParameter<edm::InputTag>("TrackMultiplicityTag")),//ok
-  energyThresholdHB_(pset.getParameter<double>("EnergyThresholdHB")),//old My dijets analysis
-  energyThresholdHE_(pset.getParameter<double>("EnergyThresholdHE")),//old My dijets analysis
-  energyThresholdHF_(pset.getParameter<double>("EnergyThresholdHF")),//old My dijets analysis
-  thresholdHF_(pset.getParameter<unsigned int>("HFThresholdIndex")),//ok
-  applyEnergyScaleHCAL_(pset.getParameter<bool>("ApplyEnergyScaleHCAL")),//ok
-  energyScaleHCAL_(-1.),//old My dijets analysis
-  useJetCorrection_(pset.getParameter<bool>("UseJetCorrection")),//ok
-  accessPileUpInfo_(pset.getParameter<bool>("AccessPileUpInfo")),//ok
-  Ebeam_(pset.getUntrackedParameter<double>("EBeam",4000.)),//ok
+  jetTag_(pset.getParameter<edm::InputTag>("JetTag")),
+  jetNonCorrTag_(pset.getParameter<edm::InputTag>("JetNonCorrTag")), 
+  particleFlowTag_(pset.getParameter<edm::InputTag>("ParticleFlowTag")),
+  castorRecHitTag_(pset.getParameter<edm::InputTag>("CastorRecHitTag")),  
+  genChargedTag_(pset.getParameter<edm::InputTag>("GenChargedParticlesTag")),
+  triggerResultsTag_(pset.getParameter<edm::InputTag>("TriggerResultsTag")),
+  trackMultiplicityTag_(pset.getParameter<edm::InputTag>("TrackMultiplicityTag")),
+  energyThresholdHB_(pset.getParameter<double>("EnergyThresholdHB")),
+  energyThresholdHE_(pset.getParameter<double>("EnergyThresholdHE")),
+  energyThresholdHF_(pset.getParameter<double>("EnergyThresholdHF")),
+  thresholdHF_(pset.getParameter<unsigned int>("HFThresholdIndex")),
+  applyEnergyScaleHCAL_(pset.getParameter<bool>("ApplyEnergyScaleHCAL")),
+  energyScaleHCAL_(-1.),
+  useJetCorrection_(pset.getParameter<bool>("UseJetCorrection")),
+  accessPileUpInfo_(pset.getParameter<bool>("AccessPileUpInfo")),
+  Ebeam_(pset.getUntrackedParameter<double>("EBeam",4000.)),
   usePAT_(pset.getUntrackedParameter<bool>("UsePAT",true)),
   accessMCInfo_(pset.getUntrackedParameter<bool>("AccessMCInfo",true)),
   POMPYTMCInfo_(pset.getUntrackedParameter<bool>("POMPYTMCInfo",true)),
-  //runOnData_(pset.getUntrackedParameter<bool>("RunOnData",true)), 
+  runOnRECO_(pset.getUntrackedParameter<bool>("RunOnRECO",false)), 
   hltPathNames_(pset.getParameter<std::vector<std::string> >("hltPaths")) {
   
   resetPFThresholds(thresholdsPFlowBarrel_);
   resetPFThresholds(thresholdsPFlowEndcap_);
   resetPFThresholds(thresholdsPFlowTransition_);
   resetPFThresholds(thresholdsPFlowForward_);
+  //setTFileService();
   if(pset.exists("PFlowThresholds")){ 
      edm::ParameterSet const& thresholdsPFPset = pset.getParameter<edm::ParameterSet>("PFlowThresholds");
  
@@ -124,7 +132,21 @@ ExclusiveDijetsAnalysis::ExclusiveDijetsAnalysis(const edm::ParameterSet& pset):
   if(useJetCorrection_) jetCorrectionService_ = pset.getParameter<std::string>("JetCorrectionService");
  
 }
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*void ExclusiveDijetsAnalysis::setTFileService(){
+  edm::Service<TFileService> fs;
+  std::ostringstream oss;
+  hltTriggerNamesHisto_ = fs->make<TH1F>("HLTTriggerNames","HLTTriggerNames",1,0,1);
+  hltTriggerNamesHisto_->SetBit(TH1::kCanRebin);
+  for(unsigned k=0; k < hltPathNames_.size(); ++k){
+    oss << "Using HLT reference trigger " << hltPathNames_[k] << std::endl;
+    hltTriggerNamesHisto_->Fill(hltPathNames_[k].c_str(),1);
+  }
 
+  hltTriggerPassHisto_ = fs->make<TH1F>("HLTTriggerPass","HLTTriggerPass",1,0,1);
+  hltTriggerPassHisto_->SetBit(TH1::kCanRebin);
+}*/
+//////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ExclusiveDijetsAnalysis::~ExclusiveDijetsAnalysis(){}
 
@@ -138,7 +160,7 @@ void ExclusiveDijetsAnalysis::fillEventData(ExclusiveDijetsEvent& eventData, con
   eventData.reset();
 
   runOnData_ = event.isRealData();
- 
+   
   // Fill event data
   if(accessMCInfo_ && accessPileUpInfo_){
      fillPileUpInfo(eventData,event,setup);
@@ -148,13 +170,15 @@ void ExclusiveDijetsAnalysis::fillEventData(ExclusiveDijetsEvent& eventData, con
      eventData.SetNPileUpBxp1(-1);
   }
 
-  //added by eliza 
+    
   fillEventInfo(eventData,event,setup);
+  //eventData.hltTrigResults_.resize(hltPathNames_.size());
+  //eventData.hltTrigNames_.resize(hltPathNames_.size());
   fillTriggerInfo(eventData,event,setup);
   fillVertexInfo(eventData,event,setup);
  
 
- fillJetInfo(eventData,event,setup);
+  fillJetInfo(eventData,event,setup);
 
 
   fillMultiplicities(eventData,event,setup);
@@ -174,7 +198,8 @@ void ExclusiveDijetsAnalysis::fillEventInfo(ExclusiveDijetsEvent& eventData, con
   unsigned int lumiSection = event.luminosityBlock();
   int bunchCrossing = event.bunchCrossing();
 /////////////////////////////
- // Instant. luminosity of a lumisection = (delivered luminosity)/(lumisection size=23.36s) 
+if(runOnRECO_){  
+  // Instant. luminosity of a lumisection = (delivered luminosity)/(lumisection size=23.36s) 
   edm::LuminosityBlock const& lumiBlock = event.getLuminosityBlock();
   edm::Handle<LumiSummary> s;
   lumiBlock.getByLabel("lumiProducer",s);
@@ -183,7 +208,7 @@ void ExclusiveDijetsAnalysis::fillEventInfo(ExclusiveDijetsEvent& eventData, con
       instLumiLS=s->avgInsDelLumi(); // calibrated
 
   }
- // Instant. luminosity of a bunch crossing
+  // Instant. luminosity of a bunch crossing
   // In EDM  it is uncalibrated. For 7TeV collisions calibration constant is 6.37.
   edm::Handle<LumiDetails> d;
   lumiBlock.getByLabel("lumiProducer",d);
@@ -191,28 +216,23 @@ void ExclusiveDijetsAnalysis::fillEventInfo(ExclusiveDijetsEvent& eventData, con
   if (d->isValid()){
      instLumiBunchOCC1 = d->lumiValue(LumiDetails::kOCC1,event.bunchCrossing());
      instLumiBunchOCC1=instLumiBunchOCC1*6.37;
-      //std::cout << "instLumiBunchOCC1 ="<<  instLumiBunchOCC1 <<std::endl;
+     //std::cout << "instLumiBunchOCC1 ="<<  instLumiBunchOCC1 <<std::endl;
      eventData.SetInstLumiBunch(instLumiBunchOCC1);
-      //std::cout<<"lumivalue 1 "<< d->lumiValue(LumiDetails::kOCC1,1)*6.37<<" "<<d->lumiBeam1Intensity(1)<<std::endl;
+     //std::cout<<"lumivalue 1 "<< d->lumiValue(LumiDetails::kOCC1,1)*6.37<<" "<<d->lumiBeam1Intensity(1)<<std::endl;
   }else{
        std::cout << "no valid lumi detail data" <<std::endl;
        //eventData.SetInstLumiBunch(-9999.);
        }
-/////////////////////////////
-  edm::Handle<double> lumiWeight;
-  event.getByLabel("lumiWeight",lumiWeight);
-  if(lumiWeight.isValid()){
-     double lumi = *lumiWeight;
-     eventData.SetLumiWeight(lumi);
-  } else{
-     eventData.SetLumiWeight(-1.); 
-  }
-
+     eventData.SetInstDelLumiLS(instLumiLS);
+}else{
+  eventData.SetInstDelLumiLS(-999.);
+  eventData.SetInstDelLumiLS(-999.);  
+}  
   eventData.SetEventNumber(eventNumber);
   eventData.SetRunNumber(runNumber);
   eventData.SetLumiSection(lumiSection);
   eventData.SetBunchCrossing(bunchCrossing);
-  eventData.SetInstDelLumiLS(instLumiLS); 
+   
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void ExclusiveDijetsAnalysis::fillTriggerInfo(ExclusiveDijetsEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
@@ -243,6 +263,8 @@ void ExclusiveDijetsAnalysis::fillTriggerInfo(ExclusiveDijetsEvent& eventData, c
      int idx_HLT = triggerNames.triggerIndex(resolvedPathName);
      int accept_HLT = ( triggerResults->wasrun(idx_HLT) && triggerResults->accept(idx_HLT) ) ? 1 : 0;
      eventData.SetHLTPath(idxpath, accept_HLT);
+     //eventData.SetHLTPathName(idxpath, resolvedPathName);
+     //hltTriggerPassHisto_->Fill( (*hltpath).c_str(), 1 ); 
   }
   
  
@@ -331,7 +353,7 @@ void ExclusiveDijetsAnalysis::fillJetInfo(ExclusiveDijetsEvent& eventData, const
      eventData.SetJetsDeltaPhi(M_PI - fabs(jet1.phi() - jet2.phi()));
      eventData.SetJetsDeltaPt(fabs(jet1.pt() - jet2.pt()));
 
-     //Jet mass added by eliza
+    
      math::XYZTLorentzVector jetSystem(0.,0.,0.,0.);
      jetSystem += jet1.p4();
      eventData.SetMassJets(jetSystem.M());
@@ -356,7 +378,7 @@ void ExclusiveDijetsAnalysis::fillJetInfo(ExclusiveDijetsEvent& eventData, const
 
      eventData.SetMxFromPFCands(allPFCands.M());
 
-// Defense Added by Diego     
+     
      if(jetCollectionH->size() > 1){
      double RjjFromJets = Rjj(*jetCollectionH,*jetCollectionH);
      eventData.SetRjjFromJets(RjjFromJets);
@@ -364,7 +386,7 @@ void ExclusiveDijetsAnalysis::fillJetInfo(ExclusiveDijetsEvent& eventData, const
      else eventData.SetRjjFromJets(-1);
 ///////////////////////////////////////////
 
-// Defense Added by Diego 
+ 
      if(jetCollectionH->size() > 0){
      double RjFromJets = Rj(*jetCollectionH,*jetCollectionH);
      eventData.SetRjFromJets(RjFromJets);
@@ -375,7 +397,7 @@ void ExclusiveDijetsAnalysis::fillJetInfo(ExclusiveDijetsEvent& eventData, const
      edm::Handle<edm::View<reco::Jet> > jetCollectionNonCorrH;
      event.getByLabel(jetNonCorrTag_,jetCollectionNonCorrH);
 
-// Defense Added by Diego
+
      if(jetCollectionNonCorrH->size() > 0){
      double RjFromPFCands = Rj(*jetCollectionNonCorrH,*particleFlowCollectionH);
      eventData.SetRjFromPFCands(RjFromPFCands);
@@ -383,7 +405,7 @@ void ExclusiveDijetsAnalysis::fillJetInfo(ExclusiveDijetsEvent& eventData, const
      else eventData.SetRjFromPFCands(-1);
 //////////////////////////////////////////////
 
-// Defense Added by Diego     
+     
      if(jetCollectionNonCorrH->size() > 1){
      double RjjFromPFCands = Rjj(*jetCollectionNonCorrH,*particleFlowCollectionH);
      eventData.SetRjjFromPFCands(RjjFromPFCands);
@@ -456,11 +478,11 @@ void ExclusiveDijetsAnalysis::fillJetInfo(ExclusiveDijetsEvent& eventData, const
     
     eventData.SetThirdJetPt(jet3.pt());
     eventData.SetThirdJetEta(jet3.eta());
-    eventData.SetThirdJetPhi(jet3.phi()); //added by Diego
+    eventData.SetThirdJetPhi(jet3.phi());  
     ///Using Lorentz Vector
     eventData.SetThirdJetP4(jet3.p4());
 
-    //begin of things added by eliza
+    
     //Tri-jet mass
     math::XYZTLorentzVector trijetSystem(0.,0.,0.,0.);
     trijetSystem += jet1.p4();
@@ -470,7 +492,7 @@ void ExclusiveDijetsAnalysis::fillJetInfo(ExclusiveDijetsEvent& eventData, const
    }else{
     eventData.SetThirdJetPt(-999.);
     eventData.SetThirdJetEta(-999.);
-    eventData.SetThirdJetPhi(-999.); // added by Diego
+    eventData.SetThirdJetPhi(-999.); 
     eventData.SetMassTrijets(-999.);
    } 
 
@@ -725,7 +747,7 @@ void ExclusiveDijetsAnalysis::fillPFFlowInfo(ExclusiveDijetsEvent& eventData, co
 } 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //template <class OneJetColl,class OnePartColl>
-//added by eliza, maybe would be better to created only one R and then ask for jet,di-jet, tri-jet...
+
 template <class OneJetColl,class OnePartColl>
 double ExclusiveDijetsAnalysis::Rj(OneJetColl& jetCollection,OnePartColl& partCollection){
   math::XYZTLorentzVector jetSystem(0.,0.,0.,0.);

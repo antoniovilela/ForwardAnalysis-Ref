@@ -7,6 +7,8 @@ config.writeEdmOutput = False
 config.runOnMC = False
 config.runPATSequences = True
 config.usePAT = False
+config.runOnAOD = True
+config.runOnRECO = False
 config.globalTagNameData = 'GR_R_42_V19::All' 
 config.instLumiROOTFile='/storage2/eliza/lumibyXing_Cert_160404-176023_7TeV_PromptReco_Collisions11_JSON.root'
 config.globalTagNameMC = 'START42_V14A::All'
@@ -28,9 +30,12 @@ config.outputTTreeFile = 'forwardQCDTTreeAnalysis.root'
 if config.runOnMC:
     config.inputFileName = '/storage2/eliza/samples_test/QCD_Pt-15to30_TuneZ2_7TeV_pythia6AODSIMS_3.root'# MC
 else:
+ if config.runOnAOD:
     #config.inputFileName = '/storage2/eliza/samples_test/MultiJetPromptReco_v4.root'#data 2011
-    config.inputFileName = '/storage2/antoniov/data1/MultiJet_Run2010B_Apr21ReReco-v1_AOD/MultiJet_Run2010B_Apr21ReReco-v1_AOD_7EA7B611-7371-E011-B164-002354EF3BDB.root' 
-
+     config.inputFileName = '/storage2/antoniov/data1/MultiJet_Run2010B_Apr21ReReco-v1_AOD/MultiJet_Run2010B_Apr21ReReco-v1_AOD_7EA7B611-7371-E011-B164-002354EF3BDB.root' 
+ else:
+  if config.runOnRECO:
+      config.inputFileName = 'rfio:/castor/cern.ch/cms/store/data/Run2011A/Jet/RECO/PromptReco-v6/000/175/576/D08A7488-32D9-E011-B32F-BCAEC518FF8D.root'
 
 process = cms.Process("Analysis")
 

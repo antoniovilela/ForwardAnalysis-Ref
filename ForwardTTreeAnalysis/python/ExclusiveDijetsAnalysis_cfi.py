@@ -29,6 +29,7 @@ ExclusiveDijetsAnalysis = cms.PSet(
     AccessMCInfo = cms.untracked.bool(True),
     POMPYTMCInfo = cms.untracked.bool(False),
     UsePAT = cms.untracked.bool(False),
+    RunOnRECO = cms.untracked.bool(False),
    ## DoBTag = cms.untracked.bool(False),
 ##)
 #########################
