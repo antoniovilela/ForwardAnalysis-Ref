@@ -171,6 +171,8 @@ void ExclusiveDijetsAnalysis::fillEventData(ExclusiveDijetsEvent& eventData, con
 
   //added by eliza 
   fillEventInfo(eventData,event,setup);
+  eventData.hltTrigResults_.resize(hltPathNames_.size());
+  eventData.hltTrigNames_.resize(hltPathNames_.size());
   fillTriggerInfo(eventData,event,setup);
   fillVertexInfo(eventData,event,setup);
  
