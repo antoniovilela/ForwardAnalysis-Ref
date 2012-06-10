@@ -17,7 +17,6 @@ config.comEnergy = 8000.0
 config.maxEvents = 3000
 config.verbose = True
 #---
-config.outputTTreeFile = 'diffractiveAnalysisTTree.root'
 config.runPATSequences = False
 config.usePAT = False
 #---
@@ -32,7 +31,7 @@ config.triggerResultsProcessNameMC = inputOptions.hltProcessNameMC
 #---
 config.switchPVFilter = True #primaryVertexFilterLooseNDOF0
 config.varyAttributes = False
-config.runPFlowThresholdAnalysis = True
+config.runPFlowThresholdAnalysis = False
 config.runOfflineOnly = False
 config.runNoColl = False
 config.runZeroBias = False
@@ -46,12 +45,14 @@ if config.runOnMC:
 
     config.inputFileName = '/storage2/antoniov/data1/MinBias_TuneZ2star_8TeV-pythia6_NoPileUp_START50_V15-v1_GEN-SIM-RECO/MinBias_TuneZ2star_8TeV-pythia6_NoPileUp_START50_V15-v1_GEN-SIM-RECO_0000_00FD0D3D-AB6F-E111-ACA5-0030487F1657.root'
     config.globalTagName = config.globalTagNameMC
+    config.outputTTreeFile = 'diffractiveAnalysisTTree_MC.root'
 else:
     config.l1Paths = ()
     config.hltPaths = ()
 
     config.inputFileName = '/storage1/antoniov/data1/LP_MinBias2_Run2012A_PromptReco-v1_RECO_Run193092/LP_MinBias2_Run2012A_PromptReco-v1_RECO_Run193092_00A2F6F1-8895-E111-9ADD-0025901D5DB8.root'
     config.globalTagName = config.globalTagNameData
+    config.outputTTreeFile = 'diffractiveAnalysisTTree.root'
 
 
 ############################################################
@@ -207,6 +208,7 @@ process.countEvents_step = cms.Path(process.countsAll +
 from Utilities.PyConfigTools.analysisTools import *
 
 makeAnalysis(process,'diffractiveAnalysisTTree','eventSelectionMinBias')
+makeAnalysis(process,'diffractiveAnalysisTTree','eventSelectionMinBiasNoVertex')
 makeAnalysis(process,config.trackAnalyzerName,'eventSelectionMinBias')
 makeAnalysis(process,'pFlowHistos','eventSelectionMinBias')
 makeAnalysis(process,'pFlowWithThresholdsHistos','eventSelectionMinBias')
@@ -224,16 +226,21 @@ if config.runPFlowThresholdAnalysis:
 
 if config.runOfflineOnly:
     makeAnalysis(process,'diffractiveAnalysisTTree','eventSelection')
+    makeAnalysis(process,'diffractiveAnalysisTTree','eventSelectionNoVertex')
 
 if config.runZeroBias:
     makeAnalysis(process,'diffractiveAnalysisTTree','eventSelectionZeroBias')
+    makeAnalysis(process,'diffractiveAnalysisTTree','eventSelectionZeroBiasNoVertex')
 
 if config.runNoColl:
     makeAnalysis(process,'diffractiveAnalysisTTree','eventSelectionMinBiasNoColl')
+    makeAnalysis(process,'diffractiveAnalysisTTree','eventSelectionMinBiasNoCollNoVertex')
 
 if config.runEtaMaxFilter:
     makeAnalysis(process,'diffractiveAnalysisTTree','eventSelectionMinBiasEtaMaxFilter')
     makeAnalysis(process,'diffractiveAnalysisTTree','eventSelectionMinBiasEtaMinFilter')
+    makeAnalysis(process,'diffractiveAnalysisTTree','eventSelectionMinBiasEtaMaxFilterNoVertex')
+    makeAnalysis(process,'diffractiveAnalysisTTree','eventSelectionMinBiasEtaMinFilterNoVertex')
 
 if config.switchPVFilter:
     from Utilities.PyConfigTools.replaceInPaths import replaceInPaths

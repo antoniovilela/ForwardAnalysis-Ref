@@ -42,7 +42,7 @@ from ForwardAnalysis.Utilities.PFCandidateNoiseStringCut import PFCandidateNoise
 #from ForwardAnalysis.ForwardTTreeAnalysis.pfThresholds_cfi import pfThresholds
 from ForwardAnalysis.MinimumBiasAnalysis.pfThresholds_cfi import pfThresholds
 
-pfStrCutHFEdges= ExcludeHFEdgesStringCut().cut()
+pfStrCutHFEdges = ExcludeHFEdgesStringCut().cut()
 pfStrCutNoise = PFCandidateNoiseStringCut(pfThresholds).cut()
 pfStrCut = '%s & %s' % (pfStrCutHFEdges,pfStrCutNoise)
 pfCandidateNoiseThresholds.cut = pfStrCut
@@ -125,8 +125,10 @@ offlineSelection = cms.Sequence( primaryVertexFilter + offlineSelectionNoVertex 
 offlineSelectionLooseNDOF0 = cms.Sequence( primaryVertexFilterLooseNDOF0 + offlineSelectionNoVertex)
 offlineSelectionLooseNDOF2 = cms.Sequence( primaryVertexFilterLooseNDOF2 + offlineSelectionNoVertex)
 
-eventSelection = cms.Sequence(offlineSelection)
+eventSelection = cms.Sequence( offlineSelection )
+eventSelectionNoVertex = cms.Sequence( offlineSelectionNoVertex )
 eventSelectionZeroBias = cms.Sequence( hltZeroBias + offlineSelection )
+eventSelectionZeroBiasNoVertex = cms.Sequence( hltZeroBias + offlineSelectionNoVertex )
 eventSelectionMinBias = cms.Sequence( hltMinBias + offlineSelection )
 eventSelectionMinBiasNoVertex = cms.Sequence( hltMinBias + offlineSelectionNoVertex )
 eventSelectionMinBiasLooseNDOF0 = cms.Sequence( hltMinBias + offlineSelectionLooseNDOF0 )
@@ -138,9 +140,11 @@ eventSelectionMinBiasNoCollLooseNDOF0 = cms.Sequence( hltMinBias + ~bptx + offli
 eventSelectionMinBiasNoCollLooseNDOF2 = cms.Sequence( hltMinBias + ~bptx + offlineSelectionLooseNDOF2 )
 
 eventSelectionMinBiasEtaMaxFilter = cms.Sequence( eventSelectionMinBias + etaMaxFilter )
+eventSelectionMinBiasEtaMaxFilterNoVertex = cms.Sequence( eventSelectionMinBiasNoVertex + etaMaxFilter )
 eventSelectionMinBiasLooseNDOF0EtaMaxFilter = cms.Sequence( eventSelectionMinBiasLooseNDOF0 + etaMaxFilter )
 eventSelectionMinBiasLooseNDOF2EtaMaxFilter = cms.Sequence( eventSelectionMinBiasLooseNDOF2 + etaMaxFilter )
 eventSelectionMinBiasEtaMinFilter = cms.Sequence( eventSelectionMinBias + etaMinFilter )
+eventSelectionMinBiasEtaMinFilterNoVertex = cms.Sequence( eventSelectionMinBiasNoVertex + etaMinFilter )
 eventSelectionMinBiasLooseNDOF0EtaMinFilter = cms.Sequence( eventSelectionMinBiasLooseNDOF0 + etaMinFilter )
 eventSelectionMinBiasLooseNDOF2EtaMinFilter = cms.Sequence( eventSelectionMinBiasLooseNDOF2 + etaMinFilter )
 #-------------------------------------------
