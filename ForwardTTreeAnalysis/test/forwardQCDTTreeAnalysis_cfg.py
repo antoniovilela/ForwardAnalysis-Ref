@@ -5,6 +5,7 @@ class config: pass
 config.verbose = True
 config.writeEdmOutput = False
 config.runOnMC = False
+config.runOnEventWeight = False
 config.runPATSequences = True
 config.usePAT = False
 config.runOnAOD = True
@@ -223,6 +224,8 @@ if config.runPATSequences:
 
 if not config.runOnMC:
     process.eventWeightSequence = cms.Sequence(process.lumiWeight) 
+
+if config.runOnEventWeight:
     process.eventWeight_step = cms.Path(process.eventWeightSequence) 
 
 if config.runOnMC:
