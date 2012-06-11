@@ -8,6 +8,7 @@
   <use name="DataFormats/ParticleFlowCandidate"/>
   <use name="DataFormats/HepMCCandidate"/>
   <use name="DataFormats/GeometrySurface"/>  
+  <use name="SimDataFormats/GeneratorProducts"/>
   <use name="Geometry/CaloTopology"/>
   <use name="Geometry/CaloGeometry"/>
   <use name="CommonTools/UtilAlgos"/>
