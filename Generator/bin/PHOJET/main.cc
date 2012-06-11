@@ -103,8 +103,9 @@ int main(int argc, char **argv)
 
    //ofstream output("phojet.hepmc");
    HepMC::IO_GenEvent* output = new HepMC::IO_GenEvent("phojet.hepmc",ios::out);
+   cout << endl;
    for(unsigned int evt = 0; evt < maxEvents_; ++evt){
-      cout << "\nProcessing event " << (evt + 1) << endl;
+      cout << "Processing event " << (evt + 1) << endl;
       bool success = generator->run();
       if(!success){
          cout << "WARNING: Event " << (evt + 1) << " failed." << endl;
