@@ -679,6 +679,165 @@ void ExclusiveDijetsAnalysis::fillPFFlowInfo(ExclusiveDijetsEvent& eventData, co
 
   reco::PFCandidateCollection::const_iterator part = pflowCollection.begin();
   reco::PFCandidateCollection::const_iterator pfCands_end = pflowCollection.end();
+ //sum_E_HF
+  double  sumEHFMinus = 0.;
+  double  sumEHFPlus  = 0.;
+// HAD energy
+  double sumHAD_energy_plus = 0.;
+  double sumHAD_energy_minus = 0.;
+
+// EMC energy
+  double sumEMC_energy_plus = 0.;
+  double sumEMC_energy_minus = 0.;
+
+ //Long fibers 
+  double sumEHFPlus_Long_Fiber = 0.;
+  double sumEHFPlus_Short_Fiber = 0.;
+ //Short fibers 
+  double sumEHFMinus_Long_Fiber = 0.;
+  double sumEHFMinus_Short_Fiber = 0.;
+
+if( particleFlowCollectionH.isValid() ){
+  for(; part != pfCands_end; ++part){
+     int partType = part->particleId();
+     double eta = part->eta();
+     double energy = part->energy();
+     double pt = part->pt();
+
+     if((3.0 < eta) && (eta < 5.0) ){
+        sumEHFPlus += energy;
+
+
+     }
+     if((-5.0 < eta) && (eta < -3.0) ){
+        sumEHFMinus += energy;
+
+  }
+     eventData.SetEtaAllTypes(eta);
+     eventData.SetEnergyAllTypes(energy);
+     eventData.SetPtAllTypes(pt);
+
+
+     if(partType == reco::PFCandidate::X){
+        eventData.SetEtaUndefined(eta);
+        eventData.SetEnergyUndefined(energy);
+        eventData.SetPtUndefined(pt);
+
+     }else if(partType == reco::PFCandidate::h){
+        eventData.SetEtaChargedHadron(eta);
+        eventData.SetEnergyChargedHadron(energy);
+        eventData.SetPtChargedHadron(pt);
+
+     }else if(partType == reco::PFCandidate::e){
+        eventData.SetEtaElectron(eta);
+        eventData.SetEnergyElectron(energy);
+        eventData.SetPtElectron(pt);
+
+     }else if(partType == reco::PFCandidate::mu){
+        eventData.SetEtaMuon(eta);
+        eventData.SetEnergyMuon(energy);
+        eventData.SetPtMuon(pt);
+
+
+     }else if(partType == reco::PFCandidate::gamma){
+        eventData.SetEtaGamma(eta);
+        eventData.SetEnergyGamma(energy);
+        eventData.SetPtGamma(pt);
+
+     }else if(partType == reco::PFCandidate::h0){
+        eventData.SetEtaNeutralHadron(eta);
+        eventData.SetEnergyNeutralHadron(energy);
+        eventData.SetPtNeutralHadron(pt);
+
+     }else if((3.0 < eta) && (eta < 5.0) && (partType == reco::PFCandidate::h_HF)){
+        sumHAD_energy_plus  += energy;
+  
+      // eventData.SetEtaHadronHF(eta); 
+//        eventData.SetEnergyHadronHF(energy);
+        //eventData.SetPtHadronHF(pt);
+
+
+
+      }else if((-5.0 < eta) && (eta < -3.0) && (partType == reco::PFCandidate::h_HF)){
+        sumHAD_energy_minus  += energy;
+
+      // eventData.SetEtaHadronHF(eta); 
+//        eventData.SetEnergyHadronHF(energy);
+        //eventData.SetPtHadronHF(pt);
+
+
+     }else if((3.0 < eta) && (eta < 5.0) && (partType == reco::PFCandidate::egamma_HF)){
+
+        sumEMC_energy_plus += energy;
+
+       //eventData.SetEtaEGammaHF(eta); 
+       // eventData.SetEnergyEGammaHF(energy);
+       // eventData.SetPtEGammaHF(pt); 
+
+    }else if((-5.0 < eta) && (eta < -3.0) && (partType == reco::PFCandidate::egamma_HF)){
+
+        sumEMC_energy_minus += energy;
+
+       //eventData.SetEtaEGammaHF(eta); 
+      //  eventData.SetEnergyEGammaHF(energy);
+       // eventData.SetPtEGammaHF(pt); 
+   }
+
+
+
+
+ }
+
+
+     eventData.SetSumEHFPFlowPlus(sumEHFPlus);
+     eventData.SetSumEHFPFlowMinus(sumEHFMinus);
+     eventData.SetEnergyHadronHFPlus(sumHAD_energy_plus);
+     eventData.SetEnergyEGammaHFPlus(sumEMC_energy_plus);
+     eventData.SetEnergyHadronHFMinus(sumHAD_energy_minus);
+     eventData.SetEnergyEGammaHFMinus(sumEMC_energy_minus);
+
+
+// L and s fibers using the HF_Plus
+sumEHFPlus_Long_Fiber += sumEMC_energy_plus +  sumHAD_energy_plus/2.0;
+sumEHFPlus_Short_Fiber += sumHAD_energy_plus/2.0;
+
+
+//L + S fibers using the HF_Minus
+sumEHFMinus_Long_Fiber += sumEMC_energy_minus +  sumHAD_energy_minus/2.0;
+sumEHFMinus_Short_Fiber += sumHAD_energy_minus/2.0;
+
+
+LogDebug("Analysis") << "sumEHFPlus_Long_Fiber: " << sumEHFPlus_Long_Fiber;
+LogDebug("Analysis") << "sumEHFPlus_Short_Fiber: " << sumEHFPlus_Short_Fiber;
+
+LogDebug("Analysis") << "sumEHFMinus_Long_Fiber: " << sumEHFMinus_Long_Fiber;
+LogDebug("Analysis") << "sumEHFMinus_Short_Fiber: " << sumEHFMinus_Short_Fiber;
+
+
+eventData.SetSumEHFPFlowPlus_Long_Fiber(sumEHFPlus_Long_Fiber);
+eventData.SetSumEHFPFlowMinus_Long_Fiber(sumEHFMinus_Long_Fiber);
+eventData.SetSumEHFPFlowPlus_Short_Fiber(sumEHFPlus_Short_Fiber);
+eventData.SetSumEHFPFlowMinus_Short_Fiber(sumEHFMinus_Short_Fiber);
+
+}else{
+
+eventData.SetSumEHFPFlowPlus(999.);
+     eventData.SetSumEHFPFlowMinus(999.);
+     eventData.SetEnergyHadronHFPlus(999.);
+     eventData.SetEnergyEGammaHFPlus(999.);
+     eventData.SetEnergyEGammaHFMinus(999.);
+     eventData.SetEnergyHadronHFMinus(999.);
+     eventData.SetSumEHFPFlowPlus_Long_Fiber(999.);
+     eventData.SetSumEHFPFlowMinus_Long_Fiber(999.);
+     eventData.SetSumEHFPFlowPlus_Short_Fiber(999.);
+     eventData.SetSumEHFPFlowMinus_Short_Fiber(999.);
+
+}
+
+
+
+
+ /*
   double sumEHFMinus = 0.;
   double sumEHFPlus  = 0.;
   for(; part != pfCands_end; ++part){
@@ -686,7 +845,7 @@ void ExclusiveDijetsAnalysis::fillPFFlowInfo(ExclusiveDijetsEvent& eventData, co
      double eta = part->eta();
      double energy = part->energy();
      double pt = part->pt();
-     
+    
      if((3.0 < eta) && (eta < 5.0) ){
         sumEHFPlus += energy;
      }
@@ -744,6 +903,10 @@ void ExclusiveDijetsAnalysis::fillPFFlowInfo(ExclusiveDijetsEvent& eventData, co
 
   eventData.SetSumEHFPFlowPlus(sumEHFPlus);
   eventData.SetSumEHFPFlowMinus(sumEHFMinus);
+*/
+
+
+
 } 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //template <class OneJetColl,class OnePartColl>
