@@ -1,6 +1,6 @@
 /*
- *  $Date: 2012/06/11 13:01:34 $
- *  $Revision: 1.1 $
+ *  $Date: 2012/06/11 15:07:18 $
+ *  $Revision: 1.2 $
  *  
  */
 
@@ -17,7 +17,8 @@
 using namespace std;
 using namespace phojet;
 
-#include "HepMC/PythiaWrapper6_2.h"
+//#include "HepMC/PythiaWrapper6_2.h"
+#include "HepMC/PythiaWrapper.h"
 #include "HepMC/IO_HEPEVT.h"
 
 //-------------------------PHOJET functions ------------------------------
