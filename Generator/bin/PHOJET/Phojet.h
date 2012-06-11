@@ -21,7 +21,7 @@ namespace phojet
 {
   class Phojet{
   public:
-    Phojet(double, long, std::vector<std::string> const&);
+    Phojet(double, long int, std::vector<std::string> const&);
     ~Phojet();
 
     void begin();
@@ -45,7 +45,7 @@ namespace phojet
    
     unsigned int event_;
     double comEnergy_;
-    long seed_;
+    long int seed_;
     double sigmaMax_; 
     std::vector<std::string> params_;
   

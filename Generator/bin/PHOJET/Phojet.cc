@@ -1,5 +1,5 @@
 /*
- *  $Date: 2012/06/07 15:26:01 $
+ *  $Date: 2012/06/11 13:01:34 $
  *  $Revision: 1.1 $
  *  
  */
@@ -43,7 +43,7 @@ HepMC::IO_HEPEVT conv;
   static const unsigned long kNanoSecPerSec = 1000000000;
   static const unsigned long kAveEventPerSec = 200;*/
 
-Phojet::Phojet(double comEnergy, long seed, vector<string> const& params):
+Phojet::Phojet(double comEnergy, long int seed, vector<string> const& params):
   event_(0), 
   comEnergy_(comEnergy),
   seed_(seed), 
@@ -65,7 +65,7 @@ void Phojet::begin() {
   event_ = 0;
 
   int iunit = 10;	
-  fostream phoconfig(iunit,"phojetConfig.txt");	
+  fostream phoconfig(iunit,"phojet.cfg");	
   phoconfig << "PARTICLE1   2212       0.0";
   phoconfig << "PARTICLE2   2212       0.0";
 
@@ -177,6 +177,7 @@ bool Phojet::run() {
 
   //HepMC::GenEvent* evt = conv.read_next_event();
   hepMCEvt_ = conv.read_next_event();
+  ++event_;
 
   //hepMCEvt_->set_signal_process_id(pypars.msti[0]);
   hepMCEvt_->set_signal_process_id(poprcs.IPROCE);
@@ -184,8 +185,6 @@ bool Phojet::run() {
   //hepMCEvt_->set_event_number(numberEventsInRun() - remainingEvents() - 1);
   hepMCEvt_->set_event_number(event_ - 1);
  
-  ++event_;
-
   //******** Verbosity ********
   if(event_ <= maxEventsToPrint_ &&
      (pythiaPylistVerbosity_ || pythiaHepMCVerbosity_)) {
@@ -199,8 +198,10 @@ bool Phojet::run() {
      // Prints HepMC event
      //
      if(pythiaHepMCVerbosity_) {
-        cout << "Event process = " << pypars.msti[0] << endl 
-             << "----------------------" << endl;	
+        stringstream oss;
+        oss << "\n----------------------" << endl	
+            << "Event process id = " << hepMCEvt_->signal_process_id() << endl; 
+        cout << oss.str();
         hepMCEvt_->print();
      }
   }   
