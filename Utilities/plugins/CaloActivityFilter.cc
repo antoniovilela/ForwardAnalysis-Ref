@@ -2,8 +2,6 @@
 #include "FWCore/Framework/interface/EDFilter.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 
-namespace old { // Hide this name 
-
 class CaloActivityFilter : public edm::EDFilter {
     public:
        explicit CaloActivityFilter( edm::ParameterSet const& );
@@ -54,7 +52,6 @@ class CaloActivityFilter : public edm::EDFilter {
        double sumETEEMaxPlus_;
        double sumETEEMaxMinus_;
 };
-} // namespace
 
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "FWCore/Framework/interface/Event.h"
@@ -68,8 +65,6 @@ class CaloActivityFilter : public edm::EDFilter {
 #include "DataFormats/HcalDetId/interface/HcalDetId.h"
 #include "DataFormats/HcalDetId/interface/HcalSubdetector.h"
 #include "DataFormats/EcalDetId/interface/EcalSubdetector.h"
-
-namespace old {
 
 CaloActivityFilter::CaloActivityFilter(edm::ParameterSet const& pset):
   //hcalTowerSummaryTag_(pset.getParameter<edm::InputTag>("HCALTowerSummaryTag")),
@@ -217,15 +212,10 @@ bool CaloActivityFilter::filter(edm::Event& event, edm::EventSetup const& setup)
 
      int zside = calotower->zside();
      double caloTowerEnergy = calotower->energy();
-     double caloTowerEmEnergy = calotower->emEnergy();
-     double caloTowerHadEnergy = calotower->hadEnergy();
-
      // FIXME
      //double caloTowerET = calotower->et(primVtx.position());
      //double caloTowerET = calotower->et(primVtx.z());
-     double caloTowerEt = calotower->et();
-     double caloTowerEmEt = calotower->emEt();
-     double caloTowerHadEt = calotower->hadEt();
+     double caloTowerET = calotower->et();
 
      // HCAL: Towers made of at least one component from HB,HE,HF
      if( hasHF && !hasHE ){
@@ -233,35 +223,35 @@ bool CaloActivityFilter::filter(edm::Event& event, edm::EventSetup const& setup)
            if(zside >= 0){
               ++nTowersHF_plus;
               sumEHF_plus += caloTowerEnergy; 
-              sumETHF_plus += caloTowerEt;
+              sumETHF_plus += caloTowerET;
            } else{
               ++nTowersHF_minus;
               sumEHF_minus += caloTowerEnergy;
-              sumETHF_minus += caloTowerEt;
+              sumETHF_minus += caloTowerET;
            } 
         }
      } else if( hasHE && !hasHF && !hasHB ){
         if( caloTowerEnergy >= energyThresholdHE_ ){
            if(zside >= 0){
               ++nTowersHE_plus;
-              sumEHE_plus += caloTowerHadEnergy;
-              sumETHE_plus += caloTowerHadEt;
+              sumEHE_plus += caloTowerEnergy;
+              sumETHE_plus += caloTowerET;
            } else{
               ++nTowersHE_minus;
-              sumEHE_minus += caloTowerHadEnergy;
-              sumETHE_minus += caloTowerHadEt;
+              sumEHE_minus += caloTowerEnergy;
+              sumETHE_minus += caloTowerET;
            }
         }
      } else if( hasHB && !hasHE ){
         if( caloTowerEnergy >= energyThresholdHB_ ){
            if(zside >= 0){
               ++nTowersHB_plus;
-              sumEHB_plus += caloTowerHadEnergy;
-              sumETHB_plus += caloTowerHadEt;
+              sumEHB_plus += caloTowerEnergy;
+              sumETHB_plus += caloTowerET;
            } else{
               ++nTowersHB_minus;
-              sumEHB_minus += caloTowerHadEnergy;
-              sumETHB_minus += caloTowerHadEt;
+              sumEHB_minus += caloTowerEnergy;
+              sumETHB_minus += caloTowerET;
            }
         }
      }
@@ -271,24 +261,24 @@ bool CaloActivityFilter::filter(edm::Event& event, edm::EventSetup const& setup)
         if( caloTowerEnergy >= energyThresholdEE_ ){
            if(zside >= 0){
               ++nTowersEE_plus;
-              sumEEE_plus += caloTowerEmEnergy;
-              sumETEE_plus += caloTowerEmEt;
+              sumEEE_plus += caloTowerEnergy;
+              sumETEE_plus += caloTowerET;
            } else{
               ++nTowersEE_minus;
-              sumEEE_minus += caloTowerEmEnergy;
-              sumETEE_minus += caloTowerEmEt;
+              sumEEE_minus += caloTowerEnergy;
+              sumETEE_minus += caloTowerET;
            }
         }
      } else if( hasEB && !hasEE ){
         if( caloTowerEnergy >= energyThresholdEB_ ){
            if(zside >= 0){
               ++nTowersEB_plus;
-              sumEEB_plus += caloTowerEmEnergy;
-              sumETEB_plus += caloTowerEmEt;
+              sumEEB_plus += caloTowerEnergy;
+              sumETEB_plus += caloTowerET;
            } else{
               ++nTowersEB_minus;
-              sumEEB_minus += caloTowerEmEnergy;
-              sumETEB_minus += caloTowerEmEt;
+              sumEEB_minus += caloTowerEnergy;
+              sumETEB_minus += caloTowerET;
            }
         }
      }
@@ -328,5 +318,5 @@ bool CaloActivityFilter::filter(edm::Event& event, edm::EventSetup const& setup)
 
   return accept;
 }
-}// namespace
-//DEFINE_FWK_MODULE(CaloActivityFilter);
+
+DEFINE_FWK_MODULE(CaloActivityFilter);
