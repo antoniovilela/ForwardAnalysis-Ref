@@ -25,7 +25,7 @@ class ExclusiveDijetsEvent {
   void SetNPileUpBxp1(int fnPileUpBxp1)           { nPileUpBxp1_       = fnPileUpBxp1;}
   void SetNVertex(int fnVertex)                 { nVertex_          = fnVertex;}
 
-  
+  //added by eliza
   void SetRunNumber(int frunNumber)             { runNumber_        = frunNumber;}   
   void SetEventNumber(int feventNumber)         { eventNumber_      = feventNumber;}
   void SetLumiSection(int flumiSection)         { lumiSection_      = flumiSection;}
@@ -33,8 +33,9 @@ class ExclusiveDijetsEvent {
   void SetLumiWeight(double flumiWeight)        { lumiWeight_       = flumiWeight;}
   void SetInstDelLumiLS(float finstLumiLS)      { instLumiLS_       = finstLumiLS;}
   void SetInstLumiBunch(float finstLumiBunchOCC1) {instLumiBunchOCC1_ = finstLumiBunchOCC1;}
+  //void SetHLT_Jet15U(int fHLT_Jet15U)           { HLT_Jet15U_       = fHLT_Jet15U;}
+  //void SetHLT_L1Jet6U(int fHLT_L1Jet6U)         { HLT_L1Jet6U_      = fHLT_L1Jet6U;}
   void SetHLTPath(int idx, int fHLTBit)         { hltTrigResults_[idx] = fHLTBit;}
-  //void SetHLTPathName(int idx, std::string const& path) { hltTrigNames_[idx] = path;}
 
   void SetSumEnergyHEPlusGen(double fsumEnergyHEPlusGen)                       { sumEnergyHEPlusGen_  =fsumEnergyHEPlusGen;}
   void SetSumEnergyHEMinusGen(double fsumEnergyHEMinusGen)                     { sumEnergyHEMinusGen_ =fsumEnergyHEMinusGen;}
@@ -45,7 +46,7 @@ class ExclusiveDijetsEvent {
   void SetMissingMassFromXiFromPFCands(double fmissingMassFromXiFromPFCands)   { missingMassFromXiFromPFCands_ =fmissingMassFromXiFromPFCands;}
   void SetEPlusPzFromPFCands(double fEPlusPzFromPFCands)                       { EPlusPzFromPFCands_ =fEPlusPzFromPFCands;}
   void SetEMinusPzFromPFCands(double fEMinusPzFromPFCands)                     { EMinusPzFromPFCands_ =fEMinusPzFromPFCands;}
-  
+  //eliza
   void SetMxGenDiss(double fMxGenDiss)                                         { MxGenDiss_ =fMxGenDiss;} 
   void SetMxGenRange(double fMxGenRange)                                       { MxGenRange_ =fMxGenRange;}
  
@@ -98,9 +99,25 @@ class ExclusiveDijetsEvent {
   void SetEtaEGammaHF(double fEtaEGammaHF)                                     { EtaEGammaHF_ =fEtaEGammaHF;}
   void SetEnergyEGammaHF(double fEnergyEGammaHF)                               { EnergyEGammaHF_ =fEnergyEGammaHF;}
   void SetPtEGammaHF(double fPtEGammaHF)                                       { PtEGammaHF_ =fPtEGammaHF;}
-
+  
   void SetSumEHFPFlowPlus(double fSumEHFPFlowPlus)                             { SumEHFPFlowPlus_ =fSumEHFPFlowPlus;}
   void SetSumEHFPFlowMinus(double fSumEHFPFlowMinus)                           { SumEHFPFlowMinus_ =fSumEHFPFlowMinus;}
+
+  void SetSumEHFPFlowPlus_Long_Fiber(double fSumEHFPFlowPlus_Long_Fiber)     {SumEHFPFlowPlus_Long_Fiber_ =fSumEHFPFlowPlus_Long_Fiber;}    
+  void SetSumEHFPFlowMinus_Long_Fiber(double fSumEHFPFlowMinus_Long_Fiber)   {SumEHFPFlowMinus_Long_Fiber_ =fSumEHFPFlowMinus_Long_Fiber;}
+
+  void SetSumEHFPFlowPlus_Short_Fiber(double fSumEHFPFlowPlus_Short_Fiber)   {SumEHFPFlowPlus_Short_Fiber_ =fSumEHFPFlowPlus_Short_Fiber;}
+  void SetSumEHFPFlowMinus_Short_Fiber(double fSumEHFPFlowMinus_Short_Fiber) {SumEHFPFlowMinus_Short_Fiber_ =fSumEHFPFlowMinus_Short_Fiber;} 
+
+// Hadronic energy in HF +
+  void SetEnergyHadronHFPlus(double fEnergyHadronHFPlus)                     {EnergyHadronHFPlus_ = fEnergyHadronHFPlus;}
+  void SetEnergyEGammaHFPlus(double fEnergyEGammaHFPlus)                     {EnergyEGammaHFPlus_ = fEnergyEGammaHFPlus;}
+
+//Hadronic energy in HF -
+  void SetEnergyHadronHFMinus(double fEnergyHadronHFMinus)                   {EnergyHadronHFMinus_ = fEnergyHadronHFMinus;}
+  void SetEnergyEGammaHFMinus(double fEnergyEGammaHFMinus)                   {EnergyEGammaHFMinus_ = fEnergyEGammaHFMinus;}
+
+
   //
 
   //------ jet 4-momentum vector------------------
@@ -251,6 +268,7 @@ class ExclusiveDijetsEvent {
   double GetSumEnergyHFPlus()      const { return sumEnergyHFPlus_ ;}
   double GetSumEnergyHFMinus()     const { return sumEnergyHFMinus_ ;}
 
+
   int const* GetMultiplicityHFPlusVsiEta()  const  { return multiplicityHFPlusVsiEta_;}
   int const* GetMultiplicityHFMinusVsiEta() const  { return multiplicityHFMinusVsiEta_;}
 
@@ -300,8 +318,6 @@ class ExclusiveDijetsEvent {
   //int  GetHLT_Jet15U()                       const {return HLT_Jet15U_;}
   //int  GetHLT_L1Jet6U()                      const {return HLT_L1Jet6U_;}
   int GetHLTPath(int idx)                    const { return hltTrigResults_[idx]; }  
-  //std::string GetHLTPathName(int idx)        const { return hltTrigNames_[idx]; }        
-
  
   double GetSumEnergyHEPlusGen()             const {return sumEnergyHEPlusGen_;}
   double GetSumEnergyHEMinusGen()            const {return sumEnergyHEMinusGen_;}
@@ -367,19 +383,32 @@ class ExclusiveDijetsEvent {
 
   double GetSumEHFPFlowPlus()                const {return SumEHFPFlowPlus_;}
   double GetSumEHFPFlowMinus()               const {return SumEHFPFlowMinus_;}
-  //
+  
+  double GetSumEHFPFlowPlus_Long_Fiber()      const {return SumEHFPFlowPlus_Long_Fiber_ ;}
+  double GetSumEHFPFlowMinus_Long_Fiber()     const {return SumEHFPFlowMinus_Long_Fiber_ ;}
+
+  double GetSumEHFPFlowPlus_Short_Fiber()      const {return SumEHFPFlowPlus_Short_Fiber_ ;}
+  double GetSumEHFPFlowMinus_Short_Fiber()     const {return SumEHFPFlowMinus_Short_Fiber_ ;}
+
+// Hadronic energy in HF +
+  double GetEnergyHadronHFPlus()               const {return EnergyHadronHFPlus_;}
+  double GetEnergyEGammaHFPlus()               const {return EnergyEGammaHFPlus_;}
+
+//Hadronic energy in HF -
+  double GetEnergyHadronHFMinus()                 const {return EnergyHadronHFMinus_;}
+  double GetEnergyEGammaHFMinus()                 const {return EnergyEGammaHFMinus_;}
 
   private:
      friend class exclusiveDijetsAnalysis::ExclusiveDijetsAnalysis;
 
      void reset();
- 
+     
      int nPileUpBxm1_;
      int nPileUpBx0_;
      int nPileUpBxp1_;
      int nVertex_;
 
-     
+     //added by eliza
      int runNumber_;
      int eventNumber_;
      int lumiSection_;
@@ -388,8 +417,6 @@ class ExclusiveDijetsEvent {
      float instLumiLS_;
      float instLumiBunchOCC1_;
      int hltTrigResults_[20];
-     //std::vector<int> hltTrigResults_; 
-     //std::vector<std::string> hltTrigNames_; 
 //------ jet 4-momentum vector------------------
      LorentzVector leadingJetP4_;
      LorentzVector secondJetP4_;
@@ -457,23 +484,23 @@ class ExclusiveDijetsEvent {
      double xiMinusFromJets_;
      double xiPlusFromPFCands_;
      double xiMinusFromPFCands_;
-     double missingMassFromXi_; 
-     double massJets_;        
+     double missingMassFromXi_; //redundant
+     double massJets_;        //eliza
      double massDijets_;       
-     double massTrijets_;       
+     double massTrijets_;       //eliza
      double massDijetsGen_;
      double MxFromJets_;
      double MxFromPFCands_;
      double MxGen_;
-     double RjFromJets_;            
+     double RjFromJets_;       //eliza     
      double RjjFromJets_;
-     double RjjjFromJets_;     
-     double RjFromPFCands_;    
+     double RjjjFromJets_;     //eliza
+     double RjFromPFCands_;    //eliza
      double RjjFromPFCands_;
-     double RjjjFromPFCands_;  
+     double RjjjFromPFCands_;  //eliza
      double RjjGen_;
 //////////////////////////////////
-
+/////added by eliza
      double sumEnergyHEPlusGen_;
      double sumEnergyHEMinusGen_;
      double sumEnergyHFPlusGen_;
@@ -536,7 +563,20 @@ class ExclusiveDijetsEvent {
 
      double SumEHFPFlowPlus_;
      double SumEHFPFlowMinus_;
-           
+
+     double SumEHFPFlowPlus_Long_Fiber_;
+     double SumEHFPFlowMinus_Long_Fiber_;
+
+     double SumEHFPFlowPlus_Short_Fiber_;
+     double SumEHFPFlowMinus_Short_Fiber_;
+
+  
+     double EnergyHadronHFPlus_;
+     double EnergyEGammaHFPlus_;
+     double EnergyHadronHFMinus_;
+     double EnergyEGammaHFMinus_;
+   
+
 //////////////////////////////////
 };
 

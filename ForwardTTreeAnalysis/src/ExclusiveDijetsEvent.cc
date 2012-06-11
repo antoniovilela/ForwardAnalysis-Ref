@@ -10,8 +10,6 @@ ExclusiveDijetsEvent::~ExclusiveDijetsEvent() {}
 void ExclusiveDijetsEvent::reset(){
   size_t len_hltTrigResults = sizeof(hltTrigResults_)/sizeof(int);
   for(size_t k = 0; k < len_hltTrigResults; ++k) hltTrigResults_[k] = 0;
-  //hltTrigResults_.clear(); 
-  //hltTrigNames_.clear();  
    
   nPileUpBx0_ = -1;
   nPileUpBxm1_ = -1;
@@ -171,6 +169,17 @@ void ExclusiveDijetsEvent::reset(){
 
   SumEHFPFlowPlus_= 999.;
   SumEHFPFlowMinus_= 999.;
+  
+  SumEHFPFlowPlus_Long_Fiber_= 999.;
+  SumEHFPFlowMinus_Long_Fiber_= 999.;
+
+  SumEHFPFlowPlus_Short_Fiber_= 999.;
+  SumEHFPFlowMinus_Short_Fiber_= 999.;
+
+  EnergyHadronHFPlus_= 999.;
+  EnergyEGammaHFPlus_= 999.;
+  EnergyHadronHFMinus_= 999.;
+  EnergyEGammaHFMinus_= 999.;
      
   //...
 }
