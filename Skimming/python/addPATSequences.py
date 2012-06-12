@@ -1,7 +1,5 @@
 import FWCore.ParameterSet.Config as cms
 
-
-
 def addPATSequences(process,runMC):
     # Load the PAT config
     from PhysicsTools.PatAlgos.patEventContent_cff import patEventContent
@@ -16,8 +14,14 @@ def addPATSequences(process,runMC):
     from PhysicsTools.PatAlgos.tools.pfTools import usePF2PAT
     postfix = "PFlow"
     jetAlgo="AK5"
-   # runOnMC = False
-    usePF2PAT(process,runPF2PAT=True, jetAlgo=jetAlgo, runOnMC=runMC, postfix=postfix,jetCorrections=('AK5PFchs', ['L1FastJet','L2Relative','L3Absolute'])) 
+    jetCorrections = None
+    if runMC:
+	jetCorrections = ('AK5PFchs', ['L1FastJet','L2Relative','L3Absolute'])
+    else:
+	jetCorrections = ('AK5PFchs', ['L1FastJet','L2Relative','L3Absolute','L2L3Residual'])
+
+    usePF2PAT(process,runPF2PAT=True,
+                      jetAlgo=jetAlgo, runOnMC=runMC, postfix=postfix,jetCorrections=jetCorrections) 
     #-----------------Customization----------------
     process.pfPileUpPFlow.Enable = True
     process.pfPileUpPFlow.checkClosestZVertex = False
@@ -32,16 +36,24 @@ def addPATSequences(process,runMC):
 	filterParams = pvSelector.clone( minNdof = cms.double(4.0), maxZ = cms.double(24.0) ),
 	src=cms.InputTag('offlinePrimaryVertices')
 	)
-
+    
     # Compute the mean pt per unit area (rho) from the PFCHS inputs
-    from RecoJets.Configuration.RecoPFJets_cff import kt6PFJets,ak5PFJets
-    process.kt6PFJetsPFlow = kt6PFJets.clone(
-	src = cms.InputTag('pfNoElectron'+postfix),
-	doAreaFastjet = cms.bool(True),
-	doRhoFastjet = cms.bool(True)
-	)
-    process.patJetCorrFactorsPFlow.rho = cms.InputTag("kt6PFJetsPFlow", "rho")
+    #from RecoJets.Configuration.RecoPFJets_cff import kt6PFJets,ak5PFJets
+    #process.kt6PFJetsPFlow = kt6PFJets.clone(
+    #	src = cms.InputTag('pfNoElectron'+postfix),
+    #	doAreaFastjet = cms.bool(True),
+    #	doRhoFastjet = cms.bool(True)
+    #	)
+    #process.patJetCorrFactorsPFlow.rho = cms.InputTag("kt6PFJetsPFlow", "rho")
+    from RecoJets.JetProducers.kt4PFJets_cfi import kt4PFJets
+    process.kt6PFJetsForPAT = kt4PFJets.clone(
+	    rParam = cms.double(0.6),
+	    doAreaFastjet = cms.bool(True),
+	    doRhoFastjet = cms.bool(True)
+	    )
+    process.patJetCorrFactorsPFlow.rho = cms.InputTag("kt6PFJetsForPAT", "rho")
 
+    from RecoJets.JetProducers.ak5PFJets_cfi import ak5PFJets
     process.ak5PFJetsPileUp = ak5PFJets.clone( src = cms.InputTag('pfPileUp'+postfix) )
 
     # Switch on PAT trigger
@@ -54,7 +66,7 @@ def addPATSequences(process,runMC):
     # Add modules to default sequence
     getattr(process,"patPF2PATSequence"+postfix).replace(
 	getattr(process,"pfNoElectron"+postfix),
-	getattr(process,"pfNoElectron"+postfix)*process.kt6PFJetsPFlow
+	getattr(process,"pfNoElectron"+postfix)*process.kt6PFJetsForPAT
 	)
 
     getattr(process,"patPF2PATSequence"+postfix).replace(
