@@ -72,6 +72,7 @@ void DiffractiveEvent::reset(){
   xiGenMinus_ = -1.;
   MxGen_ = -1.;
   MxGenDiss_ = -1.;
+  MyGenDiss_ = -1.;
   MxGenRange_ = -1.;
   MxGenPlus_ = -1.;
   MxGenMinus_ = -1.;
