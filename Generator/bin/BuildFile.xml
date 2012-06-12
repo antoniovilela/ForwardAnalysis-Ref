@@ -1,5 +1,5 @@
 
-<library   file="PHOJET/*.f PHOJET/fostream.cc PHOJET/Phojet.cc" name="GeneratorInterfacePhojet">
+<library   file="PHOJET/*.f PHOJET/pydata.F PHOJET/fostream.cc PHOJET/Phojet.cc" name="GeneratorInterfacePhojet">
   <use   name="hepmc"/>
   <use   name="clhep"/>
   <use   name="pythia6"/>

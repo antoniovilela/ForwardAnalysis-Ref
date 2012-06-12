@@ -1,6 +1,6 @@
 /*
- *  $Date: 2012/06/11 15:07:18 $
- *  $Revision: 1.2 $
+ *  $Date: 2012/06/11 18:17:36 $
+ *  $Revision: 1.3 $
  *  
  */
 
@@ -121,8 +121,11 @@ void Phojet::begin() {
   phoconfig << sRandomSet.str().c_str();
   //phoconfig << (const char*)"ENDINPUT  ";
   phoconfig << "ENDINPUT  ";
-
   phoconfig.rewind();
+
+  // PYDATA initialization 
+  //pydata();
+
   int irej;
   initphojet(iunit,irej);
   /*if(irej != 0) throw edm::Exception(edm::errors::Configuration,"PhojetError") 
