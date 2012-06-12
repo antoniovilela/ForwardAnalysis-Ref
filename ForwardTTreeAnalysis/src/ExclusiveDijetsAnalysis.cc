@@ -80,7 +80,7 @@ ExclusiveDijetsAnalysis::ExclusiveDijetsAnalysis(const edm::ParameterSet& pset):
   usePAT_(pset.getUntrackedParameter<bool>("UsePAT",true)),
   accessMCInfo_(pset.getUntrackedParameter<bool>("AccessMCInfo",true)),
   POMPYTMCInfo_(pset.getUntrackedParameter<bool>("POMPYTMCInfo",true)),
-  //runOnData_(pset.getUntrackedParameter<bool>("RunOnData",true)), 
+  runOnRECO_(pset.getUntrackedParameter<bool>("RunOnRECO",false)),  
   hltPathNames_(pset.getParameter<std::vector<std::string> >("hltPaths")) {
   
   resetPFThresholds(thresholdsPFlowBarrel_);
@@ -197,7 +197,8 @@ void ExclusiveDijetsAnalysis::fillEventInfo(ExclusiveDijetsEvent& eventData, con
   unsigned int lumiSection = event.luminosityBlock();
   int bunchCrossing = event.bunchCrossing();
 /////////////////////////////
- // Instant. luminosity of a lumisection = (delivered luminosity)/(lumisection size=23.36s) 
+if(runOnRECO_){  
+  // Instant. luminosity of a lumisection = (delivered luminosity)/(lumisection size=23.36s) 
   edm::LuminosityBlock const& lumiBlock = event.getLuminosityBlock();
   edm::Handle<LumiSummary> s;
   lumiBlock.getByLabel("lumiProducer",s);
@@ -206,7 +207,7 @@ void ExclusiveDijetsAnalysis::fillEventInfo(ExclusiveDijetsEvent& eventData, con
       instLumiLS=s->avgInsDelLumi(); // calibrated
 
   }
- // Instant. luminosity of a bunch crossing
+  // Instant. luminosity of a bunch crossing
   // In EDM  it is uncalibrated. For 7TeV collisions calibration constant is 6.37.
   edm::Handle<LumiDetails> d;
   lumiBlock.getByLabel("lumiProducer",d);
@@ -214,28 +215,22 @@ void ExclusiveDijetsAnalysis::fillEventInfo(ExclusiveDijetsEvent& eventData, con
   if (d->isValid()){
      instLumiBunchOCC1 = d->lumiValue(LumiDetails::kOCC1,event.bunchCrossing());
      instLumiBunchOCC1=instLumiBunchOCC1*6.37;
-      //std::cout << "instLumiBunchOCC1 ="<<  instLumiBunchOCC1 <<std::endl;
+     //std::cout << "instLumiBunchOCC1 ="<<  instLumiBunchOCC1 <<std::endl;
      eventData.SetInstLumiBunch(instLumiBunchOCC1);
-      //std::cout<<"lumivalue 1 "<< d->lumiValue(LumiDetails::kOCC1,1)*6.37<<" "<<d->lumiBeam1Intensity(1)<<std::endl;
+     //std::cout<<"lumivalue 1 "<< d->lumiValue(LumiDetails::kOCC1,1)*6.37<<" "<<d->lumiBeam1Intensity(1)<<std::endl;
   }else{
        std::cout << "no valid lumi detail data" <<std::endl;
        //eventData.SetInstLumiBunch(-9999.);
        }
-/////////////////////////////
-  edm::Handle<double> lumiWeight;
-  event.getByLabel("lumiWeight",lumiWeight);
-  if(lumiWeight.isValid()){
-     double lumi = *lumiWeight;
-     eventData.SetLumiWeight(lumi);
-  } else{
-     eventData.SetLumiWeight(-1.); 
-  }
-
+     eventData.SetInstDelLumiLS(instLumiLS);
+}else{
+  eventData.SetInstDelLumiLS(-999.);
+  eventData.SetInstDelLumiLS(-999.);  
+}  
   eventData.SetEventNumber(eventNumber);
   eventData.SetRunNumber(runNumber);
   eventData.SetLumiSection(lumiSection);
   eventData.SetBunchCrossing(bunchCrossing);
-  eventData.SetInstDelLumiLS(instLumiLS); 
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void ExclusiveDijetsAnalysis::fillTriggerInfo(ExclusiveDijetsEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){

@@ -91,7 +91,8 @@ class ExclusiveDijetsAnalysis {
 
      bool accessMCInfo_;
      bool POMPYTMCInfo_;
-   
+     bool runOnRECO_;     
+
      
      std::vector<std::string> hltPathNames_;
    

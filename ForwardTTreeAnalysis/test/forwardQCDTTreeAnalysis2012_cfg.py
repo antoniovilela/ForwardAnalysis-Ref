@@ -8,6 +8,8 @@ config.writeEdmOutput = False
 config.runOnMC = False
 config.runPATSequences = True
 config.usePAT = False
+config.runOnAOD = True
+config.runOnRECO = False
 config.globalTagNameData = 'GR_R_52_V7::All' 
 #config.instLumiROOTFile = 'lumibyXing_Cert_160404-176023_7TeV_PromptReco_Collisions11_JSON.root'
 config.globalTagNameMC = 'START42_V14A::All'
@@ -30,8 +32,12 @@ config.outputTTreeFile = 'teste.root'
 if config.runOnMC:
     config.inputFileName = 'rfio:/castor/cern.ch/cms/store/data/Run2012A/Jet/AOD/PromptReco-v1/000/190/731/224D5FB2-B383-E111-B38A-003048F1183E.root'
 else:
-    config.inputFileName = 'rfio:/castor/cern.ch/cms/store/data/Run2012A/Jet/AOD/PromptReco-v1/000/190/731/224D5FB2-B383-E111-B38A-003048F1183E.root' 
-
+ if config.runOnAOD:
+     config.inputFileName = 'rfio:/castor/cern.ch/cms/store/data/Run2012A/Jet/AOD/PromptReco-v1/000/190/731/224D5FB2-B383-E111-B38A-003048F1183E.root' 
+ else:
+  if config.runOnRECO:
+      config.inputFileName = 'rfio:/castor/cern.ch/cms/store/data/Run2011A/Jet/RECO/PromptReco-v6/000/175/576/D08A7488-32D9-E011-B32F-BCAEC518FF8D.root'
+ 
 
 process = cms.Process("Analysis")
 
