@@ -502,6 +502,7 @@ void DiffractiveAnalysis::fillGenInfo(DiffractiveEvent& eventData, const edm::Ev
      event.getByLabel(edm::InputTag("edmNtupleMxGen","Mx"),edmNtupleMxGen);
  
      eventData.MxGenDiss_ = (edmNtupleMxGen.isValid() && edmNtupleMxGen->size()) ? (*edmNtupleMxGen)[0] : -999.;
+     eventData.MyGenDiss_ = (edmNtupleMxGen.isValid() && edmNtupleMxGen->size() > 1) ? (*edmNtupleMxGen)[1] : -999.;
 
    
   } else{
@@ -509,6 +510,7 @@ void DiffractiveAnalysis::fillGenInfo(DiffractiveEvent& eventData, const edm::Ev
      eventData.xiGenMinus_ = -1.;
      eventData.MxGen_ = -1.;
      eventData.MxGenDiss_ = -1.;
+     eventData.MyGenDiss_ = -1.;
      eventData.MxGenRange_ = -1.;
      eventData.MxGenPlus_ = -1.; 
      eventData.MxGenMinus_ = -1.;

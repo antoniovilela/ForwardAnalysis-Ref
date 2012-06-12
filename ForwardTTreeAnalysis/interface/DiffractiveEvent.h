@@ -99,6 +99,7 @@ class DiffractiveEvent {
 
       double GetMxGen() const {return MxGen_;}
       double GetMxGenDiss() const {return MxGenDiss_;}
+      double GetMyGenDiss() const {return MyGenDiss_;}
       double GetMxGenRange() const {return MxGenRange_;}
       double GetMxGenPlus() const {return MxGenPlus_;}
       double GetMxGenMinus() const {return MxGenMinus_;}
@@ -170,6 +171,7 @@ class DiffractiveEvent {
       double EMinusPzFromPFCands_;
       double MxGen_;
       double MxGenDiss_; 
+      double MyGenDiss_;
       double MxGenRange_;
       double MxGenPlus_;
       double MxGenMinus_;

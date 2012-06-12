@@ -3,8 +3,8 @@ import FWCore.ParameterSet.Config as cms
 DiffractiveAnalysis = cms.PSet(
     # Input tags
     vertexTag = cms.InputTag("offlinePrimaryVertices"),
-    trackTag = cms.InputTag(""),
-    jetTag = cms.InputTag(""),
+    trackTag = cms.InputTag("generalTracks"),
+    jetTag = cms.InputTag("ak5PFJets"),
     metTag = cms.InputTag("met"),
     caloTowerTag = cms.InputTag("towerMaker"), 
     castorRecHitTag = cms.InputTag("castorRecHitCorrector"),
