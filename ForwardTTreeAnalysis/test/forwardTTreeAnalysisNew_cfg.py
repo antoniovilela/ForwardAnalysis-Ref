@@ -5,12 +5,13 @@ class config: pass
 config.verbose = True
 config.writeEdmOutput = False
 config.runOnMC = False
-config.runPATSequences = True
+config.runPATSequences = False
 config.usePAT = False
-config.globalTagNameData = 'GR_R_42_V19::All' 
+config.globalTagNameData = 'GR_R_52_V7::All'
+#config.globalTagNameData = 'GR_R_42_V19::All' 
 #config.instLumiROOTFile='/storage2/eliza/lumibyXing_Cert_160404-176023_7TeV_PromptReco_Collisions11_JSON.root'
 config.globalTagNameMC = 'START42_V14A::All'
-config.comEnergy = 7000.0
+config.comEnergy = 8000.0
 config.trackAnalyzerName = 'trackHistoAnalyzer'
 config.trackTagName = 'analysisTracks'
 ##PAT INFO does not using Asterisk, yet.
@@ -22,18 +23,21 @@ if config.runOnMC:
 else:
     #config.l1Paths = ('L1_ZeroBias','L1_BptxMinus_NotBptxPlus','L1_SingleJet30U')
     #config.hltPaths = ('HLT_ExclDiJet30U_HFOR_v1','HLT_DiJetAve100U_v1')
-    config.l1Paths = ('L1_SingleJet36','L1_SingleJet36_FwdVeto')
-    config.hltPaths = ('HLT_ExclDiJet60_HFOR_v*','HLT_ExclDiJet60_HFAND_v*','HLT_Jet60_v*' )
-
+    config.l1Paths = ('L1_SingleJet36','L1_SingleJet16','L1_DoubleJetC56')
+    #config.hltPaths = ('HLT_ExclDiJet60_HFOR_v*','HLT_ExclDiJet60_HFAND_v*','HLT_Jet60_v*' )
+    config.hltPaths = ('HLT_PFJet40_v*','HLT_L1SingleJet16_v*','HLT_DiPFJetAve80_v*','HLT_L1SingleJet36_v*','HLT_ExclDiJet80_HFAND_v*','HLT_ExclDiJet35_HFAND_v*','HLT_ExclDiJet35_HFOR_v*')
 
 config.outputTTreeFile = 'forwardQCDTTreeAnalysis.root'
 
 if config.runOnMC:
     config.inputFileName = '/storage2/eliza/samples_test/QCD_Pt-15to30_TuneZ2_7TeV_pythia6AODSIMS_3.root'# MC
 else:
-    config.inputFileName = '/storage2/eliza/samples_test/MultiJetPromptReco_v4.root'#data 2011
+    config.inputFileName = 'rfio:/castor/cern.ch/cms/store/data/Run2012A/Jet/RAW/v1/000/193/336/6CE0FC0F-7995-E111-BC9D-001D09F2B2CF.root'
     #config.inputFileName = '/storage2/antoniov/data1/MultiJet_Run2010B_Apr21ReReco-v1_AOD/MultiJet_Run2010B_Apr21ReReco-v1_AOD_7EA7B611-7371-E011-B164-002354EF3BDB.root' 
-
+    #config.inputFileName = 'rfio:/castor/cern.ch/cms/store/data/Run2012A/Jet/RAW/v1/000/193/686/D80B9D30-5999-E111-8DAF-003048D2BC4C.root' 
+        #'rfio:/castor/cern.ch/cms/store/data/Run2012A/Jet/RAW/v1/000/193/686/D80B9D30-5999-E111-8DAF-003048D2BC4C.root',
+        #'rfio:/castor/cern.ch/cms/store/data/Run2012A/Jet/RAW/v1/000/193/676/8CF36755-3C99-E111-B084-0025B3203898.root'
+#'rfio:/castor/cern.ch/cms/store/data/Run2012A/Jet/RECO/PromptReco-v1/000/190/895/BCF66AEE-2685-E111-8B36-BCAEC518FF62.root'
 
 process = cms.Process("Analysis")
 
@@ -44,7 +48,7 @@ process.options = cms.untracked.PSet(
 	SkipEvent = cms.untracked.vstring('ProductNotFound')
 	)
 
-process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(300) )
+process.maxEvents = cms.untracked.PSet( input = cms.untracked.int32(10000) )
 
 process.source = cms.Source("PoolSource",
     fileNames = cms.untracked.vstring( 'file:%s' % config.inputFileName )
@@ -64,9 +68,23 @@ process.load('Configuration.StandardSequences.GeometryExtended_cff')
 process.load('Configuration.StandardSequences.MagneticField_38T_cff')
 process.load('Configuration.StandardSequences.Reconstruction_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
-process.GlobalTag.globaltag = 'GR_R_42_V19::All'
-
-
+process.GlobalTag.globaltag = 'GR_R_52_V7::All'
+process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
+process.load('RecoJets.Configuration.RecoPFJets_cff')
+process.load('RecoJets.Configuration.RecoJets_cff')
+process.load('CommonTools/RecoAlgos/HBHENoiseFilterResultProducer_cfi')
+###Fragmento do menu de 2012
+process.load('ForwardAnalysis.ForwardTTreeAnalysis.HLT2012_cff')
+# create the jetMET HLT reco path
+process.DoHLTJets = cms.Path(
+    process.HLTBeginSequence +
+    process.HLTRecoJetSequenceAK5Corrected +
+    process.HLTRecoJetSequenceAK5L1FastJetCorrected +
+    process.HLTRecoMETSequence #+
+    #HLTDoLocalHcalWithoutHOSequence +                 
+    #OpenHLTHCalNoiseTowerCleanerSequence
+)
+##############################
 if config.runPATSequences:
     from ForwardAnalysis.Skimming.addPATSequences import addPATSequences
     addPATSequences(process,config.runOnMC)
@@ -104,11 +122,15 @@ process.tracksTransverseRegion.JetTag = "selectedPatJetsPFlow"
 from ForwardAnalysis.ForwardTTreeAnalysis.DiffractiveAnalysis_cfi import DiffractiveAnalysis
 from ForwardAnalysis.ForwardTTreeAnalysis.ExclusiveDijetsAnalysis_cfi import ExclusiveDijetsAnalysis
 from ForwardAnalysis.ForwardTTreeAnalysis.PATInfo_cfi import PATInfo
-
+from ForwardAnalysis.ForwardTTreeAnalysis.dijetsTriggerAnalysis_cfi import DijetsTriggerAnalysis  
 #PATInfo.L1AlgoBitName =  config.l1Paths 
 #PATInfo.HLTAlgoBitName = config.hltPaths 
 PATInfo.runALLTriggerPath = True
 
+process.dijetsTriggerAnalysisTTree = cms.EDAnalyzer("DijetsTriggerAnalysisTTree",
+        DijetsTriggerAnalysis = DijetsTriggerAnalysis,
+        #PATInfo = PATInfo 
+        )
 
 process.patInfoTTree = cms.EDAnalyzer("PATInfoTTree",
 	PATInfo = PATInfo
@@ -129,17 +151,17 @@ process.diffractiveAnalysisTTree.DiffractiveAnalysis.hltPath = ''
 process.diffractiveAnalysisPATInfoTTree.DiffractiveAnalysis.hltPath = ''
 
 
-process.exclusiveDijetsHLTFilter.HLTPaths = ['HLT_Jet60_v*']
+process.exclusiveDijetsHLTFilter.HLTPaths = ['HLT_ExclDiJet80_HFAND_v*','HLT_ExclDiJet35_HFAND_v*','HLT_ExclDiJet35_HFOR_v*','HLT_L1SingleJet16_v*','HLT_DiPFJetAve80_v*','HLT_L1SingleJet36_v*']
 
 process.diffractiveExclusiveDijetsAnalysisPATInfoTTree.DiffractiveAnalysis.hltPath = ''
 process.diffractiveExclusiveDijetsAnalysisPATInfoTTree.DiffractiveAnalysis.trackTag = 'analysisTracks'
-process.diffractiveExclusiveDijetsAnalysisPATInfoTTree.DiffractiveAnalysis.vertexTag = "goodOfflinePrimaryVertices"
+process.diffractiveExclusiveDijetsAnalysisPATInfoTTree.DiffractiveAnalysis.vertexTag = "offlinePrimaryVertices"
 process.diffractiveExclusiveDijetsAnalysisPATInfoTTree.DiffractiveAnalysis.particleFlowTag = "pfCandidateNoiseThresholds"
 process.diffractiveExclusiveDijetsAnalysisPATInfoTTree.DiffractiveAnalysis.jetTag = "selectedPatJetsPFlow"
 
 process.diffractiveExclusiveDijetsAnalysisPATInfoTTree.ExclusiveDijetsAnalysis.hltPaths = config.hltPaths 
 process.diffractiveExclusiveDijetsAnalysisPATInfoTTree.ExclusiveDijetsAnalysis.TrackTag = 'analysisTracks'
-process.diffractiveExclusiveDijetsAnalysisPATInfoTTree.ExclusiveDijetsAnalysis.VertexTag = "goodOfflinePrimaryVertices"
+process.diffractiveExclusiveDijetsAnalysisPATInfoTTree.ExclusiveDijetsAnalysis.VertexTag = "offlinePrimaryVertices"
 process.diffractiveExclusiveDijetsAnalysisPATInfoTTree.ExclusiveDijetsAnalysis.ParticleFlowTag = "pfCandidateNoiseThresholds"
 process.diffractiveExclusiveDijetsAnalysisPATInfoTTree.ExclusiveDijetsAnalysis.JetTag = "selectedPatJetsPFlow"
 process.diffractiveExclusiveDijetsAnalysisPATInfoTTree.ExclusiveDijetsAnalysis.JetNonCorrTag = "ak5PFJets"
@@ -167,18 +189,18 @@ if config.runOnMC:
                               process.edmNtupleEtaMaxGen+process.edmNtupleEtaMinGen)
 
 
-process.analysis_reco_step = cms.Path(process.analysisSequences)
-process.castor_step = cms.Path(process.castorSequence)
+#process.analysis_reco_step = cms.Path(process.analysisSequences)
+#process.castor_step = cms.Path(process.castorSequence)
 #process.analysis_patInfoTTree_step = cms.Path(process.patInfoTTree)
 #process.analysis_diffractiveAnalysisTTree_step = cms.Path(process.diffractiveAnalysisTTree)
-
+process.analysis_dijetsTriggerAnalysisPATInfoTTree_step = cms.Path(process.exclusiveDijetsHLTFilter + process.dijetsTriggerAnalysisTTree)
 #process.analysis_diffractiveAnalysisPATInfoTTree_step = cms.Path(process.diffractiveAnalysisPATInfoTTree)
-process.analysis_diffractiveExclusiveDijetsAnalysisPATInfoTTree_step = cms.Path(process.eventSelectionHLT+
-                                                                                process.diffractiveExclusiveDijetsAnalysisPATInfoTTree+
-                                                                                process.diffractiveExclusiveDijetsAnalysisPATInfoTTree_HF0+
-                                                                                process.diffractiveExclusiveDijetsAnalysisPATInfoTTree_HF1+
-                                                                                process.diffractiveExclusiveDijetsAnalysisPATInfoTTree_HF2+
-                                                                                process.diffractiveExclusiveDijetsAnalysisPATInfoTTree_HF3)
+#process.analysis_diffractiveExclusiveDijetsAnalysisPATInfoTTree_step = cms.Path(process.eventSelectionHLT+
+#                                                                                process.diffractiveExclusiveDijetsAnalysisPATInfoTTree+
+#                                                                                process.diffractiveExclusiveDijetsAnalysisPATInfoTTree_HF0+
+#                                                                                process.diffractiveExclusiveDijetsAnalysisPATInfoTTree_HF1+
+#                                                                                process.diffractiveExclusiveDijetsAnalysisPATInfoTTree_HF2+
+#                                                                                process.diffractiveExclusiveDijetsAnalysisPATInfoTTree_HF3)
 #process.analysis_diffractiveExclusiveDijetsAnalysisPATInfoTTree_HF0_step = cms.Path(process.diffractiveExclusiveDijetsAnalysisPATInfoTTree_HF0)
 
 #process.analysis_diffractiveAnalysisPATInfoTTree_step = cms.Path(process.diffractiveAnalysisPATInfoTTree)
