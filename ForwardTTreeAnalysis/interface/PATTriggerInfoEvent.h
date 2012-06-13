@@ -1,22 +1,22 @@
-#ifndef PATInfoEvent_h
-#define PATInfoEvent_h
+#ifndef PATTriggerInfoEvent_h
+#define PATTriggerInfoEvent_h
 
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/PATL1Trigger.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/PATHLTTrigger.h"
 #include <string>
 #include <vector>
 
-namespace patInfo {
-  class PATInfo;
+namespace patTriggerInfo {
+  class PATTriggerInfo;
 }
 
-class PATInfoEvent {
+class PATTriggerInfoEvent {
    public:
-      typedef patInfo::PATInfo analysis_type;
+      typedef patTriggerInfo::PATTriggerInfo analysis_type;
       static const char* name;
 
-      PATInfoEvent();
-      ~PATInfoEvent();
+      PATTriggerInfoEvent();
+      ~PATTriggerInfoEvent();
       //------------ Set FWD methods ------------------------------
 
 
@@ -37,18 +37,13 @@ class PATInfoEvent {
       
 
    private:
-      friend class patInfo::PATInfo;
+      friend class patTriggerInfo::PATTriggerInfo;
       void reset();
 
       int nbit_, nHLTbit_;
 
       std::vector<PATL1Trigger> l1Triggers_;
       std::vector<PATHLTTrigger> HLTTriggers_;
-
-     
-
-     
-      
 
       //////////////////////////////////
 };//end code

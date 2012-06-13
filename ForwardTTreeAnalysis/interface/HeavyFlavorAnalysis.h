@@ -24,8 +24,10 @@ class HeavyFlavorAnalysis {
       HeavyFlavorAnalysis(const edm::ParameterSet&);
       ~HeavyFlavorAnalysis();
 
-      void setBeginRun(const edm::Run&, const edm::EventSetup&);
-      void fillEventData(HeavyFlavorEvent&, const edm::Event&, const edm::EventSetup&);
+      void begin();
+      void begin(const edm::Run&, const edm::EventSetup&);
+      void fill(HeavyFlavorEvent&, const edm::Event&, const edm::EventSetup&);
+      void end();
    private:
       //void fillEventInfo(HeavyFlavorEvent&, const edm::Event&, const edm::EventSetup&);
  

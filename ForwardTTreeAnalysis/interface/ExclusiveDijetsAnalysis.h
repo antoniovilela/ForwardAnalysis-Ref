@@ -24,8 +24,10 @@ class ExclusiveDijetsAnalysis {
      ExclusiveDijetsAnalysis(const edm::ParameterSet&);
      ~ExclusiveDijetsAnalysis();
 
-     void setBeginRun(const edm::Run&, const edm::EventSetup&);
-     void fillEventData(ExclusiveDijetsEvent&, const edm::Event&, const edm::EventSetup&);
+     void begin();
+     void begin(const edm::Run&, const edm::EventSetup&);
+     void fill(ExclusiveDijetsEvent&, const edm::Event&, const edm::EventSetup&);
+     void end();
   private:
     
      template <class OneJetColl,class OnePartColl> //eliza
@@ -38,7 +40,7 @@ class ExclusiveDijetsAnalysis {
      unsigned int nHFSlice(const std::map<unsigned int, std::vector<unsigned int> >& mapTreshToiEta, unsigned int thresholdHF, unsigned int ieta);
  
      //void setGenInfo(const edm::Event&, const edm::EventSetup&);
-     //void setTFileService();
+     void setTFileService();
      void fillEventInfo(ExclusiveDijetsEvent&, const edm::Event&, const edm::EventSetup&); //added by eliza 
      void fillTriggerInfo(ExclusiveDijetsEvent&, const edm::Event&, const edm::EventSetup&); //added by eliza
      void fillPileUpInfo(ExclusiveDijetsEvent&, const edm::Event&, const edm::EventSetup&);
@@ -55,9 +57,9 @@ class ExclusiveDijetsAnalysis {
     
      void fillEventVariables(ExclusiveDijetsEvent&, const edm::Event&, const edm::EventSetup&);
 
-//new input tags:
      bool runOnData_;
-   
+     //bool initializeTFileService_;
+
      edm::InputTag vertexTag_;
      edm::InputTag trackTag_;
      edm::InputTag metTag_;
@@ -87,7 +89,6 @@ class ExclusiveDijetsAnalysis {
      bool usePAT_; 
 
      //new variables:
-
      bool accessMCInfo_;
      bool POMPYTMCInfo_;
      bool runOnRECO_; 
@@ -106,8 +107,7 @@ class ExclusiveDijetsAnalysis {
      std::string jetCorrectionService_;
      const JetCorrector* corrector_;
 
-     //TH1F *hltTriggerPassHisto_,*hltTriggerNamesHisto_;
-     
+     TH1F *hltTriggerPassHisto_,*hltTriggerNamesHisto_;
 };
 
 } // namespace

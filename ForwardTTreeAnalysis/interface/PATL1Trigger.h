@@ -3,7 +3,7 @@
 
 #include <string>
 
-namespace patInfo {
+namespace patTriggerInfo {
   class PATInfo;
 }
 
@@ -36,7 +36,7 @@ class PATL1Trigger {
   unsigned GetL1Prescale()                       const { return  L1Prescale_;}
 
   private:
-     friend class patInfo::PATInfo;
+     friend class patTriggerInfo::PATInfo;
 
      bool TechL1bit_;
 

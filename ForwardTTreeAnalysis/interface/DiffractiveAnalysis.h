@@ -24,8 +24,10 @@ class DiffractiveAnalysis {
       DiffractiveAnalysis(const edm::ParameterSet&);
       ~DiffractiveAnalysis();
 
-      void setBeginRun(const edm::Run&, const edm::EventSetup&);
-      void fillEventData(DiffractiveEvent&, const edm::Event&, const edm::EventSetup&);
+      void begin();
+      void begin(const edm::Run&, const edm::EventSetup&);
+      void fill(DiffractiveEvent&, const edm::Event&, const edm::EventSetup&);
+      void end();
    private:
       void fillEventInfo(DiffractiveEvent&, const edm::Event&, const edm::EventSetup&);
       void fillNoiseInfo(DiffractiveEvent&, const edm::Event&, const edm::EventSetup&);

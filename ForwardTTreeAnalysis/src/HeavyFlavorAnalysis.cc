@@ -25,9 +25,13 @@ HeavyFlavorAnalysis::HeavyFlavorAnalysis(const edm::ParameterSet& pset):
 
 HeavyFlavorAnalysis::~HeavyFlavorAnalysis(){}
 
-void HeavyFlavorAnalysis::setBeginRun(const edm::Run& run, const edm::EventSetup& setup) {}
+void HeavyFlavorAnalysis::begin() {}
 
-void HeavyFlavorAnalysis::fillEventData(HeavyFlavorEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
+void HeavyFlavorAnalysis::begin(const edm::Run& run, const edm::EventSetup& setup) {}
+
+void HeavyFlavorAnalysis::end() {}
+
+void HeavyFlavorAnalysis::fill(HeavyFlavorEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
   eventData.reset();
 
   edm::Handle<edm::View<reco::Jet> > jetCollectionH;

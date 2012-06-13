@@ -7,12 +7,13 @@ config.writeEdmOutput = False
 config.runOnMC = False
 config.runOnEventWeight = False
 config.runPATSequences = True
-config.usePAT = False
+config.usePAT = True
 config.runOnAOD = True
 config.runOnRECO = False
-config.globalTagNameData = 'GR_R_42_V19::All' 
-config.instLumiROOTFile='/storage2/eliza/lumibyXing_Cert_160404-176023_7TeV_PromptReco_Collisions11_JSON.root'
-config.globalTagNameMC = 'START42_V14A::All'
+config.globalTagNameData = 'GR_R_42_V23::All' 
+#config.instLumiROOTFile='/storage2/eliza/lumibyXing_Cert_160404-176023_7TeV_PromptReco_Collisions11_JSON.root'
+config.instLumiROOTFile=''
+config.globalTagNameMC = 'START42_V17::All'
 config.comEnergy = 7000.0
 config.trackAnalyzerName = 'trackHistoAnalyzer'
 config.trackTagName = 'analysisTracks'
@@ -32,17 +33,19 @@ if config.runOnMC:
     config.inputFileName = '/storage2/eliza/samples_test/QCD_Pt-15to30_TuneZ2_7TeV_pythia6AODSIMS_3.root'# MC
 else:
  if config.runOnAOD:
-    #config.inputFileName = '/storage2/eliza/samples_test/MultiJetPromptReco_v4.root'#data 2011
+     #config.inputFileName = '/storage2/eliza/samples_test/MultiJetPromptReco_v4.root'#data 2011
      config.inputFileName = '/storage2/antoniov/data1/MultiJet_Run2010B_Apr21ReReco-v1_AOD/MultiJet_Run2010B_Apr21ReReco-v1_AOD_7EA7B611-7371-E011-B164-002354EF3BDB.root' 
  else:
   if config.runOnRECO:
       config.inputFileName = 'rfio:/castor/cern.ch/cms/store/data/Run2011A/Jet/RECO/PromptReco-v6/000/175/576/D08A7488-32D9-E011-B32F-BCAEC518FF8D.root'
 
+#=======================
 process = cms.Process("Analysis")
 
 process.load('FWCore.MessageService.MessageLogger_cfi')
 process.MessageLogger.cerr.threshold = 'DEBUG'
 process.MessageLogger.debugModules = cms.untracked.vstring('forwardQCDTTreeAnalysis')
+#process.MessageLogger.debugModules = cms.untracked.vstring('*')
 process.MessageLogger.destinations = cms.untracked.vstring('cerr')
 process.MessageLogger.categories.append('Analysis')
 process.MessageLogger.cerr.Analysis = cms.untracked.PSet(limit = cms.untracked.int32(-1))
@@ -75,9 +78,9 @@ else: process.GlobalTag.globaltag = config.globalTagNameData
 #---------------------------------------------------------------------------------
 ##Jet Correction Service
 
-process.ak5CaloL1Offset.useCondDB = False
-process.ak5PFL1Offset.useCondDB = False
-process.ak5JPTL1Offset.useCondDB = False
+#process.ak5CaloL1Offset.useCondDB = False
+#process.ak5PFL1Offset.useCondDB = False
+#process.ak5JPTL1Offset.useCondDB = False
 
 #---------------------------------------------------------------------------------
 # Output
@@ -119,6 +122,11 @@ process.tracksTransverseRegion.JetTag = "selectedPatJetsPFlow"
 
 from ForwardAnalysis.ForwardTTreeAnalysis.DiffractiveAnalysis_cfi import DiffractiveAnalysis
 from ForwardAnalysis.ForwardTTreeAnalysis.ExclusiveDijetsAnalysis_cfi import ExclusiveDijetsAnalysis
+pfjecService    = 'ak5PFL1FastL2L3'
+calojecService  = 'ak5CaloL1L2L3'
+if not config.runOnMC:
+    pfjecService    = 'ak5PFL1FastL2L3Residual'
+    calojecService  = 'ak5CaloL1L2L3Residual'
 process.forwardQCDTTreeAnalysis = cms.EDAnalyzer('ProcessedTreeProducer',
     diffractiveAnalysis = DiffractiveAnalysis,
     exclusiveDijetsAnalysis = ExclusiveDijetsAnalysis,
@@ -162,10 +170,11 @@ process.forwardQCDTTreeAnalysis = cms.EDAnalyzer('ProcessedTreeProducer',
     triggerResults  = cms.InputTag("TriggerResults","","HLT"),
     triggerEvent    = cms.InputTag("hltTriggerSummaryAOD","","HLT"),
     ## jec services ##############################
-    pfjecService    = cms.string('ak5PFL1FastL2L3Residual'),
-    calojecService  = cms.string('ak5CaloL1L2L3Residual')
+    pfjecService    = cms.string(pfjecService),
+    calojecService  = cms.string(calojecService)
 )
 
+# CASTOR 
 config.castorTagName = "castorRecHitCorrector"
 if config.runOnMC: config.castorTagName = "castorreco"
 # Diffractive analysis
@@ -189,10 +198,16 @@ process.forwardQCDTTreeAnalysis.exclusiveDijetsAnalysis.VertexTag = "goodOffline
 process.forwardQCDTTreeAnalysis.exclusiveDijetsAnalysis.ParticleFlowTag = "pfCandidateNoiseThresholds"
 process.forwardQCDTTreeAnalysis.exclusiveDijetsAnalysis.JetTag = "selectedPatJetsPFlow"
 process.forwardQCDTTreeAnalysis.exclusiveDijetsAnalysis.JetNonCorrTag = "ak5PFJets"
+process.forwardQCDTTreeAnalysis.exclusiveDijetsAnalysis.UsePAT = config.usePAT
 if config.runOnMC:
     process.forwardQCDTTreeAnalysis.exclusiveDijetsAnalysis.AccessMCInfo = True
 else:
     process.forwardQCDTTreeAnalysis.exclusiveDijetsAnalysis.AccessMCInfo = False
+
+print "DiffractiveAnalysis configuration:"
+print process.forwardQCDTTreeAnalysis.diffractiveAnalysis
+print "ExclusiveDijetsAnalysis configuration:"
+print process.forwardQCDTTreeAnalysis.exclusiveDijetsAnalysis
 
 
 ############# Turn-on the fastjet area calculation needed for the L1Fastjet ##############
@@ -222,10 +237,8 @@ if config.runPATSequences:
 	process.patTrigger.addL1Algos = cms.bool( True )
 	process.patJets.addTagInfos   = cms.bool( True )   
 
-if not config.runOnMC:
+if not config.runOnMC and config.runOnEventWeight:
     process.eventWeightSequence = cms.Sequence(process.lumiWeight) 
-
-if config.runOnEventWeight:
     process.eventWeight_step = cms.Path(process.eventWeightSequence) 
 
 if config.runOnMC:
@@ -235,5 +248,11 @@ if config.runOnMC:
                                process.etaMaxGen+process.etaMinGen*
                                process.edmNtupleEtaMaxGen+process.edmNtupleEtaMinGen)
 process.analysis_reco_step = cms.Path(process.analysisSequences)
-process.analysis_forwardQCDAnalysis_step = cms.Path(process.eventSelectionHLT+
-                                                    process.forwardQCDTTreeAnalysis)
+
+if not config.runOnMC:
+    process.analysis_forwardQCDAnalysis_step = cms.Path( process.eventSelectionHLT +
+                                                         process.forwardQCDTTreeAnalysis )
+else:
+    process.analysis_forwardQCDAnalysis_step = cms.Path( process.eventSelection + 
+                                                         process.forwardQCDTTreeAnalysis )
+

@@ -69,9 +69,13 @@ DiffractiveAnalysis::DiffractiveAnalysis(const edm::ParameterSet& pset):
 
 DiffractiveAnalysis::~DiffractiveAnalysis(){}
 
-void DiffractiveAnalysis::setBeginRun(const edm::Run& run, const edm::EventSetup& setup) {}
+void DiffractiveAnalysis::begin() {}
 
-void DiffractiveAnalysis::fillEventData(DiffractiveEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
+void DiffractiveAnalysis::begin(const edm::Run& run, const edm::EventSetup& setup) {}
+
+void DiffractiveAnalysis::end() {}
+
+void DiffractiveAnalysis::fill(DiffractiveEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
   eventData.reset();
 
   fillEventInfo(eventData,event,setup);

@@ -4,7 +4,7 @@
   <class name="ExclusiveDijetsEvent"/>
   <class name="DijetsTriggerEvent"/>
   <class name="HeavyFlavorEvent"/>
-  <class name="PATInfoEvent"/>
+  <class name="PATTriggerInfoEvent"/>
   <class name="PATL1Trigger"/>
   <class name="PATHLTTrigger"/>
 </selection>

@@ -3,7 +3,7 @@
 
 #include <string>
 
-namespace patInfo {
+namespace patTriggerInfo {
   class PATInfo;
 }
 
@@ -38,7 +38,7 @@ class PATHLTTrigger {
       std::string  GetFailedL1SeedName()                         const { return failedL1Seeds_;}
 
   private:
-     friend class patInfo::PATInfo;
+     friend class patTriggerInfo::PATInfo;
      std::string  HLTName_;
      
      unsigned HLTPrescale_;

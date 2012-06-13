@@ -47,7 +47,7 @@ DijetsTriggerAnalysis::DijetsTriggerAnalysis(const edm::ParameterSet& pset):
   ringNames_.push_back("Ring 1 HF-minus");
   ringNames_.push_back("Ring 2 HF-plus");
   ringNames_.push_back("Ring 2 HF-minus");
-  setTFileService(); 
+  //setTFileService(); 
 }
 
 void DijetsTriggerAnalysis::setTFileService(){
@@ -92,6 +92,17 @@ void DijetsTriggerAnalysis::setTFileService(){
   edm::LogInfo("Analysis") << oss.str();
 }
 
+DijetsTriggerAnalysis::~DijetsTriggerAnalysis(){}
+
+void DijetsTriggerAnalysis::begin() {
+  setTFileService(); 
+}
+
+void DijetsTriggerAnalysis::begin(const edm::Run& run, const edm::EventSetup& setup){
+  //l1GtUtils_.getL1GtRunCache(run, setup, true, false);
+}
+
+void DijetsTriggerAnalysis::end() {}
 /*void DijetsTriggerAnalysis::endJob(){
    std::ostringstream oss;
    for(size_t k = 0; k < histosCountAll_.size(); ++k){
@@ -114,13 +125,7 @@ void DijetsTriggerAnalysis::setTFileService(){
    }
 }*/
 
-DijetsTriggerAnalysis::~DijetsTriggerAnalysis(){}
-
-void DijetsTriggerAnalysis::setBeginRun(const edm::Run& run, const edm::EventSetup& setup){
-  //l1GtUtils_.getL1GtRunCache(run, setup, true, false);
-}
-
-void DijetsTriggerAnalysis::fillEventData(DijetsTriggerEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
+void DijetsTriggerAnalysis::fill(DijetsTriggerEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
   eventData.reset();
   eventData.l1Decision_.resize(l1TriggerNames_.size());
   eventData.l1Prescale_.resize(l1TriggerNames_.size());

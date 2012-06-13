@@ -58,7 +58,8 @@ using exclusiveDijetsAnalysis::ExclusiveDijetsAnalysis;
 const char* ExclusiveDijetsAnalysis::name = "ExclusiveDijetsAnalysis";
 
 ExclusiveDijetsAnalysis::ExclusiveDijetsAnalysis(const edm::ParameterSet& pset):
-  runOnData_(true), 
+  runOnData_(true),
+  //initializeTFileService_(false), 
   vertexTag_(pset.getParameter<edm::InputTag>("VertexTag")),
   trackTag_(pset.getParameter<edm::InputTag>("TrackTag")),
   metTag_(pset.getParameter<edm::InputTag>("METTag")),
@@ -88,7 +89,6 @@ ExclusiveDijetsAnalysis::ExclusiveDijetsAnalysis(const edm::ParameterSet& pset):
   resetPFThresholds(thresholdsPFlowEndcap_);
   resetPFThresholds(thresholdsPFlowTransition_);
   resetPFThresholds(thresholdsPFlowForward_);
-  //setTFileService();
   if(pset.exists("PFlowThresholds")){ 
      edm::ParameterSet const& thresholdsPFPset = pset.getParameter<edm::ParameterSet>("PFlowThresholds");
  
@@ -125,15 +125,13 @@ ExclusiveDijetsAnalysis::ExclusiveDijetsAnalysis(const edm::ParameterSet& pset):
   } 
   LogDebug("Analysis") << oss.str();
 
-
   if(applyEnergyScaleHCAL_) energyScaleHCAL_ = pset.getParameter<double>("EnergyScaleFactorHCAL");
 
-
   if(useJetCorrection_) jetCorrectionService_ = pset.getParameter<std::string>("JetCorrectionService");
- 
 }
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/*void ExclusiveDijetsAnalysis::setTFileService(){
+void ExclusiveDijetsAnalysis::setTFileService(){
   edm::Service<TFileService> fs;
   std::ostringstream oss;
   hltTriggerNamesHisto_ = fs->make<TH1F>("HLTTriggerNames","HLTTriggerNames",1,0,1);
@@ -142,25 +140,35 @@ ExclusiveDijetsAnalysis::ExclusiveDijetsAnalysis(const edm::ParameterSet& pset):
     oss << "Using HLT reference trigger " << hltPathNames_[k] << std::endl;
     hltTriggerNamesHisto_->Fill(hltPathNames_[k].c_str(),1);
   }
+  edm::LogVerbatim("Analysis") << oss.str();
 
   hltTriggerPassHisto_ = fs->make<TH1F>("HLTTriggerPass","HLTTriggerPass",1,0,1);
   hltTriggerPassHisto_->SetBit(TH1::kCanRebin);
-}*/
+}
 //////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 ExclusiveDijetsAnalysis::~ExclusiveDijetsAnalysis(){}
 
-void ExclusiveDijetsAnalysis::setBeginRun(const edm::Run& run, const edm::EventSetup& setup){
+void ExclusiveDijetsAnalysis::begin(){
+  setTFileService();
+}
+
+void ExclusiveDijetsAnalysis::begin(const edm::Run& run, const edm::EventSetup& setup){
   if(useJetCorrection_) corrector_ = JetCorrector::getJetCorrector(jetCorrectionService_,setup);
 }
 
+void ExclusiveDijetsAnalysis::end() {}
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void ExclusiveDijetsAnalysis::fillEventData(ExclusiveDijetsEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
+void ExclusiveDijetsAnalysis::fill(ExclusiveDijetsEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
   // Reset info
   eventData.reset();
 
   runOnData_ = event.isRealData();
    
+  //if(!initializeTFileService_) { setTFileService(); initializeTFileService_ = true; }
+
   // Fill event data
   if(accessMCInfo_ && accessPileUpInfo_){
      fillPileUpInfo(eventData,event,setup);
@@ -170,24 +178,18 @@ void ExclusiveDijetsAnalysis::fillEventData(ExclusiveDijetsEvent& eventData, con
      eventData.SetNPileUpBxp1(-1);
   }
 
-    
   fillEventInfo(eventData,event,setup);
+
   //eventData.hltTrigResults_.resize(hltPathNames_.size());
   //eventData.hltTrigNames_.resize(hltPathNames_.size());
   fillTriggerInfo(eventData,event,setup);
+
   fillVertexInfo(eventData,event,setup);
- 
-
   fillJetInfo(eventData,event,setup);
-
 
   fillMultiplicities(eventData,event,setup);
   fillXiInfo(eventData,event,setup);
   fillPFFlowInfo(eventData,event,setup);
-   
-  //
-
-
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -197,47 +199,46 @@ void ExclusiveDijetsAnalysis::fillEventInfo(ExclusiveDijetsEvent& eventData, con
   unsigned int runNumber = event.id().run();
   unsigned int lumiSection = event.luminosityBlock();
   int bunchCrossing = event.bunchCrossing();
-/////////////////////////////
-if(runOnRECO_){  
-  // Instant. luminosity of a lumisection = (delivered luminosity)/(lumisection size=23.36s) 
-  edm::LuminosityBlock const& lumiBlock = event.getLuminosityBlock();
-  edm::Handle<LumiSummary> s;
-  lumiBlock.getByLabel("lumiProducer",s);
-  float instLumiLS=-10.;
-  if( s->isValid() ){
-      instLumiLS=s->avgInsDelLumi(); // calibrated
+  /////////////////////////////
+  if(runOnRECO_){  
+     // Instant. luminosity of a lumisection = (delivered luminosity)/(lumisection size=23.36s) 
+     edm::LuminosityBlock const& lumiBlock = event.getLuminosityBlock();
+     edm::Handle<LumiSummary> s;
+     lumiBlock.getByLabel("lumiProducer",s);
+     float instLumiLS=-10.;
+     if( s.isValid() ){
+	instLumiLS=s->avgInsDelLumi(); // calibrated
+     }
 
-  }
-  // Instant. luminosity of a bunch crossing
-  // In EDM  it is uncalibrated. For 7TeV collisions calibration constant is 6.37.
-  edm::Handle<LumiDetails> d;
-  lumiBlock.getByLabel("lumiProducer",d);
-  float instLumiBunchOCC1=-10.;
-  if (d->isValid()){
-     instLumiBunchOCC1 = d->lumiValue(LumiDetails::kOCC1,event.bunchCrossing());
-     instLumiBunchOCC1=instLumiBunchOCC1*6.37;
-     //std::cout << "instLumiBunchOCC1 ="<<  instLumiBunchOCC1 <<std::endl;
-     eventData.SetInstLumiBunch(instLumiBunchOCC1);
-     //std::cout<<"lumivalue 1 "<< d->lumiValue(LumiDetails::kOCC1,1)*6.37<<" "<<d->lumiBeam1Intensity(1)<<std::endl;
-  }else{
-       std::cout << "no valid lumi detail data" <<std::endl;
-       //eventData.SetInstLumiBunch(-9999.);
-       }
+     // Instant. luminosity of a bunch crossing
+     // In EDM  it is uncalibrated. For 7TeV collisions calibration constant is 6.37.
+     edm::Handle<LumiDetails> d;
+     lumiBlock.getByLabel("lumiProducer",d);
+     float instLumiBunchOCC1=-10.;
+     if( d.isValid() ){
+	instLumiBunchOCC1 = d->lumiValue(LumiDetails::kOCC1,event.bunchCrossing());
+	instLumiBunchOCC1=instLumiBunchOCC1*6.37;
+	//std::cout << "instLumiBunchOCC1 ="<<  instLumiBunchOCC1 <<std::endl;
+	eventData.SetInstLumiBunch(instLumiBunchOCC1);
+	//std::cout<<"lumivalue 1 "<< d->lumiValue(LumiDetails::kOCC1,1)*6.37<<" "<<d->lumiBeam1Intensity(1)<<std::endl;
+     } else{
+	std::cout << "no valid lumi detail data" <<std::endl;
+	//eventData.SetInstLumiBunch(-9999.);
+     }
      eventData.SetInstDelLumiLS(instLumiLS);
-}else{
-  eventData.SetInstDelLumiLS(-999.);
-  eventData.SetInstDelLumiLS(-999.);  
-}  
+  } else{
+     eventData.SetInstDelLumiLS(-999.);
+     eventData.SetInstDelLumiLS(-999.);  
+  }  
   eventData.SetEventNumber(eventNumber);
   eventData.SetRunNumber(runNumber);
   eventData.SetLumiSection(lumiSection);
   eventData.SetBunchCrossing(bunchCrossing);
-   
 }
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void ExclusiveDijetsAnalysis::fillTriggerInfo(ExclusiveDijetsEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
  
-
   edm::Handle<edm::TriggerResults> triggerResults;
   event.getByLabel(triggerResultsTag_, triggerResults);
 
@@ -264,12 +265,10 @@ void ExclusiveDijetsAnalysis::fillTriggerInfo(ExclusiveDijetsEvent& eventData, c
      int accept_HLT = ( triggerResults->wasrun(idx_HLT) && triggerResults->accept(idx_HLT) ) ? 1 : 0;
      eventData.SetHLTPath(idxpath, accept_HLT);
      //eventData.SetHLTPathName(idxpath, resolvedPathName);
-     //hltTriggerPassHisto_->Fill( (*hltpath).c_str(), 1 ); 
+     hltTriggerPassHisto_->Fill( (*hltpath).c_str(), 1 ); 
   }
-  
  
 }
-
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void ExclusiveDijetsAnalysis::fillPileUpInfo(ExclusiveDijetsEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){

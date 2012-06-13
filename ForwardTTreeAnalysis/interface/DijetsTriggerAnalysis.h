@@ -29,8 +29,10 @@ namespace dijetsTriggerAnalysis {
 	 DijetsTriggerAnalysis(const edm::ParameterSet&);
 	 ~DijetsTriggerAnalysis();
 
-	 void setBeginRun(const edm::Run&, const edm::EventSetup&);
-	 void fillEventData(DijetsTriggerEvent&, const edm::Event&, const edm::EventSetup&);
+	 void begin();
+	 void begin(const edm::Run&, const edm::EventSetup&);
+	 void fill(DijetsTriggerEvent&, const edm::Event&, const edm::EventSetup&);
+	 void end();
       private:
 	 bool acceptHFRingEtSum(std::vector<TH1F*>&, const L1GctHFRingEtSumsCollection*);
 	 bool acceptHFRingEtSum(std::vector<TH1F*>&, const L1GctHFBitCountsCollection*);

@@ -1,6 +1,6 @@
 
-#include "ForwardAnalysis/ForwardTTreeAnalysis/interface/PATInfo.h"
-#include "ForwardAnalysis/ForwardTTreeAnalysis/interface/PATInfoEvent.h"
+#include "ForwardAnalysis/ForwardTTreeAnalysis/interface/PATTriggerInfo.h"
+#include "ForwardAnalysis/ForwardTTreeAnalysis/interface/PATTriggerInfoEvent.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/PATL1Trigger.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/PATHLTTrigger.h"
 
@@ -22,7 +22,6 @@
 #include "DataFormats/Common/interface/RefVector.h"
 #include "FWCore/Utilities/interface/RegexMatch.h"
 
-
 #include <cmath>
 #include <vector>
 #include <string>
@@ -33,12 +32,11 @@
 
 //using namespace forwardAnalysis;
 using namespace pat;
-//using patInfo::PATInfo;
-using namespace patInfo;
+using namespace patTriggerInfo;
 
-const char* PATInfo::name = "PATInfo";
+const char* PATTriggerInfo::name = "PATTriggerInfo";
 
-PATInfo::PATInfo(const edm::ParameterSet& pset):
+PATTriggerInfo::PATTriggerInfo(const edm::ParameterSet& pset):
   runOnData_(true),
   runALLTriggerPath_(pset.getParameter<bool>("runALLTriggerPath")),
   /*vertexTag_(pset.getParameter<edm::InputTag>("vertexTag")),
@@ -53,13 +51,17 @@ PATInfo::PATInfo(const edm::ParameterSet& pset):
 {}
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-PATInfo::~PATInfo(){}
+PATTriggerInfo::~PATTriggerInfo(){}
 
-void PATInfo::setBeginRun(const edm::Run& run, const edm::EventSetup& setup){
+void PATTriggerInfo::begin() {}
+
+void PATTriggerInfo::begin(const edm::Run& run, const edm::EventSetup& setup){
 }
 
+void PATTriggerInfo::end() {}
+
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void PATInfo::fillEventData(PATInfoEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
+void PATTriggerInfo::fill(PATTriggerInfoEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
   // Reset info
   eventData.reset();
 
@@ -80,7 +82,7 @@ void PATInfo::fillEventData(PATInfoEvent& eventData, const edm::Event& event, co
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void PATInfo::patL1TriggerInfo(PATInfoEvent& eventData, const edm::Event& event, const edm::EventSetup& setup)
+void PATTriggerInfo::patL1TriggerInfo(PATTriggerInfoEvent& eventData, const edm::Event& event, const edm::EventSetup& setup)
 { 
    //Ref:http://cmssw.cvs.cern.ch/cgi-bin/cmssw.cgi/UserCode/Bromo/TopAnalysis/TopAnalyzer/src/JetTrigger.cc
   std::cout<< "Using PAT INFO:"<< std::endl;
@@ -141,7 +143,7 @@ void PATInfo::patL1TriggerInfo(PATInfoEvent& eventData, const edm::Event& event,
 
 //
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/*void PATInfo::patL1TriggerInfoSelection(PATInfoEvent& eventData, const edm::Event& event, const edm::EventSetup& setup)
+/*void PATTriggerInfo::patL1TriggerInfoSelection(PATTriggerInfoEvent& eventData, const edm::Event& event, const edm::EventSetup& setup)
 { 
    //Ref:http://cmssw.cvs.cern.ch/cgi-bin/cmssw.cgi/UserCode/Bromo/TopAnalysis/TopAnalyzer/src/JetTrigger.cc
 
@@ -195,7 +197,7 @@ void PATInfo::patL1TriggerInfo(PATInfoEvent& eventData, const edm::Event& event,
 */
 //
 
-void PATInfo::patHLTTriggerInfo(PATInfoEvent& eventData, const edm::Event& event, const edm::EventSetup& setup)
+void PATTriggerInfo::patHLTTriggerInfo(PATTriggerInfoEvent& eventData, const edm::Event& event, const edm::EventSetup& setup)
 { 
   // PAT trigger event
   edm::Handle< TriggerEvent > triggerEvent;
@@ -237,7 +239,7 @@ void PATInfo::patHLTTriggerInfo(PATInfoEvent& eventData, const edm::Event& event
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/*void PATInfo::patHLTTriggerInfoSelection(PATInfoEvent& eventData, const edm::Event& event, const edm::EventSetup& setup)
+/*void PATTriggerInfo::patHLTTriggerInfoSelection(PATTriggerInfoEvent& eventData, const edm::Event& event, const edm::EventSetup& setup)
 { 
 
   // PAT trigger event
