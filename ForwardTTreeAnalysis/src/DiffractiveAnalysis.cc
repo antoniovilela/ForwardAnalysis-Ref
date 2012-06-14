@@ -78,6 +78,14 @@ void DiffractiveAnalysis::end() {}
 void DiffractiveAnalysis::fill(DiffractiveEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
   eventData.reset();
 
+  int ietasize = 13;
+  eventData.multiplicityHFPlusVsiEta_.resize(ietasize);
+  eventData.multiplicityHFMinusVsiEta_.resize(ietasize);
+  eventData.sumEHFPlusVsiEta_.resize(ietasize);
+  eventData.sumEHFMinusVsiEta_.resize(ietasize);
+  eventData.sumETHFPlusVsiEta_.resize(ietasize);
+  eventData.sumETHFMinusVsiEta_.resize(ietasize);
+
   fillEventInfo(eventData,event,setup);
   fillNoiseInfo(eventData,event,setup); 
   fillTriggerInfo(eventData,event,setup);

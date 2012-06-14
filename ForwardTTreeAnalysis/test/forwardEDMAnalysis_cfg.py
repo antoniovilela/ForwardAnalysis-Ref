@@ -3,8 +3,9 @@ import FWCore.ParameterSet.Config as cms
 # Settings
 class config: pass
 config.verbose = True
-config.writeEdmOutput = False
-config.outputTTreeFile = 'forwardTTreeAnalysis.root'
+config.writeEdmOutput = True
+config.outputEdmFile = 'forwardEDMAnalysis.root'
+config.outputTFileServiceFile = 'forwardEDMAnalysis_TFileService.root'
 config.runOnMC = False
 config.runPATSequences = True
 config.usePAT = False
@@ -41,7 +42,8 @@ else:
         #'rfio:/castor/cern.ch/cms/store/data/Run2012A/Jet/RAW/v1/000/193/676/8CF36755-3C99-E111-B084-0025B3203898.root'
 #'rfio:/castor/cern.ch/cms/store/data/Run2012A/Jet/RECO/PromptReco-v1/000/190/895/BCF66AEE-2685-E111-8B36-BCAEC518FF62.root'
 
-process = cms.Process("Analysis")
+#---------------------------------------------------------------------------------
+process = cms.Process("EDMAnalysis")
 
 process.load('FWCore.MessageService.MessageLogger_cfi')
 
@@ -57,13 +59,7 @@ process.source = cms.Source("PoolSource",
     #duplicateCheckMode = cms.untracked.string('noDuplicateCheck')
 )
 
-
 #---------------------------------------------------------------------------------
-# Output
-process.TFileService = cms.Service("TFileService",
-                                   fileName = cms.string(config.outputTTreeFile))
-
-
 process.load('Configuration.StandardSequences.Services_cff')
 process.load('Configuration.StandardSequences.GeometryExtended_cff')
 process.load('Configuration.StandardSequences.MagneticField_38T_cff')
@@ -71,6 +67,10 @@ process.load('Configuration.StandardSequences.Reconstruction_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 if config.runOnMC: process.GlobalTag.globaltag = config.globalTagNameMC
 else: process.GlobalTag.globaltag = config.globalTagNameData
+
+process.TFileService = cms.Service("TFileService",
+	fileName = cms.string( config.outputTFileServiceFile )
+	)
 
 process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
 process.load('RecoJets.Configuration.RecoPFJets_cff')
@@ -99,6 +99,18 @@ if config.runPATSequences:
 	process.patTrigger.addL1Algos = cms.bool( True )
 	process.patJets.addTagInfos   = cms.bool( True )   
 
+#---------------------------------------------------------------------------------
+# Output
+if config.writeEdmOutput:
+    process.out.outputCommands += (
+       'keep DiffractiveEvent_*_*_*',
+       'keep ExclusiveDijetsEvent_*_*_*',
+       'keep PATTriggerInfoEvent_*_*_*'
+    )
+    process.out.fileName = config.outputEdmFile
+    process.out.SelectEvents.SelectEvents = cms.vstring('selection_step')
+
+#---------------------------------------------------------------------------------
 from ForwardAnalysis.ForwardTTreeAnalysis.addCastorRecHitCorrector import addCastorRecHitCorrector
 addCastorRecHitCorrector(process)
 
@@ -123,65 +135,45 @@ process.tracksTransverseRegion.JetTag = "selectedPatJetsPFlow"
 from ForwardAnalysis.ForwardTTreeAnalysis.DiffractiveAnalysis_cfi import DiffractiveAnalysis
 from ForwardAnalysis.ForwardTTreeAnalysis.ExclusiveDijetsAnalysis_cfi import ExclusiveDijetsAnalysis
 from ForwardAnalysis.ForwardTTreeAnalysis.PATTriggerInfo_cfi import PATTriggerInfo
-from ForwardAnalysis.ForwardTTreeAnalysis.DijetsTriggerAnalysis_cfi import DijetsTriggerAnalysis  
+#from ForwardAnalysis.ForwardTTreeAnalysis.DijetsTriggerAnalysis_cfi import DijetsTriggerAnalysis  
+
 #PATTriggerInfo.L1AlgoBitName =  config.l1Paths 
 #PATTriggerInfo.HLTAlgoBitName = config.hltPaths 
 PATTriggerInfo.runALLTriggerPath = True
-
-process.dijetsTriggerAnalysisTTree = cms.EDAnalyzer("DijetsTriggerAnalysisTTree",
-        DijetsTriggerAnalysis = DijetsTriggerAnalysis,
-        #PATTriggerInfo = PATTriggerInfo 
-        )
-
-process.patInfoTTree = cms.EDAnalyzer("PATTriggerInfoTTree",
+process.patTriggerInfo = cms.EDProducer("PATTriggerInfoEDMProducer",
 	PATTriggerInfo = PATTriggerInfo
 	)
-process.diffractiveAnalysisTTree = cms.EDAnalyzer("DiffractiveAnalysisTTree",
+
+process.diffractiveAnalysis = cms.EDProducer("DiffractiveAnalysisEDMProducer",
 	DiffractiveAnalysis = DiffractiveAnalysis
 	)
-process.diffractiveAnalysisPATTriggerInfoTTree = cms.EDAnalyzer("DiffractiveAnalysisPATTriggerInfoTTree",
-	DiffractiveAnalysis = DiffractiveAnalysis,
-	PATTriggerInfo = PATTriggerInfo
-	)
-process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree = cms.EDAnalyzer("DiffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree",
-	DiffractiveAnalysis = DiffractiveAnalysis,
+
+process.exclusiveDijetsAnalysis = cms.EDProducer("ExclusiveDijetsAnalysisEDMProducer",
         ExclusiveDijetsAnalysis = ExclusiveDijetsAnalysis,
-	PATTriggerInfo = PATTriggerInfo
 	)
-process.diffractiveAnalysisTTree.DiffractiveAnalysis.hltPath = ''
-process.diffractiveAnalysisPATTriggerInfoTTree.DiffractiveAnalysis.hltPath = ''
 
 #process.exclusiveDijetsHLTFilter.HLTPaths = ['HLT_ExclDiJet80_HFAND_v*','HLT_ExclDiJet35_HFAND_v*','HLT_ExclDiJet35_HFOR_v*','HLT_L1SingleJet16_v*','HLT_DiPFJetAve80_v*','HLT_L1SingleJet36_v*']
 process.exclusiveDijetsHLTFilter.HLTPaths = config.hltPaths 
 
-process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree.DiffractiveAnalysis.hltPath = ''
-process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree.DiffractiveAnalysis.trackTag = 'analysisTracks'
-process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree.DiffractiveAnalysis.vertexTag = "offlinePrimaryVertices"
-process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree.DiffractiveAnalysis.particleFlowTag = "pfCandidateNoiseThresholds"
-process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree.DiffractiveAnalysis.jetTag = "selectedPatJetsPFlow"
+process.diffractiveAnalysis.DiffractiveAnalysis.hltPath = ''
+process.diffractiveAnalysis.DiffractiveAnalysis.trackTag = 'analysisTracks'
+process.diffractiveAnalysis.DiffractiveAnalysis.vertexTag = "offlinePrimaryVertices"
+process.diffractiveAnalysis.DiffractiveAnalysis.particleFlowTag = "pfCandidateNoiseThresholds"
+process.diffractiveAnalysis.DiffractiveAnalysis.jetTag = "selectedPatJetsPFlow"
 
-process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree.ExclusiveDijetsAnalysis.hltPaths = config.hltPaths 
-process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree.ExclusiveDijetsAnalysis.TrackTag = 'analysisTracks'
-process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree.ExclusiveDijetsAnalysis.VertexTag = "offlinePrimaryVertices"
-process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree.ExclusiveDijetsAnalysis.ParticleFlowTag = "pfCandidateNoiseThresholds"
-process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree.ExclusiveDijetsAnalysis.JetTag = "selectedPatJetsPFlow"
-process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree.ExclusiveDijetsAnalysis.JetNonCorrTag = "ak5PFJets"
+process.exclusiveDijetsAnalysis.ExclusiveDijetsAnalysis.hltPaths = config.hltPaths 
+process.exclusiveDijetsAnalysis.ExclusiveDijetsAnalysis.TrackTag = 'analysisTracks'
+process.exclusiveDijetsAnalysis.ExclusiveDijetsAnalysis.VertexTag = "offlinePrimaryVertices"
+process.exclusiveDijetsAnalysis.ExclusiveDijetsAnalysis.ParticleFlowTag = "pfCandidateNoiseThresholds"
+process.exclusiveDijetsAnalysis.ExclusiveDijetsAnalysis.JetTag = "selectedPatJetsPFlow"
+process.exclusiveDijetsAnalysis.ExclusiveDijetsAnalysis.JetNonCorrTag = "ak5PFJets"
 if config.runOnMC:
-     process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree.DiffractiveAnalysis.accessMCInfo = True
-     process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree.ExclusiveDijetsAnalysis.AccessMCInfo = True
+     process.diffractiveAnalysis.DiffractiveAnalysis.accessMCInfo = True
+     process.exclusiveDijetsAnalysis.ExclusiveDijetsAnalysis.AccessMCInfo = True
 else:
-     process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree.DiffractiveAnalysis.accessMCInfo = False 
-     process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree.ExclusiveDijetsAnalysis.AccessMCInfo = False 
-
+     process.diffractiveAnalysis.DiffractiveAnalysis.accessMCInfo = False
+     process.exclusiveDijetsAnalysis.ExclusiveDijetsAnalysis.AccessMCInfo = False 
 #########################################################################
-process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree_HF0 = process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree.clone()
-process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree_HF0.DiffractiveAnalysis.energyThresholdHF = 0.0
-process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree_HF1 = process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree.clone()
-process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree_HF1.DiffractiveAnalysis.energyThresholdHF = 1.0
-process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree_HF2 = process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree.clone()
-process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree_HF2.DiffractiveAnalysis.energyThresholdHF = 2.0
-process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree_HF3 = process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree.clone()
-process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree_HF3.DiffractiveAnalysis.energyThresholdHF = 3.0
 
 
 ##########################################################################
@@ -192,24 +184,13 @@ if config.runOnMC:
                               process.etaMaxGen+process.etaMinGen*
                               process.edmNtupleEtaMaxGen+process.edmNtupleEtaMinGen)
 
+process.selection_step = cms.Path( process.eventSelectionHLT ) 
 
 process.analysis_reco_step = cms.Path(process.analysisSequences)
 process.castor_step = cms.Path(process.castorSequence)
 
-#process.analysis_patInfoTTree_step = cms.Path(process.patInfoTTree)
-#process.analysis_diffractiveAnalysisTTree_step = cms.Path(process.diffractiveAnalysisTTree)
-#process.analysis_dijetsTriggerAnalysisPATTriggerInfoTTree_step = cms.Path(process.exclusiveDijetsHLTFilter + process.dijetsTriggerAnalysisTTree)
-#process.analysis_diffractiveAnalysisPATTriggerInfoTTree_step = cms.Path(process.diffractiveAnalysisPATTriggerInfoTTree)
+process.analysis_diffractiveAnalysis_step = cms.Path(process.diffractiveAnalysis)
+process.analysis_exclusiveDijetsAnalysis_step = cms.Path(process.exclusiveDijetsAnalysis)
+process.analysis_patTriggerInfo_step = cms.Path(process.patTriggerInfo)
 
-process.analysis_diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree_step = cms.Path(
-    process.eventSelectionHLT +
-    process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree
-)
-
-#process.analysis_diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree_step = cms.Path(
-#    process.eventSelectionHLT+
-#    process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree+
-#    process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree_HF0+
-#    process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree_HF1+
-#    process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree_HF2+
-#    process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree_HF3)
+if config.writeEdmOutput: process.out_step = cms.EndPath(process.out)

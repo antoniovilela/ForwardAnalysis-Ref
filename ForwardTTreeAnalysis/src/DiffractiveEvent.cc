@@ -58,7 +58,7 @@ void DiffractiveEvent::reset(){
   sumETHFPlus_ = -999.;
   sumETHFMinus_ = -999.;
 
-  size_t len_multiplicityHFPlusVsiEta = sizeof(multiplicityHFPlusVsiEta_)/sizeof(int);
+  /*size_t len_multiplicityHFPlusVsiEta = sizeof(multiplicityHFPlusVsiEta_)/sizeof(int);
   for(size_t k = 0; k < len_multiplicityHFPlusVsiEta; ++k){
      multiplicityHFPlusVsiEta_[k] = -1;
      multiplicityHFMinusVsiEta_[k] = -1;
@@ -66,7 +66,13 @@ void DiffractiveEvent::reset(){
      sumEHFMinusVsiEta_[k] = -999.;
      sumETHFPlusVsiEta_[k] = -999.;
      sumETHFMinusVsiEta_[k] = -999.;
-  }
+  }*/
+  multiplicityHFPlusVsiEta_.clear();
+  multiplicityHFMinusVsiEta_.clear();
+  sumEHFPlusVsiEta_.clear();
+  sumEHFMinusVsiEta_.clear();
+  sumETHFPlusVsiEta_.clear();
+  sumETHFMinusVsiEta_.clear();
 
   xiGenPlus_ = -1.;
   xiGenMinus_ = -1.;

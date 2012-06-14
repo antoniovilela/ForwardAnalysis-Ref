@@ -5,6 +5,8 @@ namespace diffractiveAnalysis {
    class DiffractiveAnalysis;
 }
 
+#include <vector>
+
 class DiffractiveEvent {
    public:
       typedef diffractiveAnalysis::DiffractiveAnalysis analysis_type;
@@ -148,12 +150,18 @@ class DiffractiveEvent {
       double sumETHFPlus_;
       double sumETHFMinus_;
       // 1-13 HF rings, 2.866 < |eta| < 5.205
-      int multiplicityHFPlusVsiEta_[13];
+      /*int multiplicityHFPlusVsiEta_[13];
       int multiplicityHFMinusVsiEta_[13];
       double sumEHFPlusVsiEta_[13];
       double sumEHFMinusVsiEta_[13];
       double sumETHFPlusVsiEta_[13];
-      double sumETHFMinusVsiEta_[13];
+      double sumETHFMinusVsiEta_[13];*/
+      std::vector<int> multiplicityHFPlusVsiEta_;
+      std::vector<int> multiplicityHFMinusVsiEta_;
+      std::vector<double> sumEHFPlusVsiEta_;
+      std::vector<double> sumEHFMinusVsiEta_;
+      std::vector<double> sumETHFPlusVsiEta_;
+      std::vector<double> sumETHFMinusVsiEta_;
       double sumEnergyHEPlusGen_;
       double sumEnergyHEMinusGen_;
       double sumEnergyHFPlusGen_;
