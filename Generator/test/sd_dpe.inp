@@ -1,0 +1,99 @@
+************************************************************                   
+*      input file      PHOJET v1.12                    
+************************************************************                   
+*
+*  Define the process
+* ===================
+* 
+*   1  non-diffractive inelastic process
+*   2  elastic scattering
+*   3  quasi-elastic rho/omega/phi and pi+/pi-production
+*   4  central diffraction (DPE)
+*   5  single diffraction of PARTICLE1  
+*   6  single diffraction of PARTICLE2
+*   7  double diffraction
+*   8  single-resolved / direct processes / photon-hadron, photon-photon  
+*
+*   9   hard interaction in SD of PARTICLE1
+*   10  hard interaction in SD of PARTICLE2
+*   11  hard interaction in DPE
+*                         
+* PROCESS     1 0 1 1 1 1 1 1
+*      
+PROCESS     0 0 0 1 1 1 0 0 1 1 1  
+*    
+*  define particles            
+*  ==================   
+*           id   virtuality
+*
+PARTICLE1   2212    0.0
+PARTICLE2   2212    0.0 
+* Set Min Bias option
+*SETMODEL   2   0
+*
+* Diffractive parameters
+* This sets the diff. mass dist. for diff. dissociation
+* ISWMDL(22) = 2 <-> dsig/dM^2 ~ 1/M^(2alphaeff(0))
+*SETMODEL   22  2
+*SETMODEL   13  0
+* PARMDL(45) -> upper mass cut for diff. system
+*               MDmax = PARMDL(45)*sqrt(s)
+*               Default: 0.46
+*SETPARAM   45  0.46
+* PARMDL(46) -> lower diff. mass cut
+*               Default: 0.3 GeV
+*SETPARAM   46  0.3
+* PARMDL(48) -> alphaeff(0) (effective pomeron intercept)
+*               Default: 1.08
+*SETPARAM   46  1.08
+* Central Diff. parameters 
+* PARMDL(70) -> lower cut on sqrt(s1/MCD^2) and sqrt(s2/MCD^2)
+*               where MCD is the central system inv. mass
+*               MCD^2 = (1 - xA)(1 - xB)s
+*               xA = 1 - s2/s  xB = -(1 - s1/s)
+*               Default: 2
+*SETPARAM   70  2
+* PARMDL(71) -> lower cut on MCD
+*               Deafult: 2.0 GeV
+*SETPARAM   71  2.0
+* PARMDL(72) -> lower cut (c) on xA and xB
+*               c = max(PARMDL(72), 1 - 1/PARMDL(70)^2)
+*SETPARAM   72  0
+* Initial/final state radiation
+* ISWMDL(8) -> 0: no parton showers
+*              1: only final state parton showers by JETSET
+*              2: only initial state parton showers
+*              3: initial and final state parton showers
+*              Default: 3 
+*SETMODEL   8  3
+*
+* debug events
+* ============
+*              LEVEL       desired output level
+*                                0   standard output
+*                                3   internal rejections
+*                                5   cross sections, slopes etc.
+*                               10   parameter of subroutines and
+*                                    results
+*                               20   huge amount of debug output
+*                               30   maximal possible output
+*
+*         1st event to be traced/number of events to be traced/output level 
+* DEBUG       1   3   35
+*
+*           ID of subroutine to be traced/output level
+*
+* TRACE     72  10
+*      
+* Random number generator seeds
+INIT-RNDM   12   56   98   112
+*
+*
+
+*  generate 100000 events in CMS system            
+*   
+*       cms energy(GeV)   #events
+*                        
+EVENT-CMS   8000.0   10000
+*
+ENDINPUT

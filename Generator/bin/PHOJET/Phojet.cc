@@ -1,6 +1,6 @@
 /*
- *  $Date: 2012/06/12 13:14:46 $
- *  $Revision: 1.3.2.1 $
+ *  $Date: 2012/06/12 13:35:15 $
+ *  $Revision: 1.4 $
  *  
  */
 
@@ -20,6 +20,7 @@ using namespace phojet;
 //#include "HepMC/PythiaWrapper6_2.h"
 #include "HepMC/PythiaWrapper.h"
 #include "HepMC/IO_HEPEVT.h"
+#include "CLHEP/Vector/LorentzVector.h"
 
 //-------------------------PHOJET functions ------------------------------
 extern"C" {
@@ -143,7 +144,9 @@ void Phojet::begin() {
   sigmaMax_ = sigmax;
   //cout << "Sigmax = " << sigmax << endl; 
   //cout << endl; // Stetically add for the output
-  //********                                      
+  //********      
+
+  //conv.set_trust_beam_particles( false );
 }
 
 void Phojet::end() {
@@ -181,6 +184,10 @@ bool Phojet::run() {
 
   //HepMC::GenEvent* evt = conv.read_next_event();
   hepMCEvt_ = conv.read_next_event();
+  /*hepMCEvt_->set_beam_particles(
+     new HepMC::GenParticle( CLHEP::HepLorentzVector(p1[0],p1[1],p1[2],p1[3]), 2212, 3 ),
+     new HepMC::GenParticle( CLHEP::HepLorentzVector(p2[0],p2[1],p2[2],p2[3]), 2212, 3 ) 
+  );*/
   ++event_;
 
   //hepMCEvt_->set_signal_process_id(pypars.msti[0]);
