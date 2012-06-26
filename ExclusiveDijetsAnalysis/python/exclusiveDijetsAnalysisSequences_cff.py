@@ -21,7 +21,7 @@ from CommonTools.RecoAlgos.HBHENoiseFilter_cfi import *
 ## Jet Trigger Filter
 ######################
 
-from ForwardAnalysis.ForwardTTreeAnalysis.exclusiveDijetsHLTPaths_cfi import *
+from ForwardAnalysis.ExclusiveDijetsAnalysis.exclusiveDijetsHLTPaths_cfi import *
 exclusiveDijetsHLTFilter.HLTPaths = ['HLT_Jet30_v*','HLT_Jet60_v*','HLT_ExclDiJet60_HFAND_v*','HLT_ExclDiJet60_HFOR_v*']
 #['HLT_ExclDiJet60_HFAND*', 'HLT_ExclDiJet60_HFOR*'] 
 #['HLT_Jet15U','HLT_L1Jet6U']
