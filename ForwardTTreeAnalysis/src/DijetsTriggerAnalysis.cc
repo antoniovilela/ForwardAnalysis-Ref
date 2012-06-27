@@ -39,6 +39,10 @@
 #include "FWCore/ServiceRegistry/interface/Service.h"
 #include "CommonTools/UtilAlgos/interface/TFileService.h"
 
+#include "FWCore/Framework/interface/LuminosityBlock.h"
+#include "DataFormats/Luminosity/interface/LumiSummary.h"
+#include "DataFormats/Luminosity/interface/LumiDetails.h"
+
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/DijetsTriggerAnalysis.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/DijetsTriggerEvent.h"
 
@@ -52,6 +56,9 @@
 #include <algorithm>
 #include <iostream>
 
+bool useL1EventSetup = true;
+bool useL1GtTriggerMenuLite = false;
+//===============================================
 using dijetsTriggerAnalysis::DijetsTriggerAnalysis;
 
 const char* DijetsTriggerAnalysis::name = "DijetsTriggerAnalysis";
@@ -179,7 +186,50 @@ void DijetsTriggerAnalysis::fillEventData(DijetsTriggerEvent& eventData, const e
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void DijetsTriggerAnalysis::dijetsTriggerInfo(DijetsTriggerEvent& eventData, const edm::Event& event, const edm::EventSetup& setup)
 { 
-  l1GtUtils_.retrieveL1EventSetup(setup);
+
+  unsigned int eventNumber = event.id().event();
+  unsigned int runNumber = event.id().run();
+  unsigned int lumiSection = event.luminosityBlock();
+  int bunchCrossing = event.bunchCrossing();
+
+
+  // Instant. luminosity of a lumisection = (delivered luminosity)/(lumisection size=23.36s) 
+  edm::LuminosityBlock const& lumiBlock = event.getLuminosityBlock();
+  edm::Handle<LumiSummary> s;
+  lumiBlock.getByLabel("lumiProducer",s);
+  float instLumiLS=-10.;
+  if( s->isValid() ){
+      instLumiLS=s->avgInsDelLumi(); // calibrated
+
+  }
+  edm::Handle<LumiDetails> d;
+  lumiBlock.getByLabel("lumiProducer",d);
+  float instLumiBunchOCC1=-10.;
+  if (d->isValid()){
+     instLumiBunchOCC1 = d->lumiValue(LumiDetails::kOCC1,event.bunchCrossing());
+     instLumiBunchOCC1=instLumiBunchOCC1*6.37;
+      //std::cout << "instLumiBunchOCC1 ="<<  instLumiBunchOCC1 <<std::endl;
+     eventData.SetInstLumiBunch(instLumiBunchOCC1);
+      //std::cout<<"lumivalue 1 "<< d->lumiValue(LumiDetails::kOCC1,1)*6.37<<" "<<d->lumiBeam1Intensity(1)<<std::endl;
+  }else{
+       std::cout << "no valid lumi detail data" <<std::endl;
+       //eventData.SetInstLumiBunch(-9999.);
+       }
+
+
+  eventData.eventNumber_ = eventNumber;
+  eventData.runNumber_ = runNumber;
+  eventData.lumiSection_ = lumiSection;
+  eventData.bunchCrossing_ = bunchCrossing;
+  eventData.SetInstDelLumiLS(instLumiLS);
+
+
+  //l1GtUtils_.retrieveL1EventSetup(setup);
+  //======================================
+  l1GtUtils_.getL1GtRunCache(event, setup, useL1EventSetup, useL1GtTriggerMenuLite); 
+  
+  //=====================================  
+
 
   eventData.SetNBits( l1TriggerNames_.size() );
 
@@ -351,38 +401,39 @@ void DijetsTriggerAnalysis::dijetsTriggerJetInfo(DijetsTriggerEvent& eventData, 
   
   eventData.nJet_ = jetCollectionH->size();
 
-  if(jetCollectionH->size() > 0){
+  if(jetCollectionH->size() > 1){
      const reco::Jet& leadingJet = (*jetCollectionH)[0];
-     //const reco::Jet& secondJet = (*jetCollectionH)[1];
+     const reco::Jet& secondJet = (*jetCollectionH)[1];
      //const reco::Jet& thirdJet = (*jetCollectionH)[2];     
  
      eventData.leadingJetPt_ = leadingJet.pt();
      eventData.leadingJetEta_ = leadingJet.eta();
      eventData.leadingJetPhi_ = leadingJet.phi();
+
+     eventData.secondJetPt_ = secondJet.pt();
+     eventData.secondJetEta_ = secondJet.eta();
+     eventData.secondJetPhi_ = secondJet.phi(); 
+
    } else{
      eventData.leadingJetPt_ = -999.;
      eventData.leadingJetEta_ = -999.;
-     eventData.leadingJetPhi_ = -999.;}  
+     eventData.leadingJetPhi_ = -999.;
+
+     eventData.secondJetPt_ = -999.;
+     eventData.secondJetEta_ = -999.;
+     eventData.secondJetPhi_ = -999.;
+   }  
   
-  if(jetCollectionH->size() > 1){
-     //const reco::Jet& leadingJet = (*jetCollectionH)[0];
-     const reco::Jet& secondJet = (*jetCollectionH)[1];
+  if(jetCollectionH->size() > 2){
+     
      const reco::Jet& thirdJet = (*jetCollectionH)[2];    
      
-     eventData.secondJetPt_ = secondJet.pt();
-     eventData.secondJetEta_ = secondJet.eta();
-     eventData.secondJetPhi_ = secondJet.phi();
  
      eventData.thirdJetPt_ = thirdJet.pt();
      eventData.thirdJetEta_ = thirdJet.eta();
      eventData.thirdJetPhi_ = thirdJet.phi(); 
 
   } else{
-        
-     eventData.secondJetPt_ = -999.;
-     eventData.secondJetEta_ = -999.;
-     eventData.secondJetPhi_ = -999.;
-
      eventData.thirdJetPt_ = -999.;
      eventData.thirdJetEta_ = -999.;
      eventData.thirdJetPhi_ = -999.;
