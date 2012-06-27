@@ -33,7 +33,7 @@ namespace dijetsTriggerAnalysis {
 	 void fillEventData(DijetsTriggerEvent&, const edm::Event&, const edm::EventSetup&);
       private:
 //         unsigned int nHFSlice(const std::map<unsigned int, std::vector<unsigned int> >& mapTreshToiEta, unsigned int thresholdHF, unsigned int ieta);
-       
+         //=============================================== 
 	 bool acceptHFRingEtSum(std::vector<TH1F*>&, const L1GctHFRingEtSumsCollection*);
 	 bool acceptHFRingEtSum(std::vector<TH1F*>&, const L1GctHFBitCountsCollection*);
          void setTFileService();
@@ -55,7 +55,8 @@ namespace dijetsTriggerAnalysis {
 		  return ((sigx == 0.)||(sigy == 0.)) ? 0. : covxy/(sigx*sigy);
 	       }
 	    private:
-	       double sumEvt_;
+	       L1GtUtils m_l1GtUtils;
+               double sumEvt_;
 	       double sumX_;
 	       double sumX2_;
 	       double sumY_;

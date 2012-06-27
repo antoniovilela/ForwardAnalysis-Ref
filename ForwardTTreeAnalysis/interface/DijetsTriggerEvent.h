@@ -16,6 +16,14 @@ class DijetsTriggerEvent {
       DijetsTriggerEvent();
       ~DijetsTriggerEvent();
       //------------ Set FWD methods ------------------------------
+      
+      void SetRunNumber(int frunNumber)             { runNumber_        = frunNumber;}
+      void SetEventNumber(int feventNumber)         { eventNumber_      = feventNumber;}
+      void SetLumiSection(int flumiSection)         { lumiSection_      = flumiSection;}
+      void SetBunchCrossing(int fbunchCrossing)     { bunchCrossing_    = fbunchCrossing;}
+      void SetInstDelLumiLS(float finstLumiLS)      { instLumiLS_       = finstLumiLS;}
+      void SetInstLumiBunch(float finstLumiBunchOCC1) {instLumiBunchOCC1_ = finstLumiBunchOCC1;}
+
 
       void SetNBits(int nBits) { nL1Bits_ = nBits; }
       void SetL1Bit(int idx, int decision) { l1Decision_[idx] = decision; }
@@ -61,6 +69,13 @@ class DijetsTriggerEvent {
    
       //
       //------------ Get FWD methods ------------------------------
+
+
+      int  GetRunNumber()                        const {return runNumber_;}
+      int  GetEventNumber()                      const {return eventNumber_;}
+      int  GetBunchCrossing()                    const {return bunchCrossing_;}
+      float GetInstDelLumiLS()                   const {return instLumiLS_;}
+      float GetInstLumiBunch()                   const {return instLumiBunchOCC1_;}
 
       int GetNBits() const { return nL1Bits_; }
       int GetL1Bit(int idx) const { return l1Decision_[idx]; }
@@ -146,7 +161,12 @@ class DijetsTriggerEvent {
      double SumEHFPlus_;
      double SumEHFMinus_;
       
-
+     int runNumber_;
+     int eventNumber_;
+     int lumiSection_;
+     int bunchCrossing_;
+     float instLumiLS_;
+     float instLumiBunchOCC1_;
      
 
 };//end code
