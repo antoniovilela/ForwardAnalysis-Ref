@@ -90,7 +90,7 @@ process.TFileService = cms.Service("TFileService",
 ###################################################################################
 # CASTOR RecHit Corrector
 if not config.runOnMC:
-    from ForwardAnalysis.ForwardTTreeAnalysis.addCastorRecHitCorrector import addCastorRecHitCorrector
+    from ForwardAnalysis.Utilities.addCastorRecHitCorrector import addCastorRecHitCorrector
     addCastorRecHitCorrector(process)
 ####################################################################################
 # Analysis modules
@@ -100,22 +100,8 @@ if not config.runOnMC:
     process.load('ForwardAnalysis.Utilities.lumiWeight_cfi')
     process.lumiWeight.rootFileName = cms.string(config.instLumiROOTFile)
 
-
-#if config.runOnMC:
-#     process.forwardQCDTTreeAnalysis.exclusiveDijetsAnalysis.AccessMCInfo = True
-#else:
-#     process.forwardQCDTTreeAnalysis.exclusiveDijetsAnalysis.AccessMCInfo = False
- 
-#process.load('RecoJets.Configuration.RecoPFJets_cff')
-#process.load('RecoJets.Configuration.RecoJets_cff')
-#process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
-
-process.load("ForwardAnalysis.ForwardTTreeAnalysis.exclusiveDijetsAnalysisSequences_cff")
-
-if config.runOnMC:
-    process.exclusiveDijetsHLTFilter.HLTPaths = config.hltPaths 
-else:
-    process.exclusiveDijetsHLTFilter.HLTPaths = config.hltPaths 
+process.load("ForwardAnalysis.ForwardTTreeAnalysis.commonAnalysisSequences_cff")
+process.hltAnalysisFilter = process.hltFilter.clone(HLTPaths = config.hltPaths)
 
 process.pfCandidateNoiseThresholds.src = "pfNoPileUpPFlow"
 process.tracksTransverseRegion.JetTag = "selectedPatJetsPFlow"
@@ -127,6 +113,7 @@ calojecService  = 'ak5CaloL1L2L3'
 if not config.runOnMC:
     pfjecService    = 'ak5PFL1FastL2L3Residual'
     calojecService  = 'ak5CaloL1L2L3Residual'
+
 process.forwardQCDTTreeAnalysis = cms.EDAnalyzer('ProcessedTreeProducer',
     diffractiveAnalysis = DiffractiveAnalysis,
     exclusiveDijetsAnalysis = ExclusiveDijetsAnalysis,
@@ -204,11 +191,9 @@ if config.runOnMC:
 else:
     process.forwardQCDTTreeAnalysis.exclusiveDijetsAnalysis.AccessMCInfo = False
 
-print "DiffractiveAnalysis configuration:"
+print "QCD Analysis configuration:"
 print process.forwardQCDTTreeAnalysis.diffractiveAnalysis
-print "ExclusiveDijetsAnalysis configuration:"
 print process.forwardQCDTTreeAnalysis.exclusiveDijetsAnalysis
-
 
 ############# Turn-on the fastjet area calculation needed for the L1Fastjet ##############
 ############# applied only to PFJets because if CaloJets are re-recoed the JetID map will be lost #####
@@ -250,7 +235,7 @@ if config.runOnMC:
 process.analysis_reco_step = cms.Path(process.analysisSequences)
 
 if not config.runOnMC:
-    process.analysis_forwardQCDAnalysis_step = cms.Path( process.eventSelectionHLT +
+    process.analysis_forwardQCDAnalysis_step = cms.Path( process.hltAnalysisFilter + process.eventSelection +
                                                          process.forwardQCDTTreeAnalysis )
 else:
     process.analysis_forwardQCDAnalysis_step = cms.Path( process.eventSelection + 
