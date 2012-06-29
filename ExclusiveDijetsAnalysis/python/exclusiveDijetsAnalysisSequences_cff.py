@@ -71,7 +71,7 @@ tracksOutsideJets.src = "selectTracksAssociatedToPV"
 tracksOutsideJets.JetTag = "ak5PFJets"
 tracksOutsideJets.JetConeSize = 0.5
 
-from ForwardAnalysis.ForwardTTreeAnalysis.tracksTransverseRegion_cfi import *
+from ForwardAnalysis.AnalysisSequences.tracksTransverseRegion_cfi import *
 tracksTransverseRegion.src = "selectTracksAssociatedToPV"
 tracksTransverseRegion.JetTag = "ak5PFJets"
 
@@ -85,8 +85,7 @@ from ForwardAnalysis.Utilities.pfCandidateSelector_cfi import pfCandidateSelecto
 from ForwardAnalysis.Utilities.ExcludeHFEdgesStringCut import ExcludeHFEdgesStringCut
 from ForwardAnalysis.Utilities.PFCandidateNoiseStringCut import PFCandidateNoiseStringCut
 # Change thresholds here if needed
-#from ForwardAnalysis.Utilities.pfThresholds_cfi import pfThresholds
-from ForwardAnalysis.ForwardTTreeAnalysis.pfThresholds_cfi import pfThresholds
+from pfThresholds_cfi import pfThresholds
 pfStrCut1 = ExcludeHFEdgesStringCut().cut()
 pfStrCut2 = PFCandidateNoiseStringCut(pfThresholds).cut()
 pfStrCut = '%s & %s' % (pfStrCut1,pfStrCut2)

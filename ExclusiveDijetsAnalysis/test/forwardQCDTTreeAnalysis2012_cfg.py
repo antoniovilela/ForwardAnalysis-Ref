@@ -82,7 +82,7 @@ process.TFileService = cms.Service("TFileService",
 ###################################################################################
 # CASTOR RecHit Corrector
 if not config.runOnMC:
-    from ForwardAnalysis.ForwardTTreeAnalysis.addCastorRecHitCorrector import addCastorRecHitCorrector
+    from ForwardAnalysis.Utilities.addCastorRecHitCorrector import addCastorRecHitCorrector
     addCastorRecHitCorrector(process)
 ####################################################################################
 # Analysis modules
@@ -111,7 +111,7 @@ process.countsAfterPATFWDHF10 = countsAnalyzer.clone()
 #process.load('RecoJets.Configuration.RecoJets_cff')
 #process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
 
-process.load("ForwardAnalysis.ForwardTTreeAnalysis.exclusiveDijetsAnalysisSequences_cff")
+process.load("ForwardAnalysis.ExclusiveDijetsAnalysis.exclusiveDijetsAnalysisSequences_cff")
 
 if config.runOnMC:
     process.exclusiveDijetsHLTFilter.HLTPaths = config.hltPaths 

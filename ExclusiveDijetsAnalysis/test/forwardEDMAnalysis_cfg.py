@@ -111,10 +111,10 @@ if config.writeEdmOutput:
     process.out.SelectEvents.SelectEvents = cms.vstring('selection_step')
 
 #---------------------------------------------------------------------------------
-from ForwardAnalysis.ForwardTTreeAnalysis.addCastorRecHitCorrector import addCastorRecHitCorrector
+from ForwardAnalysis.Utilities.addCastorRecHitCorrector import addCastorRecHitCorrector
 addCastorRecHitCorrector(process)
 
-process.load("ForwardAnalysis.ForwardTTreeAnalysis.exclusiveDijetsAnalysisSequences_cff")
+process.load("ForwardAnalysis.ExclusiveDijetsAnalysis.exclusiveDijetsAnalysisSequences_cff")
 #######################################################################################################################
 # Analysis modules
 #--------------------------------
