@@ -1,6 +1,6 @@
 import FWCore.ParameterSet.Config as cms
 
-from ForwardAnalysis.ForwardTTreeAnalysis.pfThresholds_cfi import pfThresholds
+from ForwardAnalysis.AnalysisSequences.pfThresholds_cfi import pfThresholds
 
 ExclusiveDijetsAnalysis = cms.PSet(
     # Input tags
