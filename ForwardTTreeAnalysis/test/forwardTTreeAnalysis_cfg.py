@@ -103,6 +103,7 @@ from ForwardAnalysis.Utilities.addCastorRecHitCorrector import addCastorRecHitCo
 addCastorRecHitCorrector(process)
 
 process.load("ForwardAnalysis.ForwardTTreeAnalysis.commonAnalysisSequences_cff")
+process.hltAnalysisFilter = process.hltFilter.clone(HLTPaths = config.hltPaths)
 #######################################################################################################################
 # Analysis modules
 #--------------------------------
@@ -151,9 +152,6 @@ process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree = cms.EDAnalyzer("
 process.diffractiveAnalysisTTree.DiffractiveAnalysis.hltPath = ''
 process.diffractiveAnalysisPATTriggerInfoTTree.DiffractiveAnalysis.hltPath = ''
 
-#process.exclusiveDijetsHLTFilter.HLTPaths = ['HLT_ExclDiJet80_HFAND_v*','HLT_ExclDiJet35_HFAND_v*','HLT_ExclDiJet35_HFOR_v*','HLT_L1SingleJet16_v*','HLT_DiPFJetAve80_v*','HLT_L1SingleJet36_v*']
-process.exclusiveDijetsHLTFilter.HLTPaths = config.hltPaths 
-
 process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree.DiffractiveAnalysis.hltPath = ''
 process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree.DiffractiveAnalysis.trackTag = 'analysisTracks'
 process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree.DiffractiveAnalysis.vertexTag = "offlinePrimaryVertices"
@@ -196,20 +194,7 @@ if config.runOnMC:
 process.analysis_reco_step = cms.Path(process.analysisSequences)
 process.castor_step = cms.Path(process.castorSequence)
 
-#process.analysis_patInfoTTree_step = cms.Path(process.patInfoTTree)
-#process.analysis_diffractiveAnalysisTTree_step = cms.Path(process.diffractiveAnalysisTTree)
-#process.analysis_dijetsTriggerAnalysisPATTriggerInfoTTree_step = cms.Path(process.exclusiveDijetsHLTFilter + process.dijetsTriggerAnalysisTTree)
-#process.analysis_diffractiveAnalysisPATTriggerInfoTTree_step = cms.Path(process.diffractiveAnalysisPATTriggerInfoTTree)
-
 process.analysis_diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree_step = cms.Path(
-    process.eventSelectionHLT +
+    process.hltAnalysisFilter + process.eventSelection +
     process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree
 )
-
-#process.analysis_diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree_step = cms.Path(
-#    process.eventSelectionHLT+
-#    process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree+
-#    process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree_HF0+
-#    process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree_HF1+
-#    process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree_HF2+
-#    process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree_HF3)

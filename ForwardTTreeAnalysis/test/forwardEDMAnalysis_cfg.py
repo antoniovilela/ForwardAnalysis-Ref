@@ -115,6 +115,7 @@ from ForwardAnalysis.Utilities.addCastorRecHitCorrector import addCastorRecHitCo
 addCastorRecHitCorrector(process)
 
 process.load("ForwardAnalysis.ForwardTTreeAnalysis.commonAnalysisSequences_cff")
+process.hltAnalysisFilter = process.hltFilter.clone(HLTPaths = config.hltPaths)
 #######################################################################################################################
 # Analysis modules
 #--------------------------------
@@ -152,9 +153,6 @@ process.exclusiveDijetsAnalysis = cms.EDProducer("ExclusiveDijetsAnalysisEDMProd
         ExclusiveDijetsAnalysis = ExclusiveDijetsAnalysis,
 	)
 
-#process.exclusiveDijetsHLTFilter.HLTPaths = ['HLT_ExclDiJet80_HFAND_v*','HLT_ExclDiJet35_HFAND_v*','HLT_ExclDiJet35_HFOR_v*','HLT_L1SingleJet16_v*','HLT_DiPFJetAve80_v*','HLT_L1SingleJet36_v*']
-process.exclusiveDijetsHLTFilter.HLTPaths = config.hltPaths 
-
 process.diffractiveAnalysis.DiffractiveAnalysis.hltPath = ''
 process.diffractiveAnalysis.DiffractiveAnalysis.trackTag = 'analysisTracks'
 process.diffractiveAnalysis.DiffractiveAnalysis.vertexTag = "offlinePrimaryVertices"
@@ -184,7 +182,7 @@ if config.runOnMC:
                               process.etaMaxGen+process.etaMinGen*
                               process.edmNtupleEtaMaxGen+process.edmNtupleEtaMinGen)
 
-process.selection_step = cms.Path( process.eventSelectionHLT ) 
+process.selection_step = cms.Path( process.hltAnalysisFilter + process.eventSelection ) 
 
 process.analysis_reco_step = cms.Path(process.analysisSequences)
 process.castor_step = cms.Path(process.castorSequence)
