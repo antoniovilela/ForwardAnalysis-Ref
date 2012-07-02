@@ -17,7 +17,7 @@ class EventInfoEvent {
   void SetNPileUpBxm1(int fnPileUpBxm1)                    { nPileUpBxm1_          = fnPileUpBxm1;}
   void SetNPileUpBx0(int fnPileUpBx0)                      { nPileUpBx0_           = fnPileUpBx0;}
   void SetNPileUpBxp1(int fnPileUpBxp1)                    { nPileUpBxp1_          = fnPileUpBxp1;}
-  void SetTrueNumInteractions(int fnTrueInteractions)  { nTrueInteractions_ = fnTrueInteractions;}
+  void SetTrueNumInteractions(float fnTrueInteractions)  { nTrueInteractions_ = fnTrueInteractions;}
 
   void SetRunNumber(int frunNumber)             { runNumber_        = frunNumber;}   
   void SetEventNumber(int feventNumber)         { eventNumber_      = feventNumber;}
@@ -31,7 +31,7 @@ class EventInfoEvent {
   int GetNPileUpBxm1()                       const { return nPileUpBxm1_;}
   int GetNPileUpBx0()                        const { return nPileUpBx0_;}
   int GetNPileUpBxp1()                       const { return nPileUpBxp1_;}
-  int GetTrueNumInteractions()              const { return nTrueInteractions_;}
+  float GetTrueNumInteractions()              const { return nTrueInteractions_;}
 
   int  GetRunNumber()                        const {return runNumber_;}
   int  GetEventNumber()                      const {return eventNumber_;}
@@ -48,7 +48,7 @@ class EventInfoEvent {
      int nPileUpBxm1_;
      int nPileUpBx0_;
      int nPileUpBxp1_;
-     int nTrueInteractions_; 
+     float nTrueInteractions_; 
 
      int runNumber_;
      int eventNumber_;
