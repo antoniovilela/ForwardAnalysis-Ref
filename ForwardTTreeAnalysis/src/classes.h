@@ -2,6 +2,7 @@
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/ExclusiveDijetsEvent.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/DijetsTriggerEvent.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/HeavyFlavorEvent.h"
+#include "ForwardAnalysis/ForwardTTreeAnalysis/interface/EventInfoEvent.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/PATTriggerInfoEvent.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/PATL1Trigger.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/PATHLTTrigger.h"
@@ -22,6 +23,7 @@ namespace {
       ExclusiveDijetsEvent exclusiveDijetsEvent;
       DijetsTriggerEvent dijetsTriggerEvent;
       HeavyFlavorEvent heavyFlavorEvent;
+      EventInfoEvent eventInfoEvent;
       PATTriggerInfoEvent patTriggerInfoEvent;
       PATL1Trigger patL1Trigger;
       PATHLTTrigger patHLTTrigger;
@@ -31,7 +33,8 @@ namespace {
       edm::Wrapper<ExclusiveDijetsEvent> exclusiveDijetsEvent_wr;
       edm::Wrapper<DijetsTriggerEvent> dijetsTriggerEvent_wr;
       edm::Wrapper<HeavyFlavorEvent> heavyFlavorEvent_wr;
-      edm::Wrapper<PATTriggerInfoEvent> patInfoEvent_wr;
+      edm::Wrapper<EventInfoEvent> eventInfoEvent_wr;
+      edm::Wrapper<PATTriggerInfoEvent> patTriggerInfoEvent_wr;
       edm::Wrapper<PATL1Trigger> patL1Trigger_wr;
       edm::Wrapper<PATHLTTrigger> patHLTTrigger_wr;
       edm::Wrapper<std::vector<PATL1Trigger> > vec_patL1Trigger_wr;
