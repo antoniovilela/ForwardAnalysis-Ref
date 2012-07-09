@@ -1,7 +1,7 @@
 import FWCore.ParameterSet.Config as cms
 
 ##---------------------------------------
-from Utilities.AnalysisSequences.hltLevel1GTSeed_cff import *
+from ForwardAnalysis.AnalysisSequences.hltLevel1GTSeed_cff import *
 bptx = hltLevel1GTSeed.clone(L1SeedsLogicalExpression = cms.string('0'))
 l1Tech4 = hltLevel1GTSeed.clone(L1SeedsLogicalExpression = cms.string('4'))
 
@@ -12,19 +12,19 @@ hltZeroBias = hltFilter.clone(HLTPaths = ['HLT_ZeroBias'])
 #hltZeroBias = hltFilter.clone(HLTPaths = ['HLT_L1Tech54_ZeroBias_v1'])
 
 ##---------------------------------------
-from Utilities.AnalysisSequences.primaryVertexFilter_cfi import *
+from ForwardAnalysis.AnalysisSequences.primaryVertexFilter_cfi import *
 
-from Utilities.AnalysisSequences.filterScraping_cfi import *
+from ForwardAnalysis.AnalysisSequences.filterScraping_cfi import *
 
 from CommonTools.RecoAlgos.HBHENoiseFilter_cfi import *
 
-from Utilities.AnalysisTools.hcalNoiseFilter_cfi import *
+from ForwardAnalysis.Utilities.hcalNoiseFilter_cfi import *
 
-from Utilities.AnalysisTools.analysisTracks_cfi import *
+from ForwardAnalysis.Utilities.analysisTracks_cfi import *
 
-from Utilities.AnalysisSequences.analysisVertices_cfi import *
+from ForwardAnalysis.AnalysisSequences.analysisVertices_cfi import *
 
-from Utilities.AnalysisTools.multipleVertexFilter_cfi import *
+from ForwardAnalysis.Utilities.multipleVertexFilter_cfi import *
 multipleVertexFilter.src = 'analysisVertices'
 multipleVertexVeto = cms.Sequence(~multipleVertexFilter)
 

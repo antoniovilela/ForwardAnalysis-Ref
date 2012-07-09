@@ -17,13 +17,13 @@ from ForwardAnalysis.AnalysisSequences.filterScraping_cfi import *
 
 from CommonTools.RecoAlgos.HBHENoiseFilter_cfi import *
 
-from Utilities.AnalysisTools.hcalNoiseFilter_cfi import *
+from ForwardAnalysis.Utilities.hcalNoiseFilter_cfi import *
 
-from Utilities.AnalysisTools.analysisTracks_cfi import *
+from ForwardAnalysis.Utilities.analysisTracks_cfi import *
 
-from Utilities.AnalysisSequences.analysisVertices_cfi import *
+from ForwardAnalysis.AnalysisSequences.analysisVertices_cfi import *
 
-from Utilities.AnalysisTools.multipleVertexFilter_cfi import *
+from ForwardAnalysis.Utilities.multipleVertexFilter_cfi import *
 multipleVertexFilter.src = 'analysisVertices'
 multipleVertexVeto = cms.Sequence(~multipleVertexFilter)
 
@@ -120,33 +120,12 @@ hcalActivitySummaryScale102 = hcalActivitySummary.clone(ApplyEnergyScale = True,
 hcalActivitySummaryScale105 = hcalActivitySummary.clone(ApplyEnergyScale = True,EnergyScaleFactorHB = 1.05,EnergyScaleFactorHE = 1.05,EnergyScaleFactorHF = 1.05)
 hcalActivitySummaryScale108 = hcalActivitySummary.clone(ApplyEnergyScale = True,EnergyScaleFactorHB = 1.08,EnergyScaleFactorHE = 1.08,EnergyScaleFactorHF = 1.08)
 hcalActivitySummaryScale110 = hcalActivitySummary.clone(ApplyEnergyScale = True,EnergyScaleFactorHB = 1.10,EnergyScaleFactorHE = 1.10,EnergyScaleFactorHF = 1.10)
-"""
-from Utilities.AnalysisTools.hcalActivityFilter_cfi import hcalActivityFilter
-hcalActivityFilter.EnergyThresholdHB = 1.5
-hcalActivityFilter.EnergyThresholdHE = 2.0
-hcalActivityFilter.EnergyThresholdHF = 4.0hcalVetoHBPlusAndMinus = hcalActivityFilter.clone(NTowersMaxHBPlus = 0, NTowersMaxHBMinus = 0)
-hcalVetoHBHEPlusAndMinus = hcalActivityFilter.clone(NTowersMaxHBPlus = 0, NTowersMaxHEPlus = 0, NTowersMaxHBMinus
- = 0, NTowersMaxHEMinus = 0)
-hcalVetoSumEMaxHBPlusAndMinus4 = hcalActivityFilter.clone(SumEMaxHBPlus = 4.0, SumEMaxHBMinus = 4.0)
-hcalVetoSumEMaxHBPlusAndMinus8 = hcalActivityFilter.clone(SumEMaxHBPlus = 8.0, SumEMaxHBMinus = 8.0)
-hcalVetoSumEMaxHBPlusAndMinus12 = hcalActivityFilter.clone(SumEMaxHBPlus = 12.0, SumEMaxHBMinus = 12.0)
-hcalVetoSumEMaxHBPlusAndMinus16 = hcalActivityFilter.clone(SumEMaxHBPlus = 16.0, SumEMaxHBMinus = 16.0)
-"""
 
 ##-----------------------------------------------------------------
 # Event selection
 offlineSelection = cms.Sequence(primaryVertexFilter + filterScraping + HBHENoiseFilter)
 eventSelection = cms.Sequence(offlineSelection)
 #eventSelectionHLT = cms.Sequence(hltBscMinBiasORBptxPlusORMinusFilter + offlineSelection)
-
-"""
-eventSelectionHLTHBVetoPlusAndMinus = cms.Sequence(eventSelectionHLT+hcalVetoHBPlusAndMinus)
-eventSelectionHLTHBHEVetoPlusAndMinus = cms.Sequence(eventSelectionHLT+hcalVetoHBHEPlusAndMinus)
-eventSelectionHLTSumEMaxHBPlusAndMinus4 = cms.Sequence(eventSelectionHLT+hcalVetoSumEMaxHBPlusAndMinus4)
-eventSelectionHLTSumEMaxHBPlusAndMinus8 = cms.Sequence(eventSelectionHLT+hcalVetoSumEMaxHBPlusAndMinus8)
-eventSelectionHLTSumEMaxHBPlusAndMinus12 = cms.Sequence(eventSelectionHLT+hcalVetoSumEMaxHBPlusAndMinus12)
-eventSelectionHLTSumEMaxHBPlusAndMinus16 = cms.Sequence(eventSelectionHLT+hcalVetoSumEMaxHBPlusAndMinus16)
-"""
 
 #-------------------------------------------
 # Sequences
