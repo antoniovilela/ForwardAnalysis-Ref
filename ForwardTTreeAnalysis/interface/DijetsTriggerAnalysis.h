@@ -38,7 +38,8 @@ namespace dijetsTriggerAnalysis {
 	 bool acceptHFRingEtSum(std::vector<TH1F*>&, const L1GctHFBitCountsCollection*);
          void setTFileService();
 	 void dijetsTriggerInfo(DijetsTriggerEvent&, const edm::Event&, const edm::EventSetup&); 
-
+         void dijetsTriggerJetInfo(DijetsTriggerEvent&, const edm::Event&, const edm::EventSetup&);
+         void dijetsTriggerCaloTowerInfo(DijetsTriggerEvent&, const edm::Event&, const edm::EventSetup&);
 	 class Correlation{
 	    public:
 	       Correlation():sumEvt_(0.),sumX_(0.),sumX2_(0.),sumY_(0.),sumY2_(0.),sumXY_(0.) {}
@@ -59,9 +60,14 @@ namespace dijetsTriggerAnalysis {
 	       double sumXY_;
 	 };
 
+
+         edm::InputTag jetTag_;
+         edm::InputTag particleFlowTag_;
+         edm::InputTag caloTowerTag_;    
 	 edm::InputTag gtDigisTag_;
 	 edm::InputTag l1GtObjectMapTag_; 
 	 edm::InputTag gctDigisTag_;
+         edm::InputTag triggerResultsTag_;
 
 	 L1GtUtils l1GtUtils_;
 
@@ -76,6 +82,10 @@ namespace dijetsTriggerAnalysis {
 	 std::vector<std::vector<TH1F*> > histosRingBitCount_;
 
 	 std::vector<std::string> l1TriggerNames_;
+         std::vector<std::string> hltPathNames_;
+         TH1F *hltTriggerPassHisto_,*hltTriggerNamesHisto_;
+
+
 
 	 TH2F* h_correlations_;
 	 std::map<std::pair<int,int>,Correlation> correlations_;
