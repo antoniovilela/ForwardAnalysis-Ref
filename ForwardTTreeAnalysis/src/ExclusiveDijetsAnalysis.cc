@@ -242,6 +242,7 @@ void ExclusiveDijetsAnalysis::fillTriggerInfo(ExclusiveDijetsEvent& eventData, c
   edm::Handle<edm::TriggerResults> triggerResults;
   event.getByLabel(triggerResultsTag_, triggerResults);
 
+  if( triggerResults.isValid() ){
   const edm::TriggerNames& triggerNames = event.triggerNames(*triggerResults);
 
   size_t idxpath = 0;
@@ -268,7 +269,12 @@ void ExclusiveDijetsAnalysis::fillTriggerInfo(ExclusiveDijetsEvent& eventData, c
      hltTriggerPassHisto_->Fill( (*hltpath).c_str(), 1 ); 
   }
  
+}else{
+        std::cout << "\n No valid trigger result." <<std::endl;
+     }
+
 }
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void ExclusiveDijetsAnalysis::fillPileUpInfo(ExclusiveDijetsEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){

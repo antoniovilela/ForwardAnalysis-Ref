@@ -14,6 +14,15 @@
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 #include "FWCore/Utilities/interface/Exception.h"
 
+//HLT
+#include "DataFormats/Common/interface/TriggerResults.h"
+#include "FWCore/Common/interface/TriggerNames.h"
+#include "FWCore/Utilities/interface/RegexMatch.h"
+//
+#include "DataFormats/JetReco/interface/CaloJetCollection.h"
+#include "DataFormats/JetReco/interface/PFJetCollection.h"
+#include "DataFormats/JetReco/interface/GenJetCollection.h"
+
 //#include "DataFormats/L1GlobalCaloTrigger/interface/L1GctHFRingEtSums.h"
 //#include "DataFormats/L1GlobalCaloTrigger/interface/L1GctHFBitCounts.h"
 //#include "DataFormats/L1GlobalCaloTrigger/interface/L1GctJetCounts.h"
@@ -22,6 +31,11 @@
 
 #include "FWCore/ServiceRegistry/interface/Service.h"
 #include "CommonTools/UtilAlgos/interface/TFileService.h"
+
+
+#include "FWCore/Framework/interface/LuminosityBlock.h"
+#include "DataFormats/Luminosity/interface/LumiSummary.h"
+#include "DataFormats/Luminosity/interface/LumiDetails.h"
 
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/DijetsTriggerAnalysis.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/DijetsTriggerEvent.h"
@@ -39,10 +53,14 @@ using dijetsTriggerAnalysis::DijetsTriggerAnalysis;
 const char* DijetsTriggerAnalysis::name = "DijetsTriggerAnalysis";
 
 DijetsTriggerAnalysis::DijetsTriggerAnalysis(const edm::ParameterSet& pset):
+     jetTag_(pset.getParameter<edm::InputTag>("jetTag")),
+     particleFlowTag_(pset.getParameter<edm::InputTag>("particleFlowTag")),
+     caloTowerTag_(pset.getParameter<edm::InputTag>("caloTowerTag")),
      gctDigisTag_(pset.getParameter<edm::InputTag>("gctDigisTag")),
      thresholdHFRingEtSum_(pset.getParameter<unsigned int>("hfRingEtSumThreshold")),
      thresholdHFRingBitCount_(pset.getParameter<unsigned int>("hfRingBitCountThreshold")),
-     l1TriggerNames_(pset.getParameter<std::vector<std::string> >("l1TriggerNames")) {
+     l1TriggerNames_(pset.getParameter<std::vector<std::string> >("l1TriggerNames")),
+     hltPathNames_(pset.getParameter<std::vector<std::string> >("hltPaths")) {  
   ringNames_.push_back("Ring 1 HF-plus");
   ringNames_.push_back("Ring 1 HF-minus");
   ringNames_.push_back("Ring 2 HF-plus");
@@ -89,6 +107,15 @@ void DijetsTriggerAnalysis::setTFileService(){
         correlations_.insert(std::make_pair(std::make_pair(i,j),Correlation()));
      }
   }
+  hltTriggerNamesHisto_ = fs->make<TH1F>("HLTTriggerNames","HLTTriggerNames",1,0,1);
+  hltTriggerNamesHisto_->SetBit(TH1::kCanRebin);
+  for(unsigned k=0; k < hltPathNames_.size(); ++k){
+    oss << "Using HLT reference trigger " << hltPathNames_[k] << std::endl;
+    hltTriggerNamesHisto_->Fill(hltPathNames_[k].c_str(),1);
+  }
+
+  hltTriggerPassHisto_ = fs->make<TH1F>("HLTTriggerPass","HLTTriggerPass",1,0,1);
+  hltTriggerPassHisto_->SetBit(TH1::kCanRebin);
   edm::LogInfo("Analysis") << oss.str();
 }
 
@@ -130,7 +157,11 @@ void DijetsTriggerAnalysis::fill(DijetsTriggerEvent& eventData, const edm::Event
   eventData.l1Decision_.resize(l1TriggerNames_.size());
   eventData.l1Prescale_.resize(l1TriggerNames_.size());
   eventData.l1AlgoName_.resize(l1TriggerNames_.size());
+  eventData.hltTrigResults_.resize(hltPathNames_.size());
+  eventData.hltTrigNames_.resize(hltPathNames_.size());
   dijetsTriggerInfo(eventData,event,setup);
+  dijetsTriggerJetInfo(eventData,event,setup); 
+  dijetsTriggerCaloTowerInfo(eventData,event,setup);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -138,6 +169,44 @@ void DijetsTriggerAnalysis::fill(DijetsTriggerEvent& eventData, const edm::Event
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void DijetsTriggerAnalysis::dijetsTriggerInfo(DijetsTriggerEvent& eventData, const edm::Event& event, const edm::EventSetup& setup)
 { 
+
+  unsigned int eventNumber = event.id().event();
+  unsigned int runNumber = event.id().run();
+  unsigned int lumiSection = event.luminosityBlock();
+  int bunchCrossing = event.bunchCrossing();
+
+
+  // Instant. luminosity of a lumisection = (delivered luminosity)/(lumisection size=23.36s) 
+  /*edm::LuminosityBlock const& lumiBlock = event.getLuminosityBlock();
+  edm::Handle<LumiSummary> s;
+  lumiBlock.getByLabel("lumiProducer",s);
+  float instLumiLS=-10.;
+  if( s->isValid() ){
+      instLumiLS=s->avgInsDelLumi(); // calibrated
+
+  }
+  edm::Handle<LumiDetails> d;
+  lumiBlock.getByLabel("lumiProducer",d);
+  float instLumiBunchOCC1=-10.;
+  if (d->isValid()){
+     instLumiBunchOCC1 = d->lumiValue(LumiDetails::kOCC1,event.bunchCrossing());
+     instLumiBunchOCC1=instLumiBunchOCC1*6.37;
+      //std::cout << "instLumiBunchOCC1 ="<<  instLumiBunchOCC1 <<std::endl;
+     eventData.SetInstLumiBunch(instLumiBunchOCC1);
+      //std::cout<<"lumivalue 1 "<< d->lumiValue(LumiDetails::kOCC1,1)*6.37<<" "<<d->lumiBeam1Intensity(1)<<std::endl;
+  }else{
+       std::cout << "no valid lumi detail data" <<std::endl;
+       //eventData.SetInstLumiBunch(-9999.);
+       }*/
+
+
+  eventData.eventNumber_ = eventNumber;
+  eventData.runNumber_ = runNumber;
+  eventData.lumiSection_ = lumiSection;
+  eventData.bunchCrossing_ = bunchCrossing;
+  //eventData.SetInstDelLumiLS(instLumiLS);
+
+
   l1GtUtils_.retrieveL1EventSetup(setup);
 
   eventData.SetNBits( l1TriggerNames_.size() );
@@ -179,7 +248,41 @@ void DijetsTriggerAnalysis::dijetsTriggerInfo(DijetsTriggerEvent& eventData, con
         corr.Fill(x,y);
      }
   }
+//////////////////////////////////////////////
+  edm::Handle<edm::TriggerResults> triggerResults;
+  event.getByLabel(triggerResultsTag_, triggerResults);
+  if( triggerResults.isValid() ){
+  const edm::TriggerNames& triggerNames = event.triggerNames(*triggerResults);
 
+  size_t idxpath = 0;
+  std::vector<std::string>::const_iterator hltpath = hltPathNames_.begin();
+  std::vector<std::string>::const_iterator hltpaths_end = hltPathNames_.end(); 
+  for(; hltpath != hltpaths_end; ++hltpath,++idxpath){
+     std::string resolvedPathName; 
+     if( edm::is_glob( *hltpath ) ){
+        std::vector< std::vector<std::string>::const_iterator > matches = edm::regexMatch(triggerNames.triggerNames(), *hltpath);
+
+        if( matches.empty() )
+           throw cms::Exception("Configuration") << "Could not find any HLT path of type " << *hltpath << "\n";
+        else if( matches.size() > 1)
+           throw cms::Exception("Configuration") << "HLT path type " << *hltpath << " not unique\n";
+        else resolvedPathName = *(matches[0]);
+     } else{
+        resolvedPathName = *hltpath;
+     }
+
+     int idx_HLT = triggerNames.triggerIndex(resolvedPathName);
+     int accept_HLT = ( triggerResults->wasrun(idx_HLT) && triggerResults->accept(idx_HLT) ) ? 1 : 0;
+     eventData.SetHLTPath(idxpath, accept_HLT);
+     eventData.SetHLTPathName(idxpath, resolvedPathName);
+     hltTriggerPassHisto_->Fill( (*hltpath).c_str(), 1 );
+   }
+  }else{
+        std::cout << "\n No valid trigger result." <<std::endl;
+     }
+
+
+//////////////////////////////////////////////
   const L1GctHFRingEtSumsCollection* gctHFRingEtSumsCollection = 0;
   const L1GctHFBitCountsCollection* gctHFBitCountsCollection = 0;
   edm::Handle<L1GctHFRingEtSumsCollection> gctHFRingEtSumsH;
@@ -274,3 +377,87 @@ bool DijetsTriggerAnalysis::acceptHFRingEtSum(std::vector<TH1F*>& histosRingSum,
 
    return accept;
 }
+void DijetsTriggerAnalysis::dijetsTriggerJetInfo(DijetsTriggerEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
+  edm::Handle<edm::View<reco::Jet> > jetCollectionH;
+  event.getByLabel(jetTag_,jetCollectionH);
+  
+  eventData.nJet_ = jetCollectionH->size();
+
+  if(jetCollectionH->size() > 1){
+     const reco::Jet& leadingJet = (*jetCollectionH)[0];
+     const reco::Jet& secondJet = (*jetCollectionH)[1];
+     //const reco::Jet& thirdJet = (*jetCollectionH)[2];     
+ 
+     eventData.leadingJetPt_ = leadingJet.pt();
+     eventData.leadingJetEta_ = leadingJet.eta();
+     eventData.leadingJetPhi_ = leadingJet.phi();
+
+     eventData.secondJetPt_ = secondJet.pt();
+     eventData.secondJetEta_ = secondJet.eta();
+     eventData.secondJetPhi_ = secondJet.phi(); 
+
+   } else{
+     eventData.leadingJetPt_ = -999.;
+     eventData.leadingJetEta_ = -999.;
+     eventData.leadingJetPhi_ = -999.;
+
+     eventData.secondJetPt_ = -999.;
+     eventData.secondJetEta_ = -999.;
+     eventData.secondJetPhi_ = -999.;
+   }  
+  
+  if(jetCollectionH->size() > 2){
+     
+     const reco::Jet& thirdJet = (*jetCollectionH)[2];    
+     
+ 
+     eventData.thirdJetPt_ = thirdJet.pt();
+     eventData.thirdJetEta_ = thirdJet.eta();
+     eventData.thirdJetPhi_ = thirdJet.phi(); 
+
+  } else{
+     eventData.thirdJetPt_ = -999.;
+     eventData.thirdJetEta_ = -999.;
+     eventData.thirdJetPhi_ = -999.;
+  }  
+}
+void DijetsTriggerAnalysis::dijetsTriggerCaloTowerInfo(DijetsTriggerEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
+
+  edm::Handle<CaloTowerCollection> caloTowerCollectionH;
+  event.getByLabel(caloTowerTag_,caloTowerCollectionH);
+  const CaloTowerCollection& caloTower = *caloTowerCollectionH;
+  CaloTowerCollection::const_iterator tower = caloTower.begin();
+  CaloTowerCollection::const_iterator tower_end = caloTower.end();
+
+  double sumEHFMinus = 0.;
+  double sumEHFPlus  = 0.;
+  if( caloTowerCollectionH.isValid() ){
+
+
+   for(; tower != tower_end; tower++){
+      double eta = tower->eta();
+      double energy = tower->energy();
+      //double pt = tower->pt();
+     
+      if((3.0 < eta) && (eta < 5.0) ){
+        sumEHFPlus += energy;
+      }
+      if((-5.0 < eta) && (eta < -3.0) ){
+        sumEHFMinus += energy;
+      }
+     
+     //eventData.SetEtaAllTowers(eta); 
+     //eventData.SetEnergyAllTowers(energy); 
+     //eventData.SetPtAllTowers(pt);
+   }
+
+   eventData.SetSumEHFPlus(sumEHFPlus);
+   eventData.SetSumEHFMinus(sumEHFMinus);
+  }else{
+   eventData.SetSumEHFPlus(-999.);
+   eventData.SetSumEHFMinus(-999.);
+ 
+  }
+}
+
+
