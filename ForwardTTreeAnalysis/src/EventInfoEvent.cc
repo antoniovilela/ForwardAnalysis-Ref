@@ -9,6 +9,9 @@ EventInfoEvent::~EventInfoEvent() {}
 
 void EventInfoEvent::reset(){
    
+  ptHat                 = -1.;
+  generatorWeight       = -1.;
+
   nPileUpBx0_           = -1;
   nPileUpBxm1_          = -1;
   nPileUpBxp1_          = -1;

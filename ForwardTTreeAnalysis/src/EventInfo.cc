@@ -11,6 +11,7 @@
 #include "DataFormats/Luminosity/interface/LumiDetails.h"
 #include "DataFormats/Luminosity/interface/LumiSummary.h"
 
+#include "SimDataFormats/GeneratorProducts/interface/GenEventInfoProduct.h"
 #include "SimDataFormats/PileupSummaryInfo/interface/PileupSummaryInfo.h"
 
 //using namespace forwardAnalysis;
@@ -38,8 +39,16 @@ void EventInfo::fill(EventInfoEvent& eventData, const edm::Event& event, const e
   fillEventInfo(eventData,event,setup);
 
   if( !runOnData_ ){
+     edm::Handle<GenEventInfoProduct> genEventInfoH;
+     event.getByLabel("generator", genEventInfoH);
+     eventData.SetPthat( genEventInfoH->binningValues()[0] );
+     eventData.SetGeneratorWeight( genEventInfoH->weight() );
+
      fillPileUpInfo(eventData,event,setup);
   } else {
+     eventData.SetPthat( -1. );
+     eventData.SetGeneratorWeight( -1. );
+
      eventData.SetNPileUpBxm1(-1);
      eventData.SetNPileUpBx0(-1);
      eventData.SetNPileUpBxp1(-1);

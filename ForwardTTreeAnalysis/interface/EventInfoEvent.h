@@ -14,6 +14,8 @@ class EventInfoEvent {
   EventInfoEvent();
   ~EventInfoEvent();
 
+  void SetPthat(double fptHat)                             { ptHat = fptHat; }
+  void SetGeneratorWeight(double fgenWeight)               { generatorWeight = fgenWeight; } 
   void SetNPileUpBxm1(int fnPileUpBxm1)                    { nPileUpBxm1_          = fnPileUpBxm1;}
   void SetNPileUpBx0(int fnPileUpBx0)                      { nPileUpBx0_           = fnPileUpBx0;}
   void SetNPileUpBxp1(int fnPileUpBxp1)                    { nPileUpBxp1_          = fnPileUpBxp1;}
@@ -28,10 +30,13 @@ class EventInfoEvent {
   void SetInstLumiBunch(float finstLumiBunchOCC1) {instLumiBunchOCC1_ = finstLumiBunchOCC1;}
 
   //---------------------------
+  double GetPthat()                          const { return ptHat; }
+  double GetGeneratorWeight()                const { return generatorWeight; } 
+
   int GetNPileUpBxm1()                       const { return nPileUpBxm1_;}
   int GetNPileUpBx0()                        const { return nPileUpBx0_;}
   int GetNPileUpBxp1()                       const { return nPileUpBxp1_;}
-  float GetTrueNumInteractions()              const { return nTrueInteractions_;}
+  float GetTrueNumInteractions()             const { return nTrueInteractions_;}
 
   int  GetRunNumber()                        const {return runNumber_;}
   int  GetEventNumber()                      const {return eventNumber_;}
@@ -45,6 +50,9 @@ class EventInfoEvent {
 
      void reset();
      
+     double ptHat;
+     double generatorWeight;
+
      int nPileUpBxm1_;
      int nPileUpBx0_;
      int nPileUpBxp1_;

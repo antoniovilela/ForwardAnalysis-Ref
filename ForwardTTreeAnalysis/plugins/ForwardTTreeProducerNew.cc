@@ -31,6 +31,10 @@ DEFINE_FWK_MODULE(ExclusiveDijetsAnalysisTTree);
 typedef forwardTTreeAnalysis::ForwardTTreeProducer<dijetsTriggerAnalysis::DijetsTriggerAnalysis> DijetsTriggerAnalysisTTree;
 DEFINE_FWK_MODULE(DijetsTriggerAnalysisTTree);
 
+typedef forwardTTreeAnalysis::ForwardTTreeProducer<eventInfo::EventInfo,
+                                                   exclusiveDijetsAnalysis::ExclusiveDijetsAnalysis> EventInfoExclusiveDijetsAnalysisTTree;
+DEFINE_FWK_MODULE(EventInfoExclusiveDijetsAnalysisTTree);
+
 typedef forwardTTreeAnalysis::ForwardTTreeProducer<dijetsTriggerAnalysis::DijetsTriggerAnalysis,
                                                    patTriggerInfo::PATTriggerInfo> DijetsTriggerAnalysisPATTriggerInfoTTree;
 DEFINE_FWK_MODULE(DijetsTriggerAnalysisPATTriggerInfoTTree);
