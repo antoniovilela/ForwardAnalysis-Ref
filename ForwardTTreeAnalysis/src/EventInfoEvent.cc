@@ -21,5 +21,6 @@ void EventInfoEvent::reset(){
   eventNumber_          = -1;
   lumiSection_          = -1;
   bunchCrossing_        = -1;
+  orbitNumber_          = -1;
   lumiWeight_           = -1.;
 }

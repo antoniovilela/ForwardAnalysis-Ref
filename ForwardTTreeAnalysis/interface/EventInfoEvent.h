@@ -25,6 +25,7 @@ class EventInfoEvent {
   void SetEventNumber(int feventNumber)         { eventNumber_      = feventNumber;}
   void SetLumiSection(int flumiSection)         { lumiSection_      = flumiSection;}
   void SetBunchCrossing(int fbunchCrossing)     { bunchCrossing_    = fbunchCrossing;}
+  void SetOrbitNumber(int forbitNumber)         { orbitNumber_      = forbitNumber;}
   void SetLumiWeight(double flumiWeight)        { lumiWeight_       = flumiWeight;}
   void SetInstDelLumiLS(float finstLumiLS)      { instLumiLS_       = finstLumiLS;}
   void SetInstLumiBunch(float finstLumiBunchOCC1) {instLumiBunchOCC1_ = finstLumiBunchOCC1;}
@@ -41,6 +42,7 @@ class EventInfoEvent {
   int  GetRunNumber()                        const {return runNumber_;}
   int  GetEventNumber()                      const {return eventNumber_;}
   int  GetBunchCrossing()                    const {return bunchCrossing_;}
+  int  GetOrbitNumber()                      const {return orbitNumber_;}
   double GetLumiWeight()                     const { return lumiWeight_;}
   float GetInstLumiBunch()                   const {return instLumiBunchOCC1_;}
   float GetInstDelLumiLS()                   const {return instLumiLS_;}
@@ -61,7 +63,8 @@ class EventInfoEvent {
      int runNumber_;
      int eventNumber_;
      int lumiSection_;
-     int bunchCrossing_; 
+     int bunchCrossing_;
+     int orbitNumber_; 
      double lumiWeight_;
      float instLumiLS_;
      float instLumiBunchOCC1_;

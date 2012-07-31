@@ -63,10 +63,12 @@ void EventInfo::fillEventInfo(EventInfoEvent& eventData, const edm::Event& event
   unsigned int runNumber = event.id().run();
   unsigned int lumiSection = event.luminosityBlock();
   int bunchCrossing = event.bunchCrossing();
+  int orbitNumber   = event.orbitNumber();
   eventData.SetEventNumber(eventNumber);
   eventData.SetRunNumber(runNumber);
   eventData.SetLumiSection(lumiSection);
   eventData.SetBunchCrossing(bunchCrossing);
+  eventData.SetOrbitNumber(orbitNumber);
 
   /////////////////////////////
   // Instant. luminosity of a lumisection = (delivered luminosity)/(lumisection size=23.36s) 
