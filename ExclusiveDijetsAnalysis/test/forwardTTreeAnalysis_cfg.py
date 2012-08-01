@@ -5,7 +5,7 @@ class config: pass
 config.verbose = True
 config.writeEdmOutput = False
 config.outputTTreeFile = 'forwardTTreeAnalysis.root'
-config.runOnMC = False
+config.runOnMC = True
 config.runPATSequences = True
 config.usePAT = False
 #config.globalTagNameData = 'GR_R_52_V7::All'
@@ -14,7 +14,7 @@ config.globalTagNameData = 'GR_R_42_V23::All'
 #config.instLumiROOTFile='/storage2/eliza/lumibyXing_Cert_160404-176023_7TeV_PromptReco_Collisions11_JSON.root'
 config.instLumiROOTFile=''
 #config.globalTagNameMC = 'START42_V14A::All'
-config.globalTagNameMC = 'START42_V17::All'
+config.globalTagNameMC = 'START42_V17D::All'
 config.comEnergy = 7000.0
 config.trackAnalyzerName = 'trackHistoAnalyzer'
 config.trackTagName = 'analysisTracks'
@@ -33,7 +33,9 @@ else:
     config.hltPaths = ('HLT_ExclDiJet30U_HFAND_v*','HLT_ExclDiJet30U_HFOR_v*','HLT_Jet30U*')
 
 if config.runOnMC:
-    config.inputFileName = '/storage2/eliza/samples_test/QCD_Pt-15to30_TuneZ2_7TeV_pythia6AODSIMS_3.root'# MC
+#    config.inputFileName = '/storage1/dmf/PrivateMCProduction/July2012Prod/Pythia/CMSSW_4_2_8_lowpupatch1/src/step3_RAW2DIGI_L1Reco_RECO.root'# MC
+#     config.inputFileName = '/storage1/dmf/PrivateMCProduction/July2012Prod/Pythia/CMSSW_4_2_8_lowpupatch1/src/QCD_Pt_15to3000_TuneZ2_Flat_7TeV_pythia6_cff_py_RAW2DIGI_L1Reco_RECO_AOD.root'
+     config.inputFileName = '/storage1/dmf/PrivateMCProduction/July2012Prod/Pythia/CMSSW_4_2_8_lowpupatch1/src/QCD_Pt_15to3000_TuneZ2_Flat_7TeV_pythia6_cff_py_RAW2DIGI_L1Reco_RECO_inRECOSIM.root'
 else:
     #config.inputFileName = 'rfio:/castor/cern.ch/cms/store/data/Run2012A/Jet/RAW/v1/000/193/336/6CE0FC0F-7995-E111-BC9D-001D09F2B2CF.root'
     config.inputFileName = '/storage2/antoniov/data1/MultiJet_Run2010B_Apr21ReReco-v1_AOD/MultiJet_Run2010B_Apr21ReReco-v1_AOD_7EA7B611-7371-E011-B164-002354EF3BDB.root' 
@@ -46,7 +48,7 @@ process = cms.Process("Analysis")
 process.load('FWCore.MessageService.MessageLogger_cfi')
 
 process.options = cms.untracked.PSet(
-	wantSummary = cms.untracked.bool(True),
+	wantSummary = cms.untracked.bool(False),
 	SkipEvent = cms.untracked.vstring('ProductNotFound')
 	)
 
@@ -128,6 +130,24 @@ from ForwardAnalysis.ForwardTTreeAnalysis.DijetsTriggerAnalysis_cfi import Dijet
 #PATTriggerInfo.HLTAlgoBitName = config.hltPaths 
 PATTriggerInfo.runALLTriggerPath = True
 
+#process.exclusiveDijetsAnalysisTTree = cms.EDAnalyzer("ExclusiveDijetsAnalysisTTree",
+#        ExclusiveDijetsAnalysis = ExclusiveDijetsAnalysis
+#        )
+#process.exclusiveDijetsAnalysisTTree = cms.EDAnalyzer("EventInfoExclusiveDijetsAnalysisTTree",
+#	EventInfo = cms.PSet(),
+#        ExclusiveDijetsAnalysis = ExclusiveDijetsAnalysis
+#        )
+
+process.exclusiveDijetsAnalysisTTree = cms.EDAnalyzer("EventInfoDiffractiveExclusiveDijetsAnalysisTTree",
+	EventInfo = cms.PSet(
+	            RunOnData = cms.untracked.bool(False),
+		    RunWithMCPU = cms.untracked.bool(False)
+	),
+	DiffractiveAnalysis = DiffractiveAnalysis,
+        ExclusiveDijetsAnalysis = ExclusiveDijetsAnalysis
+        )
+
+"""
 process.dijetsTriggerAnalysisTTree = cms.EDAnalyzer("DijetsTriggerAnalysisTTree",
         DijetsTriggerAnalysis = DijetsTriggerAnalysis,
         #PATTriggerInfo = PATTriggerInfo 
@@ -150,38 +170,39 @@ process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree = cms.EDAnalyzer("
 	)
 process.diffractiveAnalysisTTree.DiffractiveAnalysis.hltPath = ''
 process.diffractiveAnalysisPATTriggerInfoTTree.DiffractiveAnalysis.hltPath = ''
+"""
 
 #process.exclusiveDijetsHLTFilter.HLTPaths = ['HLT_ExclDiJet80_HFAND_v*','HLT_ExclDiJet35_HFAND_v*','HLT_ExclDiJet35_HFOR_v*','HLT_L1SingleJet16_v*','HLT_DiPFJetAve80_v*','HLT_L1SingleJet36_v*']
 process.exclusiveDijetsHLTFilter.HLTPaths = config.hltPaths 
 
-process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree.DiffractiveAnalysis.hltPath = ''
-process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree.DiffractiveAnalysis.trackTag = 'analysisTracks'
-process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree.DiffractiveAnalysis.vertexTag = "offlinePrimaryVertices"
-process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree.DiffractiveAnalysis.particleFlowTag = "pfCandidateNoiseThresholds"
-process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree.DiffractiveAnalysis.jetTag = "selectedPatJetsPFlow"
+process.exclusiveDijetsAnalysisTTree.DiffractiveAnalysis.hltPath = ''
+process.exclusiveDijetsAnalysisTTree.DiffractiveAnalysis.trackTag = 'analysisTracks'
+process.exclusiveDijetsAnalysisTTree.DiffractiveAnalysis.vertexTag = "offlinePrimaryVertices"
+process.exclusiveDijetsAnalysisTTree.DiffractiveAnalysis.particleFlowTag = "pfCandidateNoiseThresholds"
+process.exclusiveDijetsAnalysisTTree.DiffractiveAnalysis.jetTag = "selectedPatJetsPFlow"
 
-process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree.ExclusiveDijetsAnalysis.hltPaths = config.hltPaths 
-process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree.ExclusiveDijetsAnalysis.TrackTag = 'analysisTracks'
-process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree.ExclusiveDijetsAnalysis.VertexTag = "offlinePrimaryVertices"
-process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree.ExclusiveDijetsAnalysis.ParticleFlowTag = "pfCandidateNoiseThresholds"
-process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree.ExclusiveDijetsAnalysis.JetTag = "selectedPatJetsPFlow"
-process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree.ExclusiveDijetsAnalysis.JetNonCorrTag = "ak5PFJets"
+process.exclusiveDijetsAnalysisTTree.ExclusiveDijetsAnalysis.hltPaths = config.hltPaths 
+process.exclusiveDijetsAnalysisTTree.ExclusiveDijetsAnalysis.TrackTag = 'analysisTracks'
+process.exclusiveDijetsAnalysisTTree.ExclusiveDijetsAnalysis.VertexTag = "offlinePrimaryVertices"
+process.exclusiveDijetsAnalysisTTree.ExclusiveDijetsAnalysis.ParticleFlowTag = "pfCandidateNoiseThresholds"
+process.exclusiveDijetsAnalysisTTree.ExclusiveDijetsAnalysis.JetTag = "selectedPatJetsPFlow"
+process.exclusiveDijetsAnalysisTTree.ExclusiveDijetsAnalysis.JetNonCorrTag = "ak5PFJets"
 if config.runOnMC:
-     process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree.DiffractiveAnalysis.accessMCInfo = True
-     process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree.ExclusiveDijetsAnalysis.AccessMCInfo = True
+     process.exclusiveDijetsAnalysisTTree.DiffractiveAnalysis.accessMCInfo = True
+     process.exclusiveDijetsAnalysisTTree.ExclusiveDijetsAnalysis.AccessMCInfo = True
 else:
-     process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree.DiffractiveAnalysis.accessMCInfo = False 
-     process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree.ExclusiveDijetsAnalysis.AccessMCInfo = False 
+     process.exclusiveDijetsAnalysisTTree.DiffractiveAnalysis.accessMCInfo = False 
+     process.exclusiveDijetsAnalysisTTree.ExclusiveDijetsAnalysis.AccessMCInfo = False 
 
 #########################################################################
-process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree_HF0 = process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree.clone()
-process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree_HF0.DiffractiveAnalysis.energyThresholdHF = 0.0
-process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree_HF1 = process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree.clone()
-process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree_HF1.DiffractiveAnalysis.energyThresholdHF = 1.0
-process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree_HF2 = process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree.clone()
-process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree_HF2.DiffractiveAnalysis.energyThresholdHF = 2.0
-process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree_HF3 = process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree.clone()
-process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree_HF3.DiffractiveAnalysis.energyThresholdHF = 3.0
+process.exclusiveDijetsAnalysisTTree_HF0 = process.exclusiveDijetsAnalysisTTree.clone()
+process.exclusiveDijetsAnalysisTTree_HF0.DiffractiveAnalysis.energyThresholdHF = 0.0
+process.exclusiveDijetsAnalysisTTree_HF1 = process.exclusiveDijetsAnalysisTTree.clone()
+process.exclusiveDijetsAnalysisTTree_HF1.DiffractiveAnalysis.energyThresholdHF = 1.0
+process.exclusiveDijetsAnalysisTTree_HF2 = process.exclusiveDijetsAnalysisTTree.clone()
+process.exclusiveDijetsAnalysisTTree_HF2.DiffractiveAnalysis.energyThresholdHF = 2.0
+process.exclusiveDijetsAnalysisTTree_HF3 = process.exclusiveDijetsAnalysisTTree.clone()
+process.exclusiveDijetsAnalysisTTree_HF3.DiffractiveAnalysis.energyThresholdHF = 3.0
 
 
 ##########################################################################
@@ -196,20 +217,14 @@ if config.runOnMC:
 process.analysis_reco_step = cms.Path(process.analysisSequences)
 process.castor_step = cms.Path(process.castorSequence)
 
-#process.analysis_patInfoTTree_step = cms.Path(process.patInfoTTree)
-#process.analysis_diffractiveAnalysisTTree_step = cms.Path(process.diffractiveAnalysisTTree)
-#process.analysis_dijetsTriggerAnalysisPATTriggerInfoTTree_step = cms.Path(process.exclusiveDijetsHLTFilter + process.dijetsTriggerAnalysisTTree)
-#process.analysis_diffractiveAnalysisPATTriggerInfoTTree_step = cms.Path(process.diffractiveAnalysisPATTriggerInfoTTree)
 
 process.analysis_diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree_step = cms.Path(
-    process.eventSelectionHLT +
-    process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree
-)
+    process.eventSelection + process.exclusiveDijetsAnalysisTTree)
 
-#process.analysis_diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree_step = cms.Path(
-#    process.eventSelectionHLT+
-#    process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree+
-#    process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree_HF0+
-#    process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree_HF1+
-#    process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree_HF2+
-#    process.diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree_HF3)
+#process.analysis_exclusiveDijetsAnalysisTTree_step = cms.Path(
+#    process.eventSelectionHLT + 
+#    process.exclusiveDijetsAnalysisTTree+
+#    process.exclusiveDijetsAnalysisTTree_HF0+
+#    process.exclusiveDijetsAnalysisTTree_HF1+
+#    process.exclusiveDijetsAnalysisTTree_HF2+
+#    process.exclusiveDijetsAnalysisTTree_HF3)
