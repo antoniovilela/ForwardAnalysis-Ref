@@ -41,7 +41,6 @@ class ExclusiveDijetsAnalysis {
  
      //void setGenInfo(const edm::Event&, const edm::EventSetup&);
      void setTFileService();
-     void fillEventInfo(ExclusiveDijetsEvent&, const edm::Event&, const edm::EventSetup&); //added by eliza 
      void fillTriggerInfo(ExclusiveDijetsEvent&, const edm::Event&, const edm::EventSetup&); //added by eliza
      void fillPileUpInfo(ExclusiveDijetsEvent&, const edm::Event&, const edm::EventSetup&);
      void fillVertexInfo(ExclusiveDijetsEvent&, const edm::Event&, const edm::EventSetup&);
@@ -91,7 +90,6 @@ class ExclusiveDijetsAnalysis {
      //new variables:
      bool accessMCInfo_;
      bool POMPYTMCInfo_;
-     bool runOnRECO_; 
      
      std::vector<std::string> hltPathNames_;
    

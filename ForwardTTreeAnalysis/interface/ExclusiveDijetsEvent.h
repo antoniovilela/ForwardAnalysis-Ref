@@ -26,10 +26,6 @@ class ExclusiveDijetsEvent {
   void SetNVertex(int fnVertex)                 { nVertex_          = fnVertex;}
 
   //added by eliza
-  void SetRunNumber(int frunNumber)             { runNumber_        = frunNumber;}   
-  void SetEventNumber(int feventNumber)         { eventNumber_      = feventNumber;}
-  void SetLumiSection(int flumiSection)         { lumiSection_      = flumiSection;}
-  void SetBunchCrossing(int fbunchCrossing)     { bunchCrossing_    = fbunchCrossing;}
   void SetLumiWeight(double flumiWeight)        { lumiWeight_       = flumiWeight;}
   void SetInstDelLumiLS(float finstLumiLS)      { instLumiLS_       = finstLumiLS;}
   void SetInstLumiBunch(float finstLumiBunchOCC1) {instLumiBunchOCC1_ = finstLumiBunchOCC1;}
@@ -309,9 +305,6 @@ class ExclusiveDijetsEvent {
   double GetSecondJetBDiscriminator()     const  {return secondJetBDiscriminator_ ;}
   double GetThirdJetBDiscriminator()      const  {return thirdJetBDiscriminator_ ;} // added by Diego
   //added by eliza
-  int  GetRunNumber()                        const {return runNumber_;}
-  int  GetEventNumber()                      const {return eventNumber_;}
-  int  GetBunchCrossing()                    const {return bunchCrossing_;}
   double GetLumiWeight()                     const { return lumiWeight_;}
   float GetInstLumiBunch()                   const {return instLumiBunchOCC1_;}
   float GetInstDelLumiLS()                   const {return instLumiLS_;}
@@ -409,10 +402,6 @@ class ExclusiveDijetsEvent {
      int nVertex_;
 
      //added by eliza
-     int runNumber_;
-     int eventNumber_;
-     int lumiSection_;
-     int bunchCrossing_; 
      double lumiWeight_;
      float instLumiLS_;
      float instLumiBunchOCC1_;

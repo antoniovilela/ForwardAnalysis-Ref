@@ -15,10 +15,6 @@ void ExclusiveDijetsEvent::reset(){
   nPileUpBxm1_ = -1;
   nPileUpBxp1_ = -1;
   nVertex_=  -1;
-  runNumber_ = -1;
-  eventNumber_= -1;
-  lumiSection_ = -1;
-  bunchCrossing_= -1;
   lumiWeight_ = 999.;
 
   leadingJetPt_= 999.;

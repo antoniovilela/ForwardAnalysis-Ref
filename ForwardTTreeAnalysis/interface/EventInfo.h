@@ -27,6 +27,7 @@ class EventInfo {
      void fillPileUpInfo(EventInfoEvent&, const edm::Event&, const edm::EventSetup&);
 
      bool runOnData_;
+     bool runWithMCPU_;
 };
 
 } // namespace
