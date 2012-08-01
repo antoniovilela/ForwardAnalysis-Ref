@@ -10,14 +10,17 @@ DijetsTriggerEvent::~DijetsTriggerEvent() {}
 void DijetsTriggerEvent::reset(){
    nL1Bits_ = -1;
 
+  runNumber_            = -1;
+  eventNumber_          = -1;
+  lumiSection_          = -1;
+  bunchCrossing_        = -1;
+  orbitNumber_          = -1;
+
+
    l1Decision_.clear();
    l1Prescale_.clear();
    l1AlgoName_.clear();
-   
-   hfRingEtSum_.clear();
-   hfRingBitCount_.clear();
-   hfRingEtSum_ = std::vector<int>(4,-1);
-   hfRingBitCount_ = std::vector<int>(4,-1);
+
    hltTrigResults_.clear(); 
    hltTrigNames_.clear(); 
  
@@ -41,4 +44,9 @@ void DijetsTriggerEvent::reset(){
    //ntowCal_ = 0;
    nJet_ = 0;
 
+   
+   //hfRingEtSum_.clear();
+   //hfRingBitCount_.clear();
+   //hfRingEtSum_ = std::vector<int>(4,-1);
+   //hfRingBitCount_ = std::vector<int>(4,-1);
 }

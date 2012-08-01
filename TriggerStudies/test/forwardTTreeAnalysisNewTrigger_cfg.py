@@ -73,14 +73,14 @@ process.TFileService = cms.Service("TFileService",
 process.load('Configuration.StandardSequences.Services_cff')
 process.load('Configuration.StandardSequences.GeometryExtended_cff')
 process.load('Configuration.StandardSequences.MagneticField_38T_cff')
-process.load('Configuration.StandardSequences.Reconstruction_cff')
+#process.load('Configuration.StandardSequences.Reconstruction_cff')
 process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 if config.runOnMC: process.GlobalTag.globaltag = config.globalTagNameMC
 else: process.GlobalTag.globaltag = config.globalTagNameData
 
-process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
-process.load('RecoJets.Configuration.RecoPFJets_cff')
-process.load('RecoJets.Configuration.RecoJets_cff')
+#process.load('JetMETCorrections.Configuration.DefaultJEC_cff')
+#process.load('RecoJets.Configuration.RecoPFJets_cff')
+#process.load('RecoJets.Configuration.RecoJets_cff')
 process.load('CommonTools/RecoAlgos/HBHENoiseFilterResultProducer_cfi')
 from RecoLuminosity.LumiProducer.lumiProducer_cff import *
 process.load('RecoLuminosity.LumiProducer.lumiProducer_cff')
