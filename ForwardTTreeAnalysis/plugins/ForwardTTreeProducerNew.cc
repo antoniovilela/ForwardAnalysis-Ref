@@ -44,11 +44,15 @@ typedef forwardTTreeAnalysis::ForwardTTreeProducer<diffractiveAnalysis::Diffract
 DEFINE_FWK_MODULE(DiffractiveAnalysisPATTriggerInfoTTree);
 
 typedef forwardTTreeAnalysis::ForwardTTreeProducer<diffractiveAnalysis::DiffractiveAnalysis,
-                                                   exclusiveDijetsAnalysis::ExclusiveDijetsAnalysis,
-                                                   patTriggerInfo::PATTriggerInfo> DiffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree;
-DEFINE_FWK_MODULE(DiffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree);
-
-typedef forwardTTreeAnalysis::ForwardTTreeProducer<diffractiveAnalysis::DiffractiveAnalysis,
                                                    heavyFlavorAnalysis::HeavyFlavorAnalysis> DiffractiveHeavyFlavorAnalysisTTree;
 DEFINE_FWK_MODULE(DiffractiveHeavyFlavorAnalysisTTree);
 
+typedef forwardTTreeAnalysis::ForwardTTreeProducer<eventInfo::EventInfo,
+                                                   diffractiveAnalysis::DiffractiveAnalysis,
+                                                   exclusiveDijetsAnalysis::ExclusiveDijetsAnalysis> EventInfoDiffractiveExclusiveDijetsAnalysisTTree;
+DEFINE_FWK_MODULE(EventInfoDiffractiveExclusiveDijetsAnalysisTTree);
+
+typedef forwardTTreeAnalysis::ForwardTTreeProducer<diffractiveAnalysis::DiffractiveAnalysis,
+                                                   exclusiveDijetsAnalysis::ExclusiveDijetsAnalysis,
+                                                   patTriggerInfo::PATTriggerInfo> DiffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree;
+DEFINE_FWK_MODULE(DiffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree);
