@@ -15,15 +15,15 @@ class DijetsTriggerEvent;
 
 class EffMacroDijetsTrigger {
 
-   //TFile* inf;
-   //TTree* tr;
+   TFile* inf;
+   TTree* tr;
 
-   //TBranch *trigger;
-   TChain chain;
+   TBranch *trigger;
+
    DijetsTriggerEvent *eventtrigger;
 
-   std::vector<std::string> filein;
-   std::vector<std::string> fileinput;
+   std::string filein;
+   std::string fileinput;
    std::string processname;
    std::string processinput; 
    std::string savehistofile;
@@ -44,10 +44,10 @@ class EffMacroDijetsTrigger {
 
    public :
    EffMacroDijetsTrigger() {}
-   ~EffMacroDijetsTrigger() { }
+   ~EffMacroDijetsTrigger() { inf->Close(); }
    
-   void Run(std::vector<std::string>& , std::string, std::string,double, double, int, double, double, int, bool, bool, bool, bool, bool, bool, bool);
-   void LoadFile(std::vector<std::string>&,std::string);
+   void Run(std::string, std::string, std::string,double, double, int, double, double, int, bool, bool, bool, bool, bool, bool, bool);
+   void LoadFile(std::string,std::string);
    void FillHistograms();
 
 };
