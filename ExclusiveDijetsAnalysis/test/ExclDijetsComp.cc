@@ -49,6 +49,7 @@
 #include <fstream>
 
 #include "ExclDijetsComp.h"
+#include "ForwardAnalysis/ForwardTTreeAnalysis/interface/EventInfoEvent.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/ExclusiveDijetsEvent.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/DiffractiveEvent.h"
 #include "KKousour/QCDAnalysis/interface/QCDEvent.h"
@@ -56,6 +57,7 @@
 
 using namespace diffractiveAnalysis;
 using namespace exclusiveDijetsAnalysis;
+using namespace eventInfo;
 using namespace reweight;
 
 void ExclDijetsComp::LoadFile(std::string fileinput, std::string processinput){
@@ -66,13 +68,13 @@ void ExclDijetsComp::LoadFile(std::string fileinput, std::string processinput){
    tr = (TTree*)inf->Get(processinput.c_str());
    eventdiff = new DiffractiveEvent();
    eventexcl = new ExclusiveDijetsEvent();
-   eventqcd = new QCDEvent();
+   eventinfo = new EventInfoEvent();
    diff = tr->GetBranch("DiffractiveAnalysis");
    excl = tr->GetBranch("ExclusiveDijetsAnalysis");
-   qcd = tr->GetBranch("QCDAnalysis");
+   info = tr->GetBranch("EventInfo");
    diff->SetAddress(&eventdiff);
    excl->SetAddress(&eventexcl);
-   qcd->SetAddress(&eventqcd);
+   info->SetAddress(&eventinfo);
 
 }
 
@@ -569,7 +571,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
       if (switchWeightEff) { triggereff = triggereffpass;}
       else { triggereff = 1.0;}
 
-      if (switchWeightePw) { weightepw = eventqcd->evtHdr().weight();}
+      if (switchWeightePw) { weightepw = eventinfo->GetGeneratorWeight();}
       else { weightepw = 1.0;}
 
       //---------->>

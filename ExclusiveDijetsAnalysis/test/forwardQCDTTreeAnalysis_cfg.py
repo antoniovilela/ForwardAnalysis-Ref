@@ -4,16 +4,16 @@ import FWCore.ParameterSet.Config as cms
 class config: pass
 config.verbose = True
 config.writeEdmOutput = False
-config.runOnMC = False
+config.runOnMC = True
 config.runOnEventWeight = False
 config.runPATSequences = True
 config.usePAT = True
-config.runOnAOD = True
-config.runOnRECO = False
+config.runOnAOD = False
+config.runOnRECO = True
 config.globalTagNameData = 'GR_R_42_V23::All' 
 #config.instLumiROOTFile='/storage2/eliza/lumibyXing_Cert_160404-176023_7TeV_PromptReco_Collisions11_JSON.root'
 config.instLumiROOTFile=''
-config.globalTagNameMC = 'START42_V17::All'
+config.globalTagNameMC = 'START42_V17D::All'
 config.comEnergy = 7000.0
 config.trackAnalyzerName = 'trackHistoAnalyzer'
 config.trackTagName = 'analysisTracks'
@@ -30,7 +30,8 @@ else:
 config.outputTTreeFile = 'forwardQCDTTreeAnalysis.root'
 
 if config.runOnMC:
-    config.inputFileName = '/storage2/eliza/samples_test/QCD_Pt-15to30_TuneZ2_7TeV_pythia6AODSIMS_3.root'# MC
+    #config.inputFileName = '/storage2/eliza/samples_test/QCD_Pt-15to30_TuneZ2_7TeV_pythia6AODSIMS_3.root'# MC
+    config.inputFileName = '/storage1/dmf/PrivateMCProduction/July2012Prod/Pythia/CMSSW_4_2_8_lowpupatch1/src/step3_RAW2DIGI_L1Reco_RECO.root'# MC
 else:
  if config.runOnAOD:
      #config.inputFileName = '/storage2/eliza/samples_test/MultiJetPromptReco_v4.root'#data 2011
@@ -128,6 +129,7 @@ if not config.runOnMC:
     pfjecService    = 'ak5PFL1FastL2L3Residual'
     calojecService  = 'ak5CaloL1L2L3Residual'
 process.forwardQCDTTreeAnalysis = cms.EDAnalyzer('ProcessedTreeProducer',
+    eventInfo = cms.PSet(),
     diffractiveAnalysis = DiffractiveAnalysis,
     exclusiveDijetsAnalysis = ExclusiveDijetsAnalysis,
     ## jet collections ###########################

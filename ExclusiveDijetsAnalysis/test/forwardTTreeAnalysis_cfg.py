@@ -141,7 +141,8 @@ PATTriggerInfo.runALLTriggerPath = True
 process.exclusiveDijetsAnalysisTTree = cms.EDAnalyzer("EventInfoDiffractiveExclusiveDijetsAnalysisTTree",
 	EventInfo = cms.PSet(
 	            RunOnData = cms.untracked.bool(False),
-		    RunWithMCPU = cms.untracked.bool(False)
+		    RunWithMCPU = cms.untracked.bool(False),
+                    RunWithGen = cms.untracked.bool(False)
 	),
 	DiffractiveAnalysis = DiffractiveAnalysis,
         ExclusiveDijetsAnalysis = ExclusiveDijetsAnalysis

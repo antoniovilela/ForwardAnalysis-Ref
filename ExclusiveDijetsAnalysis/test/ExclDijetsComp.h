@@ -12,6 +12,7 @@
 class DiffractiveEvent;
 class ExclusiveDijetsEvent;
 class QCDEvent;
+class EventInfoEvent;
 
 class ExclDijetsComp {
 
@@ -19,10 +20,10 @@ class ExclDijetsComp {
    TTree* tr;
    TBranch *diff;
    TBranch *excl;
-   TBranch *qcd;
+   TBranch *info;
    DiffractiveEvent *eventdiff;
    ExclusiveDijetsEvent *eventexcl;
-   QCDEvent *eventqcd;
+   EventInfoEvent *eventinfo;
 
    std::string filein;
    std::string fileinput;
