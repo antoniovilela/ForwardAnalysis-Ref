@@ -28,6 +28,7 @@ class EventInfo {
 
      bool runOnData_;
      bool runWithMCPU_;
+     bool runWithGen_;
 };
 
 } // namespace

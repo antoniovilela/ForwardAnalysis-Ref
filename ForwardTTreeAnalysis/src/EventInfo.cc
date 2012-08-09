@@ -20,8 +20,9 @@ using eventInfo::EventInfo;
 const char* EventInfo::name = "EventInfo";
 
 EventInfo::EventInfo(const edm::ParameterSet& pset):
-  runOnData_(pset.getUntrackedParameter<bool>("RunOnData")), 
-  runWithMCPU_(pset.getUntrackedParameter<bool>("RunWithMCPU")) {} 
+  runOnData_(pset.getUntrackedParameter<bool>("RunOnData")),
+  runWithMCPU_(pset.getUntrackedParameter<bool>("RunWithMCPU")),
+  runWithGen_(pset.getUntrackedParameter<bool>("RunWithGen")) {} 
 
 EventInfo::~EventInfo() {}
 
@@ -39,7 +40,7 @@ void EventInfo::fill(EventInfoEvent& eventData, const edm::Event& event, const e
 	   
 	  fillEventInfo(eventData,event,setup);
 
-	  if( !runOnData_ ){
+	  if( runWithGen_ ){
 	     edm::Handle<GenEventInfoProduct> genEventInfoH;
 	     event.getByLabel("generator", genEventInfoH);
 	     eventData.SetPthat( genEventInfoH->binningValues()[0] );
