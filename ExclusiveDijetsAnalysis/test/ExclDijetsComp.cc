@@ -147,8 +147,13 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
    }
    //--------------------------------------------------------------------------------------------------------------------------
 
-   TFile *l1  = TFile::Open("effcomplete.root");
-   TH1F* h_eff = (TH1F*)l1->Get("Ratio");
+   TFile *l1  = TFile::Open("eff_Before.root");
+   TH1F* h_eff_excl = (TH1F*)l1->Get("RatioPreSel");
+   TH1F* h_eff_vertex = (TH1F*)l1->Get("RatioVertex");
+   TH1F* h_eff_step_4_4 = (TH1F*)l1->Get("RatioStep4_4");
+   TH1F* h_eff_step_4_3 = (TH1F*)l1->Get("RatioStep4_3");
+   TH1F* h_eff_step_4_2 = (TH1F*)l1->Get("RatioStep4_2");
+   TH1F* h_eff_step_4_1 = (TH1F*)l1->Get("RatioStep4_1");
 
    LoadFile(filein,processname);
    edm::LumiReWeighting LumiWeights_("pu_mc_QCD15-3000.root","pu_147196-148058.root","pileUpBx0_complete_without_cuts","pileup");
@@ -539,11 +544,32 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
 	      weightbxm1 = 1.0;
       }
 
-      double triggereff;
+      double triggereff_excl;
+      double triggereff_vertex;
+      double triggereff_step4_4;
+      double triggereff_step4_3;
+      double triggereff_step4_2;
+      double triggereff_step4_1;
       if (switchWeightEff){
- 	      triggereff = 1./h_eff->GetBinContent(h_eff->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
+ 	      if (switchPreSel) {
+                     triggereff_excl = 1./h_eff_excl->GetBinContent(h_eff_excl->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
+              } else {
+                     triggereff_excl = 1.0;
+              }       
+              triggereff_vertex = 1./h_eff_vertex->GetBinContent(h_eff_vertex->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
+              triggereff_step4_4 = 1./h_eff_step_4_4->GetBinContent(h_eff_step_4_4->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
+              triggereff_step4_3 = 1./h_eff_step_4_3->GetBinContent(h_eff_step_4_3->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
+              triggereff_step4_2 = 1./h_eff_step_4_2->GetBinContent(h_eff_step_4_2->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
+              triggereff_step4_1 = 1./h_eff_step_4_1->GetBinContent(h_eff_step_4_1->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));  
+      } 
+      else { 
+              triggereff_excl = 1.0;
+              triggereff_vertex = 1.0;
+              triggereff_step4_4 = 1.0;
+              triggereff_step4_3 = 1.0;
+              triggereff_step4_2 = 1.0;
+              triggereff_step4_1 = 1.0;
       }
-      else { triggereff = 1.0;}
 
       //------------------------------------------------------------------------------------------
 
@@ -566,9 +592,9 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
        */
       //---------->>
 
-      totalweight = triggereff*weight*weightlumi*weightepw;
-      totalweightbxm1 = triggereff*weightbxm1*weightlumi*weightepw;
-      totalweightbxp1 = triggereff*weightbxp1*weightlumi*weightepw;
+      totalweight = weight*weightlumi*weightepw;
+      totalweightbxm1 = weightbxm1*weightlumi*weightepw;
+      totalweightbxp1 = weightbxp1*weightlumi*weightepw;
 
       if( i % 1000 == 0 ){
 	    std::cout << "\nEvent " << i << std::endl
@@ -578,8 +604,13 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
 	    << "Pile-up weight    : " << weight << std::endl
 	    << "Weight Lumi       : " << weightlumi << std::endl
             << "Lumi per Bunch    : " << eventinfo->GetInstLumiBunch() << std::endl
-	    << "Lumi eff corr.    : " << triggereff << std::endl
-	    << "MC event weight   : " << weightepw << std::endl
+	    << "Lumi eff corr. Pre Sel. : " << triggereff_excl << std::endl
+            << "Lumi eff corr. Pre Sel. + Vertex: " << triggereff_vertex << std::endl
+            << "Lumi eff corr. Pre Sel. + Vertex + Eta_PF(max,min) < 4: " << triggereff_step4_4 << std::endl
+            << "Lumi eff corr. Pre Sel. + Vertex + Eta_PF(max,min) < 3: " << triggereff_step4_3 << std::endl
+            << "Lumi eff corr. Pre Sel. + Vertex + Eta_PF(max,min) < 2: " << triggereff_step4_2 << std::endl
+            << "Lumi eff corr. Pre Sel. + Vertex + Eta_PF(max,min) < 1: " << triggereff_step4_1 << std::endl
+            << "MC event weight   : " << weightepw << std::endl
 	    << "Total weight BX0  : " << totalweight << std::endl
             << "Total weight BXm1 : " << totalweightbxm1 << std::endl
             << "Total weight BXp1 : " << totalweightbxp1 << std::endl;
@@ -638,43 +669,43 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
 	 //
 	 //------------------------------------------------------------------------------------------
 
-	 counterTrigger+=totalweight;
+	 counterTrigger+=totalweight*triggereff_excl;
 
 	 // With Trigger: online or emulate          
 	 ////////////////////////////////////////////////
-         m_hVector_rjj[1].at(indexV)->Fill(eventexcl->GetRjjFromJets(),totalweight);
-         m_hVector_detagen[1].at(indexV)->Fill(eventexcl->GetDeltaEtaGen(),totalweight);
-         m_hVector_mxGen[1].at(indexV)->Fill(eventexcl->GetMxGenRange(),totalweight);
-         m_hVector_multhf[1].at(indexV)->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),totalweight);
-         m_hVector_etcalos[1].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())),totalweight);
-         m_hVector_tracks[1].at(indexV)->Fill(eventdiff->GetMultiplicityTracks(),totalweight);
-         m_hVector_pfetamax[1].at(indexV)->Fill(eventdiff->GetEtaMaxFromPFCands(),totalweight);
-         m_hVector_pfetamin[1].at(indexV)->Fill(eventdiff->GetEtaMinFromPFCands(),totalweight);
-         m_hVector_asumE[1].at(indexV)->Fill(aSumE_,totalweight);
-         m_hVector_deltaetajets[1].at(indexV)->Fill(eventexcl->GetJetsDeltaEta(),totalweight);
-         m_hVector_deltaphijets[1].at(indexV)->Fill(deltaphi_,totalweight);
-         m_hVector_deltaptjets[1].at(indexV)->Fill(eventexcl->GetJetsDeltaPt(),totalweight);
-         m_hVector_dijetmass[1].at(indexV)->Fill(eventexcl->GetMassDijets(),totalweight);
-         m_hVector_ptjet1[1].at(indexV)->Fill(eventexcl->GetLeadingJetPt(),totalweight);
-         m_hVector_ptjet2[1].at(indexV)->Fill(eventexcl->GetSecondJetPt(),totalweight);
-         m_hVector_etajet1[1].at(indexV)->Fill(eventexcl->GetLeadingJetEta(),totalweight);
-         m_hVector_etajet2[1].at(indexV)->Fill(eventexcl->GetSecondJetEta(),totalweight);
-         m_hVector_phijet1[1].at(indexV)->Fill(eventexcl->GetLeadingJetPhi(),totalweight);
-         m_hVector_phijet2[1].at(indexV)->Fill(eventexcl->GetSecondJetPhi(),totalweight);
-         m_hVector_sumEHFplus[1].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight);
-         m_hVector_sumEHFminus[1].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight);
-         m_hVector_sumEHEplus[1].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus(),totalweight);
-         m_hVector_sumEHEminus[1].at(indexV)->Fill(eventdiff->GetSumEnergyHEMinus(),totalweight);
-         m_hVector_sumEHFpfplus[1].at(indexV)->Fill(eventexcl->GetSumEHFPFlowPlus(),totalweight);
-         m_hVector_sumEHFpfminus[1].at(indexV)->Fill(eventexcl->GetSumEHFPFlowMinus(),totalweight);
-         m_hVector_deltaEtaPF[1].at(indexV)->Fill(deltaetapf_,totalweight);
-         m_hVector_absdeltaEtaPF[1].at(indexV)->Fill(absdeltaetapf_,totalweight);
-         m_hVector_vertex[1].at(indexV)->Fill(eventexcl->GetNVertex(),totalweight);
+         m_hVector_rjj[1].at(indexV)->Fill(eventexcl->GetRjjFromJets(),totalweight*triggereff_excl);
+         m_hVector_detagen[1].at(indexV)->Fill(eventexcl->GetDeltaEtaGen(),totalweight*triggereff_excl);
+         m_hVector_mxGen[1].at(indexV)->Fill(eventexcl->GetMxGenRange(),totalweight*triggereff_excl);
+         m_hVector_multhf[1].at(indexV)->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),totalweight*triggereff_excl);
+         m_hVector_etcalos[1].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())),totalweight*triggereff_excl);
+         m_hVector_tracks[1].at(indexV)->Fill(eventdiff->GetMultiplicityTracks(),totalweight*triggereff_excl);
+         m_hVector_pfetamax[1].at(indexV)->Fill(eventdiff->GetEtaMaxFromPFCands(),totalweight*triggereff_excl);
+         m_hVector_pfetamin[1].at(indexV)->Fill(eventdiff->GetEtaMinFromPFCands(),totalweight*triggereff_excl);
+         m_hVector_asumE[1].at(indexV)->Fill(aSumE_,totalweight*triggereff_excl);
+         m_hVector_deltaetajets[1].at(indexV)->Fill(eventexcl->GetJetsDeltaEta(),totalweight*triggereff_excl);
+         m_hVector_deltaphijets[1].at(indexV)->Fill(deltaphi_,totalweight*triggereff_excl);
+         m_hVector_deltaptjets[1].at(indexV)->Fill(eventexcl->GetJetsDeltaPt(),totalweight*triggereff_excl);
+         m_hVector_dijetmass[1].at(indexV)->Fill(eventexcl->GetMassDijets(),totalweight*triggereff_excl);
+         m_hVector_ptjet1[1].at(indexV)->Fill(eventexcl->GetLeadingJetPt(),totalweight*triggereff_excl);
+         m_hVector_ptjet2[1].at(indexV)->Fill(eventexcl->GetSecondJetPt(),totalweight*triggereff_excl);
+         m_hVector_etajet1[1].at(indexV)->Fill(eventexcl->GetLeadingJetEta(),totalweight*triggereff_excl);
+         m_hVector_etajet2[1].at(indexV)->Fill(eventexcl->GetSecondJetEta(),totalweight*triggereff_excl);
+         m_hVector_phijet1[1].at(indexV)->Fill(eventexcl->GetLeadingJetPhi(),totalweight*triggereff_excl);
+         m_hVector_phijet2[1].at(indexV)->Fill(eventexcl->GetSecondJetPhi(),totalweight*triggereff_excl);
+         m_hVector_sumEHFplus[1].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight*triggereff_excl);
+         m_hVector_sumEHFminus[1].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight*triggereff_excl);
+         m_hVector_sumEHEplus[1].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus(),totalweight*triggereff_excl);
+         m_hVector_sumEHEminus[1].at(indexV)->Fill(eventdiff->GetSumEnergyHEMinus(),totalweight*triggereff_excl);
+         m_hVector_sumEHFpfplus[1].at(indexV)->Fill(eventexcl->GetSumEHFPFlowPlus(),totalweight*triggereff_excl);
+         m_hVector_sumEHFpfminus[1].at(indexV)->Fill(eventexcl->GetSumEHFPFlowMinus(),totalweight*triggereff_excl);
+         m_hVector_deltaEtaPF[1].at(indexV)->Fill(deltaetapf_,totalweight*triggereff_excl);
+         m_hVector_absdeltaEtaPF[1].at(indexV)->Fill(absdeltaetapf_,totalweight*triggereff_excl);
+         m_hVector_vertex[1].at(indexV)->Fill(eventexcl->GetNVertex(),totalweight*triggereff_excl);
          m_hVector_lumi[1].at(indexV)->Fill(eventinfo->GetInstLumiBunch());
 
          for(int ieta = 29,iring = 0; ieta <= 41; ++ieta,++iring){
-             m_hVector_sumEHFplusVsiEta[1][iring]->Fill(eventdiff->GetSumEHFPlusVsiEta(iring),totalweight);
-             m_hVector_sumEHFminusVsiEta[1][iring]->Fill(eventdiff->GetSumEHFMinusVsiEta(iring),totalweight);
+             m_hVector_sumEHFplusVsiEta[1][iring]->Fill(eventdiff->GetSumEHFPlusVsiEta(iring),totalweight*triggereff_excl);
+             m_hVector_sumEHFminusVsiEta[1][iring]->Fill(eventdiff->GetSumEHFMinusVsiEta(iring),totalweight*triggereff_excl);
          }
 
          //////////////////////////////////////////////////
@@ -682,7 +713,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
 	 if(eventexcl->GetNVertex() > 0 && eventexcl->GetNVertex()<= optnVertex){
 //         if(eventexcl->GetNVertex() > 0 && eventexcl->GetNVertex()>= optnVertex){
 
-            counterJetsstep1+=totalweight; 
+            counterJetsstep1+=totalweight*triggereff_vertex; 
 
 	    //---------->>
 
@@ -703,39 +734,39 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
 
 	    // STEP1        
 	    //////////////////////////////////////////////////
-            m_hVector_rjj[2].at(indexV)->Fill(eventexcl->GetRjjFromJets(),totalweight);
-            m_hVector_detagen[2].at(indexV)->Fill(eventexcl->GetDeltaEtaGen(),totalweight);
-            m_hVector_mxGen[2].at(indexV)->Fill(eventexcl->GetMxGenRange(),totalweight);
-            m_hVector_multhf[2].at(indexV)->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),totalweight);
-            m_hVector_etcalos[2].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())),totalweight);
-            m_hVector_tracks[2].at(indexV)->Fill(eventdiff->GetMultiplicityTracks(),totalweight);
-            m_hVector_pfetamax[2].at(indexV)->Fill(eventdiff->GetEtaMaxFromPFCands(),totalweight);
-            m_hVector_pfetamin[2].at(indexV)->Fill(eventdiff->GetEtaMinFromPFCands(),totalweight);
-            m_hVector_asumE[2].at(indexV)->Fill(aSumE_,totalweight);
-            m_hVector_deltaetajets[2].at(indexV)->Fill(eventexcl->GetJetsDeltaEta(),totalweight);
-            m_hVector_deltaphijets[2].at(indexV)->Fill(deltaphi_,totalweight);
-            m_hVector_deltaptjets[2].at(indexV)->Fill(eventexcl->GetJetsDeltaPt(),totalweight);
-            m_hVector_dijetmass[2].at(indexV)->Fill(eventexcl->GetMassDijets(),totalweight);
-            m_hVector_ptjet1[2].at(indexV)->Fill(eventexcl->GetLeadingJetPt(),totalweight);
-            m_hVector_ptjet2[2].at(indexV)->Fill(eventexcl->GetSecondJetPt(),totalweight);
-            m_hVector_etajet1[2].at(indexV)->Fill(eventexcl->GetLeadingJetEta(),totalweight);
-            m_hVector_etajet2[2].at(indexV)->Fill(eventexcl->GetSecondJetEta(),totalweight);
-            m_hVector_phijet1[2].at(indexV)->Fill(eventexcl->GetLeadingJetPhi(),totalweight);
-            m_hVector_phijet2[2].at(indexV)->Fill(eventexcl->GetSecondJetPhi(),totalweight);
-            m_hVector_sumEHFplus[2].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight);
-            m_hVector_sumEHFminus[2].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight);
-            m_hVector_sumEHEplus[2].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus(),totalweight);
-            m_hVector_sumEHEminus[2].at(indexV)->Fill(eventdiff->GetSumEnergyHEMinus(),totalweight);
-            m_hVector_sumEHFpfplus[2].at(indexV)->Fill(eventexcl->GetSumEHFPFlowPlus(),totalweight);
-            m_hVector_sumEHFpfminus[2].at(indexV)->Fill(eventexcl->GetSumEHFPFlowMinus(),totalweight);
-            m_hVector_deltaEtaPF[2].at(indexV)->Fill(deltaetapf_,totalweight);
-            m_hVector_absdeltaEtaPF[2].at(indexV)->Fill(absdeltaetapf_,totalweight);
-            m_hVector_vertex[2].at(indexV)->Fill(eventexcl->GetNVertex(),totalweight);
+            m_hVector_rjj[2].at(indexV)->Fill(eventexcl->GetRjjFromJets(),totalweight*triggereff_vertex);
+            m_hVector_detagen[2].at(indexV)->Fill(eventexcl->GetDeltaEtaGen(),totalweight*triggereff_vertex);
+            m_hVector_mxGen[2].at(indexV)->Fill(eventexcl->GetMxGenRange(),totalweight*triggereff_vertex);
+            m_hVector_multhf[2].at(indexV)->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),totalweight*triggereff_vertex);
+            m_hVector_etcalos[2].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())),totalweight*triggereff_vertex);
+            m_hVector_tracks[2].at(indexV)->Fill(eventdiff->GetMultiplicityTracks(),totalweight*triggereff_vertex);
+            m_hVector_pfetamax[2].at(indexV)->Fill(eventdiff->GetEtaMaxFromPFCands(),totalweight*triggereff_vertex);
+            m_hVector_pfetamin[2].at(indexV)->Fill(eventdiff->GetEtaMinFromPFCands(),totalweight*triggereff_vertex);
+            m_hVector_asumE[2].at(indexV)->Fill(aSumE_,totalweight*triggereff_vertex);
+            m_hVector_deltaetajets[2].at(indexV)->Fill(eventexcl->GetJetsDeltaEta(),totalweight*triggereff_vertex);
+            m_hVector_deltaphijets[2].at(indexV)->Fill(deltaphi_,totalweight*triggereff_vertex);
+            m_hVector_deltaptjets[2].at(indexV)->Fill(eventexcl->GetJetsDeltaPt(),totalweight*triggereff_vertex);
+            m_hVector_dijetmass[2].at(indexV)->Fill(eventexcl->GetMassDijets(),totalweight*triggereff_vertex);
+            m_hVector_ptjet1[2].at(indexV)->Fill(eventexcl->GetLeadingJetPt(),totalweight*triggereff_vertex);
+            m_hVector_ptjet2[2].at(indexV)->Fill(eventexcl->GetSecondJetPt(),totalweight*triggereff_vertex);
+            m_hVector_etajet1[2].at(indexV)->Fill(eventexcl->GetLeadingJetEta(),totalweight*triggereff_vertex);
+            m_hVector_etajet2[2].at(indexV)->Fill(eventexcl->GetSecondJetEta(),totalweight*triggereff_vertex);
+            m_hVector_phijet1[2].at(indexV)->Fill(eventexcl->GetLeadingJetPhi(),totalweight*triggereff_vertex);
+            m_hVector_phijet2[2].at(indexV)->Fill(eventexcl->GetSecondJetPhi(),totalweight*triggereff_vertex);
+            m_hVector_sumEHFplus[2].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight*triggereff_vertex);
+            m_hVector_sumEHFminus[2].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight*triggereff_vertex);
+            m_hVector_sumEHEplus[2].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus(),totalweight*triggereff_vertex);
+            m_hVector_sumEHEminus[2].at(indexV)->Fill(eventdiff->GetSumEnergyHEMinus(),totalweight*triggereff_vertex);
+            m_hVector_sumEHFpfplus[2].at(indexV)->Fill(eventexcl->GetSumEHFPFlowPlus(),totalweight*triggereff_vertex);
+            m_hVector_sumEHFpfminus[2].at(indexV)->Fill(eventexcl->GetSumEHFPFlowMinus(),totalweight*triggereff_vertex);
+            m_hVector_deltaEtaPF[2].at(indexV)->Fill(deltaetapf_,totalweight*triggereff_vertex);
+            m_hVector_absdeltaEtaPF[2].at(indexV)->Fill(absdeltaetapf_,totalweight*triggereff_vertex);
+            m_hVector_vertex[2].at(indexV)->Fill(eventexcl->GetNVertex(),totalweight*triggereff_vertex);
             m_hVector_lumi[2].at(indexV)->Fill(eventinfo->GetInstLumiBunch());
 
             for(int ieta = 29,iring = 0; ieta <= 41; ++ieta,++iring){
-               m_hVector_sumEHFplusVsiEta[2][iring]->Fill(eventdiff->GetSumEHFPlusVsiEta(iring),totalweight);
-               m_hVector_sumEHFminusVsiEta[2][iring]->Fill(eventdiff->GetSumEHFMinusVsiEta(iring),totalweight);
+               m_hVector_sumEHFplusVsiEta[2][iring]->Fill(eventdiff->GetSumEHFPlusVsiEta(iring),totalweight*triggereff_vertex);
+               m_hVector_sumEHFminusVsiEta[2][iring]->Fill(eventdiff->GetSumEHFMinusVsiEta(iring),totalweight*triggereff_vertex);
             }
 
 	    //////////////////////////////////////////////////
@@ -744,86 +775,86 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
 	    // Setting Analysis Cut
 	    if (eventexcl->GetLeadingJetP4().Pt() > jet1PT && eventexcl->GetSecondJetP4().Pt() > jet2PT ){
 
-	       counterJetsstep2+=totalweight;
+	       counterJetsstep2+=totalweight*triggereff_vertex;
 
 	       // STEP2         
 	       ////////////////////////////////////////////////
-               m_hVector_rjj[3].at(indexV)->Fill(eventexcl->GetRjjFromJets(),totalweight);
-               m_hVector_detagen[3].at(indexV)->Fill(eventexcl->GetDeltaEtaGen(),totalweight);
-               m_hVector_mxGen[3].at(indexV)->Fill(eventexcl->GetMxGenRange(),totalweight);
-               m_hVector_multhf[3].at(indexV)->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),totalweight);
-               m_hVector_etcalos[3].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())),totalweight);
-               m_hVector_tracks[3].at(indexV)->Fill(eventdiff->GetMultiplicityTracks(),totalweight);
-               m_hVector_pfetamax[3].at(indexV)->Fill(eventdiff->GetEtaMaxFromPFCands(),totalweight);
-               m_hVector_pfetamin[3].at(indexV)->Fill(eventdiff->GetEtaMinFromPFCands(),totalweight);
-               m_hVector_asumE[3].at(indexV)->Fill(aSumE_,totalweight);
-               m_hVector_deltaetajets[3].at(indexV)->Fill(eventexcl->GetJetsDeltaEta(),totalweight);
-               m_hVector_deltaphijets[3].at(indexV)->Fill(deltaphi_,totalweight);
-               m_hVector_deltaptjets[3].at(indexV)->Fill(eventexcl->GetJetsDeltaPt(),totalweight);
-               m_hVector_dijetmass[3].at(indexV)->Fill(eventexcl->GetMassDijets(),totalweight);
-               m_hVector_ptjet1[3].at(indexV)->Fill(eventexcl->GetLeadingJetPt(),totalweight);
-               m_hVector_ptjet2[3].at(indexV)->Fill(eventexcl->GetSecondJetPt(),totalweight);
-               m_hVector_etajet1[3].at(indexV)->Fill(eventexcl->GetLeadingJetEta(),totalweight);
-               m_hVector_etajet2[3].at(indexV)->Fill(eventexcl->GetSecondJetEta(),totalweight);
-               m_hVector_phijet1[3].at(indexV)->Fill(eventexcl->GetLeadingJetPhi(),totalweight);
-               m_hVector_phijet2[3].at(indexV)->Fill(eventexcl->GetSecondJetPhi(),totalweight);
-               m_hVector_sumEHFplus[3].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight);
-               m_hVector_sumEHFminus[3].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight);
-               m_hVector_sumEHEplus[3].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus(),totalweight);
-               m_hVector_sumEHEminus[3].at(indexV)->Fill(eventdiff->GetSumEnergyHEMinus(),totalweight);
-               m_hVector_sumEHFpfplus[3].at(indexV)->Fill(eventexcl->GetSumEHFPFlowPlus(),totalweight);
-               m_hVector_sumEHFpfminus[3].at(indexV)->Fill(eventexcl->GetSumEHFPFlowMinus(),totalweight);
-               m_hVector_deltaEtaPF[3].at(indexV)->Fill(deltaetapf_,totalweight);
-               m_hVector_absdeltaEtaPF[3].at(indexV)->Fill(absdeltaetapf_,totalweight);
-               m_hVector_vertex[3].at(indexV)->Fill(eventexcl->GetNVertex(),totalweight);
+               m_hVector_rjj[3].at(indexV)->Fill(eventexcl->GetRjjFromJets(),totalweight*triggereff_vertex);
+               m_hVector_detagen[3].at(indexV)->Fill(eventexcl->GetDeltaEtaGen(),totalweight*triggereff_vertex);
+               m_hVector_mxGen[3].at(indexV)->Fill(eventexcl->GetMxGenRange(),totalweight*triggereff_vertex);
+               m_hVector_multhf[3].at(indexV)->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),totalweight*triggereff_vertex);
+               m_hVector_etcalos[3].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())),totalweight*triggereff_vertex);
+               m_hVector_tracks[3].at(indexV)->Fill(eventdiff->GetMultiplicityTracks(),totalweight*triggereff_vertex);
+               m_hVector_pfetamax[3].at(indexV)->Fill(eventdiff->GetEtaMaxFromPFCands(),totalweight*triggereff_vertex);
+               m_hVector_pfetamin[3].at(indexV)->Fill(eventdiff->GetEtaMinFromPFCands(),totalweight*triggereff_vertex);
+               m_hVector_asumE[3].at(indexV)->Fill(aSumE_,totalweight*triggereff_vertex);
+               m_hVector_deltaetajets[3].at(indexV)->Fill(eventexcl->GetJetsDeltaEta(),totalweight*triggereff_vertex);
+               m_hVector_deltaphijets[3].at(indexV)->Fill(deltaphi_,totalweight*triggereff_vertex);
+               m_hVector_deltaptjets[3].at(indexV)->Fill(eventexcl->GetJetsDeltaPt(),totalweight*triggereff_vertex);
+               m_hVector_dijetmass[3].at(indexV)->Fill(eventexcl->GetMassDijets(),totalweight*triggereff_vertex);
+               m_hVector_ptjet1[3].at(indexV)->Fill(eventexcl->GetLeadingJetPt(),totalweight*triggereff_vertex);
+               m_hVector_ptjet2[3].at(indexV)->Fill(eventexcl->GetSecondJetPt(),totalweight*triggereff_vertex);
+               m_hVector_etajet1[3].at(indexV)->Fill(eventexcl->GetLeadingJetEta(),totalweight*triggereff_vertex);
+               m_hVector_etajet2[3].at(indexV)->Fill(eventexcl->GetSecondJetEta(),totalweight*triggereff_vertex);
+               m_hVector_phijet1[3].at(indexV)->Fill(eventexcl->GetLeadingJetPhi(),totalweight*triggereff_vertex);
+               m_hVector_phijet2[3].at(indexV)->Fill(eventexcl->GetSecondJetPhi(),totalweight*triggereff_vertex);
+               m_hVector_sumEHFplus[3].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight*triggereff_vertex);
+               m_hVector_sumEHFminus[3].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight*triggereff_vertex);
+               m_hVector_sumEHEplus[3].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus(),totalweight*triggereff_vertex);
+               m_hVector_sumEHEminus[3].at(indexV)->Fill(eventdiff->GetSumEnergyHEMinus(),totalweight*triggereff_vertex);
+               m_hVector_sumEHFpfplus[3].at(indexV)->Fill(eventexcl->GetSumEHFPFlowPlus(),totalweight*triggereff_vertex);
+               m_hVector_sumEHFpfminus[3].at(indexV)->Fill(eventexcl->GetSumEHFPFlowMinus(),totalweight*triggereff_vertex);
+               m_hVector_deltaEtaPF[3].at(indexV)->Fill(deltaetapf_,totalweight*triggereff_vertex);
+               m_hVector_absdeltaEtaPF[3].at(indexV)->Fill(absdeltaetapf_,totalweight*triggereff_vertex);
+               m_hVector_vertex[3].at(indexV)->Fill(eventexcl->GetNVertex(),totalweight*triggereff_vertex);
                m_hVector_lumi[3].at(indexV)->Fill(eventinfo->GetInstLumiBunch());
 
                for(int ieta = 29,iring = 0; ieta <= 41; ++ieta,++iring){
-                  m_hVector_sumEHFplusVsiEta[3][iring]->Fill(eventdiff->GetSumEHFPlusVsiEta(iring),totalweight);
-                  m_hVector_sumEHFminusVsiEta[3][iring]->Fill(eventdiff->GetSumEHFMinusVsiEta(iring),totalweight);
+                  m_hVector_sumEHFplusVsiEta[3][iring]->Fill(eventdiff->GetSumEHFPlusVsiEta(iring),totalweight*triggereff_vertex);
+                  m_hVector_sumEHFminusVsiEta[3][iring]->Fill(eventdiff->GetSumEHFMinusVsiEta(iring),totalweight*triggereff_vertex);
                }
 
                ////////////////////////////////////////////////
  
 	       if (eventexcl->GetLeadingJetP4().Eta() < 5.2 && eventexcl->GetSecondJetP4().Eta() < 5.2 && eventexcl->GetLeadingJetP4().Eta() > -5.2 && eventexcl->GetSecondJetP4().Eta() > -5.2){
 
-		  counterJetsAllstep3+=totalweight;
+		  counterJetsAllstep3+=totalweight*triggereff_vertex;
 
 		  // ALL - STEP3         
 		  ////////////////////////////////////////////////
-                  m_hVector_rjj[4].at(indexV)->Fill(eventexcl->GetRjjFromJets(),totalweight);
-                  m_hVector_detagen[4].at(indexV)->Fill(eventexcl->GetDeltaEtaGen(),totalweight);
-		  m_hVector_mxGen[4].at(indexV)->Fill(eventexcl->GetMxGenRange(),totalweight);
-		  m_hVector_multhf[4].at(indexV)->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),totalweight);
-		  m_hVector_etcalos[4].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())),totalweight);
-		  m_hVector_tracks[4].at(indexV)->Fill(eventdiff->GetMultiplicityTracks(),totalweight);
-		  m_hVector_pfetamax[4].at(indexV)->Fill(eventdiff->GetEtaMaxFromPFCands(),totalweight);
-		  m_hVector_pfetamin[4].at(indexV)->Fill(eventdiff->GetEtaMinFromPFCands(),totalweight);
-		  m_hVector_asumE[4].at(indexV)->Fill(aSumE_,totalweight);
-		  m_hVector_deltaetajets[4].at(indexV)->Fill(eventexcl->GetJetsDeltaEta(),totalweight);
-		  m_hVector_deltaphijets[4].at(indexV)->Fill(deltaphi_,totalweight);
-		  m_hVector_deltaptjets[4].at(indexV)->Fill(eventexcl->GetJetsDeltaPt(),totalweight);
-		  m_hVector_dijetmass[4].at(indexV)->Fill(eventexcl->GetMassDijets(),totalweight);
-		  m_hVector_ptjet1[4].at(indexV)->Fill(eventexcl->GetLeadingJetPt(),totalweight);
-		  m_hVector_ptjet2[4].at(indexV)->Fill(eventexcl->GetSecondJetPt(),totalweight);
-		  m_hVector_etajet1[4].at(indexV)->Fill(eventexcl->GetLeadingJetEta(),totalweight);
-		  m_hVector_etajet2[4].at(indexV)->Fill(eventexcl->GetSecondJetEta(),totalweight);
-		  m_hVector_phijet1[4].at(indexV)->Fill(eventexcl->GetLeadingJetPhi(),totalweight);
-	          m_hVector_phijet2[4].at(indexV)->Fill(eventexcl->GetSecondJetPhi(),totalweight);
-		  m_hVector_sumEHFplus[4].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight);
-		  m_hVector_sumEHFminus[4].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight);
-		  m_hVector_sumEHEplus[4].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus(),totalweight);
-		  m_hVector_sumEHEminus[4].at(indexV)->Fill(eventdiff->GetSumEnergyHEMinus(),totalweight);
-		  m_hVector_sumEHFpfplus[4].at(indexV)->Fill(eventexcl->GetSumEHFPFlowPlus(),totalweight);
-		  m_hVector_sumEHFpfminus[4].at(indexV)->Fill(eventexcl->GetSumEHFPFlowMinus(),totalweight);
-		  m_hVector_deltaEtaPF[4].at(indexV)->Fill(deltaetapf_,totalweight);
-		  m_hVector_absdeltaEtaPF[4].at(indexV)->Fill(absdeltaetapf_,totalweight);
-		  m_hVector_vertex[4].at(indexV)->Fill(eventexcl->GetNVertex(),totalweight);
+                  m_hVector_rjj[4].at(indexV)->Fill(eventexcl->GetRjjFromJets(),totalweight*triggereff_vertex);
+                  m_hVector_detagen[4].at(indexV)->Fill(eventexcl->GetDeltaEtaGen(),totalweight*triggereff_vertex);
+		  m_hVector_mxGen[4].at(indexV)->Fill(eventexcl->GetMxGenRange(),totalweight*triggereff_vertex);
+		  m_hVector_multhf[4].at(indexV)->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),totalweight*triggereff_vertex);
+		  m_hVector_etcalos[4].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())),totalweight*triggereff_vertex);
+		  m_hVector_tracks[4].at(indexV)->Fill(eventdiff->GetMultiplicityTracks(),totalweight*triggereff_vertex);
+		  m_hVector_pfetamax[4].at(indexV)->Fill(eventdiff->GetEtaMaxFromPFCands(),totalweight*triggereff_vertex);
+		  m_hVector_pfetamin[4].at(indexV)->Fill(eventdiff->GetEtaMinFromPFCands(),totalweight*triggereff_vertex);
+		  m_hVector_asumE[4].at(indexV)->Fill(aSumE_,totalweight*triggereff_vertex);
+		  m_hVector_deltaetajets[4].at(indexV)->Fill(eventexcl->GetJetsDeltaEta(),totalweight*triggereff_vertex);
+		  m_hVector_deltaphijets[4].at(indexV)->Fill(deltaphi_,totalweight*triggereff_vertex);
+		  m_hVector_deltaptjets[4].at(indexV)->Fill(eventexcl->GetJetsDeltaPt(),totalweight*triggereff_vertex);
+		  m_hVector_dijetmass[4].at(indexV)->Fill(eventexcl->GetMassDijets(),totalweight*triggereff_vertex);
+		  m_hVector_ptjet1[4].at(indexV)->Fill(eventexcl->GetLeadingJetPt(),totalweight*triggereff_vertex);
+		  m_hVector_ptjet2[4].at(indexV)->Fill(eventexcl->GetSecondJetPt(),totalweight*triggereff_vertex);
+		  m_hVector_etajet1[4].at(indexV)->Fill(eventexcl->GetLeadingJetEta(),totalweight*triggereff_vertex);
+		  m_hVector_etajet2[4].at(indexV)->Fill(eventexcl->GetSecondJetEta(),totalweight*triggereff_vertex);
+		  m_hVector_phijet1[4].at(indexV)->Fill(eventexcl->GetLeadingJetPhi(),totalweight*triggereff_vertex);
+	          m_hVector_phijet2[4].at(indexV)->Fill(eventexcl->GetSecondJetPhi(),totalweight*triggereff_vertex);
+		  m_hVector_sumEHFplus[4].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight*triggereff_vertex);
+		  m_hVector_sumEHFminus[4].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight*triggereff_vertex);
+		  m_hVector_sumEHEplus[4].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus(),totalweight*triggereff_vertex);
+		  m_hVector_sumEHEminus[4].at(indexV)->Fill(eventdiff->GetSumEnergyHEMinus(),totalweight*triggereff_vertex);
+		  m_hVector_sumEHFpfplus[4].at(indexV)->Fill(eventexcl->GetSumEHFPFlowPlus(),totalweight*triggereff_vertex);
+		  m_hVector_sumEHFpfminus[4].at(indexV)->Fill(eventexcl->GetSumEHFPFlowMinus(),totalweight*triggereff_vertex);
+		  m_hVector_deltaEtaPF[4].at(indexV)->Fill(deltaetapf_,totalweight*triggereff_vertex);
+		  m_hVector_absdeltaEtaPF[4].at(indexV)->Fill(absdeltaetapf_,totalweight*triggereff_vertex);
+		  m_hVector_vertex[4].at(indexV)->Fill(eventexcl->GetNVertex(),totalweight*triggereff_vertex);
                   m_hVector_lumi[4].at(indexV)->Fill(eventinfo->GetInstLumiBunch());
 
                   for(int ieta = 29,iring = 0; ieta <= 41; ++ieta,++iring){
-                     m_hVector_sumEHFplusVsiEta[4][iring]->Fill(eventdiff->GetSumEHFPlusVsiEta(iring),totalweight);
-                     m_hVector_sumEHFminusVsiEta[4][iring]->Fill(eventdiff->GetSumEHFMinusVsiEta(iring),totalweight);
+                     m_hVector_sumEHFplusVsiEta[4][iring]->Fill(eventdiff->GetSumEHFPlusVsiEta(iring),totalweight*triggereff_vertex);
+                     m_hVector_sumEHFminusVsiEta[4][iring]->Fill(eventdiff->GetSumEHFMinusVsiEta(iring),totalweight*triggereff_vertex);
                   }
 
 		  //////////////////////////////////////////////////////////////////////////////////////////
@@ -831,160 +862,160 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
 		  // Eta max and Eta min cut
 		  if (eventdiff->GetEtaMinFromPFCands() > -4. && eventdiff->GetEtaMaxFromPFCands() < 4.){
 
-                     counterJetsAllstep4_4+=totalweight;
-		     m_hVector_rjj[5].at(indexV)->Fill(eventexcl->GetRjjFromJets(),totalweight);
-		     m_hVector_detagen[5].at(indexV)->Fill(eventexcl->GetDeltaEtaGen(),totalweight);
-		     m_hVector_mxGen[5].at(indexV)->Fill(eventexcl->GetMxGenRange(),totalweight);
-		     m_hVector_multhf[5].at(indexV)->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),totalweight);
-		     m_hVector_etcalos[5].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())),totalweight);
-		     m_hVector_tracks[5].at(indexV)->Fill(eventdiff->GetMultiplicityTracks(),totalweight);
-		     m_hVector_pfetamax[5].at(indexV)->Fill(eventdiff->GetEtaMaxFromPFCands(),totalweight);
-		     m_hVector_pfetamin[5].at(indexV)->Fill(eventdiff->GetEtaMinFromPFCands(),totalweight);
-		     m_hVector_asumE[5].at(indexV)->Fill(aSumE_,totalweight);
-		     m_hVector_deltaetajets[5].at(indexV)->Fill(eventexcl->GetJetsDeltaEta(),totalweight);
-		     m_hVector_deltaphijets[5].at(indexV)->Fill(deltaphi_,totalweight);
-		     m_hVector_deltaptjets[5].at(indexV)->Fill(eventexcl->GetJetsDeltaPt(),totalweight);
-		     m_hVector_dijetmass[5].at(indexV)->Fill(eventexcl->GetMassDijets(),totalweight);
-		     m_hVector_ptjet1[5].at(indexV)->Fill(eventexcl->GetLeadingJetPt(),totalweight);
-		     m_hVector_ptjet2[5].at(indexV)->Fill(eventexcl->GetSecondJetPt(),totalweight);
-		     m_hVector_etajet1[5].at(indexV)->Fill(eventexcl->GetLeadingJetEta(),totalweight);
-		     m_hVector_etajet2[5].at(indexV)->Fill(eventexcl->GetSecondJetEta(),totalweight);
-		     m_hVector_phijet1[5].at(indexV)->Fill(eventexcl->GetLeadingJetPhi(),totalweight);
-		     m_hVector_phijet2[5].at(indexV)->Fill(eventexcl->GetSecondJetPhi(),totalweight);
-		     m_hVector_sumEHFplus[5].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight);
-		     m_hVector_sumEHFminus[5].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight);
-		     m_hVector_sumEHEplus[5].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus(),totalweight);
-		     m_hVector_sumEHEminus[5].at(indexV)->Fill(eventdiff->GetSumEnergyHEMinus(),totalweight);
-		     m_hVector_sumEHFpfplus[5].at(indexV)->Fill(eventexcl->GetSumEHFPFlowPlus(),totalweight);
-		     m_hVector_sumEHFpfminus[5].at(indexV)->Fill(eventexcl->GetSumEHFPFlowMinus(),totalweight);
-		     m_hVector_deltaEtaPF[5].at(indexV)->Fill(deltaetapf_,totalweight);
-		     m_hVector_absdeltaEtaPF[5].at(indexV)->Fill(absdeltaetapf_,totalweight);
-		     m_hVector_vertex[5].at(indexV)->Fill(eventexcl->GetNVertex(),totalweight);
+                     counterJetsAllstep4_4+=totalweight*triggereff_step4_4;
+		     m_hVector_rjj[5].at(indexV)->Fill(eventexcl->GetRjjFromJets(),totalweight*triggereff_step4_4);
+		     m_hVector_detagen[5].at(indexV)->Fill(eventexcl->GetDeltaEtaGen(),totalweight*triggereff_step4_4);
+		     m_hVector_mxGen[5].at(indexV)->Fill(eventexcl->GetMxGenRange(),totalweight*triggereff_step4_4);
+		     m_hVector_multhf[5].at(indexV)->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),totalweight*triggereff_step4_4);
+		     m_hVector_etcalos[5].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())),totalweight*triggereff_step4_4);
+		     m_hVector_tracks[5].at(indexV)->Fill(eventdiff->GetMultiplicityTracks(),totalweight*triggereff_step4_4);
+		     m_hVector_pfetamax[5].at(indexV)->Fill(eventdiff->GetEtaMaxFromPFCands(),totalweight*triggereff_step4_4);
+		     m_hVector_pfetamin[5].at(indexV)->Fill(eventdiff->GetEtaMinFromPFCands(),totalweight*triggereff_step4_4);
+		     m_hVector_asumE[5].at(indexV)->Fill(aSumE_,totalweight*triggereff_step4_4);
+		     m_hVector_deltaetajets[5].at(indexV)->Fill(eventexcl->GetJetsDeltaEta(),totalweight*triggereff_step4_4);
+		     m_hVector_deltaphijets[5].at(indexV)->Fill(deltaphi_,totalweight*triggereff_step4_4);
+		     m_hVector_deltaptjets[5].at(indexV)->Fill(eventexcl->GetJetsDeltaPt(),totalweight*triggereff_step4_4);
+		     m_hVector_dijetmass[5].at(indexV)->Fill(eventexcl->GetMassDijets(),totalweight*triggereff_step4_4);
+		     m_hVector_ptjet1[5].at(indexV)->Fill(eventexcl->GetLeadingJetPt(),totalweight*triggereff_step4_4);
+		     m_hVector_ptjet2[5].at(indexV)->Fill(eventexcl->GetSecondJetPt(),totalweight*triggereff_step4_4);
+		     m_hVector_etajet1[5].at(indexV)->Fill(eventexcl->GetLeadingJetEta(),totalweight*triggereff_step4_4);
+		     m_hVector_etajet2[5].at(indexV)->Fill(eventexcl->GetSecondJetEta(),totalweight*triggereff_step4_4);
+		     m_hVector_phijet1[5].at(indexV)->Fill(eventexcl->GetLeadingJetPhi(),totalweight*triggereff_step4_4);
+		     m_hVector_phijet2[5].at(indexV)->Fill(eventexcl->GetSecondJetPhi(),totalweight*triggereff_step4_4);
+		     m_hVector_sumEHFplus[5].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight*triggereff_step4_4);
+		     m_hVector_sumEHFminus[5].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight*triggereff_step4_4);
+		     m_hVector_sumEHEplus[5].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus(),totalweight*triggereff_step4_4);
+		     m_hVector_sumEHEminus[5].at(indexV)->Fill(eventdiff->GetSumEnergyHEMinus(),totalweight*triggereff_step4_4);
+		     m_hVector_sumEHFpfplus[5].at(indexV)->Fill(eventexcl->GetSumEHFPFlowPlus(),totalweight*triggereff_step4_4);
+		     m_hVector_sumEHFpfminus[5].at(indexV)->Fill(eventexcl->GetSumEHFPFlowMinus(),totalweight*triggereff_step4_4);
+		     m_hVector_deltaEtaPF[5].at(indexV)->Fill(deltaetapf_,totalweight*triggereff_step4_4);
+		     m_hVector_absdeltaEtaPF[5].at(indexV)->Fill(absdeltaetapf_,totalweight*triggereff_step4_4);
+		     m_hVector_vertex[5].at(indexV)->Fill(eventexcl->GetNVertex(),totalweight*triggereff_step4_4);
                      m_hVector_lumi[5].at(indexV)->Fill(eventinfo->GetInstLumiBunch());
 
                      for(int ieta = 29,iring = 0; ieta <= 41; ++ieta,++iring){
-                       m_hVector_sumEHFplusVsiEta[5][iring]->Fill(eventdiff->GetSumEHFPlusVsiEta(iring),totalweight);
-                       m_hVector_sumEHFminusVsiEta[5][iring]->Fill(eventdiff->GetSumEHFMinusVsiEta(iring),totalweight);
+                       m_hVector_sumEHFplusVsiEta[5][iring]->Fill(eventdiff->GetSumEHFPlusVsiEta(iring),totalweight*triggereff_step4_4);
+                       m_hVector_sumEHFminusVsiEta[5][iring]->Fill(eventdiff->GetSumEHFMinusVsiEta(iring),totalweight*triggereff_step4_4);
                      }
    
                   }
 
 		  if (eventdiff->GetEtaMinFromPFCands() > -3. && eventdiff->GetEtaMaxFromPFCands() < 3.){
 
-                     counterJetsAllstep4_3+=totalweight;
-		     m_hVector_rjj[6].at(indexV)->Fill(eventexcl->GetRjjFromJets(),totalweight);
-		     m_hVector_detagen[6].at(indexV)->Fill(eventexcl->GetDeltaEtaGen(),totalweight);
-		     m_hVector_mxGen[6].at(indexV)->Fill(eventexcl->GetMxGenRange(),totalweight);
-		     m_hVector_multhf[6].at(indexV)->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),totalweight);
-		     m_hVector_etcalos[6].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())),totalweight);
-		     m_hVector_tracks[6].at(indexV)->Fill(eventdiff->GetMultiplicityTracks(),totalweight);
-		     m_hVector_pfetamax[6].at(indexV)->Fill(eventdiff->GetEtaMaxFromPFCands(),totalweight);
-		     m_hVector_pfetamin[6].at(indexV)->Fill(eventdiff->GetEtaMinFromPFCands(),totalweight);
-		     m_hVector_asumE[6].at(indexV)->Fill(aSumE_,totalweight);
-		     m_hVector_deltaetajets[6].at(indexV)->Fill(eventexcl->GetJetsDeltaEta(),totalweight);
-		     m_hVector_deltaphijets[6].at(indexV)->Fill(deltaphi_,totalweight);
-		     m_hVector_deltaptjets[6].at(indexV)->Fill(eventexcl->GetJetsDeltaPt(),totalweight);
-		     m_hVector_dijetmass[6].at(indexV)->Fill(eventexcl->GetMassDijets(),totalweight);
-		     m_hVector_ptjet1[6].at(indexV)->Fill(eventexcl->GetLeadingJetPt(),totalweight);
-		     m_hVector_ptjet2[6].at(indexV)->Fill(eventexcl->GetSecondJetPt(),totalweight);
-		     m_hVector_etajet1[6].at(indexV)->Fill(eventexcl->GetLeadingJetEta(),totalweight);
-		     m_hVector_etajet2[6].at(indexV)->Fill(eventexcl->GetSecondJetEta(),totalweight);
-		     m_hVector_phijet1[6].at(indexV)->Fill(eventexcl->GetLeadingJetPhi(),totalweight);
-                     m_hVector_phijet2[6].at(indexV)->Fill(eventexcl->GetSecondJetPhi(),totalweight);
-                     m_hVector_sumEHFplus[6].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight);
-                     m_hVector_sumEHFminus[6].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight);
-                     m_hVector_sumEHEplus[6].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus(),totalweight);
-                     m_hVector_sumEHEminus[6].at(indexV)->Fill(eventdiff->GetSumEnergyHEMinus(),totalweight);
-                     m_hVector_sumEHFpfplus[6].at(indexV)->Fill(eventexcl->GetSumEHFPFlowPlus(),totalweight);
-                     m_hVector_sumEHFpfminus[6].at(indexV)->Fill(eventexcl->GetSumEHFPFlowMinus(),totalweight);
-                     m_hVector_deltaEtaPF[6].at(indexV)->Fill(deltaetapf_,totalweight);
-                     m_hVector_absdeltaEtaPF[6].at(indexV)->Fill(absdeltaetapf_,totalweight);
-                     m_hVector_vertex[6].at(indexV)->Fill(eventexcl->GetNVertex(),totalweight);
+                     counterJetsAllstep4_3+=totalweight*triggereff_step4_3;
+		     m_hVector_rjj[6].at(indexV)->Fill(eventexcl->GetRjjFromJets(),totalweight*triggereff_step4_3);
+		     m_hVector_detagen[6].at(indexV)->Fill(eventexcl->GetDeltaEtaGen(),totalweight*triggereff_step4_3);
+		     m_hVector_mxGen[6].at(indexV)->Fill(eventexcl->GetMxGenRange(),totalweight*triggereff_step4_3);
+		     m_hVector_multhf[6].at(indexV)->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),totalweight*triggereff_step4_3);
+		     m_hVector_etcalos[6].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())),totalweight*triggereff_step4_3);
+		     m_hVector_tracks[6].at(indexV)->Fill(eventdiff->GetMultiplicityTracks(),totalweight*triggereff_step4_3);
+		     m_hVector_pfetamax[6].at(indexV)->Fill(eventdiff->GetEtaMaxFromPFCands(),totalweight*triggereff_step4_3);
+		     m_hVector_pfetamin[6].at(indexV)->Fill(eventdiff->GetEtaMinFromPFCands(),totalweight*triggereff_step4_3);
+		     m_hVector_asumE[6].at(indexV)->Fill(aSumE_,totalweight*triggereff_step4_3);
+		     m_hVector_deltaetajets[6].at(indexV)->Fill(eventexcl->GetJetsDeltaEta(),totalweight*triggereff_step4_3);
+		     m_hVector_deltaphijets[6].at(indexV)->Fill(deltaphi_,totalweight*triggereff_step4_3);
+		     m_hVector_deltaptjets[6].at(indexV)->Fill(eventexcl->GetJetsDeltaPt(),totalweight*triggereff_step4_3);
+		     m_hVector_dijetmass[6].at(indexV)->Fill(eventexcl->GetMassDijets(),totalweight*triggereff_step4_3);
+		     m_hVector_ptjet1[6].at(indexV)->Fill(eventexcl->GetLeadingJetPt(),totalweight*triggereff_step4_3);
+		     m_hVector_ptjet2[6].at(indexV)->Fill(eventexcl->GetSecondJetPt(),totalweight*triggereff_step4_3);
+		     m_hVector_etajet1[6].at(indexV)->Fill(eventexcl->GetLeadingJetEta(),totalweight*triggereff_step4_3);
+		     m_hVector_etajet2[6].at(indexV)->Fill(eventexcl->GetSecondJetEta(),totalweight*triggereff_step4_3);
+		     m_hVector_phijet1[6].at(indexV)->Fill(eventexcl->GetLeadingJetPhi(),totalweight*triggereff_step4_3);
+                     m_hVector_phijet2[6].at(indexV)->Fill(eventexcl->GetSecondJetPhi(),totalweight*triggereff_step4_3);
+                     m_hVector_sumEHFplus[6].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight*triggereff_step4_3);
+                     m_hVector_sumEHFminus[6].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight*triggereff_step4_3);
+                     m_hVector_sumEHEplus[6].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus(),totalweight*triggereff_step4_3);
+                     m_hVector_sumEHEminus[6].at(indexV)->Fill(eventdiff->GetSumEnergyHEMinus(),totalweight*triggereff_step4_3);
+                     m_hVector_sumEHFpfplus[6].at(indexV)->Fill(eventexcl->GetSumEHFPFlowPlus(),totalweight*triggereff_step4_3);
+                     m_hVector_sumEHFpfminus[6].at(indexV)->Fill(eventexcl->GetSumEHFPFlowMinus(),totalweight*triggereff_step4_3);
+                     m_hVector_deltaEtaPF[6].at(indexV)->Fill(deltaetapf_,totalweight*triggereff_step4_3);
+                     m_hVector_absdeltaEtaPF[6].at(indexV)->Fill(absdeltaetapf_,totalweight*triggereff_step4_3);
+                     m_hVector_vertex[6].at(indexV)->Fill(eventexcl->GetNVertex(),totalweight*triggereff_step4_3);
                      m_hVector_lumi[6].at(indexV)->Fill(eventinfo->GetInstLumiBunch());
 
                      for(int ieta = 29,iring = 0; ieta <= 41; ++ieta,++iring){
-                       m_hVector_sumEHFplusVsiEta[6][iring]->Fill(eventdiff->GetSumEHFPlusVsiEta(iring),totalweight);
-                       m_hVector_sumEHFminusVsiEta[6][iring]->Fill(eventdiff->GetSumEHFMinusVsiEta(iring),totalweight);
+                       m_hVector_sumEHFplusVsiEta[6][iring]->Fill(eventdiff->GetSumEHFPlusVsiEta(iring),totalweight*triggereff_step4_3);
+                       m_hVector_sumEHFminusVsiEta[6][iring]->Fill(eventdiff->GetSumEHFMinusVsiEta(iring),totalweight*triggereff_step4_3);
                      }
 
 		  }
 
 		  if (eventdiff->GetEtaMinFromPFCands() > -2. && eventdiff->GetEtaMaxFromPFCands() < 2.){
 
-                     counterJetsAllstep4_2+=totalweight;
-		     m_hVector_rjj[7].at(indexV)->Fill(eventexcl->GetRjjFromJets(),totalweight);
-		     m_hVector_detagen[7].at(indexV)->Fill(eventexcl->GetDeltaEtaGen(),totalweight);
-		     m_hVector_mxGen[7].at(indexV)->Fill(eventexcl->GetMxGenRange(),totalweight);
-		     m_hVector_multhf[7].at(indexV)->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),totalweight);
-		     m_hVector_etcalos[7].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())),totalweight);
-		     m_hVector_tracks[7].at(indexV)->Fill(eventdiff->GetMultiplicityTracks(),totalweight);
-		     m_hVector_pfetamax[7].at(indexV)->Fill(eventdiff->GetEtaMaxFromPFCands(),totalweight);
-		     m_hVector_pfetamin[7].at(indexV)->Fill(eventdiff->GetEtaMinFromPFCands(),totalweight);
-		     m_hVector_asumE[7].at(indexV)->Fill(aSumE_,totalweight);
-		     m_hVector_deltaetajets[7].at(indexV)->Fill(eventexcl->GetJetsDeltaEta(),totalweight);
-		     m_hVector_deltaphijets[7].at(indexV)->Fill(deltaphi_,totalweight);
-		     m_hVector_deltaptjets[7].at(indexV)->Fill(eventexcl->GetJetsDeltaPt(),totalweight);
-		     m_hVector_dijetmass[7].at(indexV)->Fill(eventexcl->GetMassDijets(),totalweight);
-		     m_hVector_ptjet1[7].at(indexV)->Fill(eventexcl->GetLeadingJetPt(),totalweight);
-		     m_hVector_ptjet2[7].at(indexV)->Fill(eventexcl->GetSecondJetPt(),totalweight);
-		     m_hVector_etajet1[7].at(indexV)->Fill(eventexcl->GetLeadingJetEta(),totalweight);
-		     m_hVector_etajet2[7].at(indexV)->Fill(eventexcl->GetSecondJetEta(),totalweight);
-		     m_hVector_phijet1[7].at(indexV)->Fill(eventexcl->GetLeadingJetPhi(),totalweight);
-                     m_hVector_phijet2[7].at(indexV)->Fill(eventexcl->GetSecondJetPhi(),totalweight);
-                     m_hVector_sumEHFplus[7].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight);
-                     m_hVector_sumEHFminus[7].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight);
-                     m_hVector_sumEHEplus[7].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus(),totalweight);
-                     m_hVector_sumEHEminus[7].at(indexV)->Fill(eventdiff->GetSumEnergyHEMinus(),totalweight);
-                     m_hVector_sumEHFpfplus[7].at(indexV)->Fill(eventexcl->GetSumEHFPFlowPlus(),totalweight);
-                     m_hVector_sumEHFpfminus[7].at(indexV)->Fill(eventexcl->GetSumEHFPFlowMinus(),totalweight);
-                     m_hVector_deltaEtaPF[7].at(indexV)->Fill(deltaetapf_,totalweight);
-                     m_hVector_absdeltaEtaPF[7].at(indexV)->Fill(absdeltaetapf_,totalweight);
-                     m_hVector_vertex[7].at(indexV)->Fill(eventexcl->GetNVertex(),totalweight);
+                     counterJetsAllstep4_2+=totalweight*triggereff_step4_2;
+		     m_hVector_rjj[7].at(indexV)->Fill(eventexcl->GetRjjFromJets(),totalweight*triggereff_step4_2);
+		     m_hVector_detagen[7].at(indexV)->Fill(eventexcl->GetDeltaEtaGen(),totalweight*triggereff_step4_2);
+		     m_hVector_mxGen[7].at(indexV)->Fill(eventexcl->GetMxGenRange(),totalweight*triggereff_step4_2);
+		     m_hVector_multhf[7].at(indexV)->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),totalweight*triggereff_step4_2);
+		     m_hVector_etcalos[7].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())),totalweight*triggereff_step4_2);
+		     m_hVector_tracks[7].at(indexV)->Fill(eventdiff->GetMultiplicityTracks(),totalweight*triggereff_step4_2);
+		     m_hVector_pfetamax[7].at(indexV)->Fill(eventdiff->GetEtaMaxFromPFCands(),totalweight*triggereff_step4_2);
+		     m_hVector_pfetamin[7].at(indexV)->Fill(eventdiff->GetEtaMinFromPFCands(),totalweight*triggereff_step4_2);
+		     m_hVector_asumE[7].at(indexV)->Fill(aSumE_,totalweight*triggereff_step4_2);
+		     m_hVector_deltaetajets[7].at(indexV)->Fill(eventexcl->GetJetsDeltaEta(),totalweight*triggereff_step4_2);
+		     m_hVector_deltaphijets[7].at(indexV)->Fill(deltaphi_,totalweight*triggereff_step4_2);
+		     m_hVector_deltaptjets[7].at(indexV)->Fill(eventexcl->GetJetsDeltaPt(),totalweight*triggereff_step4_2);
+		     m_hVector_dijetmass[7].at(indexV)->Fill(eventexcl->GetMassDijets(),totalweight*triggereff_step4_2);
+		     m_hVector_ptjet1[7].at(indexV)->Fill(eventexcl->GetLeadingJetPt(),totalweight*triggereff_step4_2);
+		     m_hVector_ptjet2[7].at(indexV)->Fill(eventexcl->GetSecondJetPt(),totalweight*triggereff_step4_2);
+		     m_hVector_etajet1[7].at(indexV)->Fill(eventexcl->GetLeadingJetEta(),totalweight*triggereff_step4_2);
+		     m_hVector_etajet2[7].at(indexV)->Fill(eventexcl->GetSecondJetEta(),totalweight*triggereff_step4_2);
+		     m_hVector_phijet1[7].at(indexV)->Fill(eventexcl->GetLeadingJetPhi(),totalweight*triggereff_step4_2);
+                     m_hVector_phijet2[7].at(indexV)->Fill(eventexcl->GetSecondJetPhi(),totalweight*triggereff_step4_2);
+                     m_hVector_sumEHFplus[7].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight*triggereff_step4_2);
+                     m_hVector_sumEHFminus[7].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight*triggereff_step4_2);
+                     m_hVector_sumEHEplus[7].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus(),totalweight*triggereff_step4_2);
+                     m_hVector_sumEHEminus[7].at(indexV)->Fill(eventdiff->GetSumEnergyHEMinus(),totalweight*triggereff_step4_2);
+                     m_hVector_sumEHFpfplus[7].at(indexV)->Fill(eventexcl->GetSumEHFPFlowPlus(),totalweight*triggereff_step4_2);
+                     m_hVector_sumEHFpfminus[7].at(indexV)->Fill(eventexcl->GetSumEHFPFlowMinus(),totalweight*triggereff_step4_2);
+                     m_hVector_deltaEtaPF[7].at(indexV)->Fill(deltaetapf_,totalweight*triggereff_step4_2);
+                     m_hVector_absdeltaEtaPF[7].at(indexV)->Fill(absdeltaetapf_,totalweight*triggereff_step4_2);
+                     m_hVector_vertex[7].at(indexV)->Fill(eventexcl->GetNVertex(),totalweight*triggereff_step4_2);
                      m_hVector_lumi[7].at(indexV)->Fill(eventinfo->GetInstLumiBunch());                       
 
                      for(int ieta = 29,iring = 0; ieta <= 41; ++ieta,++iring){
-                        m_hVector_sumEHFplusVsiEta[7][iring]->Fill(eventdiff->GetSumEHFPlusVsiEta(iring),totalweight);
-                        m_hVector_sumEHFminusVsiEta[7][iring]->Fill(eventdiff->GetSumEHFMinusVsiEta(iring),totalweight);
+                        m_hVector_sumEHFplusVsiEta[7][iring]->Fill(eventdiff->GetSumEHFPlusVsiEta(iring),totalweight*triggereff_step4_2);
+                        m_hVector_sumEHFminusVsiEta[7][iring]->Fill(eventdiff->GetSumEHFMinusVsiEta(iring),totalweight*triggereff_step4_2);
                      }
 
 		  }
 
 		  if (eventdiff->GetEtaMinFromPFCands() > -1. && eventdiff->GetEtaMaxFromPFCands() < 1.){
 
-                     counterJetsAllstep4_1+=totalweight;
-		     m_hVector_rjj[8].at(indexV)->Fill(eventexcl->GetRjjFromJets(),totalweight);
-		     m_hVector_detagen[8].at(indexV)->Fill(eventexcl->GetDeltaEtaGen(),totalweight);
-		     m_hVector_mxGen[8].at(indexV)->Fill(eventexcl->GetMxGenRange(),totalweight);
-		     m_hVector_multhf[8].at(indexV)->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),totalweight);
-		     m_hVector_etcalos[8].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())),totalweight);
-		     m_hVector_tracks[8].at(indexV)->Fill(eventdiff->GetMultiplicityTracks(),totalweight);
-		     m_hVector_pfetamax[8].at(indexV)->Fill(eventdiff->GetEtaMaxFromPFCands(),totalweight);
-		     m_hVector_pfetamin[8].at(indexV)->Fill(eventdiff->GetEtaMinFromPFCands(),totalweight);
-		     m_hVector_asumE[8].at(indexV)->Fill(aSumE_,totalweight);
-		     m_hVector_deltaetajets[8].at(indexV)->Fill(eventexcl->GetJetsDeltaEta(),totalweight);
-		     m_hVector_deltaphijets[8].at(indexV)->Fill(deltaphi_,totalweight);
-		     m_hVector_deltaptjets[8].at(indexV)->Fill(eventexcl->GetJetsDeltaPt(),totalweight);
-		     m_hVector_dijetmass[8].at(indexV)->Fill(eventexcl->GetMassDijets(),totalweight);
-		     m_hVector_ptjet1[8].at(indexV)->Fill(eventexcl->GetLeadingJetPt(),totalweight);
-		     m_hVector_ptjet2[8].at(indexV)->Fill(eventexcl->GetSecondJetPt(),totalweight);
-		     m_hVector_etajet1[8].at(indexV)->Fill(eventexcl->GetLeadingJetEta(),totalweight);
-		     m_hVector_etajet2[8].at(indexV)->Fill(eventexcl->GetSecondJetEta(),totalweight);
-		     m_hVector_phijet1[8].at(indexV)->Fill(eventexcl->GetLeadingJetPhi(),totalweight);
-                     m_hVector_phijet2[8].at(indexV)->Fill(eventexcl->GetSecondJetPhi(),totalweight);
-                     m_hVector_sumEHFplus[8].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight);
-                     m_hVector_sumEHFminus[8].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight);
-                     m_hVector_sumEHEplus[8].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus(),totalweight);
-                     m_hVector_sumEHEminus[8].at(indexV)->Fill(eventdiff->GetSumEnergyHEMinus(),totalweight);
-                     m_hVector_sumEHFpfplus[8].at(indexV)->Fill(eventexcl->GetSumEHFPFlowPlus(),totalweight);
-                     m_hVector_sumEHFpfminus[8].at(indexV)->Fill(eventexcl->GetSumEHFPFlowMinus(),totalweight);
-                     m_hVector_deltaEtaPF[8].at(indexV)->Fill(deltaetapf_,totalweight);
-                     m_hVector_absdeltaEtaPF[8].at(indexV)->Fill(absdeltaetapf_,totalweight);
-                     m_hVector_vertex[8].at(indexV)->Fill(eventexcl->GetNVertex(),totalweight);
+                     counterJetsAllstep4_1+=totalweight*triggereff_step4_1;
+		     m_hVector_rjj[8].at(indexV)->Fill(eventexcl->GetRjjFromJets(),totalweight*triggereff_step4_1);
+		     m_hVector_detagen[8].at(indexV)->Fill(eventexcl->GetDeltaEtaGen(),totalweight*triggereff_step4_1);
+		     m_hVector_mxGen[8].at(indexV)->Fill(eventexcl->GetMxGenRange(),totalweight*triggereff_step4_1);
+		     m_hVector_multhf[8].at(indexV)->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),totalweight*triggereff_step4_1);
+		     m_hVector_etcalos[8].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())),totalweight*triggereff_step4_1);
+		     m_hVector_tracks[8].at(indexV)->Fill(eventdiff->GetMultiplicityTracks(),totalweight*triggereff_step4_1);
+		     m_hVector_pfetamax[8].at(indexV)->Fill(eventdiff->GetEtaMaxFromPFCands(),totalweight*triggereff_step4_1);
+		     m_hVector_pfetamin[8].at(indexV)->Fill(eventdiff->GetEtaMinFromPFCands(),totalweight*triggereff_step4_1);
+		     m_hVector_asumE[8].at(indexV)->Fill(aSumE_,totalweight*triggereff_step4_1);
+		     m_hVector_deltaetajets[8].at(indexV)->Fill(eventexcl->GetJetsDeltaEta(),totalweight*triggereff_step4_1);
+		     m_hVector_deltaphijets[8].at(indexV)->Fill(deltaphi_,totalweight*triggereff_step4_1);
+		     m_hVector_deltaptjets[8].at(indexV)->Fill(eventexcl->GetJetsDeltaPt(),totalweight*triggereff_step4_1);
+		     m_hVector_dijetmass[8].at(indexV)->Fill(eventexcl->GetMassDijets(),totalweight*triggereff_step4_1);
+		     m_hVector_ptjet1[8].at(indexV)->Fill(eventexcl->GetLeadingJetPt(),totalweight*triggereff_step4_1);
+		     m_hVector_ptjet2[8].at(indexV)->Fill(eventexcl->GetSecondJetPt(),totalweight*triggereff_step4_1);
+		     m_hVector_etajet1[8].at(indexV)->Fill(eventexcl->GetLeadingJetEta(),totalweight*triggereff_step4_1);
+		     m_hVector_etajet2[8].at(indexV)->Fill(eventexcl->GetSecondJetEta(),totalweight*triggereff_step4_1);
+		     m_hVector_phijet1[8].at(indexV)->Fill(eventexcl->GetLeadingJetPhi(),totalweight*triggereff_step4_1);
+                     m_hVector_phijet2[8].at(indexV)->Fill(eventexcl->GetSecondJetPhi(),totalweight*triggereff_step4_1);
+                     m_hVector_sumEHFplus[8].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight*triggereff_step4_1);
+                     m_hVector_sumEHFminus[8].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight*triggereff_step4_1);
+                     m_hVector_sumEHEplus[8].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus(),totalweight*triggereff_step4_1);
+                     m_hVector_sumEHEminus[8].at(indexV)->Fill(eventdiff->GetSumEnergyHEMinus(),totalweight*triggereff_step4_1);
+                     m_hVector_sumEHFpfplus[8].at(indexV)->Fill(eventexcl->GetSumEHFPFlowPlus(),totalweight*triggereff_step4_1);
+                     m_hVector_sumEHFpfminus[8].at(indexV)->Fill(eventexcl->GetSumEHFPFlowMinus(),totalweight*triggereff_step4_1);
+                     m_hVector_deltaEtaPF[8].at(indexV)->Fill(deltaetapf_,totalweight*triggereff_step4_1);
+                     m_hVector_absdeltaEtaPF[8].at(indexV)->Fill(absdeltaetapf_,totalweight*triggereff_step4_1);
+                     m_hVector_vertex[8].at(indexV)->Fill(eventexcl->GetNVertex(),totalweight*triggereff_step4_1);
                      m_hVector_lumi[8].at(indexV)->Fill(eventinfo->GetInstLumiBunch());                   
 
                      for(int ieta = 29,iring = 0; ieta <= 41; ++ieta,++iring){
-                        m_hVector_sumEHFplusVsiEta[8][iring]->Fill(eventdiff->GetSumEHFPlusVsiEta(iring),totalweight);
-                        m_hVector_sumEHFminusVsiEta[8][iring]->Fill(eventdiff->GetSumEHFMinusVsiEta(iring),totalweight);
+                        m_hVector_sumEHFplusVsiEta[8][iring]->Fill(eventdiff->GetSumEHFPlusVsiEta(iring),totalweight*triggereff_step4_1);
+                        m_hVector_sumEHFminusVsiEta[8][iring]->Fill(eventdiff->GetSumEHFMinusVsiEta(iring),totalweight*triggereff_step4_1);
                      }
  
                    }
@@ -994,203 +1025,203 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
 
 	       if (eventexcl->GetLeadingJetP4().Eta() < 2.9 && eventexcl->GetSecondJetP4().Eta() < 2.9 && eventexcl->GetLeadingJetP4().Eta() > -2.9 && eventexcl->GetSecondJetP4().Eta() > -2.9){
 
-		  counterJetsTrackerstep3+=totalweight;
+		  counterJetsTrackerstep3+=totalweight*triggereff_vertex;
 
 		  // Tracker - STEP3         
 		  ////////////////////////////////////////////////
-                  m_hVector_rjj[9].at(indexV)->Fill(eventexcl->GetRjjFromJets(),totalweight);
-                  m_hVector_detagen[9].at(indexV)->Fill(eventexcl->GetDeltaEtaGen(),totalweight);
-		  m_hVector_mxGen[9].at(indexV)->Fill(eventexcl->GetMxGenRange(),totalweight);
-		  m_hVector_multhf[9].at(indexV)->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),totalweight);
-		  m_hVector_etcalos[9].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())),totalweight);
-		  m_hVector_tracks[9].at(indexV)->Fill(eventdiff->GetMultiplicityTracks(),totalweight);
-		  m_hVector_pfetamax[9].at(indexV)->Fill(eventdiff->GetEtaMaxFromPFCands(),totalweight);
-		  m_hVector_pfetamin[9].at(indexV)->Fill(eventdiff->GetEtaMinFromPFCands(),totalweight);
-		  m_hVector_asumE[9].at(indexV)->Fill(aSumE_,totalweight);
-		  m_hVector_deltaetajets[9].at(indexV)->Fill(eventexcl->GetJetsDeltaEta(),totalweight);
-		  m_hVector_deltaphijets[9].at(indexV)->Fill(deltaphi_,totalweight);
-		  m_hVector_deltaptjets[9].at(indexV)->Fill(eventexcl->GetJetsDeltaPt(),totalweight);
-		  m_hVector_dijetmass[9].at(indexV)->Fill(eventexcl->GetMassDijets(),totalweight);
-		  m_hVector_ptjet1[9].at(indexV)->Fill(eventexcl->GetLeadingJetPt(),totalweight);
-		  m_hVector_ptjet2[9].at(indexV)->Fill(eventexcl->GetSecondJetPt(),totalweight);
-		  m_hVector_etajet1[9].at(indexV)->Fill(eventexcl->GetLeadingJetEta(),totalweight);
-		  m_hVector_etajet2[9].at(indexV)->Fill(eventexcl->GetSecondJetEta(),totalweight);
-		  m_hVector_phijet1[9].at(indexV)->Fill(eventexcl->GetLeadingJetPhi(),totalweight);
-                  m_hVector_phijet2[9].at(indexV)->Fill(eventexcl->GetSecondJetPhi(),totalweight);
-                  m_hVector_sumEHFplus[9].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight);
-                  m_hVector_sumEHFminus[9].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight);
-                  m_hVector_sumEHEplus[9].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus(),totalweight);
-                  m_hVector_sumEHEminus[9].at(indexV)->Fill(eventdiff->GetSumEnergyHEMinus(),totalweight);
-                  m_hVector_sumEHFpfplus[9].at(indexV)->Fill(eventexcl->GetSumEHFPFlowPlus(),totalweight);
-                  m_hVector_sumEHFpfminus[9].at(indexV)->Fill(eventexcl->GetSumEHFPFlowMinus(),totalweight);
-                  m_hVector_deltaEtaPF[9].at(indexV)->Fill(deltaetapf_,totalweight);
-                  m_hVector_absdeltaEtaPF[9].at(indexV)->Fill(absdeltaetapf_,totalweight);
-                  m_hVector_vertex[9].at(indexV)->Fill(eventexcl->GetNVertex(),totalweight);
+                  m_hVector_rjj[9].at(indexV)->Fill(eventexcl->GetRjjFromJets(),totalweight*triggereff_vertex);
+                  m_hVector_detagen[9].at(indexV)->Fill(eventexcl->GetDeltaEtaGen(),totalweight*triggereff_vertex);
+		  m_hVector_mxGen[9].at(indexV)->Fill(eventexcl->GetMxGenRange(),totalweight*triggereff_vertex);
+		  m_hVector_multhf[9].at(indexV)->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),totalweight*triggereff_vertex);
+		  m_hVector_etcalos[9].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())),totalweight*triggereff_vertex);
+		  m_hVector_tracks[9].at(indexV)->Fill(eventdiff->GetMultiplicityTracks(),totalweight*triggereff_vertex);
+		  m_hVector_pfetamax[9].at(indexV)->Fill(eventdiff->GetEtaMaxFromPFCands(),totalweight*triggereff_vertex);
+		  m_hVector_pfetamin[9].at(indexV)->Fill(eventdiff->GetEtaMinFromPFCands(),totalweight*triggereff_vertex);
+		  m_hVector_asumE[9].at(indexV)->Fill(aSumE_,totalweight*triggereff_vertex);
+		  m_hVector_deltaetajets[9].at(indexV)->Fill(eventexcl->GetJetsDeltaEta(),totalweight*triggereff_vertex);
+		  m_hVector_deltaphijets[9].at(indexV)->Fill(deltaphi_,totalweight*triggereff_vertex);
+		  m_hVector_deltaptjets[9].at(indexV)->Fill(eventexcl->GetJetsDeltaPt(),totalweight*triggereff_vertex);
+		  m_hVector_dijetmass[9].at(indexV)->Fill(eventexcl->GetMassDijets(),totalweight*triggereff_vertex);
+		  m_hVector_ptjet1[9].at(indexV)->Fill(eventexcl->GetLeadingJetPt(),totalweight*triggereff_vertex);
+		  m_hVector_ptjet2[9].at(indexV)->Fill(eventexcl->GetSecondJetPt(),totalweight*triggereff_vertex);
+		  m_hVector_etajet1[9].at(indexV)->Fill(eventexcl->GetLeadingJetEta(),totalweight*triggereff_vertex);
+		  m_hVector_etajet2[9].at(indexV)->Fill(eventexcl->GetSecondJetEta(),totalweight*triggereff_vertex);
+		  m_hVector_phijet1[9].at(indexV)->Fill(eventexcl->GetLeadingJetPhi(),totalweight*triggereff_vertex);
+                  m_hVector_phijet2[9].at(indexV)->Fill(eventexcl->GetSecondJetPhi(),totalweight*triggereff_vertex);
+                  m_hVector_sumEHFplus[9].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight*triggereff_vertex);
+                  m_hVector_sumEHFminus[9].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight*triggereff_vertex);
+                  m_hVector_sumEHEplus[9].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus(),totalweight*triggereff_vertex);
+                  m_hVector_sumEHEminus[9].at(indexV)->Fill(eventdiff->GetSumEnergyHEMinus(),totalweight*triggereff_vertex);
+                  m_hVector_sumEHFpfplus[9].at(indexV)->Fill(eventexcl->GetSumEHFPFlowPlus(),totalweight*triggereff_vertex);
+                  m_hVector_sumEHFpfminus[9].at(indexV)->Fill(eventexcl->GetSumEHFPFlowMinus(),totalweight*triggereff_vertex);
+                  m_hVector_deltaEtaPF[9].at(indexV)->Fill(deltaetapf_,totalweight*triggereff_vertex);
+                  m_hVector_absdeltaEtaPF[9].at(indexV)->Fill(absdeltaetapf_,totalweight*triggereff_vertex);
+                  m_hVector_vertex[9].at(indexV)->Fill(eventexcl->GetNVertex(),totalweight*triggereff_vertex);
                   m_hVector_lumi[9].at(indexV)->Fill(eventinfo->GetInstLumiBunch());
 
                   for(int ieta = 29,iring = 0; ieta <= 41; ++ieta,++iring){
-                     m_hVector_sumEHFplusVsiEta[9][iring]->Fill(eventdiff->GetSumEHFPlusVsiEta(iring),totalweight);
-                     m_hVector_sumEHFminusVsiEta[9][iring]->Fill(eventdiff->GetSumEHFMinusVsiEta(iring),totalweight);
+                     m_hVector_sumEHFplusVsiEta[9][iring]->Fill(eventdiff->GetSumEHFPlusVsiEta(iring),totalweight*triggereff_vertex);
+                     m_hVector_sumEHFminusVsiEta[9][iring]->Fill(eventdiff->GetSumEHFMinusVsiEta(iring),totalweight*triggereff_vertex);
                   }
 
 
 		  // Eta max and nt ieta = 29,iring = 0; ieta <= 41; ++ieta,++iring){
 		  if (eventdiff->GetEtaMinFromPFCands() > -4. && eventdiff->GetEtaMaxFromPFCands() < 4.){
 
-                     counterJetsTrackerstep4_4+=totalweight;
-                     m_hVector_rjj[10].at(indexV)->Fill(eventexcl->GetRjjFromJets(),totalweight);
-                     m_hVector_detagen[10].at(indexV)->Fill(eventexcl->GetDeltaEtaGen(),totalweight);
-		     m_hVector_mxGen[10].at(indexV)->Fill(eventexcl->GetMxGenRange(),totalweight);
-                     m_hVector_multhf[10].at(indexV)->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),totalweight);
-                     m_hVector_etcalos[10].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())),totalweight);
-                     m_hVector_tracks[10].at(indexV)->Fill(eventdiff->GetMultiplicityTracks(),totalweight);
-                     m_hVector_pfetamax[10].at(indexV)->Fill(eventdiff->GetEtaMaxFromPFCands(),totalweight);
-                     m_hVector_pfetamin[10].at(indexV)->Fill(eventdiff->GetEtaMinFromPFCands(),totalweight);
-                     m_hVector_asumE[10].at(indexV)->Fill(aSumE_,totalweight);
-                     m_hVector_deltaetajets[10].at(indexV)->Fill(eventexcl->GetJetsDeltaEta(),totalweight);
-                     m_hVector_deltaphijets[10].at(indexV)->Fill(deltaphi_,totalweight);
-                     m_hVector_deltaptjets[10].at(indexV)->Fill(eventexcl->GetJetsDeltaPt(),totalweight);
-                     m_hVector_dijetmass[10].at(indexV)->Fill(eventexcl->GetMassDijets(),totalweight);
-                     m_hVector_ptjet1[10].at(indexV)->Fill(eventexcl->GetLeadingJetPt(),totalweight);
-                     m_hVector_ptjet2[10].at(indexV)->Fill(eventexcl->GetSecondJetPt(),totalweight);
-                     m_hVector_etajet1[10].at(indexV)->Fill(eventexcl->GetLeadingJetEta(),totalweight);
-                     m_hVector_etajet2[10].at(indexV)->Fill(eventexcl->GetSecondJetEta(),totalweight);
-                     m_hVector_phijet1[10].at(indexV)->Fill(eventexcl->GetLeadingJetPhi(),totalweight);
-                     m_hVector_phijet2[10].at(indexV)->Fill(eventexcl->GetSecondJetPhi(),totalweight);
-                     m_hVector_sumEHFplus[10].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight);
-                     m_hVector_sumEHFminus[10].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight);
-                     m_hVector_sumEHEplus[10].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus(),totalweight);
-                     m_hVector_sumEHEminus[10].at(indexV)->Fill(eventdiff->GetSumEnergyHEMinus(),totalweight);
-                     m_hVector_sumEHFpfplus[10].at(indexV)->Fill(eventexcl->GetSumEHFPFlowPlus(),totalweight);
-                     m_hVector_sumEHFpfminus[10].at(indexV)->Fill(eventexcl->GetSumEHFPFlowMinus(),totalweight);
-                     m_hVector_deltaEtaPF[10].at(indexV)->Fill(deltaetapf_,totalweight);
-                     m_hVector_absdeltaEtaPF[10].at(indexV)->Fill(absdeltaetapf_,totalweight);
-                     m_hVector_vertex[10].at(indexV)->Fill(eventexcl->GetNVertex(),totalweight);
+                     counterJetsTrackerstep4_4+=totalweight*triggereff_step4_4;
+                     m_hVector_rjj[10].at(indexV)->Fill(eventexcl->GetRjjFromJets(),totalweight*triggereff_step4_4);
+                     m_hVector_detagen[10].at(indexV)->Fill(eventexcl->GetDeltaEtaGen(),totalweight*triggereff_step4_4);
+		     m_hVector_mxGen[10].at(indexV)->Fill(eventexcl->GetMxGenRange(),totalweight*triggereff_step4_4);
+                     m_hVector_multhf[10].at(indexV)->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),totalweight*triggereff_step4_4);
+                     m_hVector_etcalos[10].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())),totalweight*triggereff_step4_4);
+                     m_hVector_tracks[10].at(indexV)->Fill(eventdiff->GetMultiplicityTracks(),totalweight*triggereff_step4_4);
+                     m_hVector_pfetamax[10].at(indexV)->Fill(eventdiff->GetEtaMaxFromPFCands(),totalweight*triggereff_step4_4);
+                     m_hVector_pfetamin[10].at(indexV)->Fill(eventdiff->GetEtaMinFromPFCands(),totalweight*triggereff_step4_4);
+                     m_hVector_asumE[10].at(indexV)->Fill(aSumE_,totalweight*triggereff_step4_4);
+                     m_hVector_deltaetajets[10].at(indexV)->Fill(eventexcl->GetJetsDeltaEta(),totalweight*triggereff_step4_4);
+                     m_hVector_deltaphijets[10].at(indexV)->Fill(deltaphi_,totalweight*triggereff_step4_4);
+                     m_hVector_deltaptjets[10].at(indexV)->Fill(eventexcl->GetJetsDeltaPt(),totalweight*triggereff_step4_4);
+                     m_hVector_dijetmass[10].at(indexV)->Fill(eventexcl->GetMassDijets(),totalweight*triggereff_step4_4);
+                     m_hVector_ptjet1[10].at(indexV)->Fill(eventexcl->GetLeadingJetPt(),totalweight*triggereff_step4_4);
+                     m_hVector_ptjet2[10].at(indexV)->Fill(eventexcl->GetSecondJetPt(),totalweight*triggereff_step4_4);
+                     m_hVector_etajet1[10].at(indexV)->Fill(eventexcl->GetLeadingJetEta(),totalweight*triggereff_step4_4);
+                     m_hVector_etajet2[10].at(indexV)->Fill(eventexcl->GetSecondJetEta(),totalweight*triggereff_step4_4);
+                     m_hVector_phijet1[10].at(indexV)->Fill(eventexcl->GetLeadingJetPhi(),totalweight*triggereff_step4_4);
+                     m_hVector_phijet2[10].at(indexV)->Fill(eventexcl->GetSecondJetPhi(),totalweight*triggereff_step4_4);
+                     m_hVector_sumEHFplus[10].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight*triggereff_step4_4);
+                     m_hVector_sumEHFminus[10].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight*triggereff_step4_4);
+                     m_hVector_sumEHEplus[10].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus(),totalweight*triggereff_step4_4);
+                     m_hVector_sumEHEminus[10].at(indexV)->Fill(eventdiff->GetSumEnergyHEMinus(),totalweight*triggereff_step4_4);
+                     m_hVector_sumEHFpfplus[10].at(indexV)->Fill(eventexcl->GetSumEHFPFlowPlus(),totalweight*triggereff_step4_4);
+                     m_hVector_sumEHFpfminus[10].at(indexV)->Fill(eventexcl->GetSumEHFPFlowMinus(),totalweight*triggereff_step4_4);
+                     m_hVector_deltaEtaPF[10].at(indexV)->Fill(deltaetapf_,totalweight*triggereff_step4_4);
+                     m_hVector_absdeltaEtaPF[10].at(indexV)->Fill(absdeltaetapf_,totalweight*triggereff_step4_4);
+                     m_hVector_vertex[10].at(indexV)->Fill(eventexcl->GetNVertex(),totalweight*triggereff_step4_4);
                      m_hVector_lumi[10].at(indexV)->Fill(eventinfo->GetInstLumiBunch());
 
                      for(int ieta = 29,iring = 0; ieta <= 41; ++ieta,++iring){
-                        m_hVector_sumEHFplusVsiEta[10][iring]->Fill(eventdiff->GetSumEHFPlusVsiEta(iring),totalweight);
-                        m_hVector_sumEHFminusVsiEta[10][iring]->Fill(eventdiff->GetSumEHFMinusVsiEta(iring),totalweight);
+                        m_hVector_sumEHFplusVsiEta[10][iring]->Fill(eventdiff->GetSumEHFPlusVsiEta(iring),totalweight*triggereff_step4_4);
+                        m_hVector_sumEHFminusVsiEta[10][iring]->Fill(eventdiff->GetSumEHFMinusVsiEta(iring),totalweight*triggereff_step4_4);
                      }
 
 		  }
 
 		  if (eventdiff->GetEtaMinFromPFCands() > -3. && eventdiff->GetEtaMaxFromPFCands() < 3.){
 
-                     counterJetsTrackerstep4_3+=totalweight;
-                     m_hVector_rjj[11].at(indexV)->Fill(eventexcl->GetRjjFromJets(),totalweight);
-                     m_hVector_detagen[11].at(indexV)->Fill(eventexcl->GetDeltaEtaGen(),totalweight);
-		     m_hVector_mxGen[11].at(indexV)->Fill(eventexcl->GetMxGenRange(),totalweight);
-                     m_hVector_multhf[11].at(indexV)->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),totalweight);
-                     m_hVector_etcalos[11].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())),totalweight);
-                     m_hVector_tracks[11].at(indexV)->Fill(eventdiff->GetMultiplicityTracks(),totalweight);
-                     m_hVector_pfetamax[11].at(indexV)->Fill(eventdiff->GetEtaMaxFromPFCands(),totalweight);
-                     m_hVector_pfetamin[11].at(indexV)->Fill(eventdiff->GetEtaMinFromPFCands(),totalweight);
-                     m_hVector_asumE[11].at(indexV)->Fill(aSumE_,totalweight);
-                     m_hVector_deltaetajets[11].at(indexV)->Fill(eventexcl->GetJetsDeltaEta(),totalweight);
-                     m_hVector_deltaphijets[11].at(indexV)->Fill(deltaphi_,totalweight);
-                     m_hVector_deltaptjets[11].at(indexV)->Fill(eventexcl->GetJetsDeltaPt(),totalweight);
-                     m_hVector_dijetmass[11].at(indexV)->Fill(eventexcl->GetMassDijets(),totalweight);
-                     m_hVector_ptjet1[11].at(indexV)->Fill(eventexcl->GetLeadingJetPt(),totalweight);
-                     m_hVector_ptjet2[11].at(indexV)->Fill(eventexcl->GetSecondJetPt(),totalweight);
-                     m_hVector_etajet1[11].at(indexV)->Fill(eventexcl->GetLeadingJetEta(),totalweight);
-                     m_hVector_etajet2[11].at(indexV)->Fill(eventexcl->GetSecondJetEta(),totalweight);
-                     m_hVector_phijet1[11].at(indexV)->Fill(eventexcl->GetLeadingJetPhi(),totalweight);
-                     m_hVector_phijet2[11].at(indexV)->Fill(eventexcl->GetSecondJetPhi(),totalweight);
-                     m_hVector_sumEHFplus[11].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight);
-                     m_hVector_sumEHFminus[11].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight);
-                     m_hVector_sumEHEplus[11].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus(),totalweight);
-                     m_hVector_sumEHEminus[11].at(indexV)->Fill(eventdiff->GetSumEnergyHEMinus(),totalweight);
-                     m_hVector_sumEHFpfplus[11].at(indexV)->Fill(eventexcl->GetSumEHFPFlowPlus(),totalweight);
-                     m_hVector_sumEHFpfminus[11].at(indexV)->Fill(eventexcl->GetSumEHFPFlowMinus(),totalweight);
-                     m_hVector_deltaEtaPF[11].at(indexV)->Fill(deltaetapf_,totalweight);
-                     m_hVector_absdeltaEtaPF[11].at(indexV)->Fill(absdeltaetapf_,totalweight);
-                     m_hVector_vertex[11].at(indexV)->Fill(eventexcl->GetNVertex(),totalweight);
+                     counterJetsTrackerstep4_3+=totalweight*triggereff_step4_3;
+                     m_hVector_rjj[11].at(indexV)->Fill(eventexcl->GetRjjFromJets(),totalweight*triggereff_step4_3);
+                     m_hVector_detagen[11].at(indexV)->Fill(eventexcl->GetDeltaEtaGen(),totalweight*triggereff_step4_3);
+		     m_hVector_mxGen[11].at(indexV)->Fill(eventexcl->GetMxGenRange(),totalweight*triggereff_step4_3);
+                     m_hVector_multhf[11].at(indexV)->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),totalweight*triggereff_step4_3);
+                     m_hVector_etcalos[11].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())),totalweight*triggereff_step4_3);
+                     m_hVector_tracks[11].at(indexV)->Fill(eventdiff->GetMultiplicityTracks(),totalweight*triggereff_step4_3);
+                     m_hVector_pfetamax[11].at(indexV)->Fill(eventdiff->GetEtaMaxFromPFCands(),totalweight*triggereff_step4_3);
+                     m_hVector_pfetamin[11].at(indexV)->Fill(eventdiff->GetEtaMinFromPFCands(),totalweight*triggereff_step4_3);
+                     m_hVector_asumE[11].at(indexV)->Fill(aSumE_,totalweight*triggereff_step4_3);
+                     m_hVector_deltaetajets[11].at(indexV)->Fill(eventexcl->GetJetsDeltaEta(),totalweight*triggereff_step4_3);
+                     m_hVector_deltaphijets[11].at(indexV)->Fill(deltaphi_,totalweight*triggereff_step4_3);
+                     m_hVector_deltaptjets[11].at(indexV)->Fill(eventexcl->GetJetsDeltaPt(),totalweight*triggereff_step4_3);
+                     m_hVector_dijetmass[11].at(indexV)->Fill(eventexcl->GetMassDijets(),totalweight*triggereff_step4_3);
+                     m_hVector_ptjet1[11].at(indexV)->Fill(eventexcl->GetLeadingJetPt(),totalweight*triggereff_step4_3);
+                     m_hVector_ptjet2[11].at(indexV)->Fill(eventexcl->GetSecondJetPt(),totalweight*triggereff_step4_3);
+                     m_hVector_etajet1[11].at(indexV)->Fill(eventexcl->GetLeadingJetEta(),totalweight*triggereff_step4_3);
+                     m_hVector_etajet2[11].at(indexV)->Fill(eventexcl->GetSecondJetEta(),totalweight*triggereff_step4_3);
+                     m_hVector_phijet1[11].at(indexV)->Fill(eventexcl->GetLeadingJetPhi(),totalweight*triggereff_step4_3);
+                     m_hVector_phijet2[11].at(indexV)->Fill(eventexcl->GetSecondJetPhi(),totalweight*triggereff_step4_3);
+                     m_hVector_sumEHFplus[11].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight*triggereff_step4_3);
+                     m_hVector_sumEHFminus[11].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight*triggereff_step4_3);
+                     m_hVector_sumEHEplus[11].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus(),totalweight*triggereff_step4_3);
+                     m_hVector_sumEHEminus[11].at(indexV)->Fill(eventdiff->GetSumEnergyHEMinus(),totalweight*triggereff_step4_3);
+                     m_hVector_sumEHFpfplus[11].at(indexV)->Fill(eventexcl->GetSumEHFPFlowPlus(),totalweight*triggereff_step4_3);
+                     m_hVector_sumEHFpfminus[11].at(indexV)->Fill(eventexcl->GetSumEHFPFlowMinus(),totalweight*triggereff_step4_3);
+                     m_hVector_deltaEtaPF[11].at(indexV)->Fill(deltaetapf_,totalweight*triggereff_step4_3);
+                     m_hVector_absdeltaEtaPF[11].at(indexV)->Fill(absdeltaetapf_,totalweight*triggereff_step4_3);
+                     m_hVector_vertex[11].at(indexV)->Fill(eventexcl->GetNVertex(),totalweight*triggereff_step4_3);
                      m_hVector_lumi[11].at(indexV)->Fill(eventinfo->GetInstLumiBunch());
 
                      for(int ieta = 29,iring = 0; ieta <= 41; ++ieta,++iring){
-                        m_hVector_sumEHFplusVsiEta[11][iring]->Fill(eventdiff->GetSumEHFPlusVsiEta(iring),totalweight);
-                        m_hVector_sumEHFminusVsiEta[11][iring]->Fill(eventdiff->GetSumEHFMinusVsiEta(iring),totalweight);
+                        m_hVector_sumEHFplusVsiEta[11][iring]->Fill(eventdiff->GetSumEHFPlusVsiEta(iring),totalweight*triggereff_step4_3);
+                        m_hVector_sumEHFminusVsiEta[11][iring]->Fill(eventdiff->GetSumEHFMinusVsiEta(iring),totalweight*triggereff_step4_3);
                      }
 
 		  }
 
 		  if (eventdiff->GetEtaMinFromPFCands() > -2. && eventdiff->GetEtaMaxFromPFCands() < 2.){
 
-                     counterJetsTrackerstep4_2+=totalweight;
-                     m_hVector_rjj[12].at(indexV)->Fill(eventexcl->GetRjjFromJets(),totalweight);
-                     m_hVector_detagen[12].at(indexV)->Fill(eventexcl->GetDeltaEtaGen(),totalweight);
-		     m_hVector_mxGen[12].at(indexV)->Fill(eventexcl->GetMxGenRange(),totalweight);
-                     m_hVector_multhf[12].at(indexV)->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),totalweight);
-                     m_hVector_etcalos[12].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())),totalweight);
-                     m_hVector_tracks[12].at(indexV)->Fill(eventdiff->GetMultiplicityTracks(),totalweight);
-                     m_hVector_pfetamax[12].at(indexV)->Fill(eventdiff->GetEtaMaxFromPFCands(),totalweight);
-                     m_hVector_pfetamin[12].at(indexV)->Fill(eventdiff->GetEtaMinFromPFCands(),totalweight);
-                     m_hVector_asumE[12].at(indexV)->Fill(aSumE_,totalweight);
-                     m_hVector_deltaetajets[12].at(indexV)->Fill(eventexcl->GetJetsDeltaEta(),totalweight);
-                     m_hVector_deltaphijets[12].at(indexV)->Fill(deltaphi_,totalweight);
-                     m_hVector_deltaptjets[12].at(indexV)->Fill(eventexcl->GetJetsDeltaPt(),totalweight);
-                     m_hVector_dijetmass[12].at(indexV)->Fill(eventexcl->GetMassDijets(),totalweight);
-                     m_hVector_ptjet1[12].at(indexV)->Fill(eventexcl->GetLeadingJetPt(),totalweight);
-                     m_hVector_ptjet2[12].at(indexV)->Fill(eventexcl->GetSecondJetPt(),totalweight);
-                     m_hVector_etajet1[12].at(indexV)->Fill(eventexcl->GetLeadingJetEta(),totalweight);
-                     m_hVector_etajet2[12].at(indexV)->Fill(eventexcl->GetSecondJetEta(),totalweight);
-                     m_hVector_phijet1[12].at(indexV)->Fill(eventexcl->GetLeadingJetPhi(),totalweight);
-                     m_hVector_phijet2[12].at(indexV)->Fill(eventexcl->GetSecondJetPhi(),totalweight);
-                     m_hVector_sumEHFplus[12].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight);
-                     m_hVector_sumEHFminus[12].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight);
-                     m_hVector_sumEHEplus[12].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus(),totalweight);
-                     m_hVector_sumEHEminus[12].at(indexV)->Fill(eventdiff->GetSumEnergyHEMinus(),totalweight);
-                     m_hVector_sumEHFpfplus[12].at(indexV)->Fill(eventexcl->GetSumEHFPFlowPlus(),totalweight);
-                     m_hVector_sumEHFpfminus[12].at(indexV)->Fill(eventexcl->GetSumEHFPFlowMinus(),totalweight);
-                     m_hVector_deltaEtaPF[12].at(indexV)->Fill(deltaetapf_,totalweight);
-                     m_hVector_absdeltaEtaPF[12].at(indexV)->Fill(absdeltaetapf_,totalweight);
-                     m_hVector_vertex[12].at(indexV)->Fill(eventexcl->GetNVertex(),totalweight);
+                     counterJetsTrackerstep4_2+=totalweight*triggereff_step4_2;
+                     m_hVector_rjj[12].at(indexV)->Fill(eventexcl->GetRjjFromJets(),totalweight*triggereff_step4_2);
+                     m_hVector_detagen[12].at(indexV)->Fill(eventexcl->GetDeltaEtaGen(),totalweight*triggereff_step4_2);
+		     m_hVector_mxGen[12].at(indexV)->Fill(eventexcl->GetMxGenRange(),totalweight*triggereff_step4_2);
+                     m_hVector_multhf[12].at(indexV)->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),totalweight*triggereff_step4_2);
+                     m_hVector_etcalos[12].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())),totalweight*triggereff_step4_2);
+                     m_hVector_tracks[12].at(indexV)->Fill(eventdiff->GetMultiplicityTracks(),totalweight*triggereff_step4_2);
+                     m_hVector_pfetamax[12].at(indexV)->Fill(eventdiff->GetEtaMaxFromPFCands(),totalweight*triggereff_step4_2);
+                     m_hVector_pfetamin[12].at(indexV)->Fill(eventdiff->GetEtaMinFromPFCands(),totalweight*triggereff_step4_2);
+                     m_hVector_asumE[12].at(indexV)->Fill(aSumE_,totalweight*triggereff_step4_2);
+                     m_hVector_deltaetajets[12].at(indexV)->Fill(eventexcl->GetJetsDeltaEta(),totalweight*triggereff_step4_2);
+                     m_hVector_deltaphijets[12].at(indexV)->Fill(deltaphi_,totalweight*triggereff_step4_2);
+                     m_hVector_deltaptjets[12].at(indexV)->Fill(eventexcl->GetJetsDeltaPt(),totalweight*triggereff_step4_2);
+                     m_hVector_dijetmass[12].at(indexV)->Fill(eventexcl->GetMassDijets(),totalweight*triggereff_step4_2);
+                     m_hVector_ptjet1[12].at(indexV)->Fill(eventexcl->GetLeadingJetPt(),totalweight*triggereff_step4_2);
+                     m_hVector_ptjet2[12].at(indexV)->Fill(eventexcl->GetSecondJetPt(),totalweight*triggereff_step4_2);
+                     m_hVector_etajet1[12].at(indexV)->Fill(eventexcl->GetLeadingJetEta(),totalweight*triggereff_step4_2);
+                     m_hVector_etajet2[12].at(indexV)->Fill(eventexcl->GetSecondJetEta(),totalweight*triggereff_step4_2);
+                     m_hVector_phijet1[12].at(indexV)->Fill(eventexcl->GetLeadingJetPhi(),totalweight*triggereff_step4_2);
+                     m_hVector_phijet2[12].at(indexV)->Fill(eventexcl->GetSecondJetPhi(),totalweight*triggereff_step4_2);
+                     m_hVector_sumEHFplus[12].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight*triggereff_step4_2);
+                     m_hVector_sumEHFminus[12].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight*triggereff_step4_2);
+                     m_hVector_sumEHEplus[12].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus(),totalweight*triggereff_step4_2);
+                     m_hVector_sumEHEminus[12].at(indexV)->Fill(eventdiff->GetSumEnergyHEMinus(),totalweight*triggereff_step4_2);
+                     m_hVector_sumEHFpfplus[12].at(indexV)->Fill(eventexcl->GetSumEHFPFlowPlus(),totalweight*triggereff_step4_2);
+                     m_hVector_sumEHFpfminus[12].at(indexV)->Fill(eventexcl->GetSumEHFPFlowMinus(),totalweight*triggereff_step4_2);
+                     m_hVector_deltaEtaPF[12].at(indexV)->Fill(deltaetapf_,totalweight*triggereff_step4_2);
+                     m_hVector_absdeltaEtaPF[12].at(indexV)->Fill(absdeltaetapf_,totalweight*triggereff_step4_2);
+                     m_hVector_vertex[12].at(indexV)->Fill(eventexcl->GetNVertex(),totalweight*triggereff_step4_2);
                      m_hVector_lumi[12].at(indexV)->Fill(eventinfo->GetInstLumiBunch());
 
                      for(int ieta = 29,iring = 0; ieta <= 41; ++ieta,++iring){
-                        m_hVector_sumEHFplusVsiEta[12][iring]->Fill(eventdiff->GetSumEHFPlusVsiEta(iring),totalweight);
-                        m_hVector_sumEHFminusVsiEta[12][iring]->Fill(eventdiff->GetSumEHFMinusVsiEta(iring),totalweight);
+                        m_hVector_sumEHFplusVsiEta[12][iring]->Fill(eventdiff->GetSumEHFPlusVsiEta(iring),totalweight*triggereff_step4_2);
+                        m_hVector_sumEHFminusVsiEta[12][iring]->Fill(eventdiff->GetSumEHFMinusVsiEta(iring),totalweight*triggereff_step4_2);
                      }
 
 		  }
 
 		  if (eventdiff->GetEtaMinFromPFCands() > -1. && eventdiff->GetEtaMaxFromPFCands() < 1.){
 
-                     counterJetsTrackerstep4_1+=totalweight;
-                     m_hVector_rjj[13].at(indexV)->Fill(eventexcl->GetRjjFromJets(),totalweight);
-                     m_hVector_detagen[13].at(indexV)->Fill(eventexcl->GetDeltaEtaGen(),totalweight);
-		     m_hVector_mxGen[13].at(indexV)->Fill(eventexcl->GetMxGenRange(),totalweight);
-                     m_hVector_multhf[13].at(indexV)->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),totalweight);
-                     m_hVector_etcalos[13].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())),totalweight);
-                     m_hVector_tracks[13].at(indexV)->Fill(eventdiff->GetMultiplicityTracks(),totalweight);
-                     m_hVector_pfetamax[13].at(indexV)->Fill(eventdiff->GetEtaMaxFromPFCands(),totalweight);
-                     m_hVector_pfetamin[13].at(indexV)->Fill(eventdiff->GetEtaMinFromPFCands(),totalweight);
-                     m_hVector_asumE[13].at(indexV)->Fill(aSumE_,totalweight);
-                     m_hVector_deltaetajets[13].at(indexV)->Fill(eventexcl->GetJetsDeltaEta(),totalweight);
-                     m_hVector_deltaphijets[13].at(indexV)->Fill(deltaphi_,totalweight);
-                     m_hVector_deltaptjets[13].at(indexV)->Fill(eventexcl->GetJetsDeltaPt(),totalweight);
-                     m_hVector_dijetmass[13].at(indexV)->Fill(eventexcl->GetMassDijets(),totalweight);
-                     m_hVector_ptjet1[13].at(indexV)->Fill(eventexcl->GetLeadingJetPt(),totalweight);
-                     m_hVector_ptjet2[13].at(indexV)->Fill(eventexcl->GetSecondJetPt(),totalweight);
-                     m_hVector_etajet1[13].at(indexV)->Fill(eventexcl->GetLeadingJetEta(),totalweight);
-                     m_hVector_etajet2[13].at(indexV)->Fill(eventexcl->GetSecondJetEta(),totalweight);
-                     m_hVector_phijet1[13].at(indexV)->Fill(eventexcl->GetLeadingJetPhi(),totalweight);
-                     m_hVector_phijet2[13].at(indexV)->Fill(eventexcl->GetSecondJetPhi(),totalweight);
-                     m_hVector_sumEHFplus[13].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight);
-                     m_hVector_sumEHFminus[13].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight);
-                     m_hVector_sumEHEplus[13].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus(),totalweight);
-                     m_hVector_sumEHEminus[13].at(indexV)->Fill(eventdiff->GetSumEnergyHEMinus(),totalweight);
-                     m_hVector_sumEHFpfplus[13].at(indexV)->Fill(eventexcl->GetSumEHFPFlowPlus(),totalweight);
-                     m_hVector_sumEHFpfminus[13].at(indexV)->Fill(eventexcl->GetSumEHFPFlowMinus(),totalweight);
-                     m_hVector_deltaEtaPF[13].at(indexV)->Fill(deltaetapf_,totalweight);
-                     m_hVector_absdeltaEtaPF[13].at(indexV)->Fill(absdeltaetapf_,totalweight);
-                     m_hVector_vertex[13].at(indexV)->Fill(eventexcl->GetNVertex(),totalweight);
+                     counterJetsTrackerstep4_1+=totalweight*triggereff_step4_1;
+                     m_hVector_rjj[13].at(indexV)->Fill(eventexcl->GetRjjFromJets(),totalweight*triggereff_step4_1);
+                     m_hVector_detagen[13].at(indexV)->Fill(eventexcl->GetDeltaEtaGen(),totalweight*triggereff_step4_1);
+		     m_hVector_mxGen[13].at(indexV)->Fill(eventexcl->GetMxGenRange(),totalweight*triggereff_step4_1);
+                     m_hVector_multhf[13].at(indexV)->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),totalweight*triggereff_step4_1);
+                     m_hVector_etcalos[13].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())),totalweight*triggereff_step4_1);
+                     m_hVector_tracks[13].at(indexV)->Fill(eventdiff->GetMultiplicityTracks(),totalweight*triggereff_step4_1);
+                     m_hVector_pfetamax[13].at(indexV)->Fill(eventdiff->GetEtaMaxFromPFCands(),totalweight*triggereff_step4_1);
+                     m_hVector_pfetamin[13].at(indexV)->Fill(eventdiff->GetEtaMinFromPFCands(),totalweight*triggereff_step4_1);
+                     m_hVector_asumE[13].at(indexV)->Fill(aSumE_,totalweight*triggereff_step4_1);
+                     m_hVector_deltaetajets[13].at(indexV)->Fill(eventexcl->GetJetsDeltaEta(),totalweight*triggereff_step4_1);
+                     m_hVector_deltaphijets[13].at(indexV)->Fill(deltaphi_,totalweight*triggereff_step4_1);
+                     m_hVector_deltaptjets[13].at(indexV)->Fill(eventexcl->GetJetsDeltaPt(),totalweight*triggereff_step4_1);
+                     m_hVector_dijetmass[13].at(indexV)->Fill(eventexcl->GetMassDijets(),totalweight*triggereff_step4_1);
+                     m_hVector_ptjet1[13].at(indexV)->Fill(eventexcl->GetLeadingJetPt(),totalweight*triggereff_step4_1);
+                     m_hVector_ptjet2[13].at(indexV)->Fill(eventexcl->GetSecondJetPt(),totalweight*triggereff_step4_1);
+                     m_hVector_etajet1[13].at(indexV)->Fill(eventexcl->GetLeadingJetEta(),totalweight*triggereff_step4_1);
+                     m_hVector_etajet2[13].at(indexV)->Fill(eventexcl->GetSecondJetEta(),totalweight*triggereff_step4_1);
+                     m_hVector_phijet1[13].at(indexV)->Fill(eventexcl->GetLeadingJetPhi(),totalweight*triggereff_step4_1);
+                     m_hVector_phijet2[13].at(indexV)->Fill(eventexcl->GetSecondJetPhi(),totalweight*triggereff_step4_1);
+                     m_hVector_sumEHFplus[13].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight*triggereff_step4_1);
+                     m_hVector_sumEHFminus[13].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight*triggereff_step4_1);
+                     m_hVector_sumEHEplus[13].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus(),totalweight*triggereff_step4_1);
+                     m_hVector_sumEHEminus[13].at(indexV)->Fill(eventdiff->GetSumEnergyHEMinus(),totalweight*triggereff_step4_1);
+                     m_hVector_sumEHFpfplus[13].at(indexV)->Fill(eventexcl->GetSumEHFPFlowPlus(),totalweight*triggereff_step4_1);
+                     m_hVector_sumEHFpfminus[13].at(indexV)->Fill(eventexcl->GetSumEHFPFlowMinus(),totalweight*triggereff_step4_1);
+                     m_hVector_deltaEtaPF[13].at(indexV)->Fill(deltaetapf_,totalweight*triggereff_step4_1);
+                     m_hVector_absdeltaEtaPF[13].at(indexV)->Fill(absdeltaetapf_,totalweight*triggereff_step4_1);
+                     m_hVector_vertex[13].at(indexV)->Fill(eventexcl->GetNVertex(),totalweight*triggereff_step4_1);
                      m_hVector_lumi[13].at(indexV)->Fill(eventinfo->GetInstLumiBunch());
 
                      for(int ieta = 29,iring = 0; ieta <= 41; ++ieta,++iring){
-                        m_hVector_sumEHFplusVsiEta[13][iring]->Fill(eventdiff->GetSumEHFPlusVsiEta(iring),totalweight);
-                        m_hVector_sumEHFminusVsiEta[13][iring]->Fill(eventdiff->GetSumEHFMinusVsiEta(iring),totalweight);
+                        m_hVector_sumEHFplusVsiEta[13][iring]->Fill(eventdiff->GetSumEHFPlusVsiEta(iring),totalweight*triggereff_step4_1);
+                        m_hVector_sumEHFminusVsiEta[13][iring]->Fill(eventdiff->GetSumEHFMinusVsiEta(iring),totalweight*triggereff_step4_1);
                      }
 
                   }
@@ -1200,43 +1231,43 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
 
 	       if (eventexcl->GetLeadingJetP4().Eta() < 2. && eventexcl->GetSecondJetP4().Eta() < 2. && eventexcl->GetLeadingJetP4().Eta() > -2. && eventexcl->GetSecondJetP4().Eta() > -2.){
 
-		  counterJetsEta2step3+=totalweight;
+		  counterJetsEta2step3+=totalweight*triggereff_vertex;
 
 		  // JetsEta2 - STEP3         
 		  ////////////////////////////////////////////////
-		  m_hVector_rjj[14].at(indexV)->Fill(eventexcl->GetRjjFromJets(),totalweight);
-		  m_hVector_detagen[14].at(indexV)->Fill(eventexcl->GetDeltaEtaGen(),totalweight);
-		  m_hVector_mxGen[14].at(indexV)->Fill(eventexcl->GetMxGenRange(),totalweight);
-		  m_hVector_multhf[14].at(indexV)->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),totalweight);
-		  m_hVector_etcalos[14].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())),totalweight);
-		  m_hVector_tracks[14].at(indexV)->Fill(eventdiff->GetMultiplicityTracks(),totalweight);
-		  m_hVector_pfetamax[14].at(indexV)->Fill(eventdiff->GetEtaMaxFromPFCands(),totalweight);
-		  m_hVector_pfetamin[14].at(indexV)->Fill(eventdiff->GetEtaMinFromPFCands(),totalweight);
-		  m_hVector_asumE[14].at(indexV)->Fill(aSumE_,totalweight);
-		  m_hVector_deltaetajets[14].at(indexV)->Fill(eventexcl->GetJetsDeltaEta(),totalweight);
-		  m_hVector_deltaphijets[14].at(indexV)->Fill(deltaphi_,totalweight);
-		  m_hVector_deltaptjets[14].at(indexV)->Fill(eventexcl->GetJetsDeltaPt(),totalweight);
-		  m_hVector_dijetmass[14].at(indexV)->Fill(eventexcl->GetMassDijets(),totalweight);
-		  m_hVector_ptjet1[14].at(indexV)->Fill(eventexcl->GetLeadingJetPt(),totalweight);
-		  m_hVector_ptjet2[14].at(indexV)->Fill(eventexcl->GetSecondJetPt(),totalweight);
-		  m_hVector_etajet1[14].at(indexV)->Fill(eventexcl->GetLeadingJetEta(),totalweight);
-		  m_hVector_etajet2[14].at(indexV)->Fill(eventexcl->GetSecondJetEta(),totalweight);
-		  m_hVector_phijet1[14].at(indexV)->Fill(eventexcl->GetLeadingJetPhi(),totalweight);
-                  m_hVector_phijet2[14].at(indexV)->Fill(eventexcl->GetSecondJetPhi(),totalweight);
-                  m_hVector_sumEHFplus[14].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight);
-                  m_hVector_sumEHFminus[14].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight);
-                  m_hVector_sumEHEplus[14].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus(),totalweight);
-                  m_hVector_sumEHEminus[14].at(indexV)->Fill(eventdiff->GetSumEnergyHEMinus(),totalweight);
-                  m_hVector_sumEHFpfplus[14].at(indexV)->Fill(eventexcl->GetSumEHFPFlowPlus(),totalweight);
-                  m_hVector_sumEHFpfminus[14].at(indexV)->Fill(eventexcl->GetSumEHFPFlowMinus(),totalweight);
-                  m_hVector_deltaEtaPF[14].at(indexV)->Fill(deltaetapf_,totalweight);
-                  m_hVector_absdeltaEtaPF[14].at(indexV)->Fill(absdeltaetapf_,totalweight);
-                  m_hVector_vertex[14].at(indexV)->Fill(eventexcl->GetNVertex(),totalweight);
+		  m_hVector_rjj[14].at(indexV)->Fill(eventexcl->GetRjjFromJets(),totalweight*triggereff_vertex);
+		  m_hVector_detagen[14].at(indexV)->Fill(eventexcl->GetDeltaEtaGen(),totalweight*triggereff_vertex);
+		  m_hVector_mxGen[14].at(indexV)->Fill(eventexcl->GetMxGenRange(),totalweight*triggereff_vertex);
+		  m_hVector_multhf[14].at(indexV)->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),totalweight*triggereff_vertex);
+		  m_hVector_etcalos[14].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())),totalweight*triggereff_vertex);
+		  m_hVector_tracks[14].at(indexV)->Fill(eventdiff->GetMultiplicityTracks(),totalweight*triggereff_vertex);
+		  m_hVector_pfetamax[14].at(indexV)->Fill(eventdiff->GetEtaMaxFromPFCands(),totalweight*triggereff_vertex);
+		  m_hVector_pfetamin[14].at(indexV)->Fill(eventdiff->GetEtaMinFromPFCands(),totalweight*triggereff_vertex);
+		  m_hVector_asumE[14].at(indexV)->Fill(aSumE_,totalweight*triggereff_vertex);
+		  m_hVector_deltaetajets[14].at(indexV)->Fill(eventexcl->GetJetsDeltaEta(),totalweight*triggereff_vertex);
+		  m_hVector_deltaphijets[14].at(indexV)->Fill(deltaphi_,totalweight*triggereff_vertex);
+		  m_hVector_deltaptjets[14].at(indexV)->Fill(eventexcl->GetJetsDeltaPt(),totalweight*triggereff_vertex);
+		  m_hVector_dijetmass[14].at(indexV)->Fill(eventexcl->GetMassDijets(),totalweight*triggereff_vertex);
+		  m_hVector_ptjet1[14].at(indexV)->Fill(eventexcl->GetLeadingJetPt(),totalweight*triggereff_vertex);
+		  m_hVector_ptjet2[14].at(indexV)->Fill(eventexcl->GetSecondJetPt(),totalweight*triggereff_vertex);
+		  m_hVector_etajet1[14].at(indexV)->Fill(eventexcl->GetLeadingJetEta(),totalweight*triggereff_vertex);
+		  m_hVector_etajet2[14].at(indexV)->Fill(eventexcl->GetSecondJetEta(),totalweight*triggereff_vertex);
+		  m_hVector_phijet1[14].at(indexV)->Fill(eventexcl->GetLeadingJetPhi(),totalweight*triggereff_vertex);
+                  m_hVector_phijet2[14].at(indexV)->Fill(eventexcl->GetSecondJetPhi(),totalweight*triggereff_vertex);
+                  m_hVector_sumEHFplus[14].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight*triggereff_vertex);
+                  m_hVector_sumEHFminus[14].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight*triggereff_vertex);
+                  m_hVector_sumEHEplus[14].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus(),totalweight*triggereff_vertex);
+                  m_hVector_sumEHEminus[14].at(indexV)->Fill(eventdiff->GetSumEnergyHEMinus(),totalweight*triggereff_vertex);
+                  m_hVector_sumEHFpfplus[14].at(indexV)->Fill(eventexcl->GetSumEHFPFlowPlus(),totalweight*triggereff_vertex);
+                  m_hVector_sumEHFpfminus[14].at(indexV)->Fill(eventexcl->GetSumEHFPFlowMinus(),totalweight*triggereff_vertex);
+                  m_hVector_deltaEtaPF[14].at(indexV)->Fill(deltaetapf_,totalweight*triggereff_vertex);
+                  m_hVector_absdeltaEtaPF[14].at(indexV)->Fill(absdeltaetapf_,totalweight*triggereff_vertex);
+                  m_hVector_vertex[14].at(indexV)->Fill(eventexcl->GetNVertex(),totalweight*triggereff_vertex);
                   m_hVector_lumi[14].at(indexV)->Fill(eventinfo->GetInstLumiBunch());
 
                   for(int ieta = 29,iring = 0; ieta <= 41; ++ieta,++iring){
-                     m_hVector_sumEHFplusVsiEta[14][iring]->Fill(eventdiff->GetSumEHFPlusVsiEta(iring),totalweight);
-                     m_hVector_sumEHFminusVsiEta[14][iring]->Fill(eventdiff->GetSumEHFMinusVsiEta(iring),totalweight);
+                     m_hVector_sumEHFplusVsiEta[14][iring]->Fill(eventdiff->GetSumEHFPlusVsiEta(iring),totalweight*triggereff_vertex);
+                     m_hVector_sumEHFminusVsiEta[14][iring]->Fill(eventdiff->GetSumEHFMinusVsiEta(iring),totalweight*triggereff_vertex);
                   }
 
 
@@ -1244,80 +1275,80 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
 		  // Eta max and Eta min cut
 		  if (eventdiff->GetEtaMinFromPFCands() > -4. && eventdiff->GetEtaMaxFromPFCands() < 4.){
 
-                     counterJetsEta2step4_4+=totalweight;
-                     m_hVector_rjj[15].at(indexV)->Fill(eventexcl->GetRjjFromJets(),totalweight);
-                     m_hVector_detagen[15].at(indexV)->Fill(eventexcl->GetDeltaEtaGen(),totalweight);
-		     m_hVector_mxGen[15].at(indexV)->Fill(eventexcl->GetMxGenRange(),totalweight);
-                     m_hVector_multhf[15].at(indexV)->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),totalweight);
-                     m_hVector_etcalos[15].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())),totalweight);
-                     m_hVector_tracks[15].at(indexV)->Fill(eventdiff->GetMultiplicityTracks(),totalweight);
-                     m_hVector_pfetamax[15].at(indexV)->Fill(eventdiff->GetEtaMaxFromPFCands(),totalweight);
-                     m_hVector_pfetamin[15].at(indexV)->Fill(eventdiff->GetEtaMinFromPFCands(),totalweight);
-                     m_hVector_asumE[15].at(indexV)->Fill(aSumE_,totalweight);
-                     m_hVector_deltaetajets[15].at(indexV)->Fill(eventexcl->GetJetsDeltaEta(),totalweight);
-                     m_hVector_deltaphijets[15].at(indexV)->Fill(deltaphi_,totalweight);
-                     m_hVector_deltaptjets[15].at(indexV)->Fill(eventexcl->GetJetsDeltaPt(),totalweight);
-                     m_hVector_dijetmass[15].at(indexV)->Fill(eventexcl->GetMassDijets(),totalweight);
-                     m_hVector_ptjet1[15].at(indexV)->Fill(eventexcl->GetLeadingJetPt(),totalweight);
-                     m_hVector_ptjet2[15].at(indexV)->Fill(eventexcl->GetSecondJetPt(),totalweight);
-                     m_hVector_etajet1[15].at(indexV)->Fill(eventexcl->GetLeadingJetEta(),totalweight);
-                     m_hVector_etajet2[15].at(indexV)->Fill(eventexcl->GetSecondJetEta(),totalweight);
-                     m_hVector_phijet1[15].at(indexV)->Fill(eventexcl->GetLeadingJetPhi(),totalweight);
-                     m_hVector_phijet2[15].at(indexV)->Fill(eventexcl->GetSecondJetPhi(),totalweight);
-                     m_hVector_sumEHFplus[15].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight);
-                     m_hVector_sumEHFminus[15].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight);
-                     m_hVector_sumEHEplus[15].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus(),totalweight);
-                     m_hVector_sumEHEminus[15].at(indexV)->Fill(eventdiff->GetSumEnergyHEMinus(),totalweight);
-                     m_hVector_sumEHFpfplus[15].at(indexV)->Fill(eventexcl->GetSumEHFPFlowPlus(),totalweight);
-                     m_hVector_sumEHFpfminus[15].at(indexV)->Fill(eventexcl->GetSumEHFPFlowMinus(),totalweight);
-                     m_hVector_deltaEtaPF[15].at(indexV)->Fill(deltaetapf_,totalweight);
-                     m_hVector_absdeltaEtaPF[15].at(indexV)->Fill(absdeltaetapf_,totalweight);
-                     m_hVector_vertex[15].at(indexV)->Fill(eventexcl->GetNVertex(),totalweight);
+                     counterJetsEta2step4_4+=totalweight*triggereff_step4_4;
+                     m_hVector_rjj[15].at(indexV)->Fill(eventexcl->GetRjjFromJets(),totalweight*triggereff_step4_4);
+                     m_hVector_detagen[15].at(indexV)->Fill(eventexcl->GetDeltaEtaGen(),totalweight*triggereff_step4_4);
+		     m_hVector_mxGen[15].at(indexV)->Fill(eventexcl->GetMxGenRange(),totalweight*triggereff_step4_4);
+                     m_hVector_multhf[15].at(indexV)->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),totalweight*triggereff_step4_4);
+                     m_hVector_etcalos[15].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())),totalweight*triggereff_step4_4);
+                     m_hVector_tracks[15].at(indexV)->Fill(eventdiff->GetMultiplicityTracks(),totalweight*triggereff_step4_4);
+                     m_hVector_pfetamax[15].at(indexV)->Fill(eventdiff->GetEtaMaxFromPFCands(),totalweight*triggereff_step4_4);
+                     m_hVector_pfetamin[15].at(indexV)->Fill(eventdiff->GetEtaMinFromPFCands(),totalweight*triggereff_step4_4);
+                     m_hVector_asumE[15].at(indexV)->Fill(aSumE_,totalweight*triggereff_step4_4);
+                     m_hVector_deltaetajets[15].at(indexV)->Fill(eventexcl->GetJetsDeltaEta(),totalweight*triggereff_step4_4);
+                     m_hVector_deltaphijets[15].at(indexV)->Fill(deltaphi_,totalweight*triggereff_step4_4);
+                     m_hVector_deltaptjets[15].at(indexV)->Fill(eventexcl->GetJetsDeltaPt(),totalweight*triggereff_step4_4);
+                     m_hVector_dijetmass[15].at(indexV)->Fill(eventexcl->GetMassDijets(),totalweight*triggereff_step4_4);
+                     m_hVector_ptjet1[15].at(indexV)->Fill(eventexcl->GetLeadingJetPt(),totalweight*triggereff_step4_4);
+                     m_hVector_ptjet2[15].at(indexV)->Fill(eventexcl->GetSecondJetPt(),totalweight*triggereff_step4_4);
+                     m_hVector_etajet1[15].at(indexV)->Fill(eventexcl->GetLeadingJetEta(),totalweight*triggereff_step4_4);
+                     m_hVector_etajet2[15].at(indexV)->Fill(eventexcl->GetSecondJetEta(),totalweight*triggereff_step4_4);
+                     m_hVector_phijet1[15].at(indexV)->Fill(eventexcl->GetLeadingJetPhi(),totalweight*triggereff_step4_4);
+                     m_hVector_phijet2[15].at(indexV)->Fill(eventexcl->GetSecondJetPhi(),totalweight*triggereff_step4_4);
+                     m_hVector_sumEHFplus[15].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight*triggereff_step4_4);
+                     m_hVector_sumEHFminus[15].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight*triggereff_step4_4);
+                     m_hVector_sumEHEplus[15].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus(),totalweight*triggereff_step4_4);
+                     m_hVector_sumEHEminus[15].at(indexV)->Fill(eventdiff->GetSumEnergyHEMinus(),totalweight*triggereff_step4_4);
+                     m_hVector_sumEHFpfplus[15].at(indexV)->Fill(eventexcl->GetSumEHFPFlowPlus(),totalweight*triggereff_step4_4);
+                     m_hVector_sumEHFpfminus[15].at(indexV)->Fill(eventexcl->GetSumEHFPFlowMinus(),totalweight*triggereff_step4_4);
+                     m_hVector_deltaEtaPF[15].at(indexV)->Fill(deltaetapf_,totalweight*triggereff_step4_4);
+                     m_hVector_absdeltaEtaPF[15].at(indexV)->Fill(absdeltaetapf_,totalweight*triggereff_step4_4);
+                     m_hVector_vertex[15].at(indexV)->Fill(eventexcl->GetNVertex(),totalweight*triggereff_step4_4);
                      m_hVector_lumi[15].at(indexV)->Fill(eventinfo->GetInstLumiBunch());
 
                      for(int ieta = 29,iring = 0; ieta <= 41; ++ieta,++iring){
-                        m_hVector_sumEHFplusVsiEta[15][iring]->Fill(eventdiff->GetSumEHFPlusVsiEta(iring),totalweight);
-                        m_hVector_sumEHFminusVsiEta[15][iring]->Fill(eventdiff->GetSumEHFMinusVsiEta(iring),totalweight);
+                        m_hVector_sumEHFplusVsiEta[15][iring]->Fill(eventdiff->GetSumEHFPlusVsiEta(iring),totalweight*triggereff_step4_4);
+                        m_hVector_sumEHFminusVsiEta[15][iring]->Fill(eventdiff->GetSumEHFMinusVsiEta(iring),totalweight*triggereff_step4_4);
                      }
 
 		  }
 
 		  if (eventdiff->GetEtaMinFromPFCands() > -3. && eventdiff->GetEtaMaxFromPFCands() < 3.){
 
-                     counterJetsEta2step4_3+=totalweight;
-                     m_hVector_rjj[16].at(indexV)->Fill(eventexcl->GetRjjFromJets(),totalweight);
-                     m_hVector_detagen[16].at(indexV)->Fill(eventexcl->GetDeltaEtaGen(),totalweight);
-		     m_hVector_mxGen[16].at(indexV)->Fill(eventexcl->GetMxGenRange(),totalweight);
-                     m_hVector_multhf[16].at(indexV)->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),totalweight);
-                     m_hVector_etcalos[16].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())),totalweight);
-                     m_hVector_tracks[16].at(indexV)->Fill(eventdiff->GetMultiplicityTracks(),totalweight);
-                     m_hVector_pfetamax[16].at(indexV)->Fill(eventdiff->GetEtaMaxFromPFCands(),totalweight);
-                     m_hVector_pfetamin[16].at(indexV)->Fill(eventdiff->GetEtaMinFromPFCands(),totalweight);
-                     m_hVector_asumE[16].at(indexV)->Fill(aSumE_,totalweight);
-                     m_hVector_deltaetajets[16].at(indexV)->Fill(eventexcl->GetJetsDeltaEta(),totalweight);
-                     m_hVector_deltaphijets[16].at(indexV)->Fill(deltaphi_,totalweight);
-                     m_hVector_deltaptjets[16].at(indexV)->Fill(eventexcl->GetJetsDeltaPt(),totalweight);
-                     m_hVector_dijetmass[16].at(indexV)->Fill(eventexcl->GetMassDijets(),totalweight);
-                     m_hVector_ptjet1[16].at(indexV)->Fill(eventexcl->GetLeadingJetPt(),totalweight);
-                     m_hVector_ptjet2[16].at(indexV)->Fill(eventexcl->GetSecondJetPt(),totalweight);
-                     m_hVector_etajet1[16].at(indexV)->Fill(eventexcl->GetLeadingJetEta(),totalweight);
-                     m_hVector_etajet2[16].at(indexV)->Fill(eventexcl->GetSecondJetEta(),totalweight);
-                     m_hVector_phijet1[16].at(indexV)->Fill(eventexcl->GetLeadingJetPhi(),totalweight);
-                     m_hVector_phijet2[16].at(indexV)->Fill(eventexcl->GetSecondJetPhi(),totalweight);
-                     m_hVector_sumEHFplus[16].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight);
-                     m_hVector_sumEHFminus[16].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight);
-                     m_hVector_sumEHEplus[16].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus(),totalweight);
-                     m_hVector_sumEHEminus[16].at(indexV)->Fill(eventdiff->GetSumEnergyHEMinus(),totalweight);
-                     m_hVector_sumEHFpfplus[16].at(indexV)->Fill(eventexcl->GetSumEHFPFlowPlus(),totalweight);
-                     m_hVector_sumEHFpfminus[16].at(indexV)->Fill(eventexcl->GetSumEHFPFlowMinus(),totalweight);
-                     m_hVector_deltaEtaPF[16].at(indexV)->Fill(deltaetapf_,totalweight);
-                     m_hVector_absdeltaEtaPF[16].at(indexV)->Fill(absdeltaetapf_,totalweight);
-                     m_hVector_vertex[16].at(indexV)->Fill(eventexcl->GetNVertex(),totalweight);
+                     counterJetsEta2step4_3+=totalweight*triggereff_step4_3;
+                     m_hVector_rjj[16].at(indexV)->Fill(eventexcl->GetRjjFromJets(),totalweight*triggereff_step4_3);
+                     m_hVector_detagen[16].at(indexV)->Fill(eventexcl->GetDeltaEtaGen(),totalweight*triggereff_step4_3);
+		     m_hVector_mxGen[16].at(indexV)->Fill(eventexcl->GetMxGenRange(),totalweight*triggereff_step4_3);
+                     m_hVector_multhf[16].at(indexV)->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),totalweight*triggereff_step4_3);
+                     m_hVector_etcalos[16].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())),totalweight*triggereff_step4_3);
+                     m_hVector_tracks[16].at(indexV)->Fill(eventdiff->GetMultiplicityTracks(),totalweight*triggereff_step4_3);
+                     m_hVector_pfetamax[16].at(indexV)->Fill(eventdiff->GetEtaMaxFromPFCands(),totalweight*triggereff_step4_3);
+                     m_hVector_pfetamin[16].at(indexV)->Fill(eventdiff->GetEtaMinFromPFCands(),totalweight*triggereff_step4_3);
+                     m_hVector_asumE[16].at(indexV)->Fill(aSumE_,totalweight*triggereff_step4_3);
+                     m_hVector_deltaetajets[16].at(indexV)->Fill(eventexcl->GetJetsDeltaEta(),totalweight*triggereff_step4_3);
+                     m_hVector_deltaphijets[16].at(indexV)->Fill(deltaphi_,totalweight*triggereff_step4_3);
+                     m_hVector_deltaptjets[16].at(indexV)->Fill(eventexcl->GetJetsDeltaPt(),totalweight*triggereff_step4_3);
+                     m_hVector_dijetmass[16].at(indexV)->Fill(eventexcl->GetMassDijets(),totalweight*triggereff_step4_3);
+                     m_hVector_ptjet1[16].at(indexV)->Fill(eventexcl->GetLeadingJetPt(),totalweight*triggereff_step4_3);
+                     m_hVector_ptjet2[16].at(indexV)->Fill(eventexcl->GetSecondJetPt(),totalweight*triggereff_step4_3);
+                     m_hVector_etajet1[16].at(indexV)->Fill(eventexcl->GetLeadingJetEta(),totalweight*triggereff_step4_3);
+                     m_hVector_etajet2[16].at(indexV)->Fill(eventexcl->GetSecondJetEta(),totalweight*triggereff_step4_3);
+                     m_hVector_phijet1[16].at(indexV)->Fill(eventexcl->GetLeadingJetPhi(),totalweight*triggereff_step4_3);
+                     m_hVector_phijet2[16].at(indexV)->Fill(eventexcl->GetSecondJetPhi(),totalweight*triggereff_step4_3);
+                     m_hVector_sumEHFplus[16].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight*triggereff_step4_3);
+                     m_hVector_sumEHFminus[16].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight*triggereff_step4_3);
+                     m_hVector_sumEHEplus[16].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus(),totalweight*triggereff_step4_3);
+                     m_hVector_sumEHEminus[16].at(indexV)->Fill(eventdiff->GetSumEnergyHEMinus(),totalweight*triggereff_step4_3);
+                     m_hVector_sumEHFpfplus[16].at(indexV)->Fill(eventexcl->GetSumEHFPFlowPlus(),totalweight*triggereff_step4_3);
+                     m_hVector_sumEHFpfminus[16].at(indexV)->Fill(eventexcl->GetSumEHFPFlowMinus(),totalweight*triggereff_step4_3);
+                     m_hVector_deltaEtaPF[16].at(indexV)->Fill(deltaetapf_,totalweight*triggereff_step4_3);
+                     m_hVector_absdeltaEtaPF[16].at(indexV)->Fill(absdeltaetapf_,totalweight*triggereff_step4_3);
+                     m_hVector_vertex[16].at(indexV)->Fill(eventexcl->GetNVertex(),totalweight*triggereff_step4_3);
                      m_hVector_lumi[16].at(indexV)->Fill(eventinfo->GetInstLumiBunch());
 
                      for(int ieta = 29,iring = 0; ieta <= 41; ++ieta,++iring){
-                        m_hVector_sumEHFplusVsiEta[16][iring]->Fill(eventdiff->GetSumEHFPlusVsiEta(iring),totalweight);
-                        m_hVector_sumEHFminusVsiEta[16][iring]->Fill(eventdiff->GetSumEHFMinusVsiEta(iring),totalweight);
+                        m_hVector_sumEHFplusVsiEta[16][iring]->Fill(eventdiff->GetSumEHFPlusVsiEta(iring),totalweight*triggereff_step4_3);
+                        m_hVector_sumEHFminusVsiEta[16][iring]->Fill(eventdiff->GetSumEHFMinusVsiEta(iring),totalweight*triggereff_step4_3);
                      }
 
 		  }
@@ -1326,80 +1357,80 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
 
 		  if (eventdiff->GetEtaMinFromPFCands() > -2. && eventdiff->GetEtaMaxFromPFCands() < 2.){
                      outstring << eventdiff->GetRunNumber() << ":" << eventdiff->GetLumiSection() << ":" << eventdiff->GetEventNumber() << std::endl;
-                     counterJetsEta2step4_2+=totalweight;
-                     m_hVector_rjj[17].at(indexV)->Fill(eventexcl->GetRjjFromJets(),totalweight);
-                     m_hVector_detagen[17].at(indexV)->Fill(eventexcl->GetDeltaEtaGen(),totalweight);
-		     m_hVector_mxGen[17].at(indexV)->Fill(eventexcl->GetMxGenRange(),totalweight);
-                     m_hVector_multhf[17].at(indexV)->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),totalweight);
-                     m_hVector_etcalos[17].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())),totalweight);
-                     m_hVector_tracks[17].at(indexV)->Fill(eventdiff->GetMultiplicityTracks(),totalweight);
-                     m_hVector_pfetamax[17].at(indexV)->Fill(eventdiff->GetEtaMaxFromPFCands(),totalweight);
-                     m_hVector_pfetamin[17].at(indexV)->Fill(eventdiff->GetEtaMinFromPFCands(),totalweight);
-                     m_hVector_asumE[17].at(indexV)->Fill(aSumE_,totalweight);
-                     m_hVector_deltaetajets[17].at(indexV)->Fill(eventexcl->GetJetsDeltaEta(),totalweight);
-                     m_hVector_deltaphijets[17].at(indexV)->Fill(deltaphi_,totalweight);
-                     m_hVector_deltaptjets[17].at(indexV)->Fill(eventexcl->GetJetsDeltaPt(),totalweight);
-                     m_hVector_dijetmass[17].at(indexV)->Fill(eventexcl->GetMassDijets(),totalweight);
-                     m_hVector_ptjet1[17].at(indexV)->Fill(eventexcl->GetLeadingJetPt(),totalweight);
-                     m_hVector_ptjet2[17].at(indexV)->Fill(eventexcl->GetSecondJetPt(),totalweight);
-                     m_hVector_etajet1[17].at(indexV)->Fill(eventexcl->GetLeadingJetEta(),totalweight);
-                     m_hVector_etajet2[17].at(indexV)->Fill(eventexcl->GetSecondJetEta(),totalweight);
-                     m_hVector_phijet1[17].at(indexV)->Fill(eventexcl->GetLeadingJetPhi(),totalweight);
-                     m_hVector_phijet2[17].at(indexV)->Fill(eventexcl->GetSecondJetPhi(),totalweight);
-                     m_hVector_sumEHFplus[17].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight);
-                     m_hVector_sumEHFminus[17].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight);
-                     m_hVector_sumEHEplus[17].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus(),totalweight);
-                     m_hVector_sumEHEminus[17].at(indexV)->Fill(eventdiff->GetSumEnergyHEMinus(),totalweight);
-                     m_hVector_sumEHFpfplus[17].at(indexV)->Fill(eventexcl->GetSumEHFPFlowPlus(),totalweight);
-                     m_hVector_sumEHFpfminus[17].at(indexV)->Fill(eventexcl->GetSumEHFPFlowMinus(),totalweight);
-                     m_hVector_deltaEtaPF[17].at(indexV)->Fill(deltaetapf_,totalweight);
-                     m_hVector_absdeltaEtaPF[17].at(indexV)->Fill(absdeltaetapf_,totalweight);
-                     m_hVector_vertex[17].at(indexV)->Fill(eventexcl->GetNVertex(),totalweight);
+                     counterJetsEta2step4_2+=totalweight*triggereff_step4_2;
+                     m_hVector_rjj[17].at(indexV)->Fill(eventexcl->GetRjjFromJets(),totalweight*triggereff_step4_2);
+                     m_hVector_detagen[17].at(indexV)->Fill(eventexcl->GetDeltaEtaGen(),totalweight*triggereff_step4_2);
+		     m_hVector_mxGen[17].at(indexV)->Fill(eventexcl->GetMxGenRange(),totalweight*triggereff_step4_2);
+                     m_hVector_multhf[17].at(indexV)->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),totalweight*triggereff_step4_2);
+                     m_hVector_etcalos[17].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())),totalweight*triggereff_step4_2);
+                     m_hVector_tracks[17].at(indexV)->Fill(eventdiff->GetMultiplicityTracks(),totalweight*triggereff_step4_2);
+                     m_hVector_pfetamax[17].at(indexV)->Fill(eventdiff->GetEtaMaxFromPFCands(),totalweight*triggereff_step4_2);
+                     m_hVector_pfetamin[17].at(indexV)->Fill(eventdiff->GetEtaMinFromPFCands(),totalweight*triggereff_step4_2);
+                     m_hVector_asumE[17].at(indexV)->Fill(aSumE_,totalweight*triggereff_step4_2);
+                     m_hVector_deltaetajets[17].at(indexV)->Fill(eventexcl->GetJetsDeltaEta(),totalweight*triggereff_step4_2);
+                     m_hVector_deltaphijets[17].at(indexV)->Fill(deltaphi_,totalweight*triggereff_step4_2);
+                     m_hVector_deltaptjets[17].at(indexV)->Fill(eventexcl->GetJetsDeltaPt(),totalweight*triggereff_step4_2);
+                     m_hVector_dijetmass[17].at(indexV)->Fill(eventexcl->GetMassDijets(),totalweight*triggereff_step4_2);
+                     m_hVector_ptjet1[17].at(indexV)->Fill(eventexcl->GetLeadingJetPt(),totalweight*triggereff_step4_2);
+                     m_hVector_ptjet2[17].at(indexV)->Fill(eventexcl->GetSecondJetPt(),totalweight*triggereff_step4_2);
+                     m_hVector_etajet1[17].at(indexV)->Fill(eventexcl->GetLeadingJetEta(),totalweight*triggereff_step4_2);
+                     m_hVector_etajet2[17].at(indexV)->Fill(eventexcl->GetSecondJetEta(),totalweight*triggereff_step4_2);
+                     m_hVector_phijet1[17].at(indexV)->Fill(eventexcl->GetLeadingJetPhi(),totalweight*triggereff_step4_2);
+                     m_hVector_phijet2[17].at(indexV)->Fill(eventexcl->GetSecondJetPhi(),totalweight*triggereff_step4_2);
+                     m_hVector_sumEHFplus[17].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight*triggereff_step4_2);
+                     m_hVector_sumEHFminus[17].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight*triggereff_step4_2);
+                     m_hVector_sumEHEplus[17].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus(),totalweight*triggereff_step4_2);
+                     m_hVector_sumEHEminus[17].at(indexV)->Fill(eventdiff->GetSumEnergyHEMinus(),totalweight*triggereff_step4_2);
+                     m_hVector_sumEHFpfplus[17].at(indexV)->Fill(eventexcl->GetSumEHFPFlowPlus(),totalweight*triggereff_step4_2);
+                     m_hVector_sumEHFpfminus[17].at(indexV)->Fill(eventexcl->GetSumEHFPFlowMinus(),totalweight*triggereff_step4_2);
+                     m_hVector_deltaEtaPF[17].at(indexV)->Fill(deltaetapf_,totalweight*triggereff_step4_2);
+                     m_hVector_absdeltaEtaPF[17].at(indexV)->Fill(absdeltaetapf_,totalweight*triggereff_step4_2);
+                     m_hVector_vertex[17].at(indexV)->Fill(eventexcl->GetNVertex(),totalweight*triggereff_step4_2);
                      m_hVector_lumi[17].at(indexV)->Fill(eventinfo->GetInstLumiBunch());
 
                      for(int ieta = 29,iring = 0; ieta <= 41; ++ieta,++iring){
-                        m_hVector_sumEHFplusVsiEta[17][iring]->Fill(eventdiff->GetSumEHFPlusVsiEta(iring),totalweight);
-                        m_hVector_sumEHFminusVsiEta[17][iring]->Fill(eventdiff->GetSumEHFMinusVsiEta(iring),totalweight);
+                        m_hVector_sumEHFplusVsiEta[17][iring]->Fill(eventdiff->GetSumEHFPlusVsiEta(iring),totalweight*triggereff_step4_2);
+                        m_hVector_sumEHFminusVsiEta[17][iring]->Fill(eventdiff->GetSumEHFMinusVsiEta(iring),totalweight*triggereff_step4_2);
                      }
 
       		  }
 
 		  if (eventdiff->GetEtaMinFromPFCands() > -1. && eventdiff->GetEtaMaxFromPFCands() < 1.){
 
-                     counterJetsEta2step4_1+=totalweight;
-                     m_hVector_rjj[18].at(indexV)->Fill(eventexcl->GetRjjFromJets(),totalweight);
-                     m_hVector_detagen[18].at(indexV)->Fill(eventexcl->GetDeltaEtaGen(),totalweight);
-		     m_hVector_mxGen[18].at(indexV)->Fill(eventexcl->GetMxGenRange(),totalweight);
-                     m_hVector_multhf[18].at(indexV)->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),totalweight);
-                     m_hVector_etcalos[18].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())),totalweight);
-                     m_hVector_tracks[18].at(indexV)->Fill(eventdiff->GetMultiplicityTracks(),totalweight);
-                     m_hVector_pfetamax[18].at(indexV)->Fill(eventdiff->GetEtaMaxFromPFCands(),totalweight);
-                     m_hVector_pfetamin[18].at(indexV)->Fill(eventdiff->GetEtaMinFromPFCands(),totalweight);
-                     m_hVector_asumE[18].at(indexV)->Fill(aSumE_,totalweight);
-                     m_hVector_deltaetajets[18].at(indexV)->Fill(eventexcl->GetJetsDeltaEta(),totalweight);
-                     m_hVector_deltaphijets[18].at(indexV)->Fill(deltaphi_,totalweight);
-                     m_hVector_deltaptjets[18].at(indexV)->Fill(eventexcl->GetJetsDeltaPt(),totalweight);
-                     m_hVector_dijetmass[18].at(indexV)->Fill(eventexcl->GetMassDijets(),totalweight);
-                     m_hVector_ptjet1[18].at(indexV)->Fill(eventexcl->GetLeadingJetPt(),totalweight);
-                     m_hVector_ptjet2[18].at(indexV)->Fill(eventexcl->GetSecondJetPt(),totalweight);
-                     m_hVector_etajet1[18].at(indexV)->Fill(eventexcl->GetLeadingJetEta(),totalweight);
-                     m_hVector_etajet2[18].at(indexV)->Fill(eventexcl->GetSecondJetEta(),totalweight);
-                     m_hVector_phijet1[18].at(indexV)->Fill(eventexcl->GetLeadingJetPhi(),totalweight);
-                     m_hVector_phijet2[18].at(indexV)->Fill(eventexcl->GetSecondJetPhi(),totalweight);
-                     m_hVector_sumEHFplus[18].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight);
-                     m_hVector_sumEHFminus[18].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight);
-                     m_hVector_sumEHEplus[18].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus(),totalweight);
-                     m_hVector_sumEHEminus[18].at(indexV)->Fill(eventdiff->GetSumEnergyHEMinus(),totalweight);
-                     m_hVector_sumEHFpfplus[18].at(indexV)->Fill(eventexcl->GetSumEHFPFlowPlus(),totalweight);
-                     m_hVector_sumEHFpfminus[18].at(indexV)->Fill(eventexcl->GetSumEHFPFlowMinus(),totalweight);
-                     m_hVector_deltaEtaPF[18].at(indexV)->Fill(deltaetapf_,totalweight);
-                     m_hVector_absdeltaEtaPF[18].at(indexV)->Fill(absdeltaetapf_,totalweight);
-                     m_hVector_vertex[18].at(indexV)->Fill(eventexcl->GetNVertex(),totalweight);
+                     counterJetsEta2step4_1+=totalweight*triggereff_step4_1;
+                     m_hVector_rjj[18].at(indexV)->Fill(eventexcl->GetRjjFromJets(),totalweight*triggereff_step4_1);
+                     m_hVector_detagen[18].at(indexV)->Fill(eventexcl->GetDeltaEtaGen(),totalweight*triggereff_step4_1);
+		     m_hVector_mxGen[18].at(indexV)->Fill(eventexcl->GetMxGenRange(),totalweight*triggereff_step4_1);
+                     m_hVector_multhf[18].at(indexV)->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),totalweight*triggereff_step4_1);
+                     m_hVector_etcalos[18].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())),totalweight*triggereff_step4_1);
+                     m_hVector_tracks[18].at(indexV)->Fill(eventdiff->GetMultiplicityTracks(),totalweight*triggereff_step4_1);
+                     m_hVector_pfetamax[18].at(indexV)->Fill(eventdiff->GetEtaMaxFromPFCands(),totalweight*triggereff_step4_1);
+                     m_hVector_pfetamin[18].at(indexV)->Fill(eventdiff->GetEtaMinFromPFCands(),totalweight*triggereff_step4_1);
+                     m_hVector_asumE[18].at(indexV)->Fill(aSumE_,totalweight*triggereff_step4_1);
+                     m_hVector_deltaetajets[18].at(indexV)->Fill(eventexcl->GetJetsDeltaEta(),totalweight*triggereff_step4_1);
+                     m_hVector_deltaphijets[18].at(indexV)->Fill(deltaphi_,totalweight*triggereff_step4_1);
+                     m_hVector_deltaptjets[18].at(indexV)->Fill(eventexcl->GetJetsDeltaPt(),totalweight*triggereff_step4_1);
+                     m_hVector_dijetmass[18].at(indexV)->Fill(eventexcl->GetMassDijets(),totalweight*triggereff_step4_1);
+                     m_hVector_ptjet1[18].at(indexV)->Fill(eventexcl->GetLeadingJetPt(),totalweight*triggereff_step4_1);
+                     m_hVector_ptjet2[18].at(indexV)->Fill(eventexcl->GetSecondJetPt(),totalweight*triggereff_step4_1);
+                     m_hVector_etajet1[18].at(indexV)->Fill(eventexcl->GetLeadingJetEta(),totalweight*triggereff_step4_1);
+                     m_hVector_etajet2[18].at(indexV)->Fill(eventexcl->GetSecondJetEta(),totalweight*triggereff_step4_1);
+                     m_hVector_phijet1[18].at(indexV)->Fill(eventexcl->GetLeadingJetPhi(),totalweight*triggereff_step4_1);
+                     m_hVector_phijet2[18].at(indexV)->Fill(eventexcl->GetSecondJetPhi(),totalweight*triggereff_step4_1);
+                     m_hVector_sumEHFplus[18].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight*triggereff_step4_1);
+                     m_hVector_sumEHFminus[18].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight*triggereff_step4_1);
+                     m_hVector_sumEHEplus[18].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus(),totalweight*triggereff_step4_1);
+                     m_hVector_sumEHEminus[18].at(indexV)->Fill(eventdiff->GetSumEnergyHEMinus(),totalweight*triggereff_step4_1);
+                     m_hVector_sumEHFpfplus[18].at(indexV)->Fill(eventexcl->GetSumEHFPFlowPlus(),totalweight*triggereff_step4_1);
+                     m_hVector_sumEHFpfminus[18].at(indexV)->Fill(eventexcl->GetSumEHFPFlowMinus(),totalweight*triggereff_step4_1);
+                     m_hVector_deltaEtaPF[18].at(indexV)->Fill(deltaetapf_,totalweight*triggereff_step4_1);
+                     m_hVector_absdeltaEtaPF[18].at(indexV)->Fill(absdeltaetapf_,totalweight*triggereff_step4_1);
+                     m_hVector_vertex[18].at(indexV)->Fill(eventexcl->GetNVertex(),totalweight*triggereff_step4_1);
                      m_hVector_lumi[18].at(indexV)->Fill(eventinfo->GetInstLumiBunch());
 
                      for(int ieta = 29,iring = 0; ieta <= 41; ++ieta,++iring){
-                        m_hVector_sumEHFplusVsiEta[18][iring]->Fill(eventdiff->GetSumEHFPlusVsiEta(iring),totalweight);
-                        m_hVector_sumEHFminusVsiEta[18][iring]->Fill(eventdiff->GetSumEHFMinusVsiEta(iring),totalweight);
+                        m_hVector_sumEHFplusVsiEta[18][iring]->Fill(eventdiff->GetSumEHFPlusVsiEta(iring),totalweight*triggereff_step4_1);
+                        m_hVector_sumEHFminusVsiEta[18][iring]->Fill(eventdiff->GetSumEHFMinusVsiEta(iring),totalweight*triggereff_step4_1);
                      }
 
                   }
