@@ -42,7 +42,7 @@ class ExclDijetsComp {
    bool switchPreSel;
    bool switchTrigger;
    double weightlumipass;
-   double triggereffpass;
+
    std::vector<std::vector<TH1D*> > m_hVector_rjj;
    std::vector<std::vector<TH1D*> > m_hVector_detagen;
    std::vector<std::vector<TH1D*> > m_hVector_mxGen;
@@ -73,12 +73,13 @@ class ExclDijetsComp {
    std::vector<std::vector<TH1D*> > m_hVector_vertex;
    std::vector<std::vector<TH1D*> > m_hVector_sumEHFplusVsiEta;
    std::vector<std::vector<TH1D*> > m_hVector_sumEHFminusVsiEta;
+   std::vector<std::vector<TH1D*> > m_hVector_lumi;
    //
    public :
    ExclDijetsComp() {}
    ~ExclDijetsComp() { inf->Close(); }
    
-   void Run(std::string, std::string, std::string, double, double, int, int, bool, bool, bool, bool, bool, bool, bool, double, double);
+   void Run(std::string, std::string, std::string, double, double, int, int, bool, bool, bool, bool, bool, bool, bool, double);
    void LoadFile(std::string,std::string);
    void FillHistograms();
 
