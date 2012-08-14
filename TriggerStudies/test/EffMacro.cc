@@ -25,11 +25,12 @@
 #include "EffMacro.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/ExclusiveDijetsEvent.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/DiffractiveEvent.h"
-#include "KKousour/QCDAnalysis/interface/QCDEvent.h"
+#include "ForwardAnalysis/ForwardTTreeAnalysis/interface/EventInfoEvent.h"
 #include "PhysicsTools/Utilities/interface/LumiReWeighting.h"
 
 using namespace diffractiveAnalysis;
 using namespace exclusiveDijetsAnalysis;
+using namespace eventInfo;
 using namespace reweight;
 
 void EffMacro::LoadFile(std::string fileinput, std::string processinput){
@@ -40,13 +41,13 @@ void EffMacro::LoadFile(std::string fileinput, std::string processinput){
    tr = (TTree*)inf->Get(processinput.c_str());
    eventdiff = new DiffractiveEvent();
    eventexcl = new ExclusiveDijetsEvent();
-   //eventqcd = new QCDEvent();
+   eventinfo = new EventInfoEvent();
    diff = tr->GetBranch("DiffractiveAnalysis");
    excl = tr->GetBranch("ExclusiveDijetsAnalysis");
-   //qcd = tr->GetBranch("QCDAnalysis");
+   info = tr->GetBranch("EventInfo");
    diff->SetAddress(&eventdiff);
    excl->SetAddress(&eventexcl);
-   //qcd->SetAddress(&eventqcd);
+   info->SetAddress(&eventinfo);
 
 }
 
@@ -178,59 +179,58 @@ void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string 
 			    std::cout << "\nEvent " << i << std::endl;
 	      }
 
-	       m_hVector_Evt_lumis.at(0)->Fill(eventexcl->GetInstLumiBunch());
-	       m_hVector_Eff_lumis.at(0)->Fill(eventexcl->GetInstLumiBunch());
+	       m_hVector_Evt_lumis.at(0)->Fill(eventinfo->GetInstLumiBunch());
+	       m_hVector_Eff_lumis.at(0)->Fill(eventinfo->GetInstLumiBunch());
 	      
-	      
-	 
+	      	 
 	      if (!switchTrigger || (switchTrigger && eventexcl->GetHLTPath(optTrigger))){
 		
                          ++counterTrigger;     
-			 m_hVector_Evt_lumis.at(1)->Fill(eventexcl->GetInstLumiBunch());
-			 m_hVector_Eff_lumis.at(1)->Fill(eventexcl->GetInstLumiBunch());
+			 m_hVector_Evt_lumis.at(1)->Fill(eventinfo->GetInstLumiBunch());
+			 m_hVector_Eff_lumis.at(1)->Fill(eventinfo->GetInstLumiBunch());
 
 
 			 if ( !switchPreSel || (switchPreSel && eventdiff->GetSumEnergyHFMinus() < 30 && eventdiff->GetSumEnergyHFPlus() < 30 )){
 
 				 ++counterPreSel;
-				 m_hVector_Evt_lumis.at(2)->Fill(eventexcl->GetInstLumiBunch());
-				 m_hVector_Eff_lumis.at(2)->Fill(eventexcl->GetInstLumiBunch());
+				 m_hVector_Evt_lumis.at(2)->Fill(eventinfo->GetInstLumiBunch());
+				 m_hVector_Eff_lumis.at(2)->Fill(eventinfo->GetInstLumiBunch());
 
 
 				 if(eventexcl->GetNVertex() > 0 && eventexcl->GetNVertex()<= optnVertex){
 
-                                                    ++counterPreSel;
-						    m_hVector_Evt_lumis.at(3)->Fill(eventexcl->GetInstLumiBunch());
-						    m_hVector_Eff_lumis.at(3)->Fill(eventexcl->GetInstLumiBunch());
+                                                    ++counterVertex;
+						    m_hVector_Evt_lumis.at(3)->Fill(eventinfo->GetInstLumiBunch());
+						    m_hVector_Eff_lumis.at(3)->Fill(eventinfo->GetInstLumiBunch());
 					 
 							  
 							  // Eta max and Eta min cut
 							  if (eventdiff->GetEtaMinFromPFCands() > -4. && eventdiff->GetEtaMaxFromPFCands() < 4.){
 
 								     ++counterAllstep4_4;
-								     m_hVector_Evt_lumis.at(4)->Fill(eventexcl->GetInstLumiBunch());
-								     m_hVector_Eff_lumis.at(4)->Fill(eventexcl->GetInstLumiBunch());
+								     m_hVector_Evt_lumis.at(4)->Fill(eventinfo->GetInstLumiBunch());
+								     m_hVector_Eff_lumis.at(4)->Fill(eventinfo->GetInstLumiBunch());
 							  }
 
 							  if (eventdiff->GetEtaMinFromPFCands() > -3. && eventdiff->GetEtaMaxFromPFCands() < 3.){
 
 								     ++counterAllstep4_3;
-								     m_hVector_Evt_lumis[5]->Fill(eventexcl->GetInstLumiBunch());
-								     m_hVector_Eff_lumis[5]->Fill(eventexcl->GetInstLumiBunch());
+								     m_hVector_Evt_lumis[5]->Fill(eventinfo->GetInstLumiBunch());
+								     m_hVector_Eff_lumis[5]->Fill(eventinfo->GetInstLumiBunch());
 							  }
 
 							  if (eventdiff->GetEtaMinFromPFCands() > -2. && eventdiff->GetEtaMaxFromPFCands() < 2.){
 
 								     ++counterAllstep4_2;
-								     m_hVector_Evt_lumis.at(6)->Fill(eventexcl->GetInstLumiBunch());
-								     m_hVector_Eff_lumis.at(6)->Fill(eventexcl->GetInstLumiBunch());
+								     m_hVector_Evt_lumis.at(6)->Fill(eventinfo->GetInstLumiBunch());
+								     m_hVector_Eff_lumis.at(6)->Fill(eventinfo->GetInstLumiBunch());
 							  }
 
 							  if (eventdiff->GetEtaMinFromPFCands() > -1. && eventdiff->GetEtaMaxFromPFCands() < 1.){
 
 								     ++counterAllstep4_1;
-								     m_hVector_Evt_lumis.at(7)->Fill(eventexcl->GetInstLumiBunch());
-								     m_hVector_Eff_lumis.at(7)->Fill(eventexcl->GetInstLumiBunch());
+								     m_hVector_Evt_lumis.at(7)->Fill(eventinfo->GetInstLumiBunch());
+								     m_hVector_Eff_lumis.at(7)->Fill(eventinfo->GetInstLumiBunch());
 							   }
 
 				 }  

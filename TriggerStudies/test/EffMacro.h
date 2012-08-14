@@ -11,7 +11,7 @@
 
 class DiffractiveEvent;
 class ExclusiveDijetsEvent;
-//class QCDEvent;
+class EventInfoEvent;
 
 class EffMacro {
 
@@ -19,10 +19,10 @@ class EffMacro {
    TTree* tr;
    TBranch *diff;
    TBranch *excl;
-   //TBranch *qcd;
+   TBranch *info;
    DiffractiveEvent *eventdiff;
    ExclusiveDijetsEvent *eventexcl;
-   //QCDEvent *eventqcd;
+   EventInfoEvent *eventinfo;
 
    std::string filein;
    std::string fileinput;
@@ -33,7 +33,6 @@ class EffMacro {
    int optTrigger;
    bool switchPreSel;
    bool switchTrigger;
-   //int nbins;
    std::vector<TH1D*> m_hVector_Evt_lumis;
    std::vector<TH1D*> m_hVector_Eff_lumis;
 
