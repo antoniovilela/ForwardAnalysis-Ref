@@ -112,6 +112,8 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
    TFile check1("pu_mc_QCD15-3000.root");
    TFile check2("pu_147196-148058.root");
    TFile check3(filein.c_str());
+   TFile check4("eff_Before.root");
+
 
    if (check1.IsZombie()){
 
@@ -142,6 +144,17 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
       std::cout << " path is not correct." << std::endl;
       std::cout << " Edit the source and recompile." << std::endl;
       std::cout << "----------------------------------------------" << std::endl;
+      return;
+
+   }
+
+   if (check4.IsZombie()){
+
+      std::cout << "\n-----------------------------------------------" << std::endl;
+      std::cout << " There is no Correction Eff Histogram file or the"   << std::endl;
+      std::cout << " path is not correct." << std::endl;
+      std::cout << " Edit the source and recompile." << std::endl;
+      std::cout << "-----------------------------------------------" << std::endl;
       return;
 
    }
