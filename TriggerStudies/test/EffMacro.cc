@@ -51,7 +51,7 @@ void EffMacro::LoadFile(std::string fileinput, std::string processinput){
 
 }
 
-void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string processname_, int optnVertex_, int optTrigger_, bool switchPreSel_, bool switchTrigger_){
+void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string processname_, int optnVertex_, int optTrigger_, bool switchPreSel_, bool switchVertex_, bool switchTrigger_){
 
    filein = filein_;
    savehistofile = savehistofile_;
@@ -60,6 +60,7 @@ void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string 
    optnVertex = optnVertex_;
    optTrigger = optTrigger_;
    switchPreSel = switchPreSel_;
+   switchVertex = switchVertex_;
    switchTrigger = switchTrigger_;
 
    std::cout << "" << std::endl;
@@ -75,6 +76,7 @@ void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string 
    std::cout << "Trigger Option: " << optTrigger << std::endl;
    std::cout << " " << std::endl;
    std::cout << "--> TRUE = 1 FALSE = 0" << std::endl;
+   std::cout << "Vertex Switch: " << switchVertex << std::endl;
    std::cout << "Trigger Switch: " << switchTrigger << std::endl;
    std::cout << "Pre-Selection Switch: " << switchPreSel << std::endl;
    std::cout << " " << std::endl;
@@ -149,7 +151,7 @@ void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string 
     {
 
        char name1[300];
-       sprintf(name1,"Events_Lumis_%s",Folders.at(j).c_str());
+       sprintf(name1,"Events_%s",Folders.at(j).c_str());
        TH1D *histo_m_Evt_lumis = new TH1D(name1,"; Lumis; N events",100,0,2.0);
        m_hVector_Evt_lumis.push_back(histo_m_Evt_lumis);
 
@@ -197,7 +199,7 @@ void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string 
 				 m_hVector_Eff_lumis.at(2)->Fill(eventinfo->GetInstLumiBunch());
 
 
-				 if(eventexcl->GetNVertex() > 0 && eventexcl->GetNVertex()<= optnVertex){
+				 if( !switchVertex || (switchVertex && eventexcl->GetNVertex() > 0 && eventexcl->GetNVertex()<= optnVertex )){
 
                                                     ++counterVertex;
 						    m_hVector_Evt_lumis.at(3)->Fill(eventinfo->GetInstLumiBunch());
@@ -260,6 +262,7 @@ void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string 
      outstring << " " << std::endl;
      outstring << "--> TRUE = 1 FALSE = 0" << std::endl;
      outstring << "Trigger Switch: " << switchTrigger << std::endl;
+     outstring << "Vertex  Switch: " << switchVertex << std::endl;
      outstring << "Pre-Selection Switch: " << switchPreSel << std::endl;
      outstring << "" << std::endl;
      outstring << "<< EVENT INFO >> " << std::endl;
@@ -297,6 +300,7 @@ int main(int argc, char **argv)
    int optnVertex_;
    int optTrigger_;
    bool switchPreSel_;
+   bool switchVertex_;
    bool switchTrigger_;
 
    if (argc > 1 && strcmp(s1,argv[1]) != 0)  filein_ = argv[1];
@@ -305,11 +309,12 @@ int main(int argc, char **argv)
    if (argc > 4 && strcmp(s1,argv[4]) != 0)  optnVertex_ = atoi(argv[4]);
    if (argc > 5 && strcmp(s1,argv[5]) != 0)  optTrigger_   = atoi(argv[5]);
    if (argc > 6 && strcmp(s1,argv[6]) != 0)  switchPreSel_   = atoi(argv[6]);
-   if (argc > 7 && strcmp(s1,argv[7]) != 0)  switchTrigger_   = atoi(argv[7]);
+   if (argc > 7 && strcmp(s1,argv[7]) != 0)  switchVertex_   = atoi(argv[7]);
+   if (argc > 8 && strcmp(s1,argv[8]) != 0)  switchTrigger_   = atoi(argv[8]);
 
 
    EffMacro* exclDijets = new EffMacro();   
-   exclDijets->Run(filein_, savehistofile_, processname_, optnVertex_, optTrigger_, switchPreSel_, switchTrigger_);
+   exclDijets->Run(filein_, savehistofile_, processname_, optnVertex_, optTrigger_, switchPreSel_, switchVertex_, switchTrigger_);
 
    return 0;
 }
