@@ -142,7 +142,7 @@ process.exclusiveDijetsAnalysisTTree = cms.EDAnalyzer("EventInfoDiffractiveExclu
 	EventInfo = cms.PSet(
 	            RunOnData = cms.untracked.bool(False),
 		    RunWithMCPU = cms.untracked.bool(False),
-                    RunWithGen = cms.untracked.bool(False)
+                    RunWithGen = cms.untracked.bool(True)
 	),
 	DiffractiveAnalysis = DiffractiveAnalysis,
         ExclusiveDijetsAnalysis = ExclusiveDijetsAnalysis
