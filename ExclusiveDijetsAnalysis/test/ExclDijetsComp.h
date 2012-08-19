@@ -30,6 +30,7 @@ class ExclDijetsComp {
    std::string processname;
    std::string processinput; 
    std::string savehistofile;
+   std::string filecor;
    double jet1PT;
    double jet2PT;
    int optnVertex;
@@ -79,7 +80,7 @@ class ExclDijetsComp {
    ExclDijetsComp() {}
    ~ExclDijetsComp() { inf->Close(); }
    
-   void Run(std::string, std::string, std::string, double, double, int, int, bool, bool, bool, bool, bool, bool, bool, double);
+   void Run(std::string, std::string, std::string, std::string, double, double, int, int, bool, bool, bool, bool, bool, bool, bool, double);
    void LoadFile(std::string,std::string);
    void FillHistograms();
 
