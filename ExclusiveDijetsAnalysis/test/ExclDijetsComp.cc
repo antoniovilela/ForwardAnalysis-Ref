@@ -632,7 +632,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
       }
 
      //Protection
-     if( eventinfo->GetInstLumiBunch()>0.03 && eventinfo->GetInstLumiBunch()<0.71 ){
+     if( switchWeightLumi || (!switchWeightLumi && eventinfo->GetInstLumiBunch()>0.03 && eventinfo->GetInstLumiBunch()<0.71) ){
 
 	      // Without Cuts          
 	      ////////////////////////////////////////////////

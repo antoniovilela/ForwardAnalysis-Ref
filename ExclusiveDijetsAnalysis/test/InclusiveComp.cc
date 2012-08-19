@@ -604,8 +604,7 @@ void InclusiveComp::Run(std::string filein_, std::string savehistofile_, std::st
             << "Total weight BXp1 : " << totalweightbxp1 << std::endl;
       }
 
-     //Protection
-     if( eventinfo->GetInstLumiBunch()>0.03 && eventinfo->GetInstLumiBunch()<0.71 ){
+     if( switchWeightLumi || (!switchWeightLumi && eventinfo->GetInstLumiBunch()>0.03 && eventinfo->GetInstLumiBunch()<0.71) ){
 
 	      // Without Cuts          
 	      ////////////////////////////////////////////////
