@@ -199,7 +199,7 @@ void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string 
 				 m_hVector_Eff_lumis.at(2)->Fill(eventinfo->GetInstLumiBunch());
 
 
-				 if( !switchVertex || (switchVertex && eventexcl->GetNVertex() > 0 && eventexcl->GetNVertex()<= optnVertex )){
+				 if( !switchVertex || (switchVertex && eventexcl->GetNVertex()<= optnVertex )){
 
                                                     ++counterVertex;
 						    m_hVector_Evt_lumis.at(3)->Fill(eventinfo->GetInstLumiBunch());
