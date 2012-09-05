@@ -604,7 +604,10 @@ double DiffractiveAnalysis::MassColl(PartColl& partCollection, double ptThreshol
       }
 
       // HF eta rings 29, 40, 41
-      if( ( (fabs(part->eta()) >= 2.866) && (fabs(part->eta()) < 2.976) ) || 
+      /*if( ( (fabs(part->eta()) >= 2.866) && (fabs(part->eta()) < 2.976) ) || 
+	    (fabs(part->eta()) >= 4.730) ) continue;*/
+      // HF eta rings 29, 30, 40, 41
+      if( ( (fabs(part->eta()) >= 2.866) && (fabs(part->eta()) < 3.152) ) || 
 	    (fabs(part->eta()) >= 4.730) ) continue;
 
       if(part_pt < ptThreshold) continue;
@@ -636,7 +639,10 @@ std::pair<double,double> DiffractiveAnalysis::Xi(Coll& partCollection, double Eb
       }
 
       // HF eta rings 29, 40, 41
-      if( ( (fabs(part->eta()) >= 2.866) && (fabs(part->eta()) < 2.976) ) || 
+      /*if( ( (fabs(part->eta()) >= 2.866) && (fabs(part->eta()) < 2.976) ) || 
+	    (fabs(part->eta()) >= 4.730) ) continue;*/
+      // HF eta rings 29, 30, 40, 41
+      if( ( (fabs(part->eta()) >= 2.866) && (fabs(part->eta()) < 3.152) ) || 
 	    (fabs(part->eta()) >= 4.730) ) continue;
 
       if(part_pt < ptThreshold) continue;
@@ -680,7 +686,10 @@ std::pair<double,double> DiffractiveAnalysis::EPlusPz(Coll& partCollection,
       }
 
       // HF eta rings 29, 40, 41
-      if( ( (fabs(part->eta()) >= 2.866) && (fabs(part->eta()) < 2.976) ) || 
+      /*if( ( (fabs(part->eta()) >= 2.866) && (fabs(part->eta()) < 2.976) ) || 
+	    (fabs(part->eta()) >= 4.730) ) continue;*/
+      // HF eta rings 29, 30, 40, 41
+      if( ( (fabs(part->eta()) >= 2.866) && (fabs(part->eta()) < 3.152) ) || 
 	    (fabs(part->eta()) >= 4.730) ) continue;
 
       if(part_pt < ptThreshold) continue;
