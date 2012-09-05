@@ -10,6 +10,7 @@ bool AcceptCaloTower::operator() (CaloTower const& calotower) {
 
   bool accept = true; 
   if( abs(ieta) == 29) accept = false;
+  if( abs(ieta) == 30) accept = false;
   if( abs(ieta) >= 40) accept = false;
 
   //...
