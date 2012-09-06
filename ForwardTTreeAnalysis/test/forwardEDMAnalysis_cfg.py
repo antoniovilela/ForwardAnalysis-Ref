@@ -35,6 +35,7 @@ else:
     config.hltPaths = ('HLT_ExclDiJet30U_HFAND_v*','HLT_ExclDiJet30U_HFOR_v*','HLT_Jet30U*')
 
 if config.runOnMC:
+    config.outputEdmFile = 'forwardEDMAnalysis_MC.root'
     config.inputFileName = '/storage2/antoniov/data1/QCD_Pt-120to170_TuneZ2_7TeV_pythia6_Summer11-PU_S3_START42_V11-v2_AODSIM/00356018-617D-E011-A32F-002590200A94.root'# MC
 else:
     #config.inputFileName = 'rfio:/castor/cern.ch/cms/store/data/Run2012A/Jet/RAW/v1/000/193/336/6CE0FC0F-7995-E111-BC9D-001D09F2B2CF.root'
@@ -145,8 +146,13 @@ process.patTriggerInfo = cms.EDProducer("PATTriggerInfoEDMProducer",
 	)
 
 process.eventInfo = cms.EDProducer("EventInfoEDMProducer",
-	EventInfo = cms.PSet()
+	EventInfo = cms.PSet(
+            RunWithGen = cms.untracked.bool(False),
+            RunWithMCPU = cms.untracked.bool(False) )
 	)
+if config.runOnMC:
+    process.eventInfo.EventInfo.RunWithGen = True
+    process.eventInfo.EventInfo.RunWithMCPU = True
 
 process.diffractiveAnalysis = cms.EDProducer("DiffractiveAnalysisEDMProducer",
 	DiffractiveAnalysis = DiffractiveAnalysis
