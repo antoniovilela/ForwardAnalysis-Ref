@@ -2,9 +2,11 @@
 
 import os,sys
 from subprocess import Popen,PIPE,call
+from ForwardAnalysis.Scripts.CopyWatch import CopyWatch
+
+"""
 #from threading import Thread,Lock,Event
 from threading import Thread
-
 class CopyWatch(Thread):
     def __init__(self,cmd):
         Thread.__init__(self)
@@ -13,6 +15,7 @@ class CopyWatch(Thread):
     def run(self):
         #print self.cmd
         call(self.cmd,shell=True)
+"""
 
 if __name__ == '__main__':
     import optparse

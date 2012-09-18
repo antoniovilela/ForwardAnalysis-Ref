@@ -4,7 +4,7 @@ import sys
 import optparse
 from subprocess import Popen,PIPE
 from listFilesInCastor import listFilesInCastor
-from CopyWatch import CopyWatch
+from ForwardAnalysis.Scripts.CopyWatch import CopyWatch
 
 """
 def listFilesInCastor(castor_dir,type,prefix):
@@ -24,7 +24,7 @@ def copyFilesFromCastor(castor_dir,output_dir,type,veto,prefix,suffix,enable):
     copyList = []
     for item in files:
         #cmd = ['rfcp',item,output_dir] 
-        cmd = 'rfcp %s %s' % (item,output_dir) 
+        cmd = 'nice rfcp %s %s' % (item,output_dir) 
         #print "..." + item
         print "..." + cmd
         if enable:
