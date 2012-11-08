@@ -1,6 +1,7 @@
 <lcgdict>
 <selection>
   <class name="DiffractiveEvent"/> 
+  <class name="DiffractiveZEvent"/>
   <class name="ExclusiveDijetsEvent"/>
   <class name="DijetsTriggerEvent"/>
   <class name="HeavyFlavorEvent"/>
@@ -11,6 +12,7 @@
   <class name="std::vector<PATL1Trigger>"/>
   <class name="std::vector<PATHLTTrigger>"/>
   <class name="edm::Wrapper<DiffractiveEvent>"/>
+  <class name="edm::Wrapper<DiffractiveZEvent>"/>
   <class name="edm::Wrapper<ExclusiveDijetsEvent>"/>
   <class name="edm::Wrapper<DijetsTriggerEvent>"/>
   <class name="edm::Wrapper<HeavyFlavorEvent>"/>
