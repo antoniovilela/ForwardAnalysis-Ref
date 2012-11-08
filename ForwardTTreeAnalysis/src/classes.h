@@ -1,5 +1,6 @@
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/DiffractiveEvent.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/ExclusiveDijetsEvent.h"
+#include "ForwardAnalysis/ForwardTTreeAnalysis/interface/DiffractiveZEvent.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/DijetsTriggerEvent.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/HeavyFlavorEvent.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/EventInfoEvent.h"
@@ -20,6 +21,7 @@ PATHLTTrigger patHLTTrigger;*/
 namespace {
    struct dictionary {
       DiffractiveEvent diffractiveEvent;
+      DiffractiveZEvent diffractiveZEvent;
       ExclusiveDijetsEvent exclusiveDijetsEvent;
       DijetsTriggerEvent dijetsTriggerEvent;
       HeavyFlavorEvent heavyFlavorEvent;
@@ -30,6 +32,7 @@ namespace {
       std::vector<PATL1Trigger> vec_patL1Trigger;
       std::vector<PATHLTTrigger> vec_patHLTTrigger;
       edm::Wrapper<DiffractiveEvent> diffractiveEvent_wr;
+      edm::Wrapper<DiffractiveZEvent> diffractiveZEvent_wr;
       edm::Wrapper<ExclusiveDijetsEvent> exclusiveDijetsEvent_wr;
       edm::Wrapper<DijetsTriggerEvent> dijetsTriggerEvent_wr;
       edm::Wrapper<HeavyFlavorEvent> heavyFlavorEvent_wr;
