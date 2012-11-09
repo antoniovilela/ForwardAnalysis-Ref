@@ -51,8 +51,8 @@
   leg->Draw("psames");
 //-----------------------------------------------
 
- //  Calculated of the threshold of the CaloTowers
- TH1F* h_energyHF_95 = static_cast<TH1F*>(fileUnpaired->Get((std::string("caloTowerAnalysisBPTXPlusOrMinusOnly") + "/energyHF").c_str()));
+  //  Calculated of the threshold of the CaloTowers
+  TH1F* h_energyHF_95 = static_cast<TH1F*>(fileUnpaired->Get((std::string("caloTowerAnalysisBPTXPlusOrMinusOnly") + "/energyHF").c_str()));
 
 
   Bool_t debug = false;
@@ -69,33 +69,33 @@
 
   Double_t integral = h_energyHF_95->Integral(bin_X_min,bin_X_max-1);
   if(debug){
-  cout << "xmin: "<< xmin <<endl;
-  cout << "xmax: "<< xmax <<endl;
-  cout << "bin_X_min: "<< bin_X_min<<" "<< "binCenter_x_min: "<< binCenter_x_min << endl;
-  cout << "bin_X_max: "<< bin_X_max-1<<" "<< "binCenter_x_max: "<< binCenter_x_max <<  endl;
-  cout << "Integral :" << integral<< endl;
+     cout << "xmin: "<< xmin <<endl;
+     cout << "xmax: "<< xmax <<endl;
+     cout << "bin_X_min: "<< bin_X_min<<" "<< "binCenter_x_min: "<< binCenter_x_min << endl;
+     cout << "bin_X_max: "<< bin_X_max-1<<" "<< "binCenter_x_max: "<< binCenter_x_max <<  endl;
+     cout << "Integral :" << integral<< endl;
   }
   Double_t choose,test;
   choose = integral*0.99;
 
-//  Double_t test;
+  //  Double_t test;
   for(Int_t i= 0;i <= bin_X_max-1;i++){
 
-  test=0;
-  test =  h_energyHF_95->Integral(0,i);
+     test=0;
+     test =  h_energyHF_95->Integral(0,i);
 
-if(test > choose){
+     if(test > choose){
 
-   Double_t value_limit_95 =  axis->GetBinCenter(i);
-   Double_t error_limit_95 = h_energyHF_95->GetBinError(i);
+       Double_t value_limit_95 =  axis->GetBinCenter(i);
+       Double_t error_limit_95 = h_energyHF_95->GetBinError(i);
   
-if(debug){
-    cout<< "binContent(bin number): "<<  value_limit_95 <<" "<<"bin number: "<< i << endl;
-    cout<< "binwidth(bin number): "<<  error_limit_95 <<" "<<"bin number: "<< i << endl;
-    cout<< "BinCenter(bin number): "<<  value_limit_95 <<" "<<"bin number: "<< i << endl;
-    cout<< "BinError(bin number): "<<  error_limit_95 <<" "<<"bin number: "<< i << endl;
+       if(debug){
+         cout<< "binContent(bin number): "<<  value_limit_95 <<" "<<"bin number: "<< i << endl;
+         cout<< "binwidth(bin number): "<<  error_limit_95 <<" "<<"bin number: "<< i << endl;
+         cout<< "BinCenter(bin number): "<<  value_limit_95 <<" "<<"bin number: "<< i << endl;
+         cout<< "BinError(bin number): "<<  error_limit_95 <<" "<<"bin number: "<< i << endl;
 
-}
+      }
     break;
    }
 
