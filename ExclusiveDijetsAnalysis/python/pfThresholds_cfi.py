@@ -14,15 +14,15 @@ pfThresholds = cms.PSet(
         gamma = cms.PSet( energy = cms.double(2.5) )
     ),
     Transition = cms.PSet(
-        hadronCharged = cms.PSet( pt = cms.double(0.0) ),
+        hadronCharged = cms.PSet( pt = cms.double(0.5) ),
         hadronNeutral = cms.PSet( energy = cms.double(3.8) ),
-        electron = cms.PSet( pt = cms.double(0.0) ),
+        electron = cms.PSet( pt = cms.double(0.5) ),
         gamma = cms.PSet( energy = cms.double(2.5) ),
-        hadronHF = cms.PSet( energy = cms.double(4.0) ),
-        emHF = cms.PSet( energy = cms.double(3.5) )
+        hadronHF = cms.PSet( energy = cms.double(7.0) ),
+        emHF = cms.PSet( energy = cms.double(7.0) )
     ),
     Forward = cms.PSet(
-        hadronHF = cms.PSet( energy = cms.double(4.0) ),
-        emHF = cms.PSet( energy = cms.double(3.5) )
+        hadronHF = cms.PSet( energy = cms.double(7.0) ),
+        emHF = cms.PSet( energy = cms.double(7.0) )
     )
 )
