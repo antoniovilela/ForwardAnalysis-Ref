@@ -154,7 +154,7 @@ process.exclusiveDijetsAnalysisTTree.ExclusiveDijetsAnalysis.VertexTag = "goodOf
 process.exclusiveDijetsAnalysisTTree.ExclusiveDijetsAnalysis.ParticleFlowTag = "pfCandidateNoiseThresholds"
 process.exclusiveDijetsAnalysisTTree.ExclusiveDijetsAnalysis.JetTag = "selectedPatJetsPFlow"
 process.exclusiveDijetsAnalysisTTree.ExclusiveDijetsAnalysis.JetNonCorrTag = "ak5PFJets"
-process.exclusiveDijetsAnalysisTTree.ExclusiveDijetsAnalysis.energyThresholdHF = 7.0
+
 
 if config.runOnMC:
      process.exclusiveDijetsAnalysisTTree.DiffractiveAnalysis.accessMCInfo = True
