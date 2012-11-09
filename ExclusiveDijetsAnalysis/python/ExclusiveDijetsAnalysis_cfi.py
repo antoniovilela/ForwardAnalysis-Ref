@@ -15,7 +15,7 @@ ExclusiveDijetsAnalysis = cms.PSet(
     # Misc
     EnergyThresholdHB = cms.double(1.5),
     EnergyThresholdHE = cms.double(2.0),
-    EnergyThresholdHF = cms.double(4.0),
+    EnergyThresholdHF = cms.double(7.0),
     # PF thresholds
     PFlowThresholds = pfThresholds,
     # Options

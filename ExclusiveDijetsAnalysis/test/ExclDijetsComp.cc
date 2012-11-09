@@ -52,13 +52,14 @@ void ExclDijetsComp::LoadFile(std::string fileinput, std::string processinput){
 
 }
 
-void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::string processname_, std::string filecor_, double jet1PT_, double jet2PT_, int optnVertex_, int optTrigger_, bool switchWeightPU_, bool switchWeightLumi_, bool switchWeightEff_, bool switchWeightePw_, bool switchMultiple_, bool switchPreSel_, bool switchTrigger_, double weightlumipass_){
+void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::string processname_, std::string filecor_, std::string filetrigger_, double jet1PT_, double jet2PT_, int optnVertex_, int optTrigger_, bool switchWeightPU_, bool switchWeightLumi_, bool switchWeightEff_, bool switchTriggerEff_, bool switchWeightePw_, bool switchMultiple_, bool switchPreSel_, bool switchTrigger_, double weightlumipass_){
 
    filein = filein_;
    savehistofile = savehistofile_;
    processname = processname_;
    filecor = filecor_;
    filein = filein_;
+   filetrigger = filetrigger_;
    jet1PT = jet1PT_;
    jet2PT = jet2PT_;
    optnVertex = optnVertex_;
@@ -66,6 +67,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
    switchWeightPU = switchWeightPU_;
    switchWeightLumi = switchWeightLumi_;
    switchWeightEff = switchWeightEff_;
+   switchTriggerEff = switchTriggerEff_;
    switchWeightePw = switchWeightePw_;
    switchPreSel = switchPreSel_;
    switchTrigger = switchTrigger_;
@@ -91,6 +93,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
    std::cout << "PU Weight: " << switchWeightPU << std::endl;
    std::cout << "Lumi. Weight: " << switchWeightLumi << std::endl;
    std::cout << "Eff. Corr.: " << switchWeightEff << std::endl;
+   std::cout << "Trigger Efficiency: "<< switchTriggerEff << std::endl; 
    std::cout << "Evt. - Evt. Weight: " << switchWeightePw << std::endl;
    std::cout << "Multiple PU Histograms: " << switchMultiple << std::endl;
    std::cout << "Trigger Switch: " << switchTrigger << std::endl;
@@ -115,6 +118,8 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
    TFile check2("pu_147196-148058.root");
    TFile check3(filein.c_str());
    TFile check4(filecor.c_str());
+   TFile check5(filetrigger.c_str());
+
 
 
    if (check1.IsZombie()){
@@ -160,6 +165,17 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
       return;
 
    }
+
+   if (check5.IsZombie()){
+
+      std::cout << "\n---------------------------------------------------" << std::endl;
+      std::cout << " There is no trigger efficiency histogram file or the"   << std::endl;
+      std::cout << " path is not correct." << std::endl;
+      std::cout << " Edit the source and recompile." << std::endl;
+      std::cout << "---------------------------------------------------" << std::endl;
+      return;
+
+   }
    //--------------------------------------------------------------------------------------------------------------------------
 
    TFile *l1  = TFile::Open(filecor.c_str());
@@ -169,6 +185,9 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
    TH1F* h_eff_step_4_3 = (TH1F*)l1->Get("RatioStep4_3");
    TH1F* h_eff_step_4_2 = (TH1F*)l1->Get("RatioStep4_2");
    TH1F* h_eff_step_4_1 = (TH1F*)l1->Get("RatioStep4_1");
+
+   TFile *l2  = TFile::Open(filetrigger.c_str());
+   TH1F* h_eff_trigger = (TH1F*)l2->Get("EffTrigger");
 
    LoadFile(filein,processname);
    edm::LumiReWeighting LumiWeights_("pu_mc_QCD15-3000.root","pu_147196-148058.root","pileUpBx0_complete_without_cuts","pileup");
@@ -559,32 +578,45 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
 	      weightbxm1 = 1.0;
       }
 
-      double triggereff_excl;
-      double triggereff_vertex;
-      double triggereff_step4_4;
-      double triggereff_step4_3;
-      double triggereff_step4_2;
-      double triggereff_step4_1;
+
+      // Trigger Efficiency Corrections
+      double triggereff;
+      if (switchTriggerEff){
+              triggereff = 1./h_eff_trigger->GetBinContent(h_eff_trigger->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
+      }
+      else {
+              triggereff = 1.0;
+      }
+
+
+      // Each Cut Efficiency Corrections
+      double triggereff_excl; // presel
+      double triggereff_vertex; // presel + vertex
+      double triggereff_step4_4; // presel + vertex + etamax 4
+      double triggereff_step4_3; // presel + vertex + etamax 3
+      double triggereff_step4_2; // presel + vertex + etamax 2
+      double triggereff_step4_1; // presel + vertex + etamax 1
       if (switchWeightEff){
  	      if (switchPreSel) {
-                     triggereff_excl = 1./h_eff_excl->GetBinContent(h_eff_excl->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
+                     triggereff_excl = triggereff*1./h_eff_excl->GetBinContent(h_eff_excl->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
               } else {
-                     triggereff_excl = 1.0;
+                     triggereff_excl = triggereff*1.0;
               }       
-              triggereff_vertex = 1./h_eff_vertex->GetBinContent(h_eff_vertex->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
-              triggereff_step4_4 = 1./h_eff_step_4_4->GetBinContent(h_eff_step_4_4->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
-              triggereff_step4_3 = 1./h_eff_step_4_3->GetBinContent(h_eff_step_4_3->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
-              triggereff_step4_2 = 1./h_eff_step_4_2->GetBinContent(h_eff_step_4_2->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
-              triggereff_step4_1 = 1./h_eff_step_4_1->GetBinContent(h_eff_step_4_1->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));  
+              triggereff_vertex = triggereff*1./h_eff_vertex->GetBinContent(h_eff_vertex->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
+              triggereff_step4_4 = triggereff*1./h_eff_step_4_4->GetBinContent(h_eff_step_4_4->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
+              triggereff_step4_3 = triggereff*1./h_eff_step_4_3->GetBinContent(h_eff_step_4_3->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
+              triggereff_step4_2 = triggereff*1./h_eff_step_4_2->GetBinContent(h_eff_step_4_2->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
+              triggereff_step4_1 = triggereff*1./h_eff_step_4_1->GetBinContent(h_eff_step_4_1->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));  
       } 
       else { 
-              triggereff_excl = 1.0;
-              triggereff_vertex = 1.0;
-              triggereff_step4_4 = 1.0;
-              triggereff_step4_3 = 1.0;
-              triggereff_step4_2 = 1.0;
-              triggereff_step4_1 = 1.0;
+              triggereff_excl = triggereff*1.0;
+              triggereff_vertex = triggereff*1.0;
+              triggereff_step4_4 = triggereff*1.0;
+              triggereff_step4_3 = triggereff*1.0;
+              triggereff_step4_2 = triggereff*1.0;
+              triggereff_step4_1 = triggereff*1.0;
       }
+
 
       //------------------------------------------------------------------------------------------
 
@@ -619,6 +651,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
 	    << "Pile-up weight    : " << weight << std::endl
 	    << "Weight Lumi       : " << weightlumi << std::endl
             << "Lumi per Bunch    : " << eventinfo->GetInstLumiBunch() << std::endl
+            << "Trigger Eff. per Lumi. : " << triggereff << std::endl
 	    << "Lumi eff corr. Pre Sel. : " << triggereff_excl << std::endl
             << "Lumi eff corr. Pre Sel. + Vertex: " << triggereff_vertex << std::endl
             << "Lumi eff corr. Pre Sel. + Vertex + Eta_PF(max,min) < 4: " << triggereff_step4_4 << std::endl
@@ -632,7 +665,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
       }
 
      //Protection
-     if( switchWeightLumi || (!switchWeightLumi && eventinfo->GetInstLumiBunch()>0.03 && eventinfo->GetInstLumiBunch()<0.71) ){
+     if(switchWeightLumi || (!switchWeightLumi && eventinfo->GetInstLumiBunch()>0.03 && eventinfo->GetInstLumiBunch()<0.75)){
 
 	      // Without Cuts          
 	      ////////////////////////////////////////////////
@@ -1481,6 +1514,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
      outstring << "PU Weight: " << switchWeightPU << std::endl;
      outstring << "Lumi. Weight: " << switchWeightLumi << std::endl;
      outstring << "Eff. Corr.: " << switchWeightEff << std::endl;
+     outstring << "Trigger Eff. Corr.: " << switchTriggerEff << std::endl;
      outstring << "Evt. - Evt. Weight: " << switchWeightePw << std::endl;
      outstring << "Multiple PU Histograms: " << switchMultiple << std::endl;
      outstring << "Trigger Switch: " << switchTrigger << std::endl;
@@ -1539,6 +1573,7 @@ int main(int argc, char **argv)
    std::string savehistofile_;
    std::string processname_;
    std::string filecor_;
+   std::string filetrigger_;
    double jet1PT_;
    double jet2PT_;
    int optnVertex_;
@@ -1546,6 +1581,7 @@ int main(int argc, char **argv)
    bool switchWeightPU_;
    bool switchWeightLumi_;
    bool switchWeightEff_;
+   bool switchTriggerEff_;
    bool switchWeightePw_;
    bool switchMultiple_;
    bool switchPreSel_;
@@ -1556,21 +1592,23 @@ int main(int argc, char **argv)
    if (argc > 2 && strcmp(s1,argv[2]) != 0)  savehistofile_  = argv[2];
    if (argc > 3 && strcmp(s1,argv[3]) != 0)  processname_  = argv[3];
    if (argc > 4 && strcmp(s1,argv[4]) != 0)  filecor_  = argv[4];
-   if (argc > 5 && strcmp(s1,argv[5]) != 0)  jet1PT_  = atoi(argv[5]);
-   if (argc > 6 && strcmp(s1,argv[6]) != 0)  jet2PT_ = atoi(argv[6]);
-   if (argc > 7 && strcmp(s1,argv[7]) != 0)  optnVertex_ = atoi(argv[7]);
-   if (argc > 8 && strcmp(s1,argv[8]) != 0)  optTrigger_   = atoi(argv[8]);
-   if (argc > 9 && strcmp(s1,argv[9]) != 0)  switchWeightPU_  = atoi(argv[9]);
-   if (argc > 10 && strcmp(s1,argv[10]) != 0)  switchWeightLumi_ = atoi(argv[10]);
-   if (argc > 11 && strcmp(s1,argv[11]) != 0)  switchWeightEff_ = atoi(argv[11]);
-   if (argc > 12 && strcmp(s1,argv[12]) != 0)  switchWeightePw_   = atoi(argv[12]);
-   if (argc > 13 && strcmp(s1,argv[13]) != 0)  switchMultiple_   = atoi(argv[13]);
-   if (argc > 14 && strcmp(s1,argv[14]) != 0)  switchPreSel_   = atoi(argv[14]);
-   if (argc > 15 && strcmp(s1,argv[15]) != 0)  switchTrigger_   = atoi(argv[15]);
-   if (argc > 16 && strcmp(s1,argv[16]) != 0)  weightlumipass_  = atof(argv[16]);
+   if (argc > 5 && strcmp(s1,argv[5]) != 0)  filetrigger_  = argv[5];
+   if (argc > 6 && strcmp(s1,argv[6]) != 0)  jet1PT_  = atoi(argv[6]);
+   if (argc > 7 && strcmp(s1,argv[7]) != 0)  jet2PT_ = atoi(argv[7]);
+   if (argc > 8 && strcmp(s1,argv[8]) != 0)  optnVertex_ = atoi(argv[8]);
+   if (argc > 9 && strcmp(s1,argv[9]) != 0)  optTrigger_   = atoi(argv[9]);
+   if (argc > 10 && strcmp(s1,argv[10]) != 0)  switchWeightPU_  = atoi(argv[10]);
+   if (argc > 11 && strcmp(s1,argv[11]) != 0)  switchWeightLumi_ = atoi(argv[11]);
+   if (argc > 12 && strcmp(s1,argv[12]) != 0)  switchWeightEff_ = atoi(argv[12]);
+   if (argc > 13 && strcmp(s1,argv[13]) != 0)  switchTriggerEff_ = atoi(argv[13]);
+   if (argc > 14 && strcmp(s1,argv[14]) != 0)  switchWeightePw_   = atoi(argv[14]);
+   if (argc > 15 && strcmp(s1,argv[15]) != 0)  switchMultiple_   = atoi(argv[15]);
+   if (argc > 16 && strcmp(s1,argv[16]) != 0)  switchPreSel_   = atoi(argv[16]);
+   if (argc > 17 && strcmp(s1,argv[17]) != 0)  switchTrigger_   = atoi(argv[17]);
+   if (argc > 18 && strcmp(s1,argv[18]) != 0)  weightlumipass_  = atof(argv[18]);
 
    ExclDijetsComp* exclDijets = new ExclDijetsComp();   
-   exclDijets->Run(filein_, savehistofile_, processname_, filecor_, jet1PT_, jet2PT_, optnVertex_, optTrigger_, switchWeightPU_, switchWeightLumi_, switchWeightEff_, switchWeightePw_, switchMultiple_, switchPreSel_, switchTrigger_, weightlumipass_);
+   exclDijets->Run(filein_, savehistofile_, processname_, filecor_, filetrigger_, jet1PT_, jet2PT_, optnVertex_, optTrigger_, switchWeightPU_, switchWeightLumi_, switchWeightEff_, switchTriggerEff_, switchWeightePw_, switchMultiple_, switchPreSel_, switchTrigger_, weightlumipass_);
 
    return 0;
 }

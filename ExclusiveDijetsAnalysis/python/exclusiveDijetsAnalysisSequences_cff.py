@@ -79,24 +79,67 @@ from ForwardAnalysis.Utilities.trackMultiplicity_cfi import *
 trackMultiplicityTransverseRegion = trackMultiplicity.clone( src = "tracksTransverseRegion" ) 
 #------------------------------
 # Particle flow
-
+Forward = cms.PSet(
+        hadronHF = cms.PSet( energy = cms.double(7.0) ),
+        emHF = cms.PSet( energy = cms.double(7.0) )
+    )
 # Add EtaMax
 from ForwardAnalysis.Utilities.pfCandidateSelector_cfi import pfCandidateSelector as pfCandidateNoiseThresholds
 from ForwardAnalysis.Utilities.ExcludeHFEdgesStringCut import ExcludeHFEdgesStringCut
 from ForwardAnalysis.Utilities.PFCandidateNoiseStringCut import PFCandidateNoiseStringCut
 # Change thresholds here if needed
 from pfThresholds_cfi import pfThresholds
+#pfThresholdsH0 = pfThresholds.clone()
+#pfThresholdsHF0.Transition.hadronHF.energy = 0.0
+#pfThresholdsHF0.Transition.emHF.energy = 0.0
+#pfThresholdsHF0.Forward.hadronHF.energy = 0.0
+#pfThresholdsHF0.Forward.emHF.energy = 0.0
+#pfThresholdsHF6 = pfThresholds.clone()
+#pfThresholdsHF6.Transition.hadronHF.energy = 6.0
+#pfThresholdsHF6.Transition.emHF.energy = 6.0
+#pfThresholdsHF6.Forward.hadronHF.energy = 6.0
+#pfThresholdsHF6.Forward.emHF.energy = 6.0
+#pfThresholdsHF7 = pfThresholds.clone()
+#pfThresholdsHF7.Transition.hadronHF.energy = 7.0
+#pfThresholdsHF7.Transition.emHF.energy = 7.0
+#pfThresholdsHF7.Forward.hadronHF.energy = 7.0
+#pfThresholdsHF7.Forward.emHF.energy = 7.0
+#pfThresholdsHF8 = pfThresholds.clone()
+#pfThresholdsHF8.Transition.hadronHF.energy = 8.0
+#pfThresholdsHF8.Transition.emHF.energy = 8.0
+#pfThresholdsHF8.Forward.hadronHF.energy = 8.0
+#pfThresholdsHF8.Forward.emHF.energy = 8.0
+#pfThresholdsHF0 = pfThresholds.clone()
+#pfThresholdsHF0.Transition.hadronHF.energy = 0.0
+#pfThresholdsHF0.Transition.emHF.energy = 0.0
+#pfThresholdsHF0.Forward.hadronHF.energy = 0.0
+#pfThresholdsHF0.Forward.emHF.energy = 0.0
+
 pfStrCut1 = ExcludeHFEdgesStringCut().cut()
 pfStrCut2 = PFCandidateNoiseStringCut(pfThresholds).cut()
 pfStrCut = '%s & %s' % (pfStrCut1,pfStrCut2)
 pfCandidateNoiseThresholds.cut = pfStrCut
+
 # Change to no pile-up collection
 pfCandidateNoiseThresholds.src = "pfNoPileUpPFlow" 
+
+#pfStrCutHF0 = '%s & %s' % (pfStrCut1, PFCandidateNoiseStringCut(pfThresholdsHF0).cut() )
+#pfCandidateNoiseThresholdsHF0 = pfCandidateNoiseThresholds.clone( cut = pfStrCutHF0 )
+#pfStrCutHF6 = '%s & %s' % (pfStrCut1, PFCandidateNoiseStringCut(pfThresholdsHF6).cut() )
+#pfCandidateNoiseThresholdsHF6 = pfCandidateNoiseThresholds.clone( cut = pfStrCutHF6 )
+#pfStrCutHF7 = '%s & %s' % (pfStrCut1, PFCandidateNoiseStringCut(pfThresholdsHF7).cut() )
+#pfCandidateNoiseThresholdsHF7 = pfCandidateNoiseThresholds.clone( cut = pfStrCutHF7 )
+#pfStrCutHF8 = '%s & %s' % (pfStrCut1, PFCandidateNoiseStringCut(pfThresholdsHF8).cut() )
+#pfCandidateNoiseThresholdsHF8 = pfCandidateNoiseThresholds.clone( cut = pfStrCutHF8 )
+#pfStrCutHF0 = '%s & %s' % (pfStrCut1, PFCandidateNoiseStringCut(pfThresholdsHF0).cut() )
+#pfCandidateNoiseThresholdsHF0 = pfCandidateNoiseThresholds.clone( cut = pfStrCutHF0 )
 
 from ForwardAnalysis.Utilities.etaMaxCandViewSelector_cfi import etaMaxCandViewSelector as etaMaxPFCands
 from ForwardAnalysis.Utilities.etaMinCandViewSelector_cfi import etaMinCandViewSelector as etaMinPFCands
 etaMaxPFCands.src = "pfCandidateNoiseThresholds"
 etaMinPFCands.src = "pfCandidateNoiseThresholds"
+#etaMaxPFCands.src = "pfCandidateNoiseThresholdsHF0"
+#etaMinPFCands.src = "pfCandidateNoiseThresholdsHF0"
 
 from ForwardAnalysis.AnalysisSequences.genChargedParticles_cfi import genChargedParticles
 from ForwardAnalysis.AnalysisSequences.genStableParticles_cfi import genStableParticles
@@ -133,7 +176,7 @@ caloVetoHFPlus = caloActivityFilter.clone(NTowersMaxHFPlus=0)
 caloVetoHFMinus = caloActivityFilter.clone(NTowersMaxHFMinus=0)
 caloActivityFilter.EnergyThresholdHB = 1.5
 caloActivityFilter.EnergyThresholdHE = 2.0
-caloActivityFilter.EnergyThresholdHF = 4.0
+caloActivityFilter.EnergyThresholdHF = 7.0
 '''
 from ForwardAnalysis.Utilities.castorActivityFilter_cfi import castorActivityFilter
 castorActivityFilter.CastorRecHitTag = "castorRecHitCorrector"
@@ -193,6 +236,8 @@ tracks = cms.Sequence(analysisTracks*
 
 pfCandidates = cms.Sequence(pfCandidateNoiseThresholds* 
                             etaMaxPFCands+etaMinPFCands)
+##pfCandidates = cms.Sequence(pfCandidateNoiseThresholdsHF0* 
+##                            etaMaxPFCands+etaMinPFCands)
 
 edmDump = cms.Sequence(#trackMultiplicity+
                        #trackMultiplicityAssociatedToPV+

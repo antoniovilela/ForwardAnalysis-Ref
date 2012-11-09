@@ -1,3 +1,4 @@
+stty erase "^?"
 source /afs/cern.ch/cms/LCG/LCG-2/UI/cms_ui_env.csh
 setenv SCRAM_ARCH slc5_amd64_gcc434
 #setenv SCRAM_ARCH slc5_ia32_gcc434

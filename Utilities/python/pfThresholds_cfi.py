@@ -18,11 +18,11 @@ pfThresholds = cms.PSet(
         hadronNeutral = cms.PSet( energy = cms.double(3.8) ),
         electron = cms.PSet( pt = cms.double(0.5) ),
         gamma = cms.PSet( energy = cms.double(2.5) ),
-        hadronHF = cms.PSet( energy = cms.double(4.0) ),
-        emHF = cms.PSet( energy = cms.double(3.5) )
+        hadronHF = cms.PSet( energy = cms.double(7.0) ),
+        emHF = cms.PSet( energy = cms.double(7.0) )
     ),
     Forward = cms.PSet(
-        hadronHF = cms.PSet( energy = cms.double(4.0) ),
-        emHF = cms.PSet( energy = cms.double(3.5) )
+        hadronHF = cms.PSet( energy = cms.double(7.0) ),
+        emHF = cms.PSet( energy = cms.double(7.0) )
     )
 )

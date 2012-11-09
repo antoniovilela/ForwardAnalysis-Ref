@@ -27,7 +27,7 @@ if config.runOnMC:
 else:
     #config.l1Paths = ('L1_ZeroBias','L1_BptxMinus_NotBptxPlus','L1_SingleJet30U')
     #config.hltPaths = ('HLT_ExclDiJet30U_HFOR_v1','HLT_DiJetAve100U_v1')
-    config.l1Paths = ('L1_SingleJet16','L1_SingleJet36')
+    config.l1Paths = ('L1_SingleJet16','L1_SingleJet36','L1_SingleJet36_FwdVeto')
     config.hltPaths = ('HLT_ExclDiJet60_HFOR_v*','HLT_ExclDiJet60_HFAND_v*','HLT_Jet60_v*' )
     #config.hltPaths = ('HLT_PFJet40_v*','HLT_L1SingleJet16_v*','HLT_DiPFJetAve80_v*','HLT_L1SingleJet36_v*','HLT_ExclDiJet80_HFAND_v*','HLT_ExclDiJet35_HFAND_v*','HLT_ExclDiJet35_HFOR_v*')
     #config.hltPaths = ('HLT_ExclDiJet30U_HFAND_v*','HLT_ExclDiJet30U_HFOR_v*','HLT_Jet30U*')
@@ -36,7 +36,8 @@ if config.runOnMC:
     config.inputFileName = '/storage2/eliza/samples_test/QCD_Pt-15to30_TuneZ2_7TeV_pythia6AODSIMS_3.root'# MC
 else:
     #config.inputFileName = 'rfio:/castor/cern.ch/cms/store/data/Run2012A/Jet/RAW/v1/000/193/336/6CE0FC0F-7995-E111-BC9D-001D09F2B2CF.root'
-    config.inputFileName = '/storage1/eliza/MultiJet_Run2011B178970_RAW.root'
+    config.inputFileName = '/storage1/eliza/Commissioning_RunB2011_Raw_175834.root'
+        # '/storage1/eliza/MultiJet_Run2011B178970_RAW.root'
         # 'rfio:/castor/cern.ch/cms/store/data/Run2011B/L1JetHPF/RAW/v1/000/179/828/FE539B1D-2CFF-E011-9C7F-BCAEC5364C6C.root'
 
         # '/storage1/eliza/MultiJet_Run2011B178970_RAW.root'

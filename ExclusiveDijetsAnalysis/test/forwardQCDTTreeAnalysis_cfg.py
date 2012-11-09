@@ -21,8 +21,8 @@ config.trackTagName = 'analysisTracks'
 if config.runOnMC:
     config.hltPaths =('HLT_Jet30*','HLT_Jet60*','HLT_Jet80*','HLT_Jet110*','HLT_Jet150*','HLT_Jet190*','HLT_Jet240_v*','HLT_Jet370_v*')
 else:
-    #config.hltPaths = ('HLT_ExclDiJet60_HFAND_v*','HLT_ExclDiJet60_HFOR_v*','HLT_Jet60_v*')
-    config.hltPaths = ('HLT_ExclDiJet30U_HFAND_v*','HLT_ExclDiJet30U_HFOR_v*','HLT_Jet30U*')
+    config.hltPaths = ('HLT_ExclDiJet60_HFAND_v*','HLT_ExclDiJet60_HFOR_v*','HLT_Jet60_v*')
+    #config.hltPaths = ('HLT_ExclDiJet30U_HFAND_v*','HLT_ExclDiJet30U_HFOR_v*','HLT_Jet30U*')
 
 #config.generator = 'Pythia6'
 
