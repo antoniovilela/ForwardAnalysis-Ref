@@ -30,13 +30,3 @@
 </bin>
 
 
-<bin   file="EffMacro.cc" name="EffMacroComp">
-  <use   name="root"/>
-  <use   name="rootcore"/>
-  <use   name="FWCore/FWLite"/>
-  <use   name="PhysicsTools/Utilities"/>
-  <use   name="ForwardAnalysis/Utilities"/>
-  <use   name="ForwardAnalysis/ForwardTTreeAnalysis"/>
-  <use   name="KKousour/QCDAnalysis"/>
-</bin>
-
