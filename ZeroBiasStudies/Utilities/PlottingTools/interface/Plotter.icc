@@ -1,0 +1,373 @@
+#include "TStyle.h"
+#include "TCanvas.h"
+#include "TLegend.h"
+#include "TPaveLabel.h"
+#include "TH1F.h"
+#include "TH2F.h"
+
+#include "Utilities/PlottingTools/interface/PlottingTools.h"
+
+#include <iostream>
+#include <vector>
+#include <map>
+#include <algorithm>
+#include <sstream>
+
+template <class NormPolicy>
+Plotter<NormPolicy>::Plotter(): verbose_(false), firstAsRefHist_(false), histStats_(true), useRatio_(false),
+                                rebin_(1),
+                                titleSize_(0.05), axisLabelSize_(0.05),
+                                legendHeader_("") {
+   // Default colors/styles
+   int colors[] = {kRed,kBlue,kMagenta};
+   std::vector<int> vec_colors(colors,colors + sizeof(colors)/sizeof(int));
+   int linestyles[] = {kDashed,kDotted,kDashDotted};
+   std::vector<int> vec_linestyles(linestyles,linestyles + sizeof(linestyles)/sizeof(int));
+   int fillstyles[] = {3004,3006,3005,3007,3013};
+   std::vector<int> vec_fillstyles(fillstyles,fillstyles + sizeof(fillstyles)/sizeof(int)); 
+   int markerstyles[] = {1};
+   std::vector<int> vec_markerstyles(markerstyles,markerstyles + sizeof(markerstyles)/sizeof(int));
+   int markersizes[] = {1.};
+   std::vector<float> vec_markersizes(markersizes,markersizes + sizeof(markersizes)/sizeof(float)); 
+
+   SetLineColors(vec_colors);
+   SetLineStyles(vec_linestyles);
+   SetFillColors(vec_colors);
+   SetFillStyles(vec_fillstyles);
+   SetMarkerColors(vec_colors);
+   SetMarkerStyles(vec_markerstyles); 
+   SetMarkerSizes(vec_markersizes);
+}
+
+//======================================================
+
+template <class NormPolicy>
+void Plotter<NormPolicy>::plotStack(VarMap const& variablesMap, const char* drawOption, bool firstAsRefHist){ 
+   Bool_t addStatus = TH1::AddDirectoryStatus();
+   TH1::AddDirectory(kFALSE);
+
+   std::string option = std::string(drawOption);
+ 
+   std::map<std::string,TCanvas*> canvasMap;
+   std::map<std::string,TLegend*> legendMap;
+   HistMap histoSets = loadHistos(variablesMap);
+   HistMap::const_iterator set = histoSets.begin();
+   HistMap::const_iterator sets_end = histoSets.end();
+   for(; set != sets_end; ++set){
+      const std::string& setName = set->first;
+      canvasMap[setName] = new TCanvas(setName.c_str(),setName.c_str());
+      canvasMap[setName]->cd();
+
+      legendMap[setName] = new TLegend(0.4,0.7,0.95,0.8);
+    
+      std::vector<HistDesc> const& histos = set->second;
+      std::vector<HistDesc> stackedHistos;
+      if(firstAsRefHist){
+         stackedHistos.resize(histos.size() - 1);
+         std::copy(histos.begin() + 1, histos.end(), stackedHistos.begin());
+      } else{
+         stackedHistos.resize(histos.size()); 
+         std::copy(histos.begin(), histos.end(), stackedHistos.begin());
+      }
+      THStack* stack = buildTHStack(setName,stackedHistos);
+
+      if(firstAsRefHist){
+         HistDesc const& histoFirst = histos[0];
+         histoFirst.first->SetMarkerStyle(20);
+         histoFirst.first->SetMarkerSize(1.2);
+         //histoFirst.first->SetStats(0);
+         stack->Draw(option.c_str());
+         histoFirst.first->Draw("SAME][");
+      } else {
+         stack->Draw(option.c_str());
+      }  
+
+      std::vector<HistDesc>::const_iterator histo = histos.begin();
+      std::vector<HistDesc>::const_iterator histos_end = histos.end();
+      for(; histo != histos_end; ++histo) legendMap[setName]->AddEntry(histo->first,histo->second.c_str(),"LPF");
+
+      legendMap[setName]->SetFillColor( canvasMap[setName]->GetFillColor() );
+      legendMap[setName]->SetHeader(legendHeader_.c_str());
+      legendMap[setName]->UseCurrentStyle();
+      legendMap[setName]->Draw("SAME");
+   }
+
+   TH1::AddDirectory(addStatus);
+}
+
+template <class NormPolicy>
+THStack* Plotter<NormPolicy>::buildTHStack(std::string const& name, std::vector<HistDesc> const& histos){
+
+   std::vector<HistDesc> reversedHistos(histos);
+   std::reverse(reversedHistos.begin(),reversedHistos.end());
+
+   // Get reversed colors/styles as well
+   std::vector<int> linecolors(histLineColors_);
+   std::reverse(linecolors.begin(),linecolors.end());
+   std::vector<int> linestyles(histLineStyles_);
+   std::reverse(linestyles.begin(),linestyles.end());
+   std::vector<int> fillcolors(histFillColors_);
+   std::reverse(fillcolors.begin(),fillcolors.end());
+   std::vector<int> fillstyles(histFillStyles_);
+   std::reverse(fillstyles.begin(),fillstyles.end());
+   std::vector<int> markercolors(histMarkerColors_);
+   std::reverse(markercolors.begin(),markercolors.end());
+   std::vector<int> markerstyles(histMarkerStyles_);
+   std::reverse(markerstyles.begin(),markerstyles.end());
+   std::vector<float> markersizes(histMarkerSizes_);
+   std::reverse(markersizes.begin(),markersizes.end()); 
+
+   THStack* stack = new THStack(("stack_" + name).c_str(),name.c_str());
+   if(verbose_) std::cout << " Created THStack " << stack->GetName() << std::endl;
+   size_t index = 0;
+   std::vector<HistDesc>::const_iterator it_histo = reversedHistos.begin();
+   std::vector<HistDesc>::const_iterator histos_end = reversedHistos.end();
+   //std::vector<HistDesc>::const_iterator histos_last = reversedHistos.end() - 1;
+   for(; it_histo != histos_end; ++it_histo, ++index){
+      TH1F* histo = it_histo->first;
+      //histo->SetStats(histStats_);
+      histo->SetLineColor(linecolors[index % linecolors.size()]);
+      histo->SetLineStyle(linestyles[index % linestyles.size()]);
+      histo->SetFillColor(fillcolors[index % fillcolors.size()]);
+      histo->SetFillStyle(fillstyles[index % fillstyles.size()]);
+      histo->SetMarkerColor(markercolors[index % markercolors.size()]);
+      histo->SetMarkerStyle(markerstyles[index % markerstyles.size()]);
+      histo->SetMarkerSize(markersizes[index % markersizes.size()]);
+      /*if(it_histo == histos_last){
+         histo->SetLineStyle(1);
+      } else{
+         histo->SetLineStyle(vec_styles[index % vec_styles.size()]);
+      }*/
+
+      stack->Add(histo);
+   }
+
+   return stack;
+}
+
+template <class NormPolicy>
+typename Plotter<NormPolicy>::HistMap Plotter<NormPolicy>::loadHistos(VarMap const& variablesMap){
+
+   // HistDesc --> std::pair<TH1F*,std::string>
+   std::map<std::string,std::vector<HistDesc> > histos;
+   std::map<std::string,std::vector<HistDesc> > histosRatio;
+   for(VarMap::const_iterator cat = variablesMap.begin(); cat != variablesMap.end(); ++cat){
+      const std::string& catName = cat->first;
+
+      histos[catName] = std::vector<HistDesc>();
+      histosRatio[catName] = std::vector<HistDesc>();
+
+      std::vector<VarDesc> const& vars = cat->second;
+      size_t index = 0;
+      for(std::vector<VarDesc>::const_iterator var = vars.begin(); var != vars.end(); ++var,++index){
+         TH1F* histo_new = loadHisto(*var,index);
+         std::string const& desc = var->label();
+   
+         histos[catName].push_back(std::make_pair(histo_new,desc));
+
+         if(useRatio_){
+            std::stringstream label;
+            label << histo_new->GetName() << "_ratio"; 
+            TH1F* histo_ratio = static_cast<TH1F*>( histo_new->Clone( label.str().c_str() ) );
+            histo_ratio->Divide( histos[catName].front().first );
+            histosRatio[catName].push_back(std::make_pair(histo_ratio,desc));
+         }
+      }
+   }
+
+   return (useRatio_) ? histosRatio : histos;
+}
+
+template <class NormPolicy>
+TH1F* Plotter<NormPolicy>::loadHisto(VarDesc const& var, unsigned int index){
+   std::string const& name = var.name();
+   TDirectory const* dir = var.dir();
+   //std::string const& desc = var.label();
+   double normFactor = var.norm();
+
+   if(verbose_) std::cout << " Accessing " << name << " in " << dir->GetName() << std::endl;
+
+   TH1F* histo = getHisto(dir,name);
+   // Clone histogram
+   std::stringstream label;
+   label << name << "_scaled_" << index; 
+   TH1F* histo_new = static_cast<TH1F*>(histo->Clone(label.str().c_str()));
+   histo_new->UseCurrentStyle();
+
+   double scaleFactor = (histo_new->GetSumOfWeights() > 0.) ? NormPolicy::GetNorm(histo_new)*normFactor/histo_new->GetSumOfWeights() : 1.;
+   scaleHisto(histo_new,scaleFactor,1,1,rebin_);
+
+   // Style and customizations
+   if(histTitlesX.find(name) != histTitlesX.end()) histo_new->GetXaxis()->SetTitle( histTitlesX[name].c_str() );
+
+   char const* titleY = "";
+   if(histTitlesY.find(name) != histTitlesY.end()) titleY = histTitlesY[name].c_str();
+   double binWidth = histo_new->GetBinWidth(1);
+   char axisYTitle[50]; sprintf(axisYTitle,"%s / (%.2f)", titleY, binWidth);
+   histo_new->GetYaxis()->SetTitle(axisYTitle);
+
+   histo_new->GetXaxis()->SetTitleSize(titleSize_);
+   histo_new->GetYaxis()->SetTitleSize(titleSize_);
+
+   histo_new->GetXaxis()->SetLabelSize(axisLabelSize_);
+   histo_new->GetYaxis()->SetLabelSize(axisLabelSize_);
+
+   histo_new->SetStats(histStats_);
+
+   return histo_new;
+}
+
+template <class NormPolicy>
+typename Plotter<NormPolicy>::VarMap Plotter<NormPolicy>::makeVarMap(std::vector<std::string>& variables, std::vector<std::pair<std::string,TDirectory*> >& directories, const std::vector<double>& normFactors){
+
+   if(normFactors.size() != directories.size()){
+      std::string errMessage = "ERROR: Input vectors must have the same size."; 
+      std::cout << errMessage << std::endl; 
+      throw RootException(errMessage);
+   }
+
+   VarMap variablesMap;
+   for(std::vector<std::string>::const_iterator var = variables.begin(); var != variables.end(); ++var){
+      std::vector<VarDesc> varVector;
+      size_t idx = 0;
+      for(std::vector<std::pair<std::string,TDirectory*> >::const_iterator dir = directories.begin(); dir != directories.end(); ++dir,++idx){
+         varVector.push_back(VarDesc(*var,dir->second,dir->first,normFactors[idx]));
+
+      }
+      variablesMap[*var] = varVector;
+   }
+   return variablesMap;
+}
+
+template <class NormPolicy>
+void Plotter<NormPolicy>::plotHistos(std::vector<HistDesc> const& histos, std::string const& option){
+   size_t index = 0;
+   std::vector<HistDesc>::const_iterator it_histo = histos.begin();
+   std::vector<HistDesc>::const_iterator histos_end = histos.end();
+   std::vector<HistDesc>::const_iterator it_first = (firstAsRefHist_) ? (it_histo + 1) : it_histo; 
+   for(; it_histo != histos_end; ++it_histo, ++index){
+      TH1F* histo = it_histo->first;
+      //std::string const& desc = it_histo->second;
+
+      //histo->SetStats(histStats_);
+      histo->SetLineColor(histLineColors_[index % histLineColors_.size()]);
+      histo->SetLineStyle(histLineStyles_[index % histLineStyles_.size()]);
+      histo->SetFillColor(histFillColors_[index % histFillColors_.size()]);
+      histo->SetFillStyle(histFillStyles_[index % histFillStyles_.size()]);
+      histo->SetMarkerColor(histMarkerColors_[index % histMarkerColors_.size()]);
+      histo->SetMarkerStyle(histMarkerStyles_[index % histMarkerStyles_.size()]);
+      histo->SetMarkerSize(histMarkerSizes_[index % histMarkerSizes_.size()]);
+
+      /*TH1F* histo_new = static_cast<TH1F*>(
+               ( var == vars.begin() ) ?
+               histo->DrawNormalized(option.c_str(),NormPolicy::GetNorm(histo)*normFactor) :
+               histo->DrawNormalized((option + "SAME").c_str(),NormPolicy::GetNorm(histo)*normFactor) );*/
+
+      if(it_histo == it_first) histo->Draw(option.c_str());
+      else histo->Draw((option + "SAME").c_str());
+   }
+   if(firstAsRefHist_) histos.begin()->first->Draw((option + "SAME").c_str());
+}
+
+template <class NormPolicy>
+void Plotter<NormPolicy>::plotStack(std::vector<std::string>& variables, std::vector<std::pair<std::string,TDirectory*> >& directories, const std::vector<double>& normFactors, const char* drawOption){
+   VarMap variablesMap = makeVarMap(variables,directories,normFactors);
+   plotStack(variablesMap,drawOption,false);
+}
+
+template <class NormPolicy>
+void Plotter<NormPolicy>::plotComponents(std::vector<std::string>& variables, std::vector<std::pair<std::string,TDirectory*> >& directories, const std::vector<double>& normFactors, const char* drawOption){
+   VarMap variablesMap = makeVarMap(variables,directories,normFactors);
+   plotStack(variablesMap,drawOption,true);
+}
+
+//======================================================
+
+template <class NormPolicy>
+void Plotter<NormPolicy>::plot(VarMap& variablesMap,const char* drawOption){
+
+   Bool_t addStatus = TH1::AddDirectoryStatus();
+   TH1::AddDirectory(kFALSE);
+
+   std::string option = std::string(drawOption);
+
+   std::map<std::string,TCanvas*> canvasMap;
+   std::map<std::string,TLegend*> legendMap;
+   HistMap histoSets = loadHistos(variablesMap);
+   HistMap::const_iterator set = histoSets.begin();
+   HistMap::const_iterator sets_end = histoSets.end();
+   for(; set != sets_end; ++set){
+      const std::string& setName = set->first;
+      canvasMap[setName] = new TCanvas(setName.c_str(),setName.c_str());
+      canvasMap[setName]->cd();
+      
+      legendMap[setName] = new TLegend(0.50,0.65,0.75,0.90);
+    
+      std::vector<HistDesc> const& histos = set->second;
+      plotHistos(histos,option);
+
+      std::vector<HistDesc>::const_iterator histo = histos.begin();
+      std::vector<HistDesc>::const_iterator histos_end = histos.end();
+      for(; histo != histos_end; ++histo) legendMap[setName]->AddEntry(histo->first,histo->second.c_str(),"LPF");
+
+      legendMap[setName]->SetFillColor( canvasMap[setName]->GetFillColor() );
+      legendMap[setName]->SetHeader(legendHeader_.c_str());
+      legendMap[setName]->UseCurrentStyle();
+      legendMap[setName]->Draw("SAME");
+   
+      std::vector<std::string>::const_iterator label = paveLabels_.begin();
+      std::vector<std::string>::const_iterator labels_end = paveLabels_.end();
+      for(; label != labels_end; ++label){
+         TPaveLabel* paveLabel = new TPaveLabel(0.45,0.80,0.80,0.90,label->c_str(),"NDC");
+         paveLabel->SetFillColor( canvasMap[setName]->GetFillColor() );
+         paveLabel->UseCurrentStyle(); 
+         paveLabel->Draw("SAME");
+      }
+
+      std::vector<TObject*>::const_iterator obj = drawObjects_.begin();
+      std::vector<TObject*>::const_iterator objs_end = drawObjects_.end();
+      for(; obj != objs_end; ++obj) (*obj)->Draw("SAME");
+
+   }
+
+   TH1::AddDirectory(addStatus);
+}
+
+template <class NormPolicy>
+void Plotter<NormPolicy>::plot(std::vector<std::string>& variables, std::vector<std::pair<std::string,TDirectory*> >& directories, const std::vector<double>& normFactors, const char* drawOption){
+   VarMap variablesMap;
+   for(std::vector<std::string>::const_iterator var = variables.begin(); var != variables.end(); ++var){
+      std::vector<VarDesc> varVector;
+      size_t idx = 0;
+      for(std::vector<std::pair<std::string,TDirectory*> >::const_iterator dir = directories.begin(); dir != directories.end(); ++dir,++idx){
+         //varVector.push_back(std::make_pair(*var,*dir));
+         //varVector.push_back(std::make_pair(*var,std::make_pair(dir->second,std::make_pair(dir->first,normFactors[idx]))));
+         varVector.push_back(VarDesc(*var,dir->second,dir->first,normFactors[idx]));
+         
+      }
+      variablesMap[*var] = varVector;
+   }   
+   plot(variablesMap,drawOption);  
+}
+
+template <class NormPolicy>
+void Plotter<NormPolicy>::plot(std::vector<std::string>& variables, std::vector<std::pair<std::string,TDirectory*> >& directories, const char* drawOption){
+   plot(variables,directories,std::vector<double>(directories.size(),1.0),drawOption);
+}
+
+template <class NormPolicy>
+void Plotter<NormPolicy>::plot(std::map<std::string,std::vector<std::string> >& variables, TDirectory* dir, const char* drawOption){
+   VarMap variablesMap;
+   for(std::map<std::string,std::vector<std::string> >::const_iterator var = variables.begin();
+                                                                       var != variables.end(); ++var){
+
+      std::vector<VarDesc> varVector;
+      for(std::vector<std::string>::const_iterator var_name = var->second.begin(); var_name != var->second.end(); ++var_name){
+         //varVector.push_back(std::make_pair(*var_name,std::make_pair(*var_name,dir)));
+         //varVector.push_back(std::make_pair(*var_name,std::make_pair(dir,std::make_pair(*var_name,1.0)))); 
+         varVector.push_back(VarDesc(*var_name,dir,*var_name,1.0));
+      }
+      variablesMap[var->first] = varVector;
+   }
+   plot(variablesMap,drawOption);
+}
