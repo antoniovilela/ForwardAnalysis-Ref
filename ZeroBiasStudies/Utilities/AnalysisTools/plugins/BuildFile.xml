@@ -1,0 +1,15 @@
+<library name="UtilitiesAnalysisTools_plugins" file="*.cc">
+  <flags EDM_PLUGIN="1"/>
+  <use name="FWCore/Framework"/>
+  <use name="FWCore/ParameterSet"/>
+  <use name="DataFormats/CaloTowers"/>
+  <use name="DataFormats/ParticleFlowCandidate"/> 
+  <use name="Geometry/CaloTopology"/>
+  <use name="Geometry/CaloGeometry"/>
+  <use name="Geometry/TrackerGeometryBuilder"/>
+  <use name="CommonTools/UtilAlgos"/>
+  <use name="CommonTools/RecoAlgos"/> 
+  <use name="Utilities/AnalysisTools"/>
+  <use name="ForwardAnalysis/Utilities"/>
+  <use name="root"/>
+</library>
