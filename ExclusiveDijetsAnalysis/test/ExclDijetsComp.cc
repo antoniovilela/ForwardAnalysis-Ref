@@ -820,7 +820,10 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
 					    // Setting Analysis Cut
 					    if (eventexcl->GetLeadingJetP4().Pt() > jet1PT && eventexcl->GetSecondJetP4().Pt() > jet2PT ){
 
-						       counterJetsstep2+=totalweight*triggereff_vertex;
+                                              if(deltaphi_>M_PI) deltaphi_=2.0*M_PI-deltaphi_;
+                                                if(deltaphi_>0.5*M_PI) {
+						
+                                                  counterJetsstep2+=totalweight*triggereff_vertex;
 
 						       // STEP2         
 						       ////////////////////////////////////////////////
@@ -1484,6 +1487,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
 
 						    } // Jets Cuts
 
+                                               } // Deltaphi cut
 					 } // If nVertex
 				       
 				       } // Trigger  
