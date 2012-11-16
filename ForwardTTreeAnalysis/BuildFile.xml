@@ -7,6 +7,7 @@
 <use   name="DataFormats/JetReco"/>
 <use   name="DataFormats/PatCandidates"/>
 <use   name="DataFormats/Luminosity"/>
+<use   name="DataFormats/Math"/>
 <use   name="JetMETCorrections/Objects"/>
 <use   name="PhysicsTools/PatAlgos"/>
 <use   name="PhysicsTools/PatUtils"/>
@@ -16,6 +17,10 @@
 <use   name="HLTrigger/HLTcore"/>
 <use   name="L1Trigger/GlobalTriggerAnalyzer"/>
 <use   name="ForwardAnalysis/Utilities"/>
+<use   name="DataFormats/GsfTrackReco"/>
+<use   name="DataFormats/EgammaCandidates"/>
+<use   name="DataFormats/MuonReco"/>
+<use   name="RecoMuon/TrackingTools"/>
 <use   name="root"/>
 <export>
   <lib   name="1"/>

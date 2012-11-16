@@ -31,9 +31,12 @@ class DiffractiveZAnalysis {
    private:
 
       void fillTriggerInfo(DiffractiveZEvent&, const edm::Event&, const edm::EventSetup&);
+      void fillElectronsInfo(DiffractiveZEvent&, const edm::Event&, const edm::EventSetup&);
+      void fillMuonsInfo(DiffractiveZEvent&, const edm::Event&, const edm::EventSetup&);
 
       edm::InputTag triggerResultsTag_;
-      edm::InputTag jetTag_;
+      edm::InputTag electronTag_;
+      edm::InputTag muonTag_;
 
       std::vector<std::string> hltPathNames_;
       std::string selectionPathName_;
