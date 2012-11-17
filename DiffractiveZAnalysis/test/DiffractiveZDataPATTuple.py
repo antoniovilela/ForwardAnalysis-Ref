@@ -17,7 +17,7 @@ config.globalTagNameMC = 'START42_V17D::All'
 config.comEnergy = 7000.0
 config.trackAnalyzerName = 'trackHistoAnalyzer'
 config.trackTagName = 'analysisTracks'
-config.NumberOfEvents = 10
+config.NumberOfEvents = 1000
 config.TriggerOn = True
 
 
@@ -34,8 +34,9 @@ if config.runOnMC:
 
 else:
     config.l1Paths = ('L1_SingleJet36','L1_SingleJet16','L1_DoubleJetC56')
-    config.hltPaths = ('HLT_DiJetAve15U','HLT_DiJetAve30U','HLT_DiJetAve50U','HLT_ExclDiJet30U_HFAND_v*','HLT_ExclDiJet30U_HFOR_v*')
-    config.inputFileName = '/storage2/antoniov/data1/MultiJet_Run2010B_Apr21ReReco-v1_AOD/MultiJet_Run2010B_Apr21ReReco-v1_AOD_7EA7B611-7371-E011-B164-002354EF3BDB.root'
+    config.hltPaths = ('HLT_Mu0_L1MuOpen','HLT_Mu3','HLT_Mu5','HLT_DoubleMu0','HLT_Jet15U')
+#    config.inputFileName = '/storage2/antoniov/data1/MultiJet_Run2010B_Apr21ReReco-v1_AOD/MultiJet_Run2010B_Apr21ReReco-v1_AOD_7EA7B611-7371-E011-B164-002354EF3BDB.root'
+    config.inputFileName = '/storage1/dmf/TestSamples/MuRun2010/MuRunA2010.root'
     config.runPUMC = False
     config.runGen = False
 
@@ -156,6 +157,8 @@ process.diffractiveZAnalysisTTree.DiffractiveAnalysis.trackTag = 'analysisTracks
 process.diffractiveZAnalysisTTree.DiffractiveAnalysis.vertexTag = "offlinePrimaryVertices"
 process.diffractiveZAnalysisTTree.DiffractiveAnalysis.particleFlowTag = "pfCandidateNoiseThresholds"
 process.diffractiveZAnalysisTTree.DiffractiveAnalysis.jetTag = "selectedPatJetsPFlow"
+
+process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.hltPaths = config.hltPaths
 
 #
 # Define MC Access
