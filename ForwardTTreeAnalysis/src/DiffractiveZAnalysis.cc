@@ -6,6 +6,8 @@
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 #include "FWCore/Utilities/interface/Exception.h"
 #include "DataFormats/Math/interface/LorentzVector.h"
+#include "FWCore/ServiceRegistry/interface/Service.h"
+#include "CommonTools/UtilAlgos/interface/TFileService.h"
 
 #include "FWCore/Utilities/interface/RegexMatch.h"
 #include "FWCore/Framework/interface/TriggerNamesService.h"
@@ -25,14 +27,32 @@ const char* DiffractiveZAnalysis::name = "DiffractiveZAnalysis";
 
 DiffractiveZAnalysis::DiffractiveZAnalysis(const edm::ParameterSet& pset):
   triggerResultsTag_(pset.getParameter<edm::InputTag>("TriggerResultsTag")),
+  hltPathNames_(pset.getParameter<std::vector<std::string> >("hltPaths")),
   electronTag_(pset.getParameter<edm::InputTag>("electronTag")),
   muonTag_(pset.getParameter<edm::InputTag>("muonTag"))
 {
 }
 
+void DiffractiveZAnalysis::setTFileService(){
+  edm::Service<TFileService> fs;
+  std::ostringstream oss;
+  hltTriggerNamesHisto_ = fs->make<TH1F>("HLTTriggerNames","HLTTriggerNames",1,0,1);
+  hltTriggerNamesHisto_->SetBit(TH1::kCanRebin);
+  for(unsigned k=0; k < hltPathNames_.size(); ++k){
+    oss << "Using HLT reference trigger " << hltPathNames_[k] << std::endl;
+    hltTriggerNamesHisto_->Fill(hltPathNames_[k].c_str(),1);
+  }
+  edm::LogVerbatim("Analysis") << oss.str();
+
+  hltTriggerPassHisto_ = fs->make<TH1F>("HLTTriggerPass","HLTTriggerPass",1,0,1);
+  hltTriggerPassHisto_->SetBit(TH1::kCanRebin);
+}
+
 DiffractiveZAnalysis::~DiffractiveZAnalysis(){}
 
-void DiffractiveZAnalysis::begin() {}
+void DiffractiveZAnalysis::begin() {
+   setTFileService();
+}
 
 void DiffractiveZAnalysis::begin(const edm::Run& run, const edm::EventSetup& setup) {}
 
@@ -43,7 +63,7 @@ void DiffractiveZAnalysis::fill(DiffractiveZEvent& eventData, const edm::Event& 
 
   eventData.reset();
 
-//  fillTriggerInfo(eventData,event,setup);
+  fillTriggerInfo(eventData,event,setup);
   fillMuonsInfo(eventData,event,setup);
   fillElectronsInfo(eventData,event,setup);
 
@@ -78,6 +98,7 @@ void DiffractiveZAnalysis::fillTriggerInfo(DiffractiveZEvent& eventData, const e
      int idx_HLT = triggerNames.triggerIndex(resolvedPathName);
      int accept_HLT = ( triggerResults->wasrun(idx_HLT) && triggerResults->accept(idx_HLT) ) ? 1 : 0;
      eventData.SetHLTPath(idxpath, accept_HLT);
+     hltTriggerPassHisto_->Fill( (*hltpath).c_str(), 1 ); 
   }
  
 }else{
@@ -100,7 +121,9 @@ void DiffractiveZAnalysis::fillElectronsInfo(DiffractiveZEvent& eventData, const
      int electronsize = electrons->size();
      int itElectron;
 
-     if(electrons.isValid() && electrons->size()>1){
+//     if(electrons.isValid() && electrons->size()>1){
+     if(electrons->size()>1){
+
 
       for(itElectron=0; itElectron < electronsize; ++itElectron){
 
@@ -186,7 +209,8 @@ void DiffractiveZAnalysis::fillMuonsInfo(DiffractiveZEvent& eventData, const edm
      int muonsize = muons->size();
      int itMuon;
 
-     if(muons.isValid() && muons->size()>1){
+//     if(muons.isValid() && muons->size()>1){
+     if(muons->size()>1){
 
       for(itMuon=0; itMuon < muonsize; ++itMuon){
 

@@ -12,6 +12,8 @@
 #include <map>
 
 class DiffractiveZEvent;
+class TH1F;
+class TH2F;
 
 namespace diffractiveZAnalysis {
 
@@ -30,16 +32,19 @@ class DiffractiveZAnalysis {
       void end();
    private:
 
+      void setTFileService();
       void fillTriggerInfo(DiffractiveZEvent&, const edm::Event&, const edm::EventSetup&);
       void fillElectronsInfo(DiffractiveZEvent&, const edm::Event&, const edm::EventSetup&);
       void fillMuonsInfo(DiffractiveZEvent&, const edm::Event&, const edm::EventSetup&);
 
       edm::InputTag triggerResultsTag_;
+      std::vector<std::string> hltPathNames_;
       edm::InputTag electronTag_;
       edm::InputTag muonTag_;
 
-      std::vector<std::string> hltPathNames_;
       std::string selectionPathName_;
+
+      TH1F *hltTriggerPassHisto_,*hltTriggerNamesHisto_;
 
 };
 
