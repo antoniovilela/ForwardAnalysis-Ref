@@ -2,7 +2,7 @@ import FWCore.ParameterSet.Config as cms
 
 analysisTracks = cms.EDProducer("TrackAnalysisSelector",
     src = cms.InputTag("generalTracks"),
-    vertexTag = cms.InputTag("offlinePrimaryVertices"),
+    vertexTag = cms.InputTag("goodOfflinePrimaryVertices"),
     ptMin = cms.double(0.5),
     etaMin = cms.double(-2.4),
     etaMax = cms.double(2.4),
