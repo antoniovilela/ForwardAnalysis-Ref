@@ -8,7 +8,7 @@ class config: pass
 config.verbose = True
 config.writeEdmOutput = False
 config.outputTTreeFile = 'ExclusiveDijetsPATTuple.root'
-config.runOnMC = True
+config.runOnMC = False
 config.runPATSequences = True
 config.usePAT = False
 config.globalTagNameData = 'GR_R_42_V23::All' 
@@ -17,8 +17,8 @@ config.globalTagNameMC = 'START42_V17D::All'
 config.comEnergy = 7000.0
 config.trackAnalyzerName = 'trackHistoAnalyzer'
 config.trackTagName = 'analysisTracks'
-config.NumberOfEvents = 10
-config.TriggerOn = False
+config.NumberOfEvents = 100
+config.TriggerOn = True
 
 #
 # Define Triggers and Input Files
@@ -154,10 +154,12 @@ process.exclusiveDijetsAnalysisTTree.ExclusiveDijetsAnalysis.VertexTag = "goodOf
 process.exclusiveDijetsAnalysisTTree.ExclusiveDijetsAnalysis.ParticleFlowTag = "pfCandidateNoiseThresholds"
 process.exclusiveDijetsAnalysisTTree.ExclusiveDijetsAnalysis.JetTag = "selectedPatJetsPFlow"
 process.exclusiveDijetsAnalysisTTree.ExclusiveDijetsAnalysis.JetNonCorrTag = "ak5PFJets"
+process.exclusiveDijetsAnalysisTTree.ExclusiveDijetsAnalysis.EnergyThresholdHF = 7.0
 process.exclusiveDijetsAnalysisTTree.ExclusiveDijetsAnalysis.PFlowThresholds.Transition.hadronHF.energy = 7.0
 process.exclusiveDijetsAnalysisTTree.ExclusiveDijetsAnalysis.PFlowThresholds.Transition.emHF.energy = 7.0
 process.exclusiveDijetsAnalysisTTree.ExclusiveDijetsAnalysis.PFlowThresholds.Forward.hadronHF.energy = 7.0
 process.exclusiveDijetsAnalysisTTree.ExclusiveDijetsAnalysis.PFlowThresholds.Forward.emHF.energy = 7.0
+
 
 
 
