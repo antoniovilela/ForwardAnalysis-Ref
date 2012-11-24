@@ -3,6 +3,7 @@
 #include "DataFormats/Common/interface/Handle.h"
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
+#include "FWCore/Utilities/interface/Exception.h"
 
 #include "DataFormats/TrackReco/interface/TrackFwd.h"
 #include "DataFormats/TrackReco/interface/Track.h"
@@ -30,20 +31,27 @@ TrackAnalysisSelector::~TrackAnalysisSelector() {}
 bool TrackAnalysisSelector::operator()(const Track& track, const edm::Event& event) const {
    edm::Handle<edm::View<Vertex> > vertexCollectionH;
    event.getByLabel(vertexTag_,vertexCollectionH);
+  
+   bool accept;  
+
+   if ( vertexCollectionH.isValid() && vertexCollectionH->size()>0) {
    const Vertex& primaryVertex = *(vertexCollectionH->begin());
  
    double dxySig = track.dxy(primaryVertex.position())/track.dxyError();
    double dzSig = track.dz(primaryVertex.position())/track.dzError();
    double sigPtRel = track.ptError()/track.pt();
  
-   bool accept = ( track.pt() > ptMin_ &&
+   accept = ( track.pt() > ptMin_ &&
                    track.eta() > etaMin_ && track.eta() < etaMax_ &&
                    track.quality(quality_) &&
                    dxySig < dxySigMax_ &&
                    dzSig < dzSigMax_ &&
                    sigPtRel < sigPtMax_);
-
+   }
+   else{ accept = false; }
+   
    return accept;
+   
 }
 
 } // namespace
