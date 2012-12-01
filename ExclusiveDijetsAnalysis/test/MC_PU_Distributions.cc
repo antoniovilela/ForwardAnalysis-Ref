@@ -542,11 +542,11 @@ void MC_PU_Distributions::Run(std::string filein_, std::string savehistofile_, s
      outstring << "STEP4_2 (Tracker Acceptance): " << counterJetsTrackerstep4_2 << std::endl;
      outstring << "STEP4_1 (Tracker Acceptance): " << counterJetsTrackerstep4_1 << std::endl;
      outstring << " " << std::endl;
-     outstring << "STEP3 (eta < 2 and eta > -2 Acceptance): " << counterJetsEta2step3 << std::endl;
-     outstring << "STEP4_4 (eta < 2 and eta > -2 Acceptance): " << counterJetsEta2step4_4 << std::endl;
-     outstring << "STEP4_3 (eta < 2 and eta > -2 Acceptance): " << counterJetsEta2step4_3 << std::endl;
+     outstring << "STEP3 (eta < x and eta > x Acceptance): " << counterJetsEta2step3 << std::endl;
+     outstring << "STEP4_4 (eta < 4 and eta > -4 Acceptance): " << counterJetsEta2step4_4 << std::endl;
+     outstring << "STEP4_3 (eta < 3 and eta > -3 Acceptance): " << counterJetsEta2step4_3 << std::endl;
      outstring << "STEP4_2 (eta < 2 and eta > -2 Acceptance): " << counterJetsEta2step4_2 << std::endl;
-     outstring << "STEP4_1 (eta < 2 and eta > -2 Acceptance): " << counterJetsEta2step4_1 << std::endl;
+     outstring << "STEP4_1 (eta < 1 and eta > -1 Acceptance): " << counterJetsEta2step4_1 << std::endl;
      outstring << " " << std::endl;
      outstring << "<< LEGEND >> " << std::endl;
      outstring << "STEP1: # Vertex selection." << std::endl;
