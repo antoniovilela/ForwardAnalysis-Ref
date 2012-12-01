@@ -49,14 +49,15 @@
 #include <fstream>
 
 #include "MC_PU_Distributions.h"
+#include "ForwardAnalysis/ForwardTTreeAnalysis/interface/EventInfoEvent.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/ExclusiveDijetsEvent.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/DiffractiveEvent.h"
-#include "KKousour/QCDAnalysis/interface/QCDEvent.h"
 #include "PhysicsTools/Utilities/interface/LumiReWeighting.h"
 
 using namespace diffractiveAnalysis;
 using namespace exclusiveDijetsAnalysis;
 using namespace reweight;
+using namespace eventInfo;
 
 void MC_PU_Distributions::LoadFile(std::string fileinput, std::string processinput){
 
@@ -66,13 +67,13 @@ void MC_PU_Distributions::LoadFile(std::string fileinput, std::string processinp
    tr = (TTree*)inf->Get(processinput.c_str());
    eventdiff = new DiffractiveEvent();
    eventexcl = new ExclusiveDijetsEvent();
-   eventqcd = new QCDEvent();
+   eventinfo = new EventInfoEvent();
    diff = tr->GetBranch("DiffractiveAnalysis");
    excl = tr->GetBranch("ExclusiveDijetsAnalysis");
-   qcd = tr->GetBranch("QCDAnalysis");
+   info = tr->GetBranch("EventInfo");
    diff->SetAddress(&eventdiff);
    excl->SetAddress(&eventexcl);
-   qcd->SetAddress(&eventqcd);
+   info->SetAddress(&eventinfo);
 
 }
 
@@ -93,7 +94,6 @@ void MC_PU_Distributions::Run(std::string filein_, std::string savehistofile_, s
    weightlumipass = weightlumipass_;
    nbins = nbins_;
 
-   std::cout << "" << std::endl;
    std::cout << "Running..." << std::endl;
    std::cout << "" << std::endl;
    std::cout << "<< INPUTS >>" << std::endl;
@@ -143,7 +143,9 @@ void MC_PU_Distributions::Run(std::string filein_, std::string savehistofile_, s
    }
    //--------------------------------------------------------------------------------------------------------------------------
 
+
    LoadFile(filein,processname);
+
 
    std::cout << " " << std::endl;
    std::cout << "pT(jet1) > " << jet1PT << std::endl;
@@ -282,7 +284,7 @@ void MC_PU_Distributions::Run(std::string filein_, std::string savehistofile_, s
       if (switchWeightLumi) { weightlumi = weightlumipass; }
       else { weightlumi = 1.0;}
 
-      if (switchWeightePw) { weightepw = eventqcd->evtHdr().weight();}
+      if (switchWeightePw) { weightepw = eventinfo->GetGeneratorWeight();}
       else { weightepw = 1.0;}
 
       totalweight = weightlumi*weightepw;
