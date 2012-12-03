@@ -192,7 +192,6 @@ void DiffractiveZAnalysis::fillElectronsInfo(DiffractiveZEvent& eventData, const
 
      }
 
-
 }
 
 // Fill Reco::Muon
