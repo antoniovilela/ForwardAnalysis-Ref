@@ -6,5 +6,6 @@ DiffractiveZAnalysis = cms.PSet(
     hltPaths = cms.vstring('HLT_Mu3'),
     TriggerResultsTag = cms.InputTag("TriggerResults::HLT"),
     electronTag = cms.InputTag("gsfElectrons"),
-    muonTag = cms.InputTag("muons")
+    muonTag = cms.InputTag("muons"),
+    PVtxCollectionTag=cms.InputTag('offlinePrimaryVertices')
 )

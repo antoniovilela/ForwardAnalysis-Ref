@@ -3,6 +3,7 @@
 
 #include "DataFormats/Candidate/interface/Particle.h"
 #include "DataFormats/Math/interface/LorentzVector.h"
+#include "DataFormats/Common/interface/DetSetVector.h"
 
 namespace diffractiveZAnalysis {
    class DiffractiveZAnalysis;
@@ -45,7 +46,14 @@ class DiffractiveZEvent {
       void SetSecondMuonP4(LorentzVector fSecondMuonP4)    { SecondMuonP4_     = fSecondMuonP4;}
       void SetSecondMuonCharge(int fSecondMuonCharge)  { SecondMuonCharge_     = fSecondMuonCharge;}
       void SetMuonsN(int fMuonsN)  { MuonsN_    = fMuonsN;}
-
+     
+      void SetVertexMultiplicity(const std::vector<double>& fVertexMultiplicity) { VertexMultiplicity_ = fVertexMultiplicity; }
+      void SetVertexChiNorm(const std::vector<double>& fVertexChiNorm) { VertexChiNorm_ = fVertexChiNorm; }
+      void SetVertexNDOF(const std::vector<double>& fVertexNDOF) { VertexNDOF_ = fVertexNDOF; }
+      void SetVz(const std::vector<double>& fVz) { Vz_ = fVz; }
+      void SetVx(const std::vector<double>& fVx) { Vx_ = fVx; }
+      void SetVy(const std::vector<double>& fVy) { Vy_ = fVy; }
+      void SetTracksPt(const std::vector<std::vector<double> >& fTracksPt) { TracksPt_ = fTracksPt; }
 
       int GetHLTPath(int idx)                    const { return hltTrigResults_[idx]; }
       double GetDiElectronMass() const {return DiElectronMass_;}
@@ -74,6 +82,14 @@ class DiffractiveZEvent {
       const LorentzVector& GetSecondMuonP4() const {return SecondMuonP4_;}
       int GetSecondMuonCharge() const {return SecondMuonCharge_;}
       int GetMuonsN() const {return MuonsN_;}
+
+      double GetVertexMultiplicity(int i) const { return VertexMultiplicity_[i]; }
+      double GetVertexChiNorm(int i) const { return VertexChiNorm_[i]; }
+      double GetVertexNDOF(int i) const { return VertexNDOF_[i]; }
+      double GetVz(int i) const { return Vz_[i]; }
+      double GetVx(int i) const { return Vx_[i]; }
+      double GetVy(int i) const { return Vy_[i]; }
+      double GetTracksPt(int i,int j) const { return TracksPt_[i][j]; }
 
 
    private:
@@ -108,6 +124,14 @@ class DiffractiveZEvent {
       LorentzVector SecondMuonP4_;
       int SecondMuonCharge_;
       int MuonsN_;
+
+      std::vector<double> VertexMultiplicity_;
+      std::vector<double> VertexChiNorm_;
+      std::vector<double> VertexNDOF_;
+      std::vector<double> Vz_;
+      std::vector<double> Vx_;
+      std::vector<double> Vy_;
+      std::vector<std::vector<double> > TracksPt_;
 
 };
 

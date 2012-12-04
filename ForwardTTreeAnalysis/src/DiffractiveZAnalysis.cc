@@ -8,6 +8,7 @@
 #include "DataFormats/Math/interface/LorentzVector.h"
 #include "FWCore/ServiceRegistry/interface/Service.h"
 #include "CommonTools/UtilAlgos/interface/TFileService.h"
+#include "TMath.h"
 
 #include "FWCore/Utilities/interface/RegexMatch.h"
 #include "FWCore/Framework/interface/TriggerNamesService.h"
@@ -21,6 +22,9 @@
 #include "DataFormats/MuonReco/interface/Muon.h"
 #include "DataFormats/MuonReco/interface/MuonFwd.h"
 
+#include "DataFormats/VertexReco/interface/Vertex.h"
+#include "DataFormats/VertexReco/interface/VertexFwd.h"
+
 using diffractiveZAnalysis::DiffractiveZAnalysis;
 
 const char* DiffractiveZAnalysis::name = "DiffractiveZAnalysis";
@@ -29,7 +33,8 @@ DiffractiveZAnalysis::DiffractiveZAnalysis(const edm::ParameterSet& pset):
   triggerResultsTag_(pset.getParameter<edm::InputTag>("TriggerResultsTag")),
   hltPathNames_(pset.getParameter<std::vector<std::string> >("hltPaths")),
   electronTag_(pset.getParameter<edm::InputTag>("electronTag")),
-  muonTag_(pset.getParameter<edm::InputTag>("muonTag"))
+  muonTag_(pset.getParameter<edm::InputTag>("muonTag")),
+  PVtxCollectionTag_(pset.getParameter<edm::InputTag>("PVtxCollectionTag"))
 {
 }
 
@@ -66,6 +71,7 @@ void DiffractiveZAnalysis::fill(DiffractiveZEvent& eventData, const edm::Event& 
   fillTriggerInfo(eventData,event,setup);
   fillMuonsInfo(eventData,event,setup);
   fillElectronsInfo(eventData,event,setup);
+  fillTracksInfo(eventData,event,setup); 
 
 }
 
@@ -278,6 +284,92 @@ void DiffractiveZAnalysis::fillMuonsInfo(DiffractiveZEvent& eventData, const edm
 */
 
      }
+
+}
+
+
+void DiffractiveZAnalysis::fillTracksInfo(DiffractiveZEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
+
+  //=======================================================
+  // Retrieve the Track information
+  //=======================================================
+  std::vector<double> vertexNDOF;
+  std::vector<double> vertexChiNorm;
+  std::vector<double> vertexMultiplicity;
+  double nhit=0;
+  std::vector<double> V_x;
+  std::vector<double> V_y;
+  std::vector<double> V_z; 
+  std::vector<double> pt;
+  std::vector<double> tracks;
+  std::vector<std::vector<double> > tracksPT;
+ 
+  edm::Handle<reco::VertexCollection>  vertexCollectionHandle;
+  event.getByLabel(PVtxCollectionTag_, vertexCollectionHandle);
+  //std::cout <<" SIZE VTX " << vertexCollectionHandle->size() <<  std::endl;
+  for(reco::VertexCollection::const_iterator vtx = vertexCollectionHandle->begin();vtx!=vertexCollectionHandle->end(); ++vtx)
+    {
+      reco::Vertex::trackRef_iterator it = vtx->tracks_begin();
+      reco::Vertex::trackRef_iterator lastTrack = vtx->tracks_end();
+
+
+      for(;it!=lastTrack;it++) {
+	nhit+=(*it)->numberOfValidHits();
+	pt.push_back((*it)->pt());
+      }
+     
+      //std::cout << vtx->x() << std::endl;
+ 
+      
+      //Sorting the pt tracks, in order to take only the 31 most energetics
+      const int  size = (int) pt.size();
+      int *sorted = new int[size];
+      double *v = new double[size];
+      
+      for (int i=0; i<size; i++) {
+	v[i] = pt[i];
+      }
+      TMath::Sort(size, v, sorted, true);
+      for (int i=0; i<size; i++) {
+	tracks.push_back(pt[sorted[i]]);
+	if (i>30) break;
+      }
+           
+      tracksPT.push_back(tracks);
+      tracks.clear();
+      pt.clear();
+
+      double ndof=vtx->ndof();
+      double chiNorm=vtx->normalizedChi2();
+      double NumbOfTracks=vtx->tracksSize();
+      vertexNDOF.push_back(ndof);
+      vertexChiNorm.push_back(chiNorm);
+      vertexMultiplicity.push_back(NumbOfTracks);
+      nhit=0;
+      if ( ndof != 0 ) {
+	V_x.push_back(vtx->x());
+	V_y.push_back(vtx->y());
+	V_z.push_back(vtx->z());
+      } else {
+	V_x.push_back(-999);
+	V_y.push_back(-999);
+	V_z.push_back(-999);
+      }
+      //if (ndof ==0) cout<<"VTX 0 "<<vtx->x() << " " << NumbOfTracks << " " << nhit << endl;
+      //if (ndof >2) cout<<"VTX 2 "<<vtx->x() << " " << NumbOfTracks << " " << nhit << endl;
+/*
+      delete [] sorted;
+      delete [] v;
+*/
+    } // loop over vtx
+
+eventData.SetVertexMultiplicity(vertexMultiplicity);
+eventData.SetVertexChiNorm(vertexChiNorm);
+eventData.SetVertexNDOF(vertexNDOF);
+eventData.SetVz(V_z);
+eventData.SetVx(V_x);
+eventData.SetVy(V_y); 
+eventData.SetTracksPt(tracksPT);
 
 }
 
