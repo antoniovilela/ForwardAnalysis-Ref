@@ -8,7 +8,7 @@ class config: pass
 config.verbose = True
 config.writeEdmOutput = False
 config.outputTTreeFile = 'DiffractiveZDataPATTuple.root'
-config.runOnMC = False
+config.runOnMC = True
 config.runPATSequences = True
 config.usePAT = False
 config.globalTagNameData = 'GR_R_42_V23::All' 
@@ -18,7 +18,7 @@ config.comEnergy = 7000.0
 config.trackAnalyzerName = 'trackHistoAnalyzer'
 config.trackTagName = 'analysisTracks'
 config.NumberOfEvents = 1000
-config.TriggerOn = True
+config.TriggerOn = False
 
 
 #
@@ -159,6 +159,10 @@ process.diffractiveZAnalysisTTree.DiffractiveAnalysis.particleFlowTag = "pfCandi
 process.diffractiveZAnalysisTTree.DiffractiveAnalysis.jetTag = "selectedPatJetsPFlow"
 
 process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.hltPaths = config.hltPaths
+if config.runOnMC:
+     process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.RunMC = True
+else:
+     process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.RunMC = False 
 
 #
 # Define MC Access
