@@ -578,9 +578,11 @@ void DiffractiveZAnalysis::fillGenInfo(DiffractiveZEvent& eventData, const edm::
       //cout << "GEN eta ranges " <<  eta_gap_limplus_gen  << " " <<  eta_gap_limminus_gen  << endl;
       
       //Rootuple->max_eta_gap_gen=max_eta_gap_gen;
+      eventData.SetPrimaryGapMaxGen(max_eta_gap_gen);
       
       if (size>2) {
 	double max_second_eta_gap_gen=diff[diffsorted[1]];
+        eventData.SetSecondGapMaxGen(max_second_eta_gap_gen);
 	//Rootuple->max_second_eta_gap_gen=max_second_eta_gap_gen;
 	//if (debug_deep) cout<<" diff  " << diff[diffsorted[0]] << " sec " << diff[diffsorted[1]] << " diff size "<< diff[size-2] <<endl;
       }
@@ -665,13 +667,16 @@ void DiffractiveZAnalysis::fillGenInfo(DiffractiveZEvent& eventData, const edm::
       if (i>30) break;
     }  //  comes out size of 32!
   
-/*
-    Rootuple->tracksPT_gen=tracks;
-    Rootuple->etaOfTracksPT_gen=etaPT;   
-    Rootuple->numberOfTracks_gen=tracks.size();  
+eventData.SetTracksPtGen(tracks);
+eventData.SetEtaOfTracksPtGen(etaPT);
+eventData.SetNTracksGen(tracks.size());
+
+//    Rootuple->tracksPT_gen=tracks;
+//    Rootuple->etaOfTracksPT_gen=etaPT;   
+//    Rootuple->numberOfTracks_gen=tracks.size();  
     genpt.clear();
     eta.clear();
-*/
+
     delete [] sorted;
     delete [] vv;
     
@@ -701,6 +706,31 @@ void DiffractiveZAnalysis::fillGenInfo(DiffractiveZEvent& eventData, const edm::
     Rootuple-> p_diss_mass_gen=p_diss_mass;
     Rootuple-> xL_p_diss= xL_p_diss;
     */
+
+eventData.SetMx2PlusGen(dataMassG_plus.M2());
+eventData.SetMx2MinusGen(dataMassG_minus.M2());
+eventData.SetMx2Gen(Mx2_NOZ_gen);
+eventData.SetMx2ZGen(Mx2_gen);
+eventData.SetNMx2PlusGen(nplusG);
+eventData.SetNMx2MinusGen(nminusG);
+eventData.SetEtaGaplimPlusGen(eta_gap_limplus_gen);
+eventData.SetEtaGaplimMinusGen(eta_gap_limminus_gen);
+eventData.SetNParticlesGen(Nstable_gen);
+eventData.SetsumECastorMinusGen(sumECastor_minus_gen);
+eventData.SetsumECastorPlusGen(sumECastor_plus_gen);
+eventData.SetsumEZDCMinusGen(sumEZDC_minus_gen);
+eventData.SetsumEZDCPlusGen(sumEZDC_plus_gen);
+eventData.SetEtaOutcomingProtonGen(etaOutcomingProton);
+eventData.SetxLGen(mostEnergeticXL);
+eventData.SetxLMostEnergeticGen(mostEnergeticXLNum);
+eventData.SetxiZMinusGen(xi_Z_gen_minus);
+eventData.SetxiZPlusGen(xi_Z_gen_plus);
+eventData.SetEtaZGen(etaZ_gen);
+eventData.SetEnergyZGen(energyZ_gen);
+eventData.SetpDissMassGen(p_diss_mass);
+eventData.SetxLpDissMass(xL_p_diss);
+
+
 
 }
 

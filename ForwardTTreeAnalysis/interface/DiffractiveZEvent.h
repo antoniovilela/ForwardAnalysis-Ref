@@ -57,8 +57,8 @@ class DiffractiveZEvent {
 
       void SetPrimaryGapMaxGen(double fPrimaryGapMaxGen)    { PrimaryGapMaxGen_     = fPrimaryGapMaxGen;}
       void SetSecondGapMaxGen(double fSecondGapMaxGen)    { SecondGapMaxGen_    = fSecondGapMaxGen;}
-      void SetTracksPtGen(double fTracksPtGen)    { TracksPtGen_     = fTracksPtGen;}
-      void SetEtaOfTracksPtGen(double fEtaOfTracksPtGen)    { EtaOfTracksPtGen_     = fEtaOfTracksPtGen;}
+      void SetTracksPtGen(const std::vector<double>& fTracksPtGen)    { TracksPtGen_     = fTracksPtGen;}
+      void SetEtaOfTracksPtGen(const std::vector<double>& fEtaOfTracksPtGen)    { EtaOfTracksPtGen_     = fEtaOfTracksPtGen;}
       void SetNTracksGen(int fNTracksGen)    { NTracksGen_     = fNTracksGen;}
       void SetMx2PlusGen(double fMx2PlusGen)    { Mx2PlusGen_     = fMx2PlusGen;}
       void SetMx2MinusGen(double fMx2MinusGen)    { Mx2MinusGen_     = fMx2MinusGen;}
@@ -121,8 +121,8 @@ class DiffractiveZEvent {
 
       double GetPrimaryGapMaxGen()    const {return PrimaryGapMaxGen_;}
       double GetSecondGapMaxGen()    const {return SecondGapMaxGen_;}
-      double GetTracksPtGen()    const {return TracksPtGen_;}
-      double GetEtaOfTracksPtGen()    const {return EtaOfTracksPtGen_;}
+      double GetTracksPtGen(int i)    const {return TracksPtGen_[i];}
+      double GetEtaOfTracksPtGen(int i)    const {return EtaOfTracksPtGen_[i];}
       int GetNTracksGen()    const {return NTracksGen_;}
       double GetMx2PlusGen()    const {return Mx2PlusGen_;}
       double GetMx2MinusGen()    const {return Mx2MinusGen_;}
@@ -190,8 +190,8 @@ class DiffractiveZEvent {
 
       double PrimaryGapMaxGen_;
       double SecondGapMaxGen_;
-      double TracksPtGen_;
-      double EtaOfTracksPtGen_;
+      std::vector<double> TracksPtGen_;
+      std::vector<double> EtaOfTracksPtGen_;
       int NTracksGen_;
       double Mx2PlusGen_;
       double Mx2MinusGen_;

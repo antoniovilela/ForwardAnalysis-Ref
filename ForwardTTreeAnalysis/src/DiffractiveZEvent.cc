@@ -44,8 +44,8 @@ void DiffractiveZEvent::reset(){
 
   PrimaryGapMaxGen_=-999.;
   SecondGapMaxGen_=-999.;
-  TracksPtGen_=-999.;
-  EtaOfTracksPtGen_=-999.;
+  TracksPtGen_.clear();
+  EtaOfTracksPtGen_.clear();
   NTracksGen_=-999;
   Mx2PlusGen_=-999.;
   Mx2MinusGen_=-999.;
