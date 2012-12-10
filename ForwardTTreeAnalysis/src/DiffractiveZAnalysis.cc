@@ -6,6 +6,8 @@
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 #include "FWCore/Utilities/interface/Exception.h"
 #include "DataFormats/Math/interface/LorentzVector.h"
+#include "TLorentzVector.h"
+
 #include "FWCore/ServiceRegistry/interface/Service.h"
 #include "CommonTools/UtilAlgos/interface/TFileService.h"
 #include "TMath.h"
@@ -29,6 +31,16 @@
 #include "DataFormats/HepMCCandidate/interface/GenParticle.h"
 #include "DataFormats/HepMCCandidate/interface/GenParticleFwd.h"
 
+#include "DataFormats/PatCandidates/interface/CompositeCandidate.h"
+
+#include "DataFormats/ParticleFlowReco/interface/PFBlockElementTrack.h"
+#include "DataFormats/ParticleFlowCandidate/interface/PFCandidate.h"
+#include "DataFormats/ParticleFlowReco/interface/PFBlock.h"
+#include "DataFormats/ParticleFlowReco/interface/PFCluster.h"
+
+#include "DataFormats/PatCandidates/interface/Muon.h"
+#include "DataFormats/PatCandidates/interface/Electron.h"
+
 using diffractiveZAnalysis::DiffractiveZAnalysis;
 
 const char* DiffractiveZAnalysis::name = "DiffractiveZAnalysis";
@@ -40,6 +52,7 @@ DiffractiveZAnalysis::DiffractiveZAnalysis(const edm::ParameterSet& pset):
   muonTag_(pset.getParameter<edm::InputTag>("muonTag")),
   PVtxCollectionTag_(pset.getParameter<edm::InputTag>("PVtxCollectionTag")),
   RunMC_(pset.getUntrackedParameter<Bool_t>("RunMC", false)),
+  RunZPat_(pset.getUntrackedParameter<Bool_t>("RunZPat", false)),
   pTPFThresholdCharged_(pset.getParameter<double>("pTPFThresholdCharged")),
   energyPFThresholdBar_(pset.getParameter<double>("energyPFThresholdBar")),
   energyPFThresholdEnd_(pset.getParameter<double>("energyPFThresholdEnd")),
@@ -81,6 +94,7 @@ void DiffractiveZAnalysis::fill(DiffractiveZEvent& eventData, const edm::Event& 
   fillElectronsInfo(eventData,event,setup);
   fillTracksInfo(eventData,event,setup); 
   if (RunMC_) fillGenInfo(eventData,event,setup); 
+  if (RunZPat_) fillZPat(eventData,event,setup);
 
 }
 
@@ -730,7 +744,94 @@ eventData.SetEnergyZGen(energyZ_gen);
 eventData.SetpDissMassGen(p_diss_mass);
 eventData.SetxLpDissMass(xL_p_diss);
 
-
-
 }
 
+
+void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
+
+  math::XYZPoint PrimaryVertex;
+  TLorentzVector m1electron(0.,0.,0.,0.);
+  TLorentzVector m2electron(0.,0.,0.,0.);
+  bool firstelectron=false;
+  bool secondelectron=false;
+  double mee=0;
+  TLorentzVector m1muon(0.,0.,0.,0.);
+  TLorentzVector m2muon(0.,0.,0.,0.);
+  bool firstmuon=false;
+  bool secondmuon=false;
+  double mmumu=0;
+
+  edm::Handle<reco::VertexCollection> Vertexes;
+  event.getByLabel("offlinePrimaryVertices", Vertexes); 
+  
+  edm::Handle <reco::PFCandidateCollection> PFCandidates;
+  event.getByLabel("particleFlow",PFCandidates); 
+  reco::PFCandidateCollection::const_iterator iter;
+
+  edm::Handle<std::vector<pat::Muon> > muons;
+  event.getByLabel("selectedPatMuonsPFlow", muons);
+
+  edm::Handle<std::vector<pat::Electron> > electrons;
+  event.getByLabel("selectedPatElectronsPFlow", electrons);
+
+      for( std::vector<pat::Electron>::const_iterator elec=electrons->begin(); elec!=electrons->end(); ++elec ){
+      
+      double pt=elec->pt();
+      double charge=elec->charge();
+      double phi=elec->phi();
+      double eta=elec->eta();
+
+      std::cout << "pT: " << pt << " | charge: " << charge << " | phi: " << phi << " | eta: " << eta << std::endl; 
+
+      if (pt>=2 && (charge)>0){
+	PrimaryVertex=elec->vertex();
+        m1electron.SetPtEtaPhiM(pt,eta,phi,0.0);
+        firstmuon=true;
+      }
+
+      if (pt>=2 && (charge)<0){
+        PrimaryVertex=elec->vertex();
+        m2electron.SetPtEtaPhiM(pt,eta,phi,0.0);
+        secondelectron=true;
+      }
+
+    }
+    if (firstelectron==true && secondelectron==true){
+      TLorentzVector Zee = m1electron+m2electron;
+      mee = Zee.M();
+      firstelectron=false;
+      secondelectron=false;
+      std::cout << "Dielectron Mass: " << mee << std::endl;
+      eventData.SetDiElectronMassPF(mee);
+    }
+
+  for( std::vector<pat::Muon>::const_iterator muon=muons->begin(); muon!=muons->end(); ++muon ){
+
+      double charge=muon->charge();
+      double phi=muon->phi();
+      double eta=muon->eta();
+      double pt=muon->pt();
+
+      std::cout << "pT: " << pt << " | charge: " << charge << " | phi: " << phi << " | eta: " << eta << std::endl;
+
+      if (pt>=2 && (charge)>0){
+	PrimaryVertex=muon->vertex();
+	m1muon.SetPtEtaPhiM(pt,eta,phi,0.0);     
+	firstmuon=true;
+      }
+      if (pt>=2 && (charge)<0){
+	PrimaryVertex=muon->vertex();
+	m2muon.SetPtEtaPhiM(pt,eta,phi,0.0); 
+	secondmuon=true;
+      }
+    }
+    if (firstmuon==true && secondmuon==true){
+      TLorentzVector Zmumu = m1muon+m2muon;
+      mmumu = Zmumu.M();
+      firstmuon=false;
+      secondmuon=false;
+      std::cout << "Dimuon Mass: " << mmumu << std::endl;
+      eventData.SetDiMuonMassPF(mmumu);
+    }
+
+}

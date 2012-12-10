@@ -9,6 +9,7 @@ DiffractiveZAnalysis = cms.PSet(
     muonTag = cms.InputTag("muons"),
     PVtxCollectionTag=cms.InputTag('offlinePrimaryVertices'),
     RunMC = cms.untracked.bool(False),
+    RunZPat = cms.untracked.bool(True),
     pTPFThresholdCharged = cms.double(0.1),
     energyPFThresholdBar = cms.double(1.5),
     energyPFThresholdEnd = cms.double(3.5),

@@ -8,7 +8,7 @@ class config: pass
 config.verbose = True
 config.writeEdmOutput = False
 config.outputTTreeFile = 'DiffractiveZDataPATTuple.root'
-config.runOnMC = True
+config.runOnMC = False
 config.runPATSequences = True
 config.usePAT = False
 config.globalTagNameData = 'GR_R_42_V23::All' 
@@ -108,6 +108,14 @@ if config.runPATSequences:
 
 from ForwardAnalysis.Utilities.addCastorRecHitCorrector import addCastorRecHitCorrector
 addCastorRecHitCorrector(process)
+
+#
+# PAT Muons and Electrons WorkFlow
+#
+
+process.load('PhysicsTools.PatAlgos.producersLayer1.muonProducer_cff')
+process.load('PhysicsTools.PatAlgos.producersLayer1.electronProducer_cff')
+
 
 #
 # Open Common Modules

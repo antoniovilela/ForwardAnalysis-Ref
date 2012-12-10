@@ -70,4 +70,6 @@ void DiffractiveZEvent::reset(){
   pDissMassGen_=-999.;
   xLpDissMass_=-999.;
 
+  DiElectronMassPF_=-999.;
+  DiMuonMassPF_=-999.;
 }

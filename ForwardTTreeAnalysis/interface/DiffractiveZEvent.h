@@ -83,6 +83,9 @@ class DiffractiveZEvent {
       void SetpDissMassGen(double fpDissMassGen)    { pDissMassGen_     = fpDissMassGen;}
       void SetxLpDissMass(double fxLpDissMass)    { xLpDissMass_     = fxLpDissMass;}
 
+      void SetDiElectronMassPF(double fDiElectronMassPF) { DiElectronMassPF_ = fDiElectronMassPF;}
+      void SetDiMuonMassPF(double fDiMuonMassPF) { DiMuonMassPF_ = fDiMuonMassPF;}
+
       int GetHLTPath(int idx)                    const { return hltTrigResults_[idx]; }
       double GetDiElectronMass() const {return DiElectronMass_;}
       double GetDiMuonMass() const {return DiMuonMass_;}
@@ -146,6 +149,10 @@ class DiffractiveZEvent {
       double GetEnergyZGen()    const {return EnergyZGen_;}
       double GetpDissMassGen()    const {return pDissMassGen_;}
       double GetxLpDissMass()    const {return xLpDissMass_;}
+
+      double GetDiElectronMassPF() const {return DiElectronMassPF_;}
+      double GetDiMuonMassPF() const {return DiMuonMassPF_;}
+
 
    private:
       friend class diffractiveZAnalysis::DiffractiveZAnalysis;
@@ -215,6 +222,10 @@ class DiffractiveZEvent {
       double EnergyZGen_;
       double pDissMassGen_;
       double xLpDissMass_;
+
+      double DiElectronMassPF_;
+      double DiMuonMassPF_;
+
 
 };
 

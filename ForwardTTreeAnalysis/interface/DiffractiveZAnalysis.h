@@ -38,6 +38,7 @@ class DiffractiveZAnalysis {
       void fillMuonsInfo(DiffractiveZEvent&, const edm::Event&, const edm::EventSetup&);
       void fillTracksInfo(DiffractiveZEvent&, const edm::Event&, const edm::EventSetup&);
       void fillGenInfo(DiffractiveZEvent&, const edm::Event&, const edm::EventSetup&);
+      void fillZPat(DiffractiveZEvent&, const edm::Event&, const edm::EventSetup&);
 
       edm::InputTag triggerResultsTag_;
       std::vector<std::string> hltPathNames_;
@@ -45,6 +46,7 @@ class DiffractiveZAnalysis {
       edm::InputTag muonTag_;
       edm::InputTag PVtxCollectionTag_;
       bool RunMC_;
+      bool RunZPat_;
       double pTPFThresholdCharged_;
       double energyPFThresholdBar_;
       double energyPFThresholdEnd_;
