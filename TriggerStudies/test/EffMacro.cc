@@ -207,28 +207,28 @@ void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string 
 					 
 							  
 							  // Eta max and Eta min cut
-							  if (eventdiff->GetEtaMinFromPFCands() > -4. && eventdiff->GetEtaMaxFromPFCands() < 4.){
+							  if ((eventdiff->GetEtaMinFromPFCands() > -4. && eventdiff->GetEtaMaxFromPFCands() < 4.) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990) ){
 
 								     ++counterAllstep4_4;
 								     m_hVector_Evt_lumis.at(4)->Fill(eventinfo->GetInstLumiBunch());
 								     m_hVector_Eff_lumis.at(4)->Fill(eventinfo->GetInstLumiBunch());
 							  }
 
-							  if (eventdiff->GetEtaMinFromPFCands() > -3. && eventdiff->GetEtaMaxFromPFCands() < 3.){
+							  if ((eventdiff->GetEtaMinFromPFCands() > -3. && eventdiff->GetEtaMaxFromPFCands() < 3.) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990)){
 
 								     ++counterAllstep4_3;
 								     m_hVector_Evt_lumis[5]->Fill(eventinfo->GetInstLumiBunch());
 								     m_hVector_Eff_lumis[5]->Fill(eventinfo->GetInstLumiBunch());
 							  }
 
-							  if (eventdiff->GetEtaMinFromPFCands() > -2. && eventdiff->GetEtaMaxFromPFCands() < 2.){
+							  if ((eventdiff->GetEtaMinFromPFCands() > -2. && eventdiff->GetEtaMaxFromPFCands() < 2.) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990)){
 
 								     ++counterAllstep4_2;
 								     m_hVector_Evt_lumis.at(6)->Fill(eventinfo->GetInstLumiBunch());
 								     m_hVector_Eff_lumis.at(6)->Fill(eventinfo->GetInstLumiBunch());
 							  }
 
-							  if (eventdiff->GetEtaMinFromPFCands() > -1. && eventdiff->GetEtaMaxFromPFCands() < 1.){
+							  if ((eventdiff->GetEtaMinFromPFCands() > -1. && eventdiff->GetEtaMaxFromPFCands() < 1.) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990)){
 
 								     ++counterAllstep4_1;
 								     m_hVector_Evt_lumis.at(7)->Fill(eventinfo->GetInstLumiBunch());
