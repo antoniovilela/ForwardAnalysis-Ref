@@ -175,60 +175,60 @@ void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::strin
                deltaphi_ = fabs(eventexcl->GetLeadingJetPhi()-eventexcl->GetSecondJetPhi());
                //double Dphi=std::abs(phijet1-phijet2);
                /*if(deltaphi_>M_PI) deltaphi_=2.0*M_PI-deltaphi_;
-               if(deltaphi_>0.5*M_PI) {*/
-	       m_hVector_Evt_lumis.at(0)->Fill(eventinfo->GetInstLumiBunch());
-	       m_hVector_Eff_lumis.at(0)->Fill(eventinfo->GetInstLumiBunch());
-	       m_hVector_Evt_pfetamax.at(0)->Fill(eventdiff->GetEtaMaxFromPFCands());
-               m_hVector_Evt_pfetamin.at(0)->Fill(eventdiff->GetEtaMinFromPFCands());
-	      	  
-		      if(eventexcl->GetHLTPath(optTriggerRef)){
-		
-                        ++counterTriggerRef;     
-			m_hVector_Evt_lumis.at(1)->Fill(eventinfo->GetInstLumiBunch());
-			m_hVector_Eff_lumis.at(1)->Fill(eventinfo->GetInstLumiBunch());
-                        m_hVector_Evt_pfetamax.at(1)->Fill(eventdiff->GetEtaMaxFromPFCands());
-                        m_hVector_Evt_pfetamin.at(1)->Fill(eventdiff->GetEtaMinFromPFCands());
+		       if(deltaphi_>0.5*M_PI) {*/
+		       m_hVector_Evt_lumis.at(0)->Fill(eventinfo->GetInstLumiBunch());
+		       m_hVector_Eff_lumis.at(0)->Fill(eventinfo->GetInstLumiBunch());
+		       m_hVector_Evt_pfetamax.at(0)->Fill(eventdiff->GetEtaMaxFromPFCands());
+		       m_hVector_Evt_pfetamin.at(0)->Fill(eventdiff->GetEtaMinFromPFCands());
+			  
+			      if(eventexcl->GetHLTPath(optTriggerRef)){
+			
+				++counterTriggerRef;     
+				m_hVector_Evt_lumis.at(1)->Fill(eventinfo->GetInstLumiBunch());
+				m_hVector_Eff_lumis.at(1)->Fill(eventinfo->GetInstLumiBunch());
+				m_hVector_Evt_pfetamax.at(1)->Fill(eventdiff->GetEtaMaxFromPFCands());
+				m_hVector_Evt_pfetamin.at(1)->Fill(eventdiff->GetEtaMinFromPFCands());
 
-                        if(eventexcl->GetLeadingJetP4().Pt() > 60. && eventexcl->GetSecondJetP4().Pt() > 60. ){
-                         if(deltaphi_>M_PI) deltaphi_=2.0*M_PI-deltaphi_;
-                         if(deltaphi_>0.5*M_PI) {
-                          if(eventdiff->GetSumEnergyHFPlus() < 30 && eventdiff->GetSumEnergyHFMinus() < 30){
-                           if(eventexcl->GetNVertex() > 0 && eventexcl->GetNVertex()<= 1){        
-                             if(eventdiff->GetEtaMinFromPFCands() > -(optDiffSel) && eventdiff->GetEtaMaxFromPFCands() < (optDiffSel)){
-                               
-                                ++counterCutOffline;
-                                m_hVector_Evt_lumis.at(2)->Fill(eventinfo->GetInstLumiBunch());
-                                m_hVector_Eff_lumis.at(2)->Fill(eventinfo->GetInstLumiBunch());
-                                m_hVector_Evt_pfetamax.at(2)->Fill(eventdiff->GetEtaMaxFromPFCands());
-                                m_hVector_Evt_pfetamin.at(2)->Fill(eventdiff->GetEtaMinFromPFCands());
+				if(eventexcl->GetLeadingJetP4().Pt() > 60. && eventexcl->GetSecondJetP4().Pt() > 60. ){
+					 if(deltaphi_>M_PI) deltaphi_=2.0*M_PI-deltaphi_;
+					 if(deltaphi_>0.5*M_PI) {
+						  if(eventdiff->GetSumEnergyHFPlus() < 30 && eventdiff->GetSumEnergyHFMinus() < 30){
+							   if(eventexcl->GetNVertex() > 0 && eventexcl->GetNVertex()<= 1){        
+							     if(eventdiff->GetEtaMinFromPFCands() > -(optDiffSel) && eventdiff->GetEtaMaxFromPFCands() < (optDiffSel)){
+								       
+									++counterCutOffline;
+									m_hVector_Evt_lumis.at(2)->Fill(eventinfo->GetInstLumiBunch());
+									m_hVector_Eff_lumis.at(2)->Fill(eventinfo->GetInstLumiBunch());
+									m_hVector_Evt_pfetamax.at(2)->Fill(eventdiff->GetEtaMaxFromPFCands());
+									m_hVector_Evt_pfetamin.at(2)->Fill(eventdiff->GetEtaMinFromPFCands());
 
-				 if(eventexcl->GetHLTPath(optTrigger)){
+									 if(eventexcl->GetHLTPath(optTrigger)){
 
-                                   if(eventexcl->GetLeadingJetP4().Pt() > 60. && eventexcl->GetSecondJetP4().Pt() > 60. ){
-                                     if(deltaphi_>M_PI) deltaphi_=2.0*M_PI-deltaphi_;
-                                     if(deltaphi_>0.5*M_PI) {
-                                      if(eventdiff->GetSumEnergyHFPlus() < 30 && eventdiff->GetSumEnergyHFMinus() < 30){
-				       if(eventexcl->GetNVertex() > 0 && eventexcl->GetNVertex()<= 1){         
-                                         if(eventdiff->GetEtaMinFromPFCands() > -(optDiffSel) && eventdiff->GetEtaMaxFromPFCands() < (optDiffSel)){ 
-                                           ++counterTrigger;
-				           m_hVector_Evt_lumis.at(3)->Fill(eventinfo->GetInstLumiBunch());
-				           m_hVector_Eff_lumis.at(3)->Fill(eventinfo->GetInstLumiBunch());
-                                           m_hVector_Evt_pfetamax.at(3)->Fill(eventdiff->GetEtaMaxFromPFCands());
-                                           m_hVector_Evt_pfetamin.at(3)->Fill(eventdiff->GetEtaMinFromPFCands());
-                                      
-                                        } 
-                                      }
-				    }
-                                  }  
-                                 }
-                                }
-                              }
-	  		    }
-                           }
-                         }
-       
-	               }
-                    }   
+										   if(eventexcl->GetLeadingJetP4().Pt() > 60. && eventexcl->GetSecondJetP4().Pt() > 60. ){
+											     if(deltaphi_>M_PI) deltaphi_=2.0*M_PI-deltaphi_;
+											     if(deltaphi_>0.5*M_PI) {
+												      if(eventdiff->GetSumEnergyHFPlus() < 30 && eventdiff->GetSumEnergyHFMinus() < 30){
+													       if(eventexcl->GetNVertex() > 0 && eventexcl->GetNVertex()<= 1){         
+															 if((eventdiff->GetEtaMinFromPFCands() > -(optDiffSel) && eventdiff->GetEtaMaxFromPFCands() < (optDiffSel)) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990) ){ 
+															   ++counterTrigger;
+															   m_hVector_Evt_lumis.at(3)->Fill(eventinfo->GetInstLumiBunch());
+															   m_hVector_Eff_lumis.at(3)->Fill(eventinfo->GetInstLumiBunch());
+															   m_hVector_Evt_pfetamax.at(3)->Fill(eventdiff->GetEtaMaxFromPFCands());
+															   m_hVector_Evt_pfetamin.at(3)->Fill(eventdiff->GetEtaMinFromPFCands());
+													      
+														} 
+												      }
+												    }
+											  }  
+										 }
+									}
+							      }
+						    }
+						   }
+					 }
+	       
+			       }
+			    }   
   }
  
   //Scalling Plots
