@@ -25,6 +25,8 @@ class ExclDijetsComp {
    ExclusiveDijetsEvent *eventexcl;
    EventInfoEvent *eventinfo;
 
+   std::string pudatafile;
+   std::string pumcfile;
    std::string filein;
    std::string filetrigger;
    std::string fileinput;
@@ -82,7 +84,7 @@ class ExclDijetsComp {
    ExclDijetsComp() {}
    ~ExclDijetsComp() { inf->Close(); }
    
-   void Run(std::string, std::string, std::string, std::string, std::string, double, double, int, int, bool, bool, bool, bool, bool, bool, bool, bool, double);
+   void Run(std::string, std::string, std::string, std::string, std::string, std::string, std::string, double, double, int, int, bool, bool, bool, bool, bool, bool, bool, bool, double);
    void LoadFile(std::string,std::string);
    void FillHistograms();
 

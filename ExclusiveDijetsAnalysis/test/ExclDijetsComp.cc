@@ -52,9 +52,11 @@ void ExclDijetsComp::LoadFile(std::string fileinput, std::string processinput){
 
 }
 
-void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::string processname_, std::string filecor_, std::string filetrigger_, double jet1PT_, double jet2PT_, int optnVertex_, int optTrigger_, bool switchWeightPU_, bool switchWeightLumi_, bool switchWeightEff_, bool switchTriggerEff_, bool switchWeightePw_, bool switchMultiple_, bool switchPreSel_, bool switchTrigger_, double weightlumipass_){
+void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::string pudatafile_, std::string pumcfile_, std::string processname_, std::string filecor_, std::string filetrigger_, double jet1PT_, double jet2PT_, int optnVertex_, int optTrigger_, bool switchWeightPU_, bool switchWeightLumi_, bool switchWeightEff_, bool switchTriggerEff_, bool switchWeightePw_, bool switchMultiple_, bool switchPreSel_, bool switchTrigger_, double weightlumipass_){
 
    filein = filein_;
+   pudatafile = pudatafile_;
+   pumcfile = pumcfile_;
    savehistofile = savehistofile_;
    processname = processname_;
    filecor = filecor_;
@@ -82,6 +84,9 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
    std::cout << "Input file: " << filein << std::endl;
    std::cout << "Output file: " << savehistofile << std::endl;
    std::cout << " " << std::cout; 
+   std::cout << "Input PU Data file: " << pudatafile << std::endl;
+   std::cout << "Output PU MC file: " << pumcfile << std::endl;
+   std::cout << " " << std::cout;
    std::cout << "Input Efficiency File: " << filecor << std::endl;
    std::cout << " " << std::cout;
    std::cout << "pT(Jet1): " << jet1PT << "GeV" << std::endl;
@@ -114,8 +119,8 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
 
    }
 
-   TFile check1("pu_mc_QCD15-3000.root");
-   TFile check2("pu_147196-148058.root");
+   TFile check1(pumcfile.c_str());
+   TFile check2(pudatafile.c_str());
    TFile check3(filein.c_str());
    TFile check4(filecor.c_str());
    TFile check5(filetrigger.c_str());
@@ -190,7 +195,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
    TH1F* h_eff_trigger = (TH1F*)l2->Get("EffTrigger");
 
    LoadFile(filein,processname);
-   edm::LumiReWeighting LumiWeights_("pu_mc_QCD15-3000.root","pu_147196-148058.root","pileUpBx0_complete_without_cuts","pileup");
+   edm::LumiReWeighting LumiWeights_(pumcfile.c_str(),pudatafile.c_str(),"pileUpBx0_complete_without_cuts","pileup");
    
    /////////////////////////////////////////////////////////// 
    std::cout << " " << std::endl;
@@ -908,7 +913,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
 								  //////////////////////////////////////////////////////////////////////////////////////////
 
 								  // Eta max and Eta min cut
-								  if (eventdiff->GetEtaMinFromPFCands() > -4. && eventdiff->GetEtaMaxFromPFCands() < 4.){
+								  if ((eventdiff->GetEtaMinFromPFCands() > -4. && eventdiff->GetEtaMaxFromPFCands() < 4.)|| (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990) ){
 
 									     counterJetsAllstep4_4+=totalweight*triggereff_step4_4;
 									     m_hVector_rjj[5].at(indexV)->Fill(eventexcl->GetRjjFromJets(),totalweight*triggereff_step4_4);
@@ -948,7 +953,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
 						   
 								  }
 
-								  if (eventdiff->GetEtaMinFromPFCands() > -3. && eventdiff->GetEtaMaxFromPFCands() < 3.){
+								  if ((eventdiff->GetEtaMinFromPFCands() > -3. && eventdiff->GetEtaMaxFromPFCands() < 3.)|| (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990)){
 
 									     counterJetsAllstep4_3+=totalweight*triggereff_step4_3;
 									     m_hVector_rjj[6].at(indexV)->Fill(eventexcl->GetRjjFromJets(),totalweight*triggereff_step4_3);
@@ -988,7 +993,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
 
 								  }
 
-								  if (eventdiff->GetEtaMinFromPFCands() > -2. && eventdiff->GetEtaMaxFromPFCands() < 2.){
+								  if ((eventdiff->GetEtaMinFromPFCands() > -2. && eventdiff->GetEtaMaxFromPFCands() < 2.) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990)){
 
 									     counterJetsAllstep4_2+=totalweight*triggereff_step4_2;
 									     m_hVector_rjj[7].at(indexV)->Fill(eventexcl->GetRjjFromJets(),totalweight*triggereff_step4_2);
@@ -1028,7 +1033,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
 
 								  }
 
-								  if (eventdiff->GetEtaMinFromPFCands() > -1. && eventdiff->GetEtaMaxFromPFCands() < 1.){
+								  if ((eventdiff->GetEtaMinFromPFCands() > -1. && eventdiff->GetEtaMaxFromPFCands() < 1.) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990)){
 
 									     counterJetsAllstep4_1+=totalweight*triggereff_step4_1;
 									     m_hVector_rjj[8].at(indexV)->Fill(eventexcl->GetRjjFromJets(),totalweight*triggereff_step4_1);
@@ -1114,7 +1119,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
 
 
 								  // Eta max and nt ieta = 29,iring = 0; ieta <= 41; ++ieta,++iring){
-								  if (eventdiff->GetEtaMinFromPFCands() > -4. && eventdiff->GetEtaMaxFromPFCands() < 4.){
+								  if ((eventdiff->GetEtaMinFromPFCands() > -4. && eventdiff->GetEtaMaxFromPFCands() < 4.)|| (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990) ){
 
 									     counterJetsTrackerstep4_4+=totalweight*triggereff_step4_4;
 									     m_hVector_rjj[10].at(indexV)->Fill(eventexcl->GetRjjFromJets(),totalweight*triggereff_step4_4);
@@ -1154,7 +1159,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
 
 								  }
 
-								  if (eventdiff->GetEtaMinFromPFCands() > -3. && eventdiff->GetEtaMaxFromPFCands() < 3.){
+								  if ((eventdiff->GetEtaMinFromPFCands() > -3. && eventdiff->GetEtaMaxFromPFCands() < 3.)|| (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990) ){
 
 									     counterJetsTrackerstep4_3+=totalweight*triggereff_step4_3;
 									     m_hVector_rjj[11].at(indexV)->Fill(eventexcl->GetRjjFromJets(),totalweight*triggereff_step4_3);
@@ -1194,7 +1199,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
 
 								  }
 
-								  if (eventdiff->GetEtaMinFromPFCands() > -2. && eventdiff->GetEtaMaxFromPFCands() < 2.){
+								  if( (eventdiff->GetEtaMinFromPFCands() > -2. && eventdiff->GetEtaMaxFromPFCands() < 2.)|| (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990) ){
 
 									     counterJetsTrackerstep4_2+=totalweight*triggereff_step4_2;
 									     m_hVector_rjj[12].at(indexV)->Fill(eventexcl->GetRjjFromJets(),totalweight*triggereff_step4_2);
@@ -1234,7 +1239,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
 
 								  }
 
-								  if (eventdiff->GetEtaMinFromPFCands() > -1. && eventdiff->GetEtaMaxFromPFCands() < 1.){
+								  if ((eventdiff->GetEtaMinFromPFCands() > -1. && eventdiff->GetEtaMaxFromPFCands() < 1.) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990)){
 
 									     counterJetsTrackerstep4_1+=totalweight*triggereff_step4_1;
 									     m_hVector_rjj[13].at(indexV)->Fill(eventexcl->GetRjjFromJets(),totalweight*triggereff_step4_1);
@@ -1321,7 +1326,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
 
 
 									  // Eta max and Eta min cut
-									  if (eventdiff->GetEtaMinFromPFCands() > -4. && eventdiff->GetEtaMaxFromPFCands() < 4.){
+									  if ((eventdiff->GetEtaMinFromPFCands() > -4. && eventdiff->GetEtaMaxFromPFCands() < 4.) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990)){
 
 										     counterJetsEta2step4_4+=totalweight*triggereff_step4_4;
 										     m_hVector_rjj[15].at(indexV)->Fill(eventexcl->GetRjjFromJets(),totalweight*triggereff_step4_4);
@@ -1361,7 +1366,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
 
 									  }
 
-									  if (eventdiff->GetEtaMinFromPFCands() > -3. && eventdiff->GetEtaMaxFromPFCands() < 3.){
+									  if ((eventdiff->GetEtaMinFromPFCands() > -3. && eventdiff->GetEtaMaxFromPFCands() < 3.) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990)){
 
 										     counterJetsEta2step4_3+=totalweight*triggereff_step4_3;
 										     m_hVector_rjj[16].at(indexV)->Fill(eventexcl->GetRjjFromJets(),totalweight*triggereff_step4_3);
@@ -1403,7 +1408,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
 
 
 
-									  if (eventdiff->GetEtaMinFromPFCands() > -2. && eventdiff->GetEtaMaxFromPFCands() < 2.){
+									  if ((eventdiff->GetEtaMinFromPFCands() > -2. && eventdiff->GetEtaMaxFromPFCands() < 2.) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990)){
 										     outstring << eventdiff->GetRunNumber() << ":" << eventdiff->GetLumiSection() << ":" << eventdiff->GetEventNumber() << std::endl;
 										     counterJetsEta2step4_2+=totalweight*triggereff_step4_2;
 										     m_hVector_rjj[17].at(indexV)->Fill(eventexcl->GetRjjFromJets(),totalweight*triggereff_step4_2);
@@ -1443,7 +1448,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
 
 									  }
 
-									  if (eventdiff->GetEtaMinFromPFCands() > -1. && eventdiff->GetEtaMaxFromPFCands() < 1.){
+									  if ((eventdiff->GetEtaMinFromPFCands() > -1. && eventdiff->GetEtaMaxFromPFCands() < 1.) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990) ){
 
 										     counterJetsEta2step4_1+=totalweight*triggereff_step4_1;
 										     m_hVector_rjj[18].at(indexV)->Fill(eventexcl->GetRjjFromJets(),totalweight*triggereff_step4_1);
@@ -1507,6 +1512,9 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
      outstring << " " << std::endl;
      outstring << "Input file: " << filein << std::endl;
      outstring << "Output file: " << savehistofile << std::endl;
+     outstring << " " << std::cout;
+     outstring << "Input PU Data file: " << pudatafile << std::endl;
+     outstring << "Output PU MC file: " << pumcfile << std::endl;
      outstring << " " << std::cout;
      outstring << "Input Efficiency File: " << filecor << std::endl;
      outstring << " " << std::cout;
@@ -1576,6 +1584,8 @@ int main(int argc, char **argv)
    const char *s1="*";
    std::string filein_;
    std::string savehistofile_;
+   std::string pudatafile_;
+   std::string pumcfile_;
    std::string processname_;
    std::string filecor_;
    std::string filetrigger_;
@@ -1595,25 +1605,27 @@ int main(int argc, char **argv)
 
    if (argc > 1 && strcmp(s1,argv[1]) != 0)  filein_ = argv[1];
    if (argc > 2 && strcmp(s1,argv[2]) != 0)  savehistofile_  = argv[2];
-   if (argc > 3 && strcmp(s1,argv[3]) != 0)  processname_  = argv[3];
-   if (argc > 4 && strcmp(s1,argv[4]) != 0)  filecor_  = argv[4];
-   if (argc > 5 && strcmp(s1,argv[5]) != 0)  filetrigger_  = argv[5];
-   if (argc > 6 && strcmp(s1,argv[6]) != 0)  jet1PT_  = atoi(argv[6]);
-   if (argc > 7 && strcmp(s1,argv[7]) != 0)  jet2PT_ = atoi(argv[7]);
-   if (argc > 8 && strcmp(s1,argv[8]) != 0)  optnVertex_ = atoi(argv[8]);
-   if (argc > 9 && strcmp(s1,argv[9]) != 0)  optTrigger_   = atoi(argv[9]);
-   if (argc > 10 && strcmp(s1,argv[10]) != 0)  switchWeightPU_  = atoi(argv[10]);
-   if (argc > 11 && strcmp(s1,argv[11]) != 0)  switchWeightLumi_ = atoi(argv[11]);
-   if (argc > 12 && strcmp(s1,argv[12]) != 0)  switchWeightEff_ = atoi(argv[12]);
-   if (argc > 13 && strcmp(s1,argv[13]) != 0)  switchTriggerEff_ = atoi(argv[13]);
-   if (argc > 14 && strcmp(s1,argv[14]) != 0)  switchWeightePw_   = atoi(argv[14]);
-   if (argc > 15 && strcmp(s1,argv[15]) != 0)  switchMultiple_   = atoi(argv[15]);
-   if (argc > 16 && strcmp(s1,argv[16]) != 0)  switchPreSel_   = atoi(argv[16]);
-   if (argc > 17 && strcmp(s1,argv[17]) != 0)  switchTrigger_   = atoi(argv[17]);
-   if (argc > 18 && strcmp(s1,argv[18]) != 0)  weightlumipass_  = atof(argv[18]);
+   if (argc > 3 && strcmp(s1,argv[3]) != 0)  pudatafile_  = argv[3];
+   if (argc > 4 && strcmp(s1,argv[4]) != 0)  pumcfile_  = argv[4];
+   if (argc > 5 && strcmp(s1,argv[5]) != 0)  processname_  = argv[5];
+   if (argc > 6 && strcmp(s1,argv[6]) != 0)  filecor_  = argv[6];
+   if (argc > 7 && strcmp(s1,argv[7]) != 0)  filetrigger_  = argv[7];
+   if (argc > 8 && strcmp(s1,argv[8]) != 0)  jet1PT_  = atoi(argv[8]);
+   if (argc > 9 && strcmp(s1,argv[9]) != 0)  jet2PT_ = atoi(argv[9]);
+   if (argc > 10 && strcmp(s1,argv[10]) != 0)  optnVertex_ = atoi(argv[10]);
+   if (argc > 11 && strcmp(s1,argv[11]) != 0)  optTrigger_   = atoi(argv[11]);
+   if (argc > 12 && strcmp(s1,argv[12]) != 0)  switchWeightPU_  = atoi(argv[12]);
+   if (argc > 13 && strcmp(s1,argv[13]) != 0)  switchWeightLumi_ = atoi(argv[13]);
+   if (argc > 14 && strcmp(s1,argv[14]) != 0)  switchWeightEff_ = atoi(argv[14]);
+   if (argc > 15 && strcmp(s1,argv[15]) != 0)  switchTriggerEff_ = atoi(argv[15]);
+   if (argc > 16 && strcmp(s1,argv[16]) != 0)  switchWeightePw_   = atoi(argv[16]);
+   if (argc > 17 && strcmp(s1,argv[17]) != 0)  switchMultiple_   = atoi(argv[17]);
+   if (argc > 18 && strcmp(s1,argv[18]) != 0)  switchPreSel_   = atoi(argv[18]);
+   if (argc > 19 && strcmp(s1,argv[19]) != 0)  switchTrigger_   = atoi(argv[19]);
+   if (argc > 20 && strcmp(s1,argv[20]) != 0)  weightlumipass_  = atof(argv[20]);
 
    ExclDijetsComp* exclDijets = new ExclDijetsComp();   
-   exclDijets->Run(filein_, savehistofile_, processname_, filecor_, filetrigger_, jet1PT_, jet2PT_, optnVertex_, optTrigger_, switchWeightPU_, switchWeightLumi_, switchWeightEff_, switchTriggerEff_, switchWeightePw_, switchMultiple_, switchPreSel_, switchTrigger_, weightlumipass_);
+   exclDijets->Run(filein_, savehistofile_, pudatafile_, pumcfile_, processname_, filecor_, filetrigger_, jet1PT_, jet2PT_, optnVertex_, optTrigger_, switchWeightPU_, switchWeightLumi_, switchWeightEff_, switchTriggerEff_, switchWeightePw_, switchMultiple_, switchPreSel_, switchTrigger_, weightlumipass_);
 
    return 0;
 }
