@@ -216,8 +216,7 @@ for(int i=0;i<NEVENTS;i++) {
 		  if(deltaphi_>0.5*M_PI) {
 		    if(eventdiff->GetSumEnergyHFPlus() < 30 && eventdiff->GetSumEnergyHFMinus() < 30){
 			if(eventexcl->GetNVertex() > 0 && eventexcl->GetNVertex()<= 1){         
-
-			    if( (eventdiff->GetEtaMinFromPFCands() < -etacut && eventdiff->GetEtaMaxFromPFCands() < -etacut ) || (gap) ){ 
+			    if( (eventdiff->GetEtaMinFromPFCands() > -etacut && eventdiff->GetEtaMaxFromPFCands() < etacut ) || (gap) ){ 
 			    counter[i+6]++;
                             m_hVector_Evt_lumis.at(i+6)->Fill(eventinfo->GetInstLumiBunch());
 			    m_hVector_Eff_lumis.at(i+6)->Fill(eventinfo->GetInstLumiBunch());
