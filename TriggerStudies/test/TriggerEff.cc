@@ -115,37 +115,37 @@ double deltaphi_ = 0.;
 
 std::vector <std::string> Folders;
 Folders.push_back("without_cuts");
-Folders.push_back("with_trigger_ref");
-Folders.push_back("with_CutsOffLine_eta4");
-Folders.push_back("with_CutsOffLine_eta3");
-Folders.push_back("with_CutsOffLine_eta2");
-Folders.push_back("with_CutsOffLine_eta1");
-Folders.push_back("with_trigger_eta4");
-Folders.push_back("with_trigger_eta3");
-Folders.push_back("with_trigger_eta2");
-Folders.push_back("with_trigger_eta1");
+Folders.push_back("with_RefTrigger");
+Folders.push_back("with_RefTriggerCutsOffLine_eta4");
+Folders.push_back("with_RefTriggerCutsOffLine_eta3");
+Folders.push_back("with_RefTriggerCutsOffLine_eta2");
+Folders.push_back("with_RefTriggerCutsOffLine_eta1");
+Folders.push_back("with_RefTriggerCutsOffLineAndTrigger_eta4");
+Folders.push_back("with_RefTriggerCutsOffLineAndTrigger_eta3");
+Folders.push_back("with_RefTriggerCutsOffLineAndTrigger_eta2");
+Folders.push_back("with_RefTriggerCutsOffLineAndTrigger_eta1");
 
 for (int j=0; j<10; j++){
 
-char name1[300];
-sprintf(name1,"Events_%s",Folders.at(j).c_str());
-TH1D *histo_m_Evt_lumis = new TH1D(name1,"; Lumis; N events",50,0,2.0);
-m_hVector_Evt_lumis.push_back(histo_m_Evt_lumis);
+  char name1[300];
+  sprintf(name1,"Events_%s",Folders.at(j).c_str());
+  TH1D *histo_m_Evt_lumis = new TH1D(name1,"; Lumis; N events",50,0,2.0);
+  m_hVector_Evt_lumis.push_back(histo_m_Evt_lumis);
 
-char name2[300];
-sprintf(name2,"Eff_%s",Folders.at(j).c_str());
-TH1D *histo_m_Eff_lumis = new TH1D(name2,"; Lumis; Efficiency",50,0,2.0);
-m_hVector_Eff_lumis.push_back(histo_m_Eff_lumis);
+  char name2[300];
+  sprintf(name2,"Eff_%s",Folders.at(j).c_str());
+  TH1D *histo_m_Eff_lumis = new TH1D(name2,"; Lumis; Efficiency",50,0,2.0);
+  m_hVector_Eff_lumis.push_back(histo_m_Eff_lumis);
 
-char name3[300];
-sprintf(name3,"Events_PFEtamax_%s",Folders.at(j).c_str());
-TH1D *histo_m_Evt_PFEtamax = new TH1D(name3,";Particle Flow #eta_{max}; N events",20,0,5.5);
-m_hVector_Evt_pfetamax.push_back(histo_m_Evt_PFEtamax);
+  char name3[300];
+  sprintf(name3,"Events_PFEtamax_%s",Folders.at(j).c_str());
+  TH1D *histo_m_Evt_PFEtamax = new TH1D(name3,";Particle Flow #eta_{max}; N events",20,0,5.5);
+  m_hVector_Evt_pfetamax.push_back(histo_m_Evt_PFEtamax);
 
-char name4[300];
-sprintf(name4,"Events_PFEtamin_%s",Folders.at(j).c_str());
-TH1D *histo_m_Evt_PFEtamin = new TH1D(name4,";Particle Flow #eta_{min}; N events",20,-5.5,0);
-m_hVector_Evt_pfetamin.push_back(histo_m_Evt_PFEtamin);
+  char name4[300];
+  sprintf(name4,"Events_PFEtamin_%s",Folders.at(j).c_str());
+  TH1D *histo_m_Evt_PFEtamin = new TH1D(name4,";Particle Flow #eta_{min}; N events",20,-5.5,0);
+  m_hVector_Evt_pfetamin.push_back(histo_m_Evt_PFEtamin);
 
 }
 
@@ -163,16 +163,16 @@ for(int i=0;i<NEVENTS;i++) {
     std::cout <<"\n<<<<<< STATUS >>>>>>" << std::endl; 
     std::cout<<10*l<<" % completed." << std::endl;
     for(int k=0; k < 20; k++){
-    std::cout <<"Trigger List Fired: "<< eventexcl->GetHLTPath(k) << std::endl; 
+      std::cout <<"Trigger List Fired: "<< eventexcl->GetHLTPath(k) << std::endl; 
     }
     std::cout <<"<<<<<<<<<<>>>>>>>>>>\n" << std::endl;
   }
 
- 
+
   for (int nt=0;nt<20;nt++){
-   if(eventexcl->GetHLTPath(nt)){
-   triggercounter[nt]++;
-   }
+    if(eventexcl->GetHLTPath(nt)){
+      triggercounter[nt]++;
+    }
   }
 
 
@@ -193,61 +193,51 @@ for(int i=0;i<NEVENTS;i++) {
   m_hVector_Evt_pfetamax.at(0)->Fill(eventdiff->GetEtaMaxFromPFCands());
   m_hVector_Evt_pfetamin.at(0)->Fill(eventdiff->GetEtaMinFromPFCands());
 
+
+
   if(eventexcl->GetHLTPath(optTriggerRef)){
 
-    counter[1]++;     
+    counter[1]++;
     m_hVector_Evt_lumis.at(1)->Fill(eventinfo->GetInstLumiBunch());
     m_hVector_Eff_lumis.at(1)->Fill(eventinfo->GetInstLumiBunch());
     m_hVector_Evt_pfetamax.at(1)->Fill(eventdiff->GetEtaMaxFromPFCands());
     m_hVector_Evt_pfetamin.at(1)->Fill(eventdiff->GetEtaMinFromPFCands());
 
-    if(eventexcl->GetLeadingJetP4().Pt() > 60. && eventexcl->GetSecondJetP4().Pt() > 60. ){
-      if(deltaphi_>M_PI) deltaphi_=2.0*M_PI-deltaphi_;
-      if(deltaphi_>0.5*M_PI) {
-	if(eventdiff->GetSumEnergyHFPlus() < 30 && eventdiff->GetSumEnergyHFMinus() < 30){
-	    if(eventexcl->GetNVertex() > 0 && eventexcl->GetNVertex()<= 1){        
+    for (int i=0; i < 4; i++ ){
 
-	    for (int i=0; i < 4; i++ ){
+      if(i==0) etacut = 4.;
+      if(i==1) etacut = 3.;
+      if(i==2) etacut = 2.;
+      if(i==3) etacut = 1.;
 
-	      if(i==0) etacut = 4.;
-	      if(i==1) etacut = 3.;
-	      if(i==2) etacut = 2.;                                                                
-	      if(i==3) etacut = 1.;
+      if(eventdiff->GetEtaMinFromPFCands() < -990. && eventdiff->GetEtaMaxFromPFCands() < -990.) gap = true;
+      if(eventexcl->GetLeadingJetP4().Pt() > 60. && eventexcl->GetSecondJetP4().Pt() > 60. ){
+	if(deltaphi_>M_PI) deltaphi_=2.0*M_PI-deltaphi_;
+	if(deltaphi_>0.5*M_PI) {
+	  if(eventdiff->GetSumEnergyHFPlus() < 30 && eventdiff->GetSumEnergyHFMinus() < 30){
+	      if(eventexcl->GetNVertex() > 0 && eventexcl->GetNVertex()<= 1){         
+	      if( (eventdiff->GetEtaMinFromPFCands() > -etacut && eventdiff->GetEtaMaxFromPFCands() < etacut ) || (gap) ){
 
-	      if(eventdiff->GetEtaMinFromPFCands() < -990. && eventdiff->GetEtaMaxFromPFCands() < -990.) gap = true;
-	      counter[i+2]++;
-	      m_hVector_Evt_lumis.at(i+2)->Fill(eventinfo->GetInstLumiBunch());
-	      m_hVector_Eff_lumis.at(i+2)->Fill(eventinfo->GetInstLumiBunch());
-	      m_hVector_Evt_pfetamax.at(i+2)->Fill(eventdiff->GetEtaMaxFromPFCands());
-	      m_hVector_Evt_pfetamin.at(i+2)->Fill(eventdiff->GetEtaMinFromPFCands());
+		counter[i+2]++;
+		m_hVector_Evt_lumis.at(i+2)->Fill(eventinfo->GetInstLumiBunch());
+		m_hVector_Eff_lumis.at(i+2)->Fill(eventinfo->GetInstLumiBunch());
+		m_hVector_Evt_pfetamax.at(i+2)->Fill(eventdiff->GetEtaMaxFromPFCands());
+		m_hVector_Evt_pfetamin.at(i+2)->Fill(eventdiff->GetEtaMinFromPFCands());
 
-	      if(eventexcl->GetHLTPath(optTrigger)){
-
-		if(eventexcl->GetLeadingJetP4().Pt() > 60. && eventexcl->GetSecondJetP4().Pt() > 60. ){
-		  if(deltaphi_>M_PI) deltaphi_=2.0*M_PI-deltaphi_;
-		  if(deltaphi_>0.5*M_PI) {
-		    if(eventdiff->GetSumEnergyHFPlus() < 30 && eventdiff->GetSumEnergyHFMinus() < 30){
-			if(eventexcl->GetNVertex() > 0 && eventexcl->GetNVertex()<= 1){         
-			    if( (eventdiff->GetEtaMinFromPFCands() > -etacut && eventdiff->GetEtaMaxFromPFCands() < etacut ) || (gap) ){ 
-                            counter[i+6]++;
-                            m_hVector_Evt_lumis.at(i+6)->Fill(eventinfo->GetInstLumiBunch());
-			    m_hVector_Eff_lumis.at(i+6)->Fill(eventinfo->GetInstLumiBunch());
-			    m_hVector_Evt_pfetamax.at(i+6)->Fill(eventdiff->GetEtaMaxFromPFCands());
-			    m_hVector_Evt_pfetamin.at(i+6)->Fill(eventdiff->GetEtaMinFromPFCands());
-   		            } 	
-
-		        } 
-		    }
-		  }
-		}  
+		if(eventexcl->GetHLTPath(optTrigger)){
+		  counter[i+6]++;
+		  m_hVector_Evt_lumis.at(i+6)->Fill(eventinfo->GetInstLumiBunch());
+		  m_hVector_Eff_lumis.at(i+6)->Fill(eventinfo->GetInstLumiBunch());
+		  m_hVector_Evt_pfetamax.at(i+6)->Fill(eventdiff->GetEtaMaxFromPFCands());
+		  m_hVector_Evt_pfetamin.at(i+6)->Fill(eventdiff->GetEtaMinFromPFCands());
+		} 	
 	      }
-
-	    }
+	    } 
 	  }
 	}
-      }
+      }  
     }
-  }   
+  }
 }
 
 //Scalling Plots
