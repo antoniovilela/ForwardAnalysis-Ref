@@ -108,6 +108,7 @@ std::cout << "" << std::endl;
 
 int decade = 0;
 
+int triggercounter[20]={0};
 double TotalE = 0.;
 double counter[10] = {0};
 double deltaphi_ = 0.;
@@ -161,8 +162,19 @@ for(int i=0;i<NEVENTS;i++) {
   if (l > decade){
     std::cout <<"\n<<<<<< STATUS >>>>>>" << std::endl; 
     std::cout<<10*l<<" % completed." << std::endl;
+    for(int k=0; k < 20; k++){
+    std::cout <<"Trigger List Fired: "<< eventexcl->GetHLTPath(k) << std::endl; 
+    }
     std::cout <<"<<<<<<<<<<>>>>>>>>>>\n" << std::endl;
   }
+
+ 
+  for (int nt=0;nt<20;nt++){
+   if(eventexcl->GetHLTPath(nt)){
+   triggercounter[nt]++;
+   }
+  }
+
 
   decade = l;          
 
@@ -217,7 +229,7 @@ for(int i=0;i<NEVENTS;i++) {
 		    if(eventdiff->GetSumEnergyHFPlus() < 30 && eventdiff->GetSumEnergyHFMinus() < 30){
 			if(eventexcl->GetNVertex() > 0 && eventexcl->GetNVertex()<= 1){         
 			    if( (eventdiff->GetEtaMinFromPFCands() > -etacut && eventdiff->GetEtaMaxFromPFCands() < etacut ) || (gap) ){ 
-			    counter[i+6]++;
+                            counter[i+6]++;
                             m_hVector_Evt_lumis.at(i+6)->Fill(eventinfo->GetInstLumiBunch());
 			    m_hVector_Eff_lumis.at(i+6)->Fill(eventinfo->GetInstLumiBunch());
 			    m_hVector_Evt_pfetamax.at(i+6)->Fill(eventdiff->GetEtaMaxFromPFCands());
@@ -264,6 +276,29 @@ outstring << "Number of Events With Trigger and Eta3 : " << counter[7] << std::e
 outstring << "Number of Events With Trigger and Eta2 : " << counter[8] << std::endl;
 outstring << "Number of Events With Trigger and Eta1 : " << counter[9] << std::endl;
 outstring << "" << std::endl;
+outstring << "Total Trigger Fired: " <<  std::endl;
+outstring << "Trigger 0: " << triggercounter[0] << std::endl;
+outstring << "Trigger 1: " << triggercounter[1] << std::endl;
+outstring << "Trigger 2: " << triggercounter[2] << std::endl;
+outstring << "Trigger 3: " << triggercounter[3] << std::endl;
+outstring << "Trigger 4: " << triggercounter[4] << std::endl;
+outstring << "Trigger 5: " << triggercounter[5] << std::endl;
+outstring << "Trigger 6: " << triggercounter[6] << std::endl;
+outstring << "Trigger 7: " << triggercounter[7] << std::endl;
+outstring << "Trigger 8: " << triggercounter[8] << std::endl;
+outstring << "Trigger 9: " << triggercounter[9] << std::endl;
+outstring << "Trigger 10: " << triggercounter[10] << std::endl;
+outstring << "Trigger 11: " << triggercounter[11] << std::endl;
+outstring << "Trigger 12: " << triggercounter[12] << std::endl;
+outstring << "Trigger 13: " << triggercounter[13] << std::endl;
+outstring << "Trigger 14: " << triggercounter[14] << std::endl;
+outstring << "Trigger 15: " << triggercounter[15] << std::endl;
+outstring << "Trigger 16: " << triggercounter[16] << std::endl;
+outstring << "Trigger 17: " << triggercounter[17] << std::endl;
+outstring << "Trigger 18: " << triggercounter[18] << std::endl;
+outstring << "Trigger 19: " << triggercounter[19] << std::endl;
+outstring << "" << std::endl;
+
 
 outf->Write();
 outf->Close();
