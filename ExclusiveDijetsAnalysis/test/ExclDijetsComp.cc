@@ -192,7 +192,9 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
    TH1F* h_eff_step_4_1 = (TH1F*)l1->Get("RatioStep4_1");
 
    TFile *l2  = TFile::Open(filetrigger.c_str());
-   TH1F* h_eff_trigger = (TH1F*)l2->Get("EffTrigger");
+   TH1F* h_eff_trigger_eta4 = (TH1F*)l2->Get("Events_with_RefTriggerCutsOffLineAndTrigger_eta4");
+   TH1F* h_eff_trigger_eta3 = (TH1F*)l2->Get("Events_with_RefTriggerCutsOffLineAndTrigger_eta3");
+
 
    LoadFile(filein,processname);
    edm::LumiReWeighting LumiWeights_(pumcfile.c_str(),pudatafile.c_str(),"pileUpBx0_complete_without_cuts","pileup");
@@ -585,12 +587,15 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
 
 
       // Trigger Efficiency Corrections
-      double triggereff;
+      double triggereff4;
+      double triggereff3;
       if (switchTriggerEff){
-              triggereff = 1./h_eff_trigger->GetBinContent(h_eff_trigger->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
+              triggereff4 = 1./h_eff_trigger_eta4->GetBinContent(h_eff_trigger_eta4->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
+              triggereff3 = 1./h_eff_trigger_eta3->GetBinContent(h_eff_trigger_eta3->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
       }
       else {
-              triggereff = 1.0;
+              triggereff4 = 1.0;
+              triggereff3 = 1.0;
       }
 
 
@@ -603,23 +608,23 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
       double triggereff_step4_1; // presel + vertex + etamax 1
       if (switchWeightEff){
  	      if (switchPreSel) {
-                     triggereff_excl = triggereff*1./h_eff_excl->GetBinContent(h_eff_excl->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
+                     triggereff_excl = 1./h_eff_excl->GetBinContent(h_eff_excl->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
               } else {
-                     triggereff_excl = triggereff*1.0;
+                     triggereff_excl = 1.0;
               }       
-              triggereff_vertex = triggereff*1./h_eff_vertex->GetBinContent(h_eff_vertex->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
-              triggereff_step4_4 = triggereff*1./h_eff_step_4_4->GetBinContent(h_eff_step_4_4->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
-              triggereff_step4_3 = triggereff*1./h_eff_step_4_3->GetBinContent(h_eff_step_4_3->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
-              triggereff_step4_2 = triggereff*1./h_eff_step_4_2->GetBinContent(h_eff_step_4_2->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
-              triggereff_step4_1 = triggereff*1./h_eff_step_4_1->GetBinContent(h_eff_step_4_1->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));  
+              triggereff_vertex = 1./h_eff_vertex->GetBinContent(h_eff_vertex->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
+              triggereff_step4_4 = triggereff4*1./h_eff_step_4_4->GetBinContent(h_eff_step_4_4->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
+              triggereff_step4_3 = triggereff3*1./h_eff_step_4_3->GetBinContent(h_eff_step_4_3->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
+              triggereff_step4_2 = 1./h_eff_step_4_2->GetBinContent(h_eff_step_4_2->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
+              triggereff_step4_1 = 1./h_eff_step_4_1->GetBinContent(h_eff_step_4_1->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));  
       } 
       else { 
-              triggereff_excl = triggereff*1.0;
-              triggereff_vertex = triggereff*1.0;
-              triggereff_step4_4 = triggereff*1.0;
-              triggereff_step4_3 = triggereff*1.0;
-              triggereff_step4_2 = triggereff*1.0;
-              triggereff_step4_1 = triggereff*1.0;
+              triggereff_excl = 1.0;
+              triggereff_vertex = 1.0;
+              triggereff_step4_4 = triggereff4*1.0;
+              triggereff_step4_3 = triggereff3*1.0;
+              triggereff_step4_2 = 1.0;
+              triggereff_step4_1 = 1.0;
       }
 
 
@@ -656,7 +661,8 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
 	    << "Pile-up weight    : " << weight << std::endl
 	    << "Weight Lumi       : " << weightlumi << std::endl
             << "Lumi per Bunch    : " << eventinfo->GetInstLumiBunch() << std::endl
-            << "Trigger Eff. per Lumi. : " << triggereff << std::endl
+            << "Trigger Eff. per Lumi. (Eta4): " << triggereff4 << std::endl
+            << "Trigger Eff. per Lumi. (Eta3): " << triggereff3 << std::endl
 	    << "Lumi eff corr. Pre Sel. : " << triggereff_excl << std::endl
             << "Lumi eff corr. Pre Sel. + Vertex: " << triggereff_vertex << std::endl
             << "Lumi eff corr. Pre Sel. + Vertex + Eta_PF(max,min) < 4: " << triggereff_step4_4 << std::endl
