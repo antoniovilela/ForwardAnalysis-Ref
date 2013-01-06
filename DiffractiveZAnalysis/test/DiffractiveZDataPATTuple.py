@@ -19,7 +19,7 @@ config.trackAnalyzerName = 'trackHistoAnalyzer'
 config.trackTagName = 'analysisTracks'
 config.NumberOfEvents = 1000
 config.TriggerOn = False
-
+triggerlist = 'HLT_Mu0_L1MuOpen','HLT_Mu3','HLT_Mu5','HLT_DoubleMu0','HLT_Jet15U'
 
 #
 # Define Triggers and Input Files
@@ -30,11 +30,12 @@ if config.runOnMC:
     config.hltPaths =('HLT_Jet30_v1','HLT_Jet30_v2','HLT_Jet30_v3','HLT_Jet30_v4','HLT_Jet30_v5','HLT_Jet30_v6')
     config.inputFileName = '/storage1/dmf/PrivateMCProduction/July2012Prod/Pythia/CMSSW_4_2_8_lowpupatch1/src/QCD_Pt_15to3000_TuneZ2_Flat_7TeV_pythia6_cff_py_RAW2DIGI_L1Reco_RECO_inRECOSIM.root'
     config.runPUMC = False  # MC With PU
-    config.runGen = True    # MC With Weight
+    config.runGen = False    # MC With Weight
 
 else:
     config.l1Paths = ('L1_SingleJet36','L1_SingleJet16','L1_DoubleJetC56')
-    config.hltPaths = ('HLT_Mu0_L1MuOpen','HLT_Mu3','HLT_Mu5','HLT_DoubleMu0','HLT_Jet15U')
+#    config.hltPaths = ('HLT_Mu0_L1MuOpen','HLT_Mu3','HLT_Mu5','HLT_DoubleMu0','HLT_Jet15U')
+    config.hltPaths = (triggerlist)
 #    config.inputFileName = '/storage2/antoniov/data1/MultiJet_Run2010B_Apr21ReReco-v1_AOD/MultiJet_Run2010B_Apr21ReReco-v1_AOD_7EA7B611-7371-E011-B164-002354EF3BDB.root'
     config.inputFileName = '/storage1/dmf/TestSamples/MuRun2010/MuRunA2010.root'
     config.runPUMC = False
