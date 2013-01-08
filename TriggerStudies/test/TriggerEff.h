@@ -40,7 +40,7 @@ class TriggerEff {
    TriggerEff() {}
    ~TriggerEff() { inf->Close(); }
    
-   void Run(std::string, std::string, std::string, int, int, double);
+   void Run(std::string, std::string, std::string, int, int);
    void LoadFile(std::string,std::string);
    void FillHistograms();
 
