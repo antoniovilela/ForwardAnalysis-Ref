@@ -22,7 +22,7 @@
 
 #include "DiffractiveZComp.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/EventInfoEvent.h"
-#include "ForwardAnalysis/ForwardTTreeAnalysis/interface/ExclusiveDijetsEvent.h"
+#include "ForwardAnalysis/ForwardTTreeAnalysis/interface/DiffractiveZEvent.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/DiffractiveEvent.h"
 
 using namespace diffractiveAnalysis;
@@ -47,10 +47,16 @@ void DiffractiveZComp::LoadFile(std::string fileinput, std::string processinput)
 
 }
 
-void DiffractiveZComp::Run(std::string filein_, std::string savehistofile_){
+void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::string savehistofile_, bool switchTrigger_, int optTrigger_, bool switchPreSel_, int nVertex_, bool switchPUMultiple_){
 
   filein = filein_;
+  ttreename = ttreename_;
   savehistofile = savehistofile_;
+  switchTrigger = switchTrigger_;
+  optTrigger = optTrigger_;
+  switchPreSel = switchPreSel_;
+  nVertex = nVertex_;
+  switchPUMultiple = switchPUMultiple_;
 
   std::cout << "" << std::endl;
   std::cout << "Running..." << std::endl;
@@ -60,12 +66,13 @@ void DiffractiveZComp::Run(std::string filein_, std::string savehistofile_){
   std::cout << "Input file: " << filein << std::endl;
   std::cout << "Output file: " << savehistofile << std::endl;
   std::cout << " " << std::cout; 
-  std::cout << "# Vertex: " << optnVertex << std::endl;
+  std::cout << "# Vertex: " << nVertex << std::endl;
   std::cout << "Trigger Option: " << optTrigger << std::endl;
   std::cout << " " << std::endl;
   std::cout << "--> TRUE = 1 FALSE = 0" << std::endl;
   std::cout << "Trigger Switch: " << switchTrigger << std::endl;
   std::cout << "Pre Selection Switch: " << switchPreSel << std::endl;
+  std::cout << "PU Multiple Histograms: " << switchPUMultiple << std::endl;
   std::cout << "" << std::endl;
 
   if (nVertex == 0){
@@ -77,7 +84,7 @@ void DiffractiveZComp::Run(std::string filein_, std::string savehistofile_){
 
   }
 
-  LoadFile(filein,processname);
+  LoadFile(filein,ttreename);
 
   TFile *outf = new TFile(savehistofile.c_str(),"RECREATE");
 
@@ -95,6 +102,7 @@ void DiffractiveZComp::Run(std::string filein_, std::string savehistofile_){
 
   int decade = 0;
 
+  // Each Cut Name Histogram tag.
   std::vector <std::string> Folders;
   Folders.push_back("without_cuts");
   Folders.push_back("with_trigger");
@@ -102,36 +110,37 @@ void DiffractiveZComp::Run(std::string filein_, std::string savehistofile_){
   int nloop;
   int indexV;
 
-  if (switchMultiple){
-   nloop = 21;
+  // nloop is number of PU events for each MC PU Histogram name. 
+  if (switchPUMultiple){
+    nloop = 21;
   }
-  
+
   else {
-   nloop = 1;
+    nloop = 1;
   }
 
-
+  // j is the number of cuts or Histogram tag name.
   for (int j=0; j<2; j++){
 
     m_hVector_mll.push_back( std::vector<TH1D*>() );
 
-     for (int k=0;k<nloop;k++){
+    for (int k=0;k<nloop;k++){
 
-    char tag[300];
+      char tag[300];
 
-    if (!switchMultiple){
-      sprintf(tag,"Complete");
+      if (!switchPUMultiple){
+	sprintf(tag,"Complete");
+      }
+      else {
+	sprintf(tag,"%i",k);
+      }
+
+      char name1[300];
+      sprintf(name1,"Mll_%s",Folders.at(j).c_str());
+      TH1D *histo_mll = new TH1D(name1,"M_{ll} Distribution; M_{ll} [GeV]; N events",40,0,500);
+      m_hVector_mll[j].push_back(histo_mll);
+
     }
-    else {
-      sprintf(tag,"%i",k);
-    }
-
-    char name1[300];
-    sprintf(name1,"Mll_%s",Folders.at(j).c_str());
-    TH1D *histo_mll = new TH1D(name1,"M_{ll} Distribution; M_{ll} [GeV]; N events",40,0,500);
-    m_hVector_mll[j].push_back(histo_mll);
-
-  }
 
   }
 
@@ -151,28 +160,40 @@ void DiffractiveZComp::Run(std::string filein_, std::string savehistofile_){
 
     tr->GetEntry(i);
 
+    if (switchPUMultiple){
+      indexV = eventinfo->GetNPileUpBx0();
+    }
+    else {
+      indexV = 0;
+    }
 
-    //No Cuts
-    //m_hVector_rjj[0].at(indexV)->Fill(eventdiffZ->GetRjjFromJets());
+    if (!switchPUMultiple || (switchPUMultiple && eventinfo->GetNPileUpBx0() < 21)){
+
+      //No Cuts
+      if (eventdiffZ->GetElectronsN() >= 2) m_hVector_mll[0].at(indexV)->Fill(eventdiffZ->GetDiElectronMassPF());
 
 
-    // Trigger
-    if (switchPreSel || (switchTrigger && eventdiffZ->GetHLTPath(optTrigger)) ){
+      // Trigger
+      if (switchPreSel || (switchTrigger && eventdiffZ->GetHLTPath(optTrigger)) ){
 
-      if (!switchPreSel || (switchPreSel && eventdiffZ->GetLeadingElectronPt() > 20 )) {
+	if (!switchPreSel || (switchPreSel && eventdiffZ->GetLeadingElectronPt() > 20 )) {
 
-        if (GetElectronsN() >= 2) m_hVector_mll[1].at(indexV)->Fill(eventdiffZ->GetDiElectronMassPF() );
+	  if (eventdiffZ->GetElectronsN() >= 2) m_hVector_mll[1].at(indexV)->Fill(eventdiffZ->GetDiElectronMassPF() );
 
-	/*if(eventdiffZ->GetNVertex() > 0 && eventdiffZ->GetNVertex()<= nVertex){
+	  /*if(eventdiffZ->GetNVertex() > 0 && eventdiffZ->GetNVertex()<= nVertex){
 
 	  m_hVector_rjj[1].at(0)->Fill(eventdiffZ->GetRjjFromJets());
 
-	}*/
+	  }*/
 
+	}
       }
     }
 
   }
+
+  outf->Write();
+  outf->Close();
 
 }
 
@@ -184,6 +205,7 @@ int main(int argc, char **argv){
 
   const char *s1="*";
   std::string filein_;
+  std::string ttreename_;  
   std::string savehistofile_;
   int nVertex_;
   int optTrigger_;
@@ -192,15 +214,16 @@ int main(int argc, char **argv){
   bool switchPUMultiple_;
 
   if (argc > 1 && strcmp(s1,argv[1]) != 0)  filein_ = argv[1];
-  if (argc > 2 && strcmp(s1,argv[2]) != 0)  savehistofile_  = argv[2];
-  if (argc > 3 && strcmp(s1,argv[3]) != 0)  switchTrigger_ = atoi(argv[3]);
-  if (argc > 4 && strcmp(s1,argv[4]) != 0)  optTrigger_   = atoi(argv[4]);
-  if (argc > 5 && strcmp(s1,argv[5]) != 0)  switchPreSel_ = atoi(argv[5]);
-  if (argc > 6 && strcmp(s1,argv[6]) != 0)  nVertex_ = atoi(argv[6]);
-  if (argc > 7 && strcmp(s1,argv[7]) != 0)  switchPUMultiple_ = atoi(argv[7]);
+  if (argc > 2 && strcmp(s1,argv[2]) != 0)  ttreename_ = argv[2];
+  if (argc > 3 && strcmp(s1,argv[3]) != 0)  savehistofile_  = argv[3];
+  if (argc > 4 && strcmp(s1,argv[4]) != 0)  switchTrigger_ = atoi(argv[4]);
+  if (argc > 5 && strcmp(s1,argv[5]) != 0)  optTrigger_   = atoi(argv[5]);
+  if (argc > 6 && strcmp(s1,argv[6]) != 0)  switchPreSel_ = atoi(argv[6]);
+  if (argc > 7 && strcmp(s1,argv[7]) != 0)  nVertex_ = atoi(argv[7]);
+  if (argc > 8 && strcmp(s1,argv[8]) != 0)  switchPUMultiple_ = atoi(argv[8]);
 
   DiffractiveZComp* diffZDijets = new DiffractiveZComp();   
-  diffZDijets->Run(filein_, savehistofile_, switchTrigger_, optTrigger_, switchPreSel_, nVertex_, switchPUMultiple_);
+  diffZDijets->Run(filein_, ttreename_, savehistofile_, switchTrigger_, optTrigger_, switchPreSel_, nVertex_, switchPUMultiple_);
 
   return 0;
 
