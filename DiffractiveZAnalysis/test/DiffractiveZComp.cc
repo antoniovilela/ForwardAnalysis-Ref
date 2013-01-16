@@ -39,7 +39,7 @@ void DiffractiveZComp::LoadFile(std::string fileinput, std::string processinput)
   eventdiffZ = new DiffractiveZEvent();
   eventinfo = new EventInfoEvent();
   diff = tr->GetBranch("DiffractiveAnalysis");
-  diffZ = tr->GetBranch("DifractiveZAnalysis");
+  diffZ = tr->GetBranch("DiffractiveZAnalysis");
   info = tr->GetBranch("EventInfo");
   diff->SetAddress(&eventdiff);
   diffZ->SetAddress(&eventdiffZ);
@@ -65,6 +65,7 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
   std::cout << " " << std::endl;
   std::cout << "Input file: " << filein << std::endl;
   std::cout << "Output file: " << savehistofile << std::endl;
+  std::cout << "TTree Name: " << ttreename << std::endl;
   std::cout << " " << std::cout; 
   std::cout << "# Vertex: " << nVertex << std::endl;
   std::cout << "Trigger Option: " << optTrigger << std::endl;
@@ -222,8 +223,8 @@ int main(int argc, char **argv){
   if (argc > 7 && strcmp(s1,argv[7]) != 0)  nVertex_ = atoi(argv[7]);
   if (argc > 8 && strcmp(s1,argv[8]) != 0)  switchPUMultiple_ = atoi(argv[8]);
 
-  DiffractiveZComp* diffZDijets = new DiffractiveZComp();   
-  diffZDijets->Run(filein_, ttreename_, savehistofile_, switchTrigger_, optTrigger_, switchPreSel_, nVertex_, switchPUMultiple_);
+  DiffractiveZComp* diffZRun = new DiffractiveZComp();   
+  diffZRun->Run(filein_, ttreename_, savehistofile_, switchTrigger_, optTrigger_, switchPreSel_, nVertex_, switchPUMultiple_);
 
   return 0;
 
