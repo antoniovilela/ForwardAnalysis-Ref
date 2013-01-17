@@ -47,7 +47,7 @@ void DiffractiveZComp::LoadFile(std::string fileinput, std::string processinput)
 
 }
 
-void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::string savehistofile_, bool switchTrigger_, int optTrigger_, bool switchPreSel_, int nVertex_, bool switchPUMultiple_){
+void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::string savehistofile_, bool switchTrigger_, int optTrigger_, bool switchPreSel_, int nVertex_, bool switchPUMultiple_, float mcweight_){
 
   filein = filein_;
   ttreename = ttreename_;
@@ -57,6 +57,7 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
   switchPreSel = switchPreSel_;
   nVertex = nVertex_;
   switchPUMultiple = switchPUMultiple_;
+  mcweight = mcweight_;
 
   std::cout << "" << std::endl;
   std::cout << "Running..." << std::endl;
@@ -66,6 +67,7 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
   std::cout << "Input file: " << filein << std::endl;
   std::cout << "Output file: " << savehistofile << std::endl;
   std::cout << "TTree Name: " << ttreename << std::endl;
+  std::cout << "MC Weight: " << mcweight << std::endl;
   std::cout << " " << std::cout; 
   std::cout << "# Vertex: " << nVertex << std::endl;
   std::cout << "Trigger Option: " << optTrigger << std::endl;
@@ -123,7 +125,27 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
   // j is the number of cuts or Histogram tag name.
   for (int j=0; j<2; j++){
 
-    m_hVector_mll.push_back( std::vector<TH1D*>() );
+    m_hVector_DiElectron.push_back( std::vector<TH1D*>() );
+    m_hVector_LeadingElectronPt.push_back( std::vector<TH1D*>() );
+    m_hVector_LeadingElectronEta.push_back( std::vector<TH1D*>() );
+    m_hVector_LeadingElectronPhi.push_back( std::vector<TH1D*>() );
+    m_hVector_LeadingElectronCharge.push_back( std::vector<TH1D*>() );
+    m_hVector_SecondElectronPt.push_back( std::vector<TH1D*>() );
+    m_hVector_SecondElectronEta.push_back( std::vector<TH1D*>() );
+    m_hVector_SecondElectronPhi.push_back( std::vector<TH1D*>() );
+    m_hVector_SecondElectronCharge.push_back( std::vector<TH1D*>() );
+    m_hVector_ElectronsN.push_back( std::vector<TH1D*>() );
+
+    m_hVector_DiMuon.push_back( std::vector<TH1D*>() );
+    m_hVector_LeadingMuonPt.push_back( std::vector<TH1D*>() );
+    m_hVector_LeadingMuonEta.push_back( std::vector<TH1D*>() );
+    m_hVector_LeadingMuonPhi.push_back( std::vector<TH1D*>() );
+    m_hVector_LeadingMuonCharge.push_back( std::vector<TH1D*>() );
+    m_hVector_SecondMuonPt.push_back( std::vector<TH1D*>() );
+    m_hVector_SecondMuonEta.push_back( std::vector<TH1D*>() );
+    m_hVector_SecondMuonPhi.push_back( std::vector<TH1D*>() );
+    m_hVector_SecondMuonCharge.push_back( std::vector<TH1D*>() );
+    m_hVector_MuonsN.push_back( std::vector<TH1D*>() );
 
     for (int k=0;k<nloop;k++){
 
@@ -137,9 +159,104 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
       }
 
       char name1[300];
-      sprintf(name1,"Mll_%s",Folders.at(j).c_str());
-      TH1D *histo_mll = new TH1D(name1,"M_{ll} Distribution; M_{ll} [GeV]; N events",40,0,500);
-      m_hVector_mll[j].push_back(histo_mll);
+      sprintf(name1,"DiElectron_%s",Folders.at(j).c_str());
+      TH1D *histo_DiElectron = new TH1D(name1,"Dielectron Invariant Mass Distribution; M_{ee} [GeV]; N events",100,0,1000);
+      m_hVector_DiElectron[j].push_back(histo_DiElectron);
+
+      char name2[300];
+      sprintf(name2,"LeadingElectronPt_%s",Folders.at(j).c_str());
+      TH1D *histo_LeadingElectronPt = new TH1D(name2,"Leading Electron - P_{T} Distribution; P_{T} [GeV.c^{-1}]; N events",100,0,2000);
+      m_hVector_LeadingElectronPt[j].push_back(histo_LeadingElectronPt);
+
+      char name3[300];
+      sprintf(name3,"LeadingElectronEta_%s",Folders.at(j).c_str());
+      TH1D *histo_LeadingElectronEta = new TH1D(name3,"Leading Electron - #eta Distribution; #eta; N events",50,-5.2,5.2);
+      m_hVector_LeadingElectronEta[j].push_back(histo_LeadingElectronEta);
+
+      char name4[300];
+      sprintf(name4,"LeadingElectronPhi_%s",Folders.at(j).c_str());
+      TH1D *histo_LeadingElectronPhi = new TH1D(name4,"Leading Electron - #phi Distribution; #phi [rad]; N events",50,-3.3,3.3);
+      m_hVector_LeadingElectronPhi[j].push_back(histo_LeadingElectronPhi);
+
+      char name5[300];
+      sprintf(name5,"LeadingElectronCharge_%s",Folders.at(j).c_str());
+      TH1D *histo_LeadingElectronCharge = new TH1D(name5,"Leading Electron - Charge Distribution; Charge; N events",50,-3,3);
+      m_hVector_LeadingElectronCharge[j].push_back(histo_LeadingElectronCharge);
+
+      char name6[300];
+      sprintf(name6,"SecondElectronPt_%s",Folders.at(j).c_str());
+      TH1D *histo_SecondElectronPt = new TH1D(name6,"Second Electron - P_{T} Distribution; P_{T} [GeV.c^{-1}]; N events",100,0,2000);
+      m_hVector_SecondElectronPt[j].push_back(histo_SecondElectronPt);
+
+      char name7[300];
+      sprintf(name7,"SecondElectronEta_%s",Folders.at(j).c_str());
+      TH1D *histo_SecondElectronEta = new TH1D(name7,"Second Electron - #eta Distribution; #eta; N events",50,-5.2,5.2);
+      m_hVector_SecondElectronEta[j].push_back(histo_SecondElectronEta);
+
+      char name8[300];
+      sprintf(name8,"SecondElectronPhi_%s",Folders.at(j).c_str());
+      TH1D *histo_SecondElectronPhi = new TH1D(name8,"Second Electron - #phi Distribution; #phi [rad]; N events",50,-3.3,3.3);
+      m_hVector_SecondElectronPhi[j].push_back(histo_SecondElectronPhi);
+
+      char name9[300];
+      sprintf(name9,"SecondElectronCharge_%s",Folders.at(j).c_str());
+      TH1D *histo_SecondElectronCharge = new TH1D(name9,"Second Electron - Charge Distribution; Charge; N events",50,-3,3);
+      m_hVector_SecondElectronCharge[j].push_back(histo_SecondElectronCharge);
+
+      char name10[300];
+      sprintf(name10,"ElectronsN_%s",Folders.at(j).c_str());
+      TH1D *histo_ElectronsN = new TH1D(name10,"Electrons per Event Distribution; Number of Electrons; N events",50,0,100);
+      m_hVector_ElectronsN[j].push_back(histo_ElectronsN);
+
+      char name11[300];
+      sprintf(name11,"DiMuon_%s",Folders.at(j).c_str());
+      TH1D *histo_DiMuon = new TH1D(name11,"Dielectron Invariant Mass Distribution; M_{ee} [GeV]; N events",100,0,1000);
+      m_hVector_DiMuon[j].push_back(histo_DiMuon);
+
+      char name12[300];
+      sprintf(name12,"LeadingMuonPt_%s",Folders.at(j).c_str());
+      TH1D *histo_LeadingMuonPt = new TH1D(name12,"Leading Muon - P_{T} Distribution; P_{T} [GeV.c^{-1}]; N events",100,0,2000);
+      m_hVector_LeadingMuonPt[j].push_back(histo_LeadingMuonPt);
+
+      char name13[300];
+      sprintf(name13,"LeadingMuonEta_%s",Folders.at(j).c_str());
+      TH1D *histo_LeadingMuonEta = new TH1D(name13,"Leading Muon - #eta Distribution; #eta; N events",50,-5.2,5.2);
+      m_hVector_LeadingMuonEta[j].push_back(histo_LeadingMuonEta);
+
+      char name14[300];
+      sprintf(name14,"LeadingMuonPhi_%s",Folders.at(j).c_str());
+      TH1D *histo_LeadingMuonPhi = new TH1D(name14,"Leading Muon - #phi Distribution; #phi [rad]; N events",50,-3.3,3.3);
+      m_hVector_LeadingMuonPhi[j].push_back(histo_LeadingMuonPhi);
+
+      char name15[300];
+      sprintf(name15,"LeadingMuonCharge_%s",Folders.at(j).c_str());
+      TH1D *histo_LeadingMuonCharge = new TH1D(name15,"Leading Muon - Charge Distribution; Charge; N events",50,-3,3);
+      m_hVector_LeadingMuonCharge[j].push_back(histo_LeadingMuonCharge);
+
+      char name16[300];
+      sprintf(name16,"SecondMuonPt_%s",Folders.at(j).c_str());
+      TH1D *histo_SecondMuonPt = new TH1D(name16,"Second Muon - P_{T} Distribution; P_{T} [GeV.c^{-1}]; N events",100,0,2000);
+      m_hVector_SecondMuonPt[j].push_back(histo_SecondMuonPt);
+
+      char name17[300];
+      sprintf(name17,"SecondMuonEta_%s",Folders.at(j).c_str());
+      TH1D *histo_SecondMuonEta = new TH1D(name17,"Second Muon - #eta Distribution; #eta; N events",50,-5.2,5.2);
+      m_hVector_SecondMuonEta[j].push_back(histo_SecondMuonEta);
+
+      char name18[300];
+      sprintf(name18,"SecondMuonPhi_%s",Folders.at(j).c_str());
+      TH1D *histo_SecondMuonPhi = new TH1D(name18,"Second Muon - #phi Distribution; #phi [rad]; N events",50,-3.3,3.3);
+      m_hVector_SecondMuonPhi[j].push_back(histo_SecondMuonPhi);
+
+      char name19[300];
+      sprintf(name19,"SecondMuonCharge_%s",Folders.at(j).c_str());
+      TH1D *histo_SecondMuonCharge = new TH1D(name19,"Second Muon - Charge Distribution; Charge; N events",50,-3,3);
+      m_hVector_SecondMuonCharge[j].push_back(histo_SecondMuonCharge);
+
+      char name20[300];
+      sprintf(name20,"MuonsN_%s",Folders.at(j).c_str());
+      TH1D *histo_MuonsN = new TH1D(name20,"Muons per Event Distribution; Number of Muons; N events",50,0,100);
+      m_hVector_MuonsN[j].push_back(histo_MuonsN);
 
     }
 
@@ -169,24 +286,51 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
     }
 
     if (!switchPUMultiple || (switchPUMultiple && eventinfo->GetNPileUpBx0() < 21)){
-
       //No Cuts
-      if (eventdiffZ->GetElectronsN() >= 2) m_hVector_mll[0].at(indexV)->Fill(eventdiffZ->GetDiElectronMassPF());
-
+      m_hVector_DiElectron[0].at(indexV)->Fill(eventdiffZ->GetDiElectronMass());
+      m_hVector_LeadingElectronPt[0].at(indexV)->Fill(eventdiffZ->GetLeadingElectronPt());
+      m_hVector_LeadingElectronEta[0].at(indexV)->Fill(eventdiffZ->GetLeadingElectronEta());
+      m_hVector_LeadingElectronPhi[0].at(indexV)->Fill(eventdiffZ->GetLeadingElectronPhi());
+      m_hVector_LeadingElectronCharge[0].at(indexV)->Fill(eventdiffZ->GetLeadingElectronCharge());
+      m_hVector_SecondElectronPt[0].at(indexV)->Fill(eventdiffZ->GetSecondElectronPt());
+      m_hVector_SecondElectronEta[0].at(indexV)->Fill(eventdiffZ->GetSecondElectronEta());
+      m_hVector_SecondElectronPhi[0].at(indexV)->Fill(eventdiffZ->GetSecondElectronPhi());
+      m_hVector_SecondElectronCharge[0].at(indexV)->Fill(eventdiffZ->GetSecondElectronCharge());
+      m_hVector_ElectronsN[0].at(indexV)->Fill(eventdiffZ->GetElectronsN());
+      m_hVector_DiMuon[0].at(indexV)->Fill(eventdiffZ->GetDiMuonMass());
+      m_hVector_LeadingMuonPt[0].at(indexV)->Fill(eventdiffZ->GetLeadingMuonPt());
+      m_hVector_LeadingMuonEta[0].at(indexV)->Fill(eventdiffZ->GetLeadingMuonEta());
+      m_hVector_LeadingMuonPhi[0].at(indexV)->Fill(eventdiffZ->GetLeadingMuonPhi());
+      m_hVector_LeadingMuonCharge[0].at(indexV)->Fill(eventdiffZ->GetLeadingMuonCharge());
+      m_hVector_SecondMuonPt[0].at(indexV)->Fill(eventdiffZ->GetSecondMuonPt());
+      m_hVector_SecondMuonEta[0].at(indexV)->Fill(eventdiffZ->GetSecondMuonEta());
+      m_hVector_SecondMuonPhi[0].at(indexV)->Fill(eventdiffZ->GetSecondMuonPhi());
+      m_hVector_SecondMuonCharge[0].at(indexV)->Fill(eventdiffZ->GetSecondMuonCharge());
+      m_hVector_MuonsN[0].at(indexV)->Fill(eventdiffZ->GetMuonsN());
 
       // Trigger
-      if (switchPreSel || (switchTrigger && eventdiffZ->GetHLTPath(optTrigger)) ){
-
-	if (!switchPreSel || (switchPreSel && eventdiffZ->GetLeadingElectronPt() > 20 )) {
-
-	  if (eventdiffZ->GetElectronsN() >= 2) m_hVector_mll[1].at(indexV)->Fill(eventdiffZ->GetDiElectronMassPF() );
-
-	  /*if(eventdiffZ->GetNVertex() > 0 && eventdiffZ->GetNVertex()<= nVertex){
-
-	  m_hVector_rjj[1].at(0)->Fill(eventdiffZ->GetRjjFromJets());
-
-	  }*/
-
+      if (!switchTrigger || (switchTrigger && eventdiffZ->GetHLTPath(optTrigger)) ){
+       if (!switchPreSel || (switchPreSel && eventdiffZ->GetLeadingElectronPt() > 20 )) {
+         m_hVector_DiElectron[1].at(indexV)->Fill(eventdiffZ->GetDiElectronMass());
+         m_hVector_LeadingElectronPt[1].at(indexV)->Fill(eventdiffZ->GetLeadingElectronPt());
+         m_hVector_LeadingElectronEta[1].at(indexV)->Fill(eventdiffZ->GetLeadingElectronEta());
+         m_hVector_LeadingElectronPhi[1].at(indexV)->Fill(eventdiffZ->GetLeadingElectronPhi());
+         m_hVector_LeadingElectronCharge[1].at(indexV)->Fill(eventdiffZ->GetLeadingElectronCharge());
+         m_hVector_SecondElectronPt[1].at(indexV)->Fill(eventdiffZ->GetSecondElectronPt());
+         m_hVector_SecondElectronEta[1].at(indexV)->Fill(eventdiffZ->GetSecondElectronEta());
+         m_hVector_SecondElectronPhi[1].at(indexV)->Fill(eventdiffZ->GetSecondElectronPhi());
+         m_hVector_SecondElectronCharge[1].at(indexV)->Fill(eventdiffZ->GetSecondElectronCharge());
+         m_hVector_ElectronsN[1].at(indexV)->Fill(eventdiffZ->GetElectronsN());
+         m_hVector_DiMuon[1].at(indexV)->Fill(eventdiffZ->GetDiMuonMass());
+         m_hVector_LeadingMuonPt[1].at(indexV)->Fill(eventdiffZ->GetLeadingMuonPt());
+         m_hVector_LeadingMuonEta[1].at(indexV)->Fill(eventdiffZ->GetLeadingMuonEta());
+         m_hVector_LeadingMuonPhi[1].at(indexV)->Fill(eventdiffZ->GetLeadingMuonPhi());
+         m_hVector_LeadingMuonCharge[1].at(indexV)->Fill(eventdiffZ->GetLeadingMuonCharge());
+         m_hVector_SecondMuonPt[1].at(indexV)->Fill(eventdiffZ->GetSecondMuonPt());
+         m_hVector_SecondMuonEta[1].at(indexV)->Fill(eventdiffZ->GetSecondMuonEta());
+         m_hVector_SecondMuonPhi[1].at(indexV)->Fill(eventdiffZ->GetSecondMuonPhi());
+         m_hVector_SecondMuonCharge[1].at(indexV)->Fill(eventdiffZ->GetSecondMuonCharge());
+         m_hVector_MuonsN[1].at(indexV)->Fill(eventdiffZ->GetMuonsN());
 	}
       }
     }
@@ -213,6 +357,7 @@ int main(int argc, char **argv){
   bool switchPreSel_;
   bool switchTrigger_;
   bool switchPUMultiple_;
+  float mcweight_;
 
   if (argc > 1 && strcmp(s1,argv[1]) != 0)  filein_ = argv[1];
   if (argc > 2 && strcmp(s1,argv[2]) != 0)  ttreename_ = argv[2];
@@ -222,9 +367,10 @@ int main(int argc, char **argv){
   if (argc > 6 && strcmp(s1,argv[6]) != 0)  switchPreSel_ = atoi(argv[6]);
   if (argc > 7 && strcmp(s1,argv[7]) != 0)  nVertex_ = atoi(argv[7]);
   if (argc > 8 && strcmp(s1,argv[8]) != 0)  switchPUMultiple_ = atoi(argv[8]);
+  if (argc > 9 && strcmp(s1,argv[9]) != 0)  mcweight_ = atoi(argv[9]);
 
   DiffractiveZComp* diffZRun = new DiffractiveZComp();   
-  diffZRun->Run(filein_, ttreename_, savehistofile_, switchTrigger_, optTrigger_, switchPreSel_, nVertex_, switchPUMultiple_);
+  diffZRun->Run(filein_, ttreename_, savehistofile_, switchTrigger_, optTrigger_, switchPreSel_, nVertex_, switchPUMultiple_, mcweight_);
 
   return 0;
 
