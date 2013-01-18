@@ -47,7 +47,7 @@ void DiffractiveZComp::LoadFile(std::string fileinput, std::string processinput)
 
 }
 
-void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::string savehistofile_, bool switchTrigger_, int optTrigger_, bool switchPreSel_, int nVertex_, bool switchPUMultiple_, float mcweight_){
+void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::string savehistofile_, bool switchTrigger_, int optTrigger_, bool switchPreSel_, int nVertex_, bool switchPUMultiple_, bool switchmcweight_, float mcweight_){
 
   filein = filein_;
   ttreename = ttreename_;
@@ -57,6 +57,7 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
   switchPreSel = switchPreSel_;
   nVertex = nVertex_;
   switchPUMultiple = switchPUMultiple_;
+  switchmcweight = switchmcweight_;
   mcweight = mcweight_;
 
   std::cout << "" << std::endl;
@@ -105,6 +106,9 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
 
   int decade = 0;
 
+  // Reco Variables
+  double aSumE = 0.;
+
   // Each Cut Name Histogram tag.
   std::vector <std::string> Folders;
   Folders.push_back("without_cuts");
@@ -146,6 +150,22 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
     m_hVector_SecondMuonPhi.push_back( std::vector<TH1D*>() );
     m_hVector_SecondMuonCharge.push_back( std::vector<TH1D*>() );
     m_hVector_MuonsN.push_back( std::vector<TH1D*>() );
+
+    m_hVector_sumEHFplus.push_back( std::vector<TH1D*>() );
+    m_hVector_sumEHFminus.push_back( std::vector<TH1D*>() );
+    m_hVector_sumEHEplus.push_back( std::vector<TH1D*>() );
+    m_hVector_sumEHEminus.push_back( std::vector<TH1D*>() );
+
+    m_hVector_lumi.push_back( std::vector<TH1D*>() );
+    m_hVector_asumE.push_back( std::vector<TH1D*>() );
+    m_hVector_multhf.push_back( std::vector<TH2F*>() );
+    m_hVector_etcalos.push_back( std::vector<TH2F*>() );
+    m_hVector_tracks.push_back( std::vector<TH1D*>() );
+    m_hVector_pfetamax.push_back( std::vector<TH1D*>() );
+    m_hVector_pfetamin.push_back( std::vector<TH1D*>() );
+    m_hVector_asumE.push_back( std::vector<TH1D*>() );
+    m_hVector_vertex.push_back( std::vector<TH1D*>() );
+
 
     for (int k=0;k<nloop;k++){
 
@@ -258,6 +278,66 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
       TH1D *histo_MuonsN = new TH1D(name20,"Muons per Event Distribution; Number of Muons; N events",50,0,100);
       m_hVector_MuonsN[j].push_back(histo_MuonsN);
 
+      char name21[300];
+      sprintf(name21,"sumEHFplus_PU_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_sumEHFplus = new TH1D(name21,"HF^{+} - Sum of Energy; #sum E_{HF^{+}} [GeV]; N events",100,0,2000);
+      m_hVector_sumEHFplus[j].push_back(histo_sumEHFplus);
+
+      char name22[300];
+      sprintf(name22,"sumEHFminus_PU_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_sumEHFminus = new TH1D(name22,"HF^{-} - Sum of Energy; #sum E_{HF^{-}} [GeV]; N events",100,0,2000);
+      m_hVector_sumEHFminus[j].push_back(histo_sumEHFminus);
+
+      char name23[300];
+      sprintf(name23,"sumEHEplus_PU_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_sumEHEplus = new TH1D(name23,"HE^{+} - Sum of Energy; #sum E_{HE^{+}} [GeV]; N events",100,0,2000);
+      m_hVector_sumEHEplus[j].push_back(histo_sumEHEplus);
+
+      char name24[300];
+      sprintf(name24,"sumEHEminus_PU_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_sumEHEminus = new TH1D(name24,"HE^{-} - Sum of Energy; #sum E_{HE^{-}} [GeV]; N events",100,0,2000);
+      m_hVector_sumEHEminus[j].push_back(histo_sumEHEminus);
+
+      char name25[300];
+      sprintf(name25,"lumi_PU_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_lumi = new TH1D(name25,"Luminosity per Bunch; L_{Bunch} [#mub^{-1}s^{-1}]; N events",25,0,2);
+      m_hVector_lumi[j].push_back(histo_lumi);      
+
+      char name26[300];
+      sprintf(name26,"aEnergy_PU_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_aSumE = new TH1D(name26,"Forward Backward Asymmetry Distribution ; (#sum HF^{+} - #sum HF^{-})x(#sum HF^{+} + #sum HF^{-})^{-1}; N events",50,-1,1);
+      m_hVector_asumE[j].push_back(histo_aSumE);
+
+       char name27[300];
+       sprintf(name27,"mHF_PU_%s_%s",tag,Folders.at(j).c_str());
+       TH2F *histo_MultHF = new TH2F(name27,"HF^{+} and HF^{-} Multiplicity; n HF^{+}; n HF^{-}; N events", 10,  0., 10., 10,  0., 10. );
+       m_hVector_multhf[j].push_back(histo_MultHF);
+
+       char name28[300];
+       sprintf(name28,"ETCalos_PU_%s_%s",tag,Folders.at(j).c_str());
+       TH2F *histo_ET_Calos = new TH2F(name28,"HF^{+} and Castor; #sum Energy HF^{+}; log_{10} #sum Castor Signal [fC]; N events", 10,  0., 10., 50,  0., 50. );
+       m_hVector_etcalos[j].push_back(histo_ET_Calos);
+
+       char name29[300];
+       sprintf(name29,"Tracks_PU_%s_%s",tag,Folders.at(j).c_str());
+       TH1D *histo_Tracks = new TH1D(name29,"Tracks Multiplicity; n Tracks; N events",50,0,150);
+       m_hVector_tracks[j].push_back(histo_Tracks);
+
+       char name30[300];
+       sprintf(name30,"pfetamax_PU_%s_%s",tag,Folders.at(j).c_str());
+       TH1D *histo_PFEtamax = new TH1D(name30,"Particle Flow #eta_{max} Distribution; #eta; N events",20,0,5.5);
+       m_hVector_pfetamax[j].push_back(histo_PFEtamax);
+
+       char name31[300];
+       sprintf(name31,"pfetamin_PU_%s_%s",tag,Folders.at(j).c_str());
+       TH1D *histo_PFEtamin = new TH1D(name31,"Particle Flow #eta_{min} Distribution; #eta; N events",20,-5.5,0);
+       m_hVector_pfetamin[j].push_back(histo_PFEtamin);
+
+       char name32[300];
+       sprintf(name32,"vertex_PU_%s_%s",tag,Folders.at(j).c_str());
+       TH1D *histo_vertex = new TH1D(name32,"Number of Vertex; # Vertex; N events",25,0,25);
+       m_hVector_vertex[j].push_back(histo_vertex);
+
     }
 
   }
@@ -286,6 +366,9 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
     }
 
     if (!switchPUMultiple || (switchPUMultiple && eventinfo->GetNPileUpBx0() < 21)){
+      // Some Reco Variables
+      aSumE = (eventdiff->GetSumEnergyHFPlus() - eventdiff->GetSumEnergyHFMinus())/(eventdiff->GetSumEnergyHFPlus() + eventdiff->GetSumEnergyHFMinus());
+
       //No Cuts
       m_hVector_DiElectron[0].at(indexV)->Fill(eventdiffZ->GetDiElectronMass());
       m_hVector_LeadingElectronPt[0].at(indexV)->Fill(eventdiffZ->GetLeadingElectronPt());
@@ -307,6 +390,19 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
       m_hVector_SecondMuonPhi[0].at(indexV)->Fill(eventdiffZ->GetSecondMuonPhi());
       m_hVector_SecondMuonCharge[0].at(indexV)->Fill(eventdiffZ->GetSecondMuonCharge());
       m_hVector_MuonsN[0].at(indexV)->Fill(eventdiffZ->GetMuonsN());
+      m_hVector_sumEHFplus[0].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus());
+      m_hVector_sumEHFminus[0].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus());
+      m_hVector_sumEHEplus[0].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus());
+      m_hVector_sumEHEminus[0].at(indexV)->Fill(eventdiff->GetSumEnergyHEMinus());
+      m_hVector_lumi[0].at(indexV)->Fill(eventinfo->GetInstLumiBunch());
+      m_hVector_asumE[0].at(indexV)->Fill(aSumE);
+      m_hVector_multhf[0].at(indexV)->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus());
+      m_hVector_etcalos[0].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())));
+      m_hVector_tracks[0].at(indexV)->Fill(eventdiff->GetMultiplicityTracks());
+      m_hVector_pfetamax[0].at(indexV)->Fill(eventdiff->GetEtaMaxFromPFCands());
+      m_hVector_pfetamin[0].at(indexV)->Fill(eventdiff->GetEtaMinFromPFCands());
+      m_hVector_vertex[0].at(indexV)->Fill(eventdiff->GetNVertex());
+
 
       // Trigger
       if (!switchTrigger || (switchTrigger && eventdiffZ->GetHLTPath(optTrigger)) ){
@@ -331,6 +427,18 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
          m_hVector_SecondMuonPhi[1].at(indexV)->Fill(eventdiffZ->GetSecondMuonPhi());
          m_hVector_SecondMuonCharge[1].at(indexV)->Fill(eventdiffZ->GetSecondMuonCharge());
          m_hVector_MuonsN[1].at(indexV)->Fill(eventdiffZ->GetMuonsN());
+         m_hVector_sumEHFplus[1].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus());
+         m_hVector_sumEHFminus[1].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus());
+         m_hVector_sumEHEplus[1].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus());
+         m_hVector_sumEHEminus[1].at(indexV)->Fill(eventdiff->GetSumEnergyHEMinus());
+         m_hVector_lumi[1].at(indexV)->Fill(eventinfo->GetInstLumiBunch());
+         m_hVector_asumE[1].at(indexV)->Fill(aSumE);
+         m_hVector_multhf[1].at(indexV)->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus());
+         m_hVector_etcalos[1].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())));
+         m_hVector_tracks[1].at(indexV)->Fill(eventdiff->GetMultiplicityTracks());
+         m_hVector_pfetamax[1].at(indexV)->Fill(eventdiff->GetEtaMaxFromPFCands());
+         m_hVector_pfetamin[1].at(indexV)->Fill(eventdiff->GetEtaMinFromPFCands());
+         m_hVector_vertex[1].at(indexV)->Fill(eventdiff->GetNVertex());
 	}
       }
     }
@@ -357,6 +465,7 @@ int main(int argc, char **argv){
   bool switchPreSel_;
   bool switchTrigger_;
   bool switchPUMultiple_;
+  bool switchmcweight_;
   float mcweight_;
 
   if (argc > 1 && strcmp(s1,argv[1]) != 0)  filein_ = argv[1];
@@ -367,10 +476,11 @@ int main(int argc, char **argv){
   if (argc > 6 && strcmp(s1,argv[6]) != 0)  switchPreSel_ = atoi(argv[6]);
   if (argc > 7 && strcmp(s1,argv[7]) != 0)  nVertex_ = atoi(argv[7]);
   if (argc > 8 && strcmp(s1,argv[8]) != 0)  switchPUMultiple_ = atoi(argv[8]);
-  if (argc > 9 && strcmp(s1,argv[9]) != 0)  mcweight_ = atoi(argv[9]);
+  if (argc > 9 && strcmp(s1,argv[9]) != 0)  switchmcweight_ = atoi(argv[9]);
+  if (argc > 10 && strcmp(s1,argv[10]) != 0)  mcweight_ = atoi(argv[10]);
 
   DiffractiveZComp* diffZRun = new DiffractiveZComp();   
-  diffZRun->Run(filein_, ttreename_, savehistofile_, switchTrigger_, optTrigger_, switchPreSel_, nVertex_, switchPUMultiple_, mcweight_);
+  diffZRun->Run(filein_, ttreename_, savehistofile_, switchTrigger_, optTrigger_, switchPreSel_, nVertex_, switchPUMultiple_, switchmcweight_, mcweight_);
 
   return 0;
 

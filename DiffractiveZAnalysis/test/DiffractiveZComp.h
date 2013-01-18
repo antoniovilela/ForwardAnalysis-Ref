@@ -32,6 +32,7 @@ class DiffractiveZComp {
    bool switchPUMultiple;
    bool switchPreSel;
    bool switchTrigger;
+   bool switchmcweight;
    float mcweight;
 
    std::vector<std::vector<TH1D*> > m_hVector_DiElectron;
@@ -55,12 +56,26 @@ class DiffractiveZComp {
    std::vector<std::vector<TH1D*> > m_hVector_SecondMuonPhi;
    std::vector<std::vector<TH1D*> > m_hVector_SecondMuonCharge;
    std::vector<std::vector<TH1D*> > m_hVector_MuonsN;
-   
+ 
+   std::vector<std::vector<TH1D*> > m_hVector_sumEHFplus;
+   std::vector<std::vector<TH1D*> > m_hVector_sumEHFminus;
+   std::vector<std::vector<TH1D*> > m_hVector_sumEHEplus;
+   std::vector<std::vector<TH1D*> > m_hVector_sumEHEminus;
+ 
+   std::vector<std::vector<TH1D*> > m_hVector_lumi;
+   std::vector<std::vector<TH1D*> > m_hVector_asumE;
+   std::vector<std::vector<TH2F*> > m_hVector_multhf;
+   std::vector<std::vector<TH2F*> > m_hVector_etcalos;
+   std::vector<std::vector<TH1D*> > m_hVector_tracks;
+   std::vector<std::vector<TH1D*> > m_hVector_pfetamax;
+   std::vector<std::vector<TH1D*> > m_hVector_pfetamin;
+   std::vector<std::vector<TH1D*> > m_hVector_vertex;
+ 
    public :
    DiffractiveZComp() {}
    ~DiffractiveZComp() { inf->Close(); }
    
-   void Run(std::string, std::string, std::string, bool, int, bool, int, bool, float);
+   void Run(std::string, std::string, std::string, bool, int, bool, int, bool, bool, float);
    void LoadFile(std::string,std::string);
    void FillHistograms();
 
