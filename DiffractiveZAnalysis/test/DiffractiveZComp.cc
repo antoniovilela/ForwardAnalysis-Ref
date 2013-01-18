@@ -113,6 +113,7 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
   std::vector <std::string> Folders;
   Folders.push_back("without_cuts");
   Folders.push_back("with_trigger");
+  Folders.push_back("ChargeConservation");
 
   int nloop;
   int indexV;
@@ -127,7 +128,7 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
   }
 
   // j is the number of cuts or Histogram tag name.
-  for (int j=0; j<2; j++){
+  for (int j=0; j<3; j++){
 
     m_hVector_DiElectron.push_back( std::vector<TH1D*>() );
     m_hVector_LeadingElectronPt.push_back( std::vector<TH1D*>() );
@@ -308,35 +309,35 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
       TH1D *histo_aSumE = new TH1D(name26,"Forward Backward Asymmetry Distribution ; (#sum HF^{+} - #sum HF^{-})x(#sum HF^{+} + #sum HF^{-})^{-1}; N events",50,-1,1);
       m_hVector_asumE[j].push_back(histo_aSumE);
 
-       char name27[300];
-       sprintf(name27,"mHF_PU_%s_%s",tag,Folders.at(j).c_str());
-       TH2F *histo_MultHF = new TH2F(name27,"HF^{+} and HF^{-} Multiplicity; n HF^{+}; n HF^{-}; N events", 10,  0., 10., 10,  0., 10. );
-       m_hVector_multhf[j].push_back(histo_MultHF);
+      char name27[300];
+      sprintf(name27,"mHF_PU_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_MultHF = new TH2F(name27,"HF^{+} and HF^{-} Multiplicity; n HF^{+}; n HF^{-}; N events", 10,  0., 10., 10,  0., 10. );
+      m_hVector_multhf[j].push_back(histo_MultHF);
 
-       char name28[300];
-       sprintf(name28,"ETCalos_PU_%s_%s",tag,Folders.at(j).c_str());
-       TH2F *histo_ET_Calos = new TH2F(name28,"HF^{+} and Castor; #sum Energy HF^{+}; log_{10} #sum Castor Signal [fC]; N events", 10,  0., 10., 50,  0., 50. );
-       m_hVector_etcalos[j].push_back(histo_ET_Calos);
+      char name28[300];
+      sprintf(name28,"ETCalos_PU_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_ET_Calos = new TH2F(name28,"HF^{+} and Castor; #sum Energy HF^{+}; log_{10} #sum Castor Signal [fC]; N events", 10,  0., 10., 50,  0., 50. );
+      m_hVector_etcalos[j].push_back(histo_ET_Calos);
 
-       char name29[300];
-       sprintf(name29,"Tracks_PU_%s_%s",tag,Folders.at(j).c_str());
-       TH1D *histo_Tracks = new TH1D(name29,"Tracks Multiplicity; n Tracks; N events",50,0,150);
-       m_hVector_tracks[j].push_back(histo_Tracks);
+      char name29[300];
+      sprintf(name29,"Tracks_PU_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_Tracks = new TH1D(name29,"Tracks Multiplicity; n Tracks; N events",50,0,150);
+      m_hVector_tracks[j].push_back(histo_Tracks);
 
-       char name30[300];
-       sprintf(name30,"pfetamax_PU_%s_%s",tag,Folders.at(j).c_str());
-       TH1D *histo_PFEtamax = new TH1D(name30,"Particle Flow #eta_{max} Distribution; #eta; N events",20,0,5.5);
-       m_hVector_pfetamax[j].push_back(histo_PFEtamax);
+      char name30[300];
+      sprintf(name30,"pfetamax_PU_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_PFEtamax = new TH1D(name30,"Particle Flow #eta_{max} Distribution; #eta; N events",20,0,5.5);
+      m_hVector_pfetamax[j].push_back(histo_PFEtamax);
 
-       char name31[300];
-       sprintf(name31,"pfetamin_PU_%s_%s",tag,Folders.at(j).c_str());
-       TH1D *histo_PFEtamin = new TH1D(name31,"Particle Flow #eta_{min} Distribution; #eta; N events",20,-5.5,0);
-       m_hVector_pfetamin[j].push_back(histo_PFEtamin);
+      char name31[300];
+      sprintf(name31,"pfetamin_PU_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_PFEtamin = new TH1D(name31,"Particle Flow #eta_{min} Distribution; #eta; N events",20,-5.5,0);
+      m_hVector_pfetamin[j].push_back(histo_PFEtamin);
 
-       char name32[300];
-       sprintf(name32,"vertex_PU_%s_%s",tag,Folders.at(j).c_str());
-       TH1D *histo_vertex = new TH1D(name32,"Number of Vertex; # Vertex; N events",25,0,25);
-       m_hVector_vertex[j].push_back(histo_vertex);
+      char name32[300];
+      sprintf(name32,"vertex_PU_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_vertex = new TH1D(name32,"Number of Vertex; # Vertex; N events",25,0,25);
+      m_hVector_vertex[j].push_back(histo_vertex);
 
     }
 
@@ -439,6 +440,44 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
          m_hVector_pfetamax[1].at(indexV)->Fill(eventdiff->GetEtaMaxFromPFCands());
          m_hVector_pfetamin[1].at(indexV)->Fill(eventdiff->GetEtaMinFromPFCands());
          m_hVector_vertex[1].at(indexV)->Fill(eventdiff->GetNVertex());
+
+          //Charge Conservation Selection
+          if( (eventdiffZ->GetLeadingElectronCharge()*eventdiffZ->GetSecondElectronCharge()==-1) | (eventdiffZ->GetLeadingMuonCharge()*eventdiffZ->GetSecondMuonCharge()==-1)){
+
+           m_hVector_DiElectron[2].at(indexV)->Fill(eventdiffZ->GetDiElectronMass());
+           m_hVector_LeadingElectronPt[2].at(indexV)->Fill(eventdiffZ->GetLeadingElectronPt());
+           m_hVector_LeadingElectronEta[2].at(indexV)->Fill(eventdiffZ->GetLeadingElectronEta());
+           m_hVector_LeadingElectronPhi[2].at(indexV)->Fill(eventdiffZ->GetLeadingElectronPhi());
+           m_hVector_LeadingElectronCharge[2].at(indexV)->Fill(eventdiffZ->GetLeadingElectronCharge());
+           m_hVector_SecondElectronPt[2].at(indexV)->Fill(eventdiffZ->GetSecondElectronPt());
+           m_hVector_SecondElectronEta[2].at(indexV)->Fill(eventdiffZ->GetSecondElectronEta());
+           m_hVector_SecondElectronPhi[2].at(indexV)->Fill(eventdiffZ->GetSecondElectronPhi());
+           m_hVector_SecondElectronCharge[2].at(indexV)->Fill(eventdiffZ->GetSecondElectronCharge());
+           m_hVector_ElectronsN[2].at(indexV)->Fill(eventdiffZ->GetElectronsN());
+           m_hVector_DiMuon[2].at(indexV)->Fill(eventdiffZ->GetDiMuonMass());
+           m_hVector_LeadingMuonPt[2].at(indexV)->Fill(eventdiffZ->GetLeadingMuonPt());
+           m_hVector_LeadingMuonEta[2].at(indexV)->Fill(eventdiffZ->GetLeadingMuonEta());
+           m_hVector_LeadingMuonPhi[2].at(indexV)->Fill(eventdiffZ->GetLeadingMuonPhi());
+           m_hVector_LeadingMuonCharge[2].at(indexV)->Fill(eventdiffZ->GetLeadingMuonCharge());
+           m_hVector_SecondMuonPt[2].at(indexV)->Fill(eventdiffZ->GetSecondMuonPt());
+           m_hVector_SecondMuonEta[2].at(indexV)->Fill(eventdiffZ->GetSecondMuonEta());
+           m_hVector_SecondMuonPhi[2].at(indexV)->Fill(eventdiffZ->GetSecondMuonPhi());
+           m_hVector_SecondMuonCharge[2].at(indexV)->Fill(eventdiffZ->GetSecondMuonCharge());
+           m_hVector_MuonsN[2].at(indexV)->Fill(eventdiffZ->GetMuonsN());
+           m_hVector_sumEHFplus[2].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus());
+           m_hVector_sumEHFminus[2].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus());
+           m_hVector_sumEHEplus[2].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus());
+           m_hVector_sumEHEminus[2].at(indexV)->Fill(eventdiff->GetSumEnergyHEMinus());
+           m_hVector_lumi[2].at(indexV)->Fill(eventinfo->GetInstLumiBunch());
+           m_hVector_asumE[2].at(indexV)->Fill(aSumE);
+           m_hVector_multhf[2].at(indexV)->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus());
+           m_hVector_etcalos[2].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())));
+           m_hVector_tracks[2].at(indexV)->Fill(eventdiff->GetMultiplicityTracks());
+           m_hVector_pfetamax[2].at(indexV)->Fill(eventdiff->GetEtaMaxFromPFCands());
+           m_hVector_pfetamin[2].at(indexV)->Fill(eventdiff->GetEtaMinFromPFCands());
+           m_hVector_vertex[2].at(indexV)->Fill(eventdiff->GetNVertex());
+
+          }
 	}
       }
     }
