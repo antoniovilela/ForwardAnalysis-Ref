@@ -185,7 +185,7 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
 
       char name1[300];
       sprintf(name1,"DiElectron_%s",Folders.at(j).c_str());
-      TH1D *histo_DiElectron = new TH1D(name1,"Dielectron Invariant Mass Distribution; M_{ee} [GeV]; N events",100,0,1000);
+      TH1D *histo_DiElectron = new TH1D(name1,"Dielectron Invariant Mass Distribution; M_{ee} [GeV]; N events",500,0,1000);
       m_hVector_DiElectron[j].push_back(histo_DiElectron);
 
       char name2[300];
@@ -235,7 +235,7 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
 
       char name11[300];
       sprintf(name11,"DiMuon_%s",Folders.at(j).c_str());
-      TH1D *histo_DiMuon = new TH1D(name11,"Dielectron Invariant Mass Distribution; M_{ee} [GeV]; N events",100,0,1000);
+      TH1D *histo_DiMuon = new TH1D(name11,"Dielectron Invariant Mass Distribution; M_{ee} [GeV]; N events",500,0,1000);
       m_hVector_DiMuon[j].push_back(histo_DiMuon);
 
       char name12[300];
@@ -425,7 +425,7 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
 
       // Step1
       if (!switchTrigger || (switchTrigger && eventdiffZ->GetHLTPath(optTrigger)) ){
-	if (!switchPreSel || (switchPreSel && eventdiffZ->GetLeadingElectronPt() > 20 )) {
+	if (!switchPreSel || (switchPreSel && (eventdiffZ->GetLeadingElectronPt() > 30 && eventdiffZ->GetSecondElectronPt() > 15 ) )) {
 	  if(eventdiff->GetNVertex() > 0 && eventdiff->GetNVertex()<= nVertex){
 	    m_hVector_DiElectron[1].at(indexV)->Fill(eventdiffZ->GetDiElectronMass());
 	    m_hVector_LeadingElectronPt[1].at(indexV)->Fill(eventdiffZ->GetLeadingElectronPt());
