@@ -108,12 +108,14 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
 
   // Reco Variables
   double aSumE = 0.;
+  double deltaphielectrons = 0;
+  double deltaphimuons = 0.;
 
   // Each Cut Name Histogram tag.
   std::vector <std::string> Folders;
   Folders.push_back("without_cuts");
-  Folders.push_back("with_trigger");
-  Folders.push_back("ChargeConservation");
+  Folders.push_back("step1");
+  Folders.push_back("step2");
 
   int nloop;
   int indexV;
@@ -166,7 +168,8 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
     m_hVector_pfetamin.push_back( std::vector<TH1D*>() );
     m_hVector_asumE.push_back( std::vector<TH1D*>() );
     m_hVector_vertex.push_back( std::vector<TH1D*>() );
-
+    m_hVector_deltaphielectrons.push_back( std::vector<TH1D*>() );
+    m_hVector_deltaphimuons.push_back( std::vector<TH1D*>() );
 
     for (int k=0;k<nloop;k++){
 
@@ -339,6 +342,17 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
       TH1D *histo_vertex = new TH1D(name32,"Number of Vertex; # Vertex; N events",25,0,25);
       m_hVector_vertex[j].push_back(histo_vertex);
 
+      char name33[300];
+      sprintf(name33,"deltaphiElectrons_PU_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_deltaphielectrons = new TH1D(name33,"Number of Vertex; # Vertex; N events",25,0,25);
+      m_hVector_deltaphielectrons[j].push_back(histo_deltaphielectrons);
+
+      char name34[300];
+      sprintf(name34,"deltaphiMuons_PU_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_deltaphimuons = new TH1D(name34,"Number of Vertex; # Vertex; N events",25,0,25);
+      m_hVector_deltaphimuons[j].push_back(histo_deltaphimuons);
+
+
     }
 
   }
@@ -369,6 +383,8 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
     if (!switchPUMultiple || (switchPUMultiple && eventinfo->GetNPileUpBx0() < 21)){
       // Some Reco Variables
       aSumE = (eventdiff->GetSumEnergyHFPlus() - eventdiff->GetSumEnergyHFMinus())/(eventdiff->GetSumEnergyHFPlus() + eventdiff->GetSumEnergyHFMinus());
+      deltaphielectrons = fabs(eventdiffZ->GetLeadingElectronPhi() - eventdiffZ->GetSecondElectronPhi());
+      deltaphimuons = fabs(eventdiffZ->GetLeadingMuonPhi() - eventdiffZ->GetSecondMuonPhi());
 
       //No Cuts
       m_hVector_DiElectron[0].at(indexV)->Fill(eventdiffZ->GetDiElectronMass());
@@ -403,85 +419,91 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
       m_hVector_pfetamax[0].at(indexV)->Fill(eventdiff->GetEtaMaxFromPFCands());
       m_hVector_pfetamin[0].at(indexV)->Fill(eventdiff->GetEtaMinFromPFCands());
       m_hVector_vertex[0].at(indexV)->Fill(eventdiff->GetNVertex());
+      m_hVector_deltaphielectrons[0].at(indexV)->Fill(deltaphielectrons);
+      m_hVector_deltaphimuons[0].at(indexV)->Fill(deltaphimuons);
 
-
-      // Trigger
+      // Step1
       if (!switchTrigger || (switchTrigger && eventdiffZ->GetHLTPath(optTrigger)) ){
-       if (!switchPreSel || (switchPreSel && eventdiffZ->GetLeadingElectronPt() > 20 )) {
-         m_hVector_DiElectron[1].at(indexV)->Fill(eventdiffZ->GetDiElectronMass());
-         m_hVector_LeadingElectronPt[1].at(indexV)->Fill(eventdiffZ->GetLeadingElectronPt());
-         m_hVector_LeadingElectronEta[1].at(indexV)->Fill(eventdiffZ->GetLeadingElectronEta());
-         m_hVector_LeadingElectronPhi[1].at(indexV)->Fill(eventdiffZ->GetLeadingElectronPhi());
-         m_hVector_LeadingElectronCharge[1].at(indexV)->Fill(eventdiffZ->GetLeadingElectronCharge());
-         m_hVector_SecondElectronPt[1].at(indexV)->Fill(eventdiffZ->GetSecondElectronPt());
-         m_hVector_SecondElectronEta[1].at(indexV)->Fill(eventdiffZ->GetSecondElectronEta());
-         m_hVector_SecondElectronPhi[1].at(indexV)->Fill(eventdiffZ->GetSecondElectronPhi());
-         m_hVector_SecondElectronCharge[1].at(indexV)->Fill(eventdiffZ->GetSecondElectronCharge());
-         m_hVector_ElectronsN[1].at(indexV)->Fill(eventdiffZ->GetElectronsN());
-         m_hVector_DiMuon[1].at(indexV)->Fill(eventdiffZ->GetDiMuonMass());
-         m_hVector_LeadingMuonPt[1].at(indexV)->Fill(eventdiffZ->GetLeadingMuonPt());
-         m_hVector_LeadingMuonEta[1].at(indexV)->Fill(eventdiffZ->GetLeadingMuonEta());
-         m_hVector_LeadingMuonPhi[1].at(indexV)->Fill(eventdiffZ->GetLeadingMuonPhi());
-         m_hVector_LeadingMuonCharge[1].at(indexV)->Fill(eventdiffZ->GetLeadingMuonCharge());
-         m_hVector_SecondMuonPt[1].at(indexV)->Fill(eventdiffZ->GetSecondMuonPt());
-         m_hVector_SecondMuonEta[1].at(indexV)->Fill(eventdiffZ->GetSecondMuonEta());
-         m_hVector_SecondMuonPhi[1].at(indexV)->Fill(eventdiffZ->GetSecondMuonPhi());
-         m_hVector_SecondMuonCharge[1].at(indexV)->Fill(eventdiffZ->GetSecondMuonCharge());
-         m_hVector_MuonsN[1].at(indexV)->Fill(eventdiffZ->GetMuonsN());
-         m_hVector_sumEHFplus[1].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus());
-         m_hVector_sumEHFminus[1].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus());
-         m_hVector_sumEHEplus[1].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus());
-         m_hVector_sumEHEminus[1].at(indexV)->Fill(eventdiff->GetSumEnergyHEMinus());
-         m_hVector_lumi[1].at(indexV)->Fill(eventinfo->GetInstLumiBunch());
-         m_hVector_asumE[1].at(indexV)->Fill(aSumE);
-         m_hVector_multhf[1].at(indexV)->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus());
-         m_hVector_etcalos[1].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())));
-         m_hVector_tracks[1].at(indexV)->Fill(eventdiff->GetMultiplicityTracks());
-         m_hVector_pfetamax[1].at(indexV)->Fill(eventdiff->GetEtaMaxFromPFCands());
-         m_hVector_pfetamin[1].at(indexV)->Fill(eventdiff->GetEtaMinFromPFCands());
-         m_hVector_vertex[1].at(indexV)->Fill(eventdiff->GetNVertex());
+	if (!switchPreSel || (switchPreSel && eventdiffZ->GetLeadingElectronPt() > 20 )) {
+	  if(eventdiff->GetNVertex() > 0 && eventdiff->GetNVertex()<= nVertex){
+	    m_hVector_DiElectron[1].at(indexV)->Fill(eventdiffZ->GetDiElectronMass());
+	    m_hVector_LeadingElectronPt[1].at(indexV)->Fill(eventdiffZ->GetLeadingElectronPt());
+	    m_hVector_LeadingElectronEta[1].at(indexV)->Fill(eventdiffZ->GetLeadingElectronEta());
+	    m_hVector_LeadingElectronPhi[1].at(indexV)->Fill(eventdiffZ->GetLeadingElectronPhi());
+	    m_hVector_LeadingElectronCharge[1].at(indexV)->Fill(eventdiffZ->GetLeadingElectronCharge());
+	    m_hVector_SecondElectronPt[1].at(indexV)->Fill(eventdiffZ->GetSecondElectronPt());
+	    m_hVector_SecondElectronEta[1].at(indexV)->Fill(eventdiffZ->GetSecondElectronEta());
+	    m_hVector_SecondElectronPhi[1].at(indexV)->Fill(eventdiffZ->GetSecondElectronPhi());
+	    m_hVector_SecondElectronCharge[1].at(indexV)->Fill(eventdiffZ->GetSecondElectronCharge());
+	    m_hVector_ElectronsN[1].at(indexV)->Fill(eventdiffZ->GetElectronsN());
+	    m_hVector_DiMuon[1].at(indexV)->Fill(eventdiffZ->GetDiMuonMass());
+	    m_hVector_LeadingMuonPt[1].at(indexV)->Fill(eventdiffZ->GetLeadingMuonPt());
+	    m_hVector_LeadingMuonEta[1].at(indexV)->Fill(eventdiffZ->GetLeadingMuonEta());
+	    m_hVector_LeadingMuonPhi[1].at(indexV)->Fill(eventdiffZ->GetLeadingMuonPhi());
+	    m_hVector_LeadingMuonCharge[1].at(indexV)->Fill(eventdiffZ->GetLeadingMuonCharge());
+	    m_hVector_SecondMuonPt[1].at(indexV)->Fill(eventdiffZ->GetSecondMuonPt());
+	    m_hVector_SecondMuonEta[1].at(indexV)->Fill(eventdiffZ->GetSecondMuonEta());
+	    m_hVector_SecondMuonPhi[1].at(indexV)->Fill(eventdiffZ->GetSecondMuonPhi());
+	    m_hVector_SecondMuonCharge[1].at(indexV)->Fill(eventdiffZ->GetSecondMuonCharge());
+	    m_hVector_MuonsN[1].at(indexV)->Fill(eventdiffZ->GetMuonsN());
+	    m_hVector_sumEHFplus[1].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus());
+	    m_hVector_sumEHFminus[1].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus());
+	    m_hVector_sumEHEplus[1].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus());
+	    m_hVector_sumEHEminus[1].at(indexV)->Fill(eventdiff->GetSumEnergyHEMinus());
+	    m_hVector_lumi[1].at(indexV)->Fill(eventinfo->GetInstLumiBunch());
+	    m_hVector_asumE[1].at(indexV)->Fill(aSumE);
+	    m_hVector_multhf[1].at(indexV)->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus());
+	    m_hVector_etcalos[1].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())));
+	    m_hVector_tracks[1].at(indexV)->Fill(eventdiff->GetMultiplicityTracks());
+	    m_hVector_pfetamax[1].at(indexV)->Fill(eventdiff->GetEtaMaxFromPFCands());
+	    m_hVector_pfetamin[1].at(indexV)->Fill(eventdiff->GetEtaMinFromPFCands());
+	    m_hVector_vertex[1].at(indexV)->Fill(eventdiff->GetNVertex());
+	    m_hVector_deltaphielectrons[1].at(indexV)->Fill(deltaphielectrons);
+	    m_hVector_deltaphimuons[1].at(indexV)->Fill(deltaphimuons);
 
-          //Charge Conservation Selection
-          if( (eventdiffZ->GetLeadingElectronCharge()*eventdiffZ->GetSecondElectronCharge()==-1) | (eventdiffZ->GetLeadingMuonCharge()*eventdiffZ->GetSecondMuonCharge()==-1)){
+	    // Step2
+	    if( (eventdiffZ->GetLeadingElectronCharge()*eventdiffZ->GetSecondElectronCharge()==-1) || (eventdiffZ->GetLeadingMuonCharge()*eventdiffZ->GetSecondMuonCharge()==-1)){
 
-           m_hVector_DiElectron[2].at(indexV)->Fill(eventdiffZ->GetDiElectronMass());
-           m_hVector_LeadingElectronPt[2].at(indexV)->Fill(eventdiffZ->GetLeadingElectronPt());
-           m_hVector_LeadingElectronEta[2].at(indexV)->Fill(eventdiffZ->GetLeadingElectronEta());
-           m_hVector_LeadingElectronPhi[2].at(indexV)->Fill(eventdiffZ->GetLeadingElectronPhi());
-           m_hVector_LeadingElectronCharge[2].at(indexV)->Fill(eventdiffZ->GetLeadingElectronCharge());
-           m_hVector_SecondElectronPt[2].at(indexV)->Fill(eventdiffZ->GetSecondElectronPt());
-           m_hVector_SecondElectronEta[2].at(indexV)->Fill(eventdiffZ->GetSecondElectronEta());
-           m_hVector_SecondElectronPhi[2].at(indexV)->Fill(eventdiffZ->GetSecondElectronPhi());
-           m_hVector_SecondElectronCharge[2].at(indexV)->Fill(eventdiffZ->GetSecondElectronCharge());
-           m_hVector_ElectronsN[2].at(indexV)->Fill(eventdiffZ->GetElectronsN());
-           m_hVector_DiMuon[2].at(indexV)->Fill(eventdiffZ->GetDiMuonMass());
-           m_hVector_LeadingMuonPt[2].at(indexV)->Fill(eventdiffZ->GetLeadingMuonPt());
-           m_hVector_LeadingMuonEta[2].at(indexV)->Fill(eventdiffZ->GetLeadingMuonEta());
-           m_hVector_LeadingMuonPhi[2].at(indexV)->Fill(eventdiffZ->GetLeadingMuonPhi());
-           m_hVector_LeadingMuonCharge[2].at(indexV)->Fill(eventdiffZ->GetLeadingMuonCharge());
-           m_hVector_SecondMuonPt[2].at(indexV)->Fill(eventdiffZ->GetSecondMuonPt());
-           m_hVector_SecondMuonEta[2].at(indexV)->Fill(eventdiffZ->GetSecondMuonEta());
-           m_hVector_SecondMuonPhi[2].at(indexV)->Fill(eventdiffZ->GetSecondMuonPhi());
-           m_hVector_SecondMuonCharge[2].at(indexV)->Fill(eventdiffZ->GetSecondMuonCharge());
-           m_hVector_MuonsN[2].at(indexV)->Fill(eventdiffZ->GetMuonsN());
-           m_hVector_sumEHFplus[2].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus());
-           m_hVector_sumEHFminus[2].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus());
-           m_hVector_sumEHEplus[2].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus());
-           m_hVector_sumEHEminus[2].at(indexV)->Fill(eventdiff->GetSumEnergyHEMinus());
-           m_hVector_lumi[2].at(indexV)->Fill(eventinfo->GetInstLumiBunch());
-           m_hVector_asumE[2].at(indexV)->Fill(aSumE);
-           m_hVector_multhf[2].at(indexV)->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus());
-           m_hVector_etcalos[2].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())));
-           m_hVector_tracks[2].at(indexV)->Fill(eventdiff->GetMultiplicityTracks());
-           m_hVector_pfetamax[2].at(indexV)->Fill(eventdiff->GetEtaMaxFromPFCands());
-           m_hVector_pfetamin[2].at(indexV)->Fill(eventdiff->GetEtaMinFromPFCands());
-           m_hVector_vertex[2].at(indexV)->Fill(eventdiff->GetNVertex());
+	      m_hVector_DiElectron[2].at(indexV)->Fill(eventdiffZ->GetDiElectronMass());
+	      m_hVector_LeadingElectronPt[2].at(indexV)->Fill(eventdiffZ->GetLeadingElectronPt());
+	      m_hVector_LeadingElectronEta[2].at(indexV)->Fill(eventdiffZ->GetLeadingElectronEta());
+	      m_hVector_LeadingElectronPhi[2].at(indexV)->Fill(eventdiffZ->GetLeadingElectronPhi());
+	      m_hVector_LeadingElectronCharge[2].at(indexV)->Fill(eventdiffZ->GetLeadingElectronCharge());
+	      m_hVector_SecondElectronPt[2].at(indexV)->Fill(eventdiffZ->GetSecondElectronPt());
+	      m_hVector_SecondElectronEta[2].at(indexV)->Fill(eventdiffZ->GetSecondElectronEta());
+	      m_hVector_SecondElectronPhi[2].at(indexV)->Fill(eventdiffZ->GetSecondElectronPhi());
+	      m_hVector_SecondElectronCharge[2].at(indexV)->Fill(eventdiffZ->GetSecondElectronCharge());
+	      m_hVector_ElectronsN[2].at(indexV)->Fill(eventdiffZ->GetElectronsN());
+	      m_hVector_DiMuon[2].at(indexV)->Fill(eventdiffZ->GetDiMuonMass());
+	      m_hVector_LeadingMuonPt[2].at(indexV)->Fill(eventdiffZ->GetLeadingMuonPt());
+	      m_hVector_LeadingMuonEta[2].at(indexV)->Fill(eventdiffZ->GetLeadingMuonEta());
+	      m_hVector_LeadingMuonPhi[2].at(indexV)->Fill(eventdiffZ->GetLeadingMuonPhi());
+	      m_hVector_LeadingMuonCharge[2].at(indexV)->Fill(eventdiffZ->GetLeadingMuonCharge());
+	      m_hVector_SecondMuonPt[2].at(indexV)->Fill(eventdiffZ->GetSecondMuonPt());
+	      m_hVector_SecondMuonEta[2].at(indexV)->Fill(eventdiffZ->GetSecondMuonEta());
+	      m_hVector_SecondMuonPhi[2].at(indexV)->Fill(eventdiffZ->GetSecondMuonPhi());
+	      m_hVector_SecondMuonCharge[2].at(indexV)->Fill(eventdiffZ->GetSecondMuonCharge());
+	      m_hVector_MuonsN[2].at(indexV)->Fill(eventdiffZ->GetMuonsN());
+	      m_hVector_sumEHFplus[2].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus());
+	      m_hVector_sumEHFminus[2].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus());
+	      m_hVector_sumEHEplus[2].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus());
+	      m_hVector_sumEHEminus[2].at(indexV)->Fill(eventdiff->GetSumEnergyHEMinus());
+	      m_hVector_lumi[2].at(indexV)->Fill(eventinfo->GetInstLumiBunch());
+	      m_hVector_asumE[2].at(indexV)->Fill(aSumE);
+	      m_hVector_multhf[2].at(indexV)->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus());
+	      m_hVector_etcalos[2].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())));
+	      m_hVector_tracks[2].at(indexV)->Fill(eventdiff->GetMultiplicityTracks());
+	      m_hVector_pfetamax[2].at(indexV)->Fill(eventdiff->GetEtaMaxFromPFCands());
+	      m_hVector_pfetamin[2].at(indexV)->Fill(eventdiff->GetEtaMinFromPFCands());
+	      m_hVector_vertex[2].at(indexV)->Fill(eventdiff->GetNVertex());
+	      m_hVector_deltaphielectrons[2].at(indexV)->Fill(deltaphielectrons);
+	      m_hVector_deltaphimuons[2].at(indexV)->Fill(deltaphimuons);
 
-          }
+	    }
+	  }
 	}
       }
     }
-
   }
 
   outf->Write();

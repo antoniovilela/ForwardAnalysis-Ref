@@ -70,6 +70,9 @@ class DiffractiveZComp {
    std::vector<std::vector<TH1D*> > m_hVector_pfetamax;
    std::vector<std::vector<TH1D*> > m_hVector_pfetamin;
    std::vector<std::vector<TH1D*> > m_hVector_vertex;
+
+   std::vector<std::vector<TH1D*> > m_hVector_deltaphielectrons;
+   std::vector<std::vector<TH1D*> > m_hVector_deltaphimuons;
  
    public :
    DiffractiveZComp() {}
@@ -77,7 +80,7 @@ class DiffractiveZComp {
    
    void Run(std::string, std::string, std::string, bool, int, bool, int, bool, bool, float);
    void LoadFile(std::string,std::string);
-   void FillHistograms();
+   void FillHistograms(int);
 
 };
 #endif
