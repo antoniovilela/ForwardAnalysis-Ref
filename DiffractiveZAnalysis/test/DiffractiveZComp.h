@@ -28,6 +28,8 @@ class DiffractiveZComp {
    std::string savehistofile;
    std::string ttreename;
    int nVertex;
+   double lepton1pt;
+   double lepton2pt;
    int optTrigger;
    bool switchPUMultiple;
    bool switchPreSel;
@@ -79,7 +81,7 @@ class DiffractiveZComp {
    DiffractiveZComp() {}
    ~DiffractiveZComp() { inf->Close(); }
    
-   void Run(std::string, std::string, std::string, bool, int, bool, int, bool, bool, float);
+   void Run(std::string, std::string, std::string, bool, int, bool, double, double, int, bool, bool, float);
    void LoadFile(std::string,std::string);
    void FillHistograms(int);
 

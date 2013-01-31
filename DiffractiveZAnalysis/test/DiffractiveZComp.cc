@@ -47,7 +47,7 @@ void DiffractiveZComp::LoadFile(std::string fileinput, std::string processinput)
 
 }
 
-void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::string savehistofile_, bool switchTrigger_, int optTrigger_, bool switchPreSel_, int nVertex_, bool switchPUMultiple_, bool switchmcweight_, float mcweight_){
+void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::string savehistofile_, bool switchTrigger_, int optTrigger_, bool switchPreSel_, double lepton1pt_, double lepton2pt_, int nVertex_, bool switchPUMultiple_, bool switchmcweight_, float mcweight_){
 
   filein = filein_;
   ttreename = ttreename_;
@@ -55,6 +55,8 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
   switchTrigger = switchTrigger_;
   optTrigger = optTrigger_;
   switchPreSel = switchPreSel_;
+  lepton1pt = lepton1pt_;
+  lepton2pt = lepton2pt_;
   nVertex = nVertex_;
   switchPUMultiple = switchPUMultiple_;
   switchmcweight = switchmcweight_;
@@ -69,7 +71,9 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
   std::cout << "Output file: " << savehistofile << std::endl;
   std::cout << "TTree Name: " << ttreename << std::endl;
   std::cout << "MC Weight: " << mcweight << std::endl;
-  std::cout << " " << std::cout; 
+  std::cout << " " << std::cout;
+  std::cout << "Leading Electron pT [GeV]: " << lepton1pt << std::endl;
+  std::cout << "Second Electron pT [GeV]: " << lepton2pt << std::endl; 
   std::cout << "# Vertex: " << nVertex << std::endl;
   std::cout << "Trigger Option: " << optTrigger << std::endl;
   std::cout << " " << std::endl;
@@ -119,7 +123,7 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
   Folders.push_back("step3");
   Folders.push_back("step4");
   Folders.push_back("step5");
-
+  Folders.push_back("step6");
 
   int nloop;
   int indexV;
@@ -134,7 +138,7 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
   }
 
   // j is the number of cuts or Histogram tag name.
-  for (int j=0; j<6; j++){
+  for (int j=0; j<7; j++){
 
     m_hVector_DiElectron.push_back( std::vector<TH1D*>() );
     m_hVector_LeadingElectronPt.push_back( std::vector<TH1D*>() );
@@ -390,7 +394,7 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
     }
 
     if (!switchmcweight){
-      mcweight=1;
+      mcweight=1.;
     }
 
     if (!switchPUMultiple || (switchPUMultiple && eventinfo->GetNPileUpBx0() < 21)){
@@ -474,7 +478,8 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
 	m_hVector_deltaphimuons[1].at(indexV)->Fill(deltaphimuons,mcweight);
 	m_hVector_vertexvslumi[1].at(indexV)->Fill(eventdiff->GetNVertex(),eventinfo->GetInstLumiBunch(),mcweight);
 
-	if (!switchPreSel || (switchPreSel && (eventdiffZ->GetLeadingElectronPt() > 30 && eventdiffZ->GetSecondElectronPt() > 15 ) )) {
+        //Step2
+	if (!switchPreSel || (switchPreSel && (eventdiffZ->GetLeadingElectronPt() > lepton1pt && eventdiffZ->GetSecondElectronPt() > lepton2pt ) )) {
 	  m_hVector_DiElectron[2].at(indexV)->Fill(eventdiffZ->GetDiElectronMass(),mcweight);
 	  m_hVector_LeadingElectronPt[2].at(indexV)->Fill(eventdiffZ->GetLeadingElectronPt(),mcweight);
 	  m_hVector_LeadingElectronEta[2].at(indexV)->Fill(eventdiffZ->GetLeadingElectronEta(),mcweight);
@@ -511,6 +516,7 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
 	  m_hVector_deltaphimuons[2].at(indexV)->Fill(deltaphimuons,mcweight);
 	  m_hVector_vertexvslumi[2].at(indexV)->Fill(eventdiff->GetNVertex(),eventinfo->GetInstLumiBunch(),mcweight);
 
+          // Step3
 	  if(eventdiff->GetNVertex() > 0 && eventdiff->GetNVertex()<= nVertex){
 	    m_hVector_DiElectron[3].at(indexV)->Fill(eventdiffZ->GetDiElectronMass(),mcweight);
 	    m_hVector_LeadingElectronPt[3].at(indexV)->Fill(eventdiffZ->GetLeadingElectronPt(),mcweight);
@@ -548,7 +554,7 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
 	    m_hVector_deltaphimuons[3].at(indexV)->Fill(deltaphimuons,mcweight);
 	    m_hVector_vertexvslumi[3].at(indexV)->Fill(eventdiff->GetNVertex(),eventinfo->GetInstLumiBunch(),mcweight);
 
-	    // Step2
+	    // Step4
 	    if( (eventdiffZ->GetLeadingElectronCharge()*eventdiffZ->GetSecondElectronCharge()==-1) || (eventdiffZ->GetLeadingMuonCharge()*eventdiffZ->GetSecondMuonCharge()==-1)){
 	      m_hVector_DiElectron[4].at(indexV)->Fill(eventdiffZ->GetDiElectronMass(),mcweight);
 	      m_hVector_LeadingElectronPt[4].at(indexV)->Fill(eventdiffZ->GetLeadingElectronPt(),mcweight);
@@ -586,8 +592,8 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
 	      m_hVector_deltaphimuons[4].at(indexV)->Fill(deltaphimuons,mcweight);
 	      m_hVector_vertexvslumi[4].at(indexV)->Fill(eventdiff->GetNVertex(),eventinfo->GetInstLumiBunch(),mcweight);
 
-	      // Step3
-	      if( (deltaphimuons < 3.2) || (deltaphielectrons < 3.2) ){
+	      // Step5
+	      if(eventdiffZ->GetElectronsN() == 2){
 		m_hVector_DiElectron[5].at(indexV)->Fill(eventdiffZ->GetDiElectronMass(),mcweight);
 		m_hVector_LeadingElectronPt[5].at(indexV)->Fill(eventdiffZ->GetLeadingElectronPt(),mcweight);
 		m_hVector_LeadingElectronEta[5].at(indexV)->Fill(eventdiffZ->GetLeadingElectronEta(),mcweight);
@@ -623,7 +629,46 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
 		m_hVector_deltaphielectrons[5].at(indexV)->Fill(deltaphielectrons,mcweight);
 		m_hVector_deltaphimuons[5].at(indexV)->Fill(deltaphimuons,mcweight);
 		m_hVector_vertexvslumi[5].at(indexV)->Fill(eventdiff->GetNVertex(),eventinfo->GetInstLumiBunch(),mcweight);
-	      }
+
+                // Step6          
+		if( (eventdiff->GetEtaMaxFromPFCands() < 3.) || (eventdiff->GetEtaMinFromPFCands() > -3.) ){
+		  m_hVector_DiElectron[6].at(indexV)->Fill(eventdiffZ->GetDiElectronMass(),mcweight);
+		  m_hVector_LeadingElectronPt[6].at(indexV)->Fill(eventdiffZ->GetLeadingElectronPt(),mcweight);
+		  m_hVector_LeadingElectronEta[6].at(indexV)->Fill(eventdiffZ->GetLeadingElectronEta(),mcweight);
+		  m_hVector_LeadingElectronPhi[6].at(indexV)->Fill(eventdiffZ->GetLeadingElectronPhi(),mcweight);
+		  m_hVector_LeadingElectronCharge[6].at(indexV)->Fill(eventdiffZ->GetLeadingElectronCharge(),mcweight);
+		  m_hVector_SecondElectronPt[6].at(indexV)->Fill(eventdiffZ->GetSecondElectronPt(),mcweight);
+		  m_hVector_SecondElectronEta[6].at(indexV)->Fill(eventdiffZ->GetSecondElectronEta(),mcweight);
+		  m_hVector_SecondElectronPhi[6].at(indexV)->Fill(eventdiffZ->GetSecondElectronPhi(),mcweight);
+		  m_hVector_SecondElectronCharge[6].at(indexV)->Fill(eventdiffZ->GetSecondElectronCharge(),mcweight);
+		  m_hVector_ElectronsN[6].at(indexV)->Fill(eventdiffZ->GetElectronsN(),mcweight);
+		  m_hVector_DiMuon[6].at(indexV)->Fill(eventdiffZ->GetDiMuonMass(),mcweight);
+		  m_hVector_LeadingMuonPt[6].at(indexV)->Fill(eventdiffZ->GetLeadingMuonPt(),mcweight);
+		  m_hVector_LeadingMuonEta[6].at(indexV)->Fill(eventdiffZ->GetLeadingMuonEta(),mcweight);
+		  m_hVector_LeadingMuonPhi[6].at(indexV)->Fill(eventdiffZ->GetLeadingMuonPhi(),mcweight);
+		  m_hVector_LeadingMuonCharge[6].at(indexV)->Fill(eventdiffZ->GetLeadingMuonCharge(),mcweight);
+		  m_hVector_SecondMuonPt[6].at(indexV)->Fill(eventdiffZ->GetSecondMuonPt(),mcweight);
+		  m_hVector_SecondMuonEta[6].at(indexV)->Fill(eventdiffZ->GetSecondMuonEta(),mcweight);
+		  m_hVector_SecondMuonPhi[6].at(indexV)->Fill(eventdiffZ->GetSecondMuonPhi(),mcweight);
+		  m_hVector_SecondMuonCharge[6].at(indexV)->Fill(eventdiffZ->GetSecondMuonCharge(),mcweight);
+		  m_hVector_MuonsN[6].at(indexV)->Fill(eventdiffZ->GetMuonsN(),mcweight);
+		  m_hVector_sumEHFplus[6].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),mcweight);
+		  m_hVector_sumEHFminus[6].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus(),mcweight);
+		  m_hVector_sumEHEplus[6].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus(),mcweight);
+		  m_hVector_sumEHEminus[6].at(indexV)->Fill(eventdiff->GetSumEnergyHEMinus(),mcweight);
+		  m_hVector_lumi[6].at(indexV)->Fill(eventinfo->GetInstLumiBunch(),mcweight);
+		  m_hVector_asumE[6].at(indexV)->Fill(aSumE,mcweight);
+		  m_hVector_multhf[6].at(indexV)->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),mcweight);
+		  m_hVector_etcalos[6].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())),mcweight);
+		  m_hVector_tracks[6].at(indexV)->Fill(eventdiff->GetMultiplicityTracks(),mcweight);
+		  m_hVector_pfetamax[6].at(indexV)->Fill(eventdiff->GetEtaMaxFromPFCands(),mcweight);
+		  m_hVector_pfetamin[6].at(indexV)->Fill(eventdiff->GetEtaMinFromPFCands(),mcweight);
+		  m_hVector_vertex[6].at(indexV)->Fill(eventdiff->GetNVertex(),mcweight);
+		  m_hVector_deltaphielectrons[6].at(indexV)->Fill(deltaphielectrons,mcweight);
+		  m_hVector_deltaphimuons[6].at(indexV)->Fill(deltaphimuons,mcweight);
+		  m_hVector_vertexvslumi[6].at(indexV)->Fill(eventdiff->GetNVertex(),eventinfo->GetInstLumiBunch(),mcweight);	       
+		}
+              }
 	    }
 	  }
 	}
@@ -646,6 +691,8 @@ int main(int argc, char **argv){
   std::string filein_;
   std::string ttreename_;  
   std::string savehistofile_;
+  double lepton1pt_;
+  double lepton2pt_;
   int nVertex_;
   int optTrigger_;
   bool switchPreSel_;
@@ -660,13 +707,15 @@ int main(int argc, char **argv){
   if (argc > 4 && strcmp(s1,argv[4]) != 0)  switchTrigger_ = atoi(argv[4]);
   if (argc > 5 && strcmp(s1,argv[5]) != 0)  optTrigger_   = atoi(argv[5]);
   if (argc > 6 && strcmp(s1,argv[6]) != 0)  switchPreSel_ = atoi(argv[6]);
-  if (argc > 7 && strcmp(s1,argv[7]) != 0)  nVertex_ = atoi(argv[7]);
-  if (argc > 8 && strcmp(s1,argv[8]) != 0)  switchPUMultiple_ = atoi(argv[8]);
-  if (argc > 9 && strcmp(s1,argv[9]) != 0)  switchmcweight_ = atoi(argv[9]);
-  if (argc > 10 && strcmp(s1,argv[10]) != 0)  mcweight_ = atoi(argv[10]);
+  if (argc > 7 && strcmp(s1,argv[7]) != 0)  lepton1pt_ = atoi(argv[7]);
+  if (argc > 8 && strcmp(s1,argv[8]) != 0)  lepton2pt_ = atoi(argv[8]);
+  if (argc > 9 && strcmp(s1,argv[9]) != 0)  nVertex_ = atoi(argv[9]);
+  if (argc > 10 && strcmp(s1,argv[10]) != 0)  switchPUMultiple_ = atoi(argv[10]);
+  if (argc > 11 && strcmp(s1,argv[11]) != 0)  switchmcweight_ = atoi(argv[11]);
+  if (argc > 12 && strcmp(s1,argv[12]) != 0)  mcweight_ = atoi(argv[12]);
 
   DiffractiveZComp* diffZRun = new DiffractiveZComp();   
-  diffZRun->Run(filein_, ttreename_, savehistofile_, switchTrigger_, optTrigger_, switchPreSel_, nVertex_, switchPUMultiple_, switchmcweight_, mcweight_);
+  diffZRun->Run(filein_, ttreename_, savehistofile_, switchTrigger_, optTrigger_, switchPreSel_, lepton1pt_, lepton2pt_, nVertex_, switchPUMultiple_, switchmcweight_, mcweight_);
 
   return 0;
 
