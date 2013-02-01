@@ -52,7 +52,7 @@ info->SetAddress(&eventinfo);
 
 }
 
-void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::string processname_, int optTriggerRef_, int optTrigger_){
+void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::string processname_, int optTriggerRef_, int optTrigger_, int bin_){
 
 filein = filein_;
 savehistofile = savehistofile_;
@@ -60,6 +60,7 @@ processname = processname_;
 filein = filein_;
 optTrigger = optTrigger_;
 optTriggerRef = optTriggerRef_;
+bin = bin_;
 
 std::cout << "" << std::endl;
 std::cout << "Running..." << std::endl;
@@ -72,6 +73,7 @@ std::cout << "Output file: " << savehistofile << std::endl;
 std::cout << " " << std::cout; 
 std::cout << "Reference Trigger Option: " << optTriggerRef << std::endl;
 std::cout << "Trigger Option: " << optTrigger << std::endl;
+std::cout << "Bin: " << bin << std::endl;
 std::cout << " " << std::endl;
 
 
@@ -129,22 +131,22 @@ for (int j=0; j<10; j++){
 
   char name1[300];
   sprintf(name1,"Events_%s",Folders.at(j).c_str());
-  TH1D *histo_m_Evt_lumis = new TH1D(name1,"; Lumis; N events",50,0,2.0);
+  TH1D *histo_m_Evt_lumis = new TH1D(name1,"; Lumis; N events",bin,0,2.0);
   m_hVector_Evt_lumis.push_back(histo_m_Evt_lumis);
 
   char name2[300];
   sprintf(name2,"Eff_%s",Folders.at(j).c_str());
-  TH1D *histo_m_Eff_lumis = new TH1D(name2,"; Lumis; Efficiency",50,0,2.0);
+  TH1D *histo_m_Eff_lumis = new TH1D(name2,"; Lumis; Efficiency",bin,0,2.0);
   m_hVector_Eff_lumis.push_back(histo_m_Eff_lumis);
 
   char name3[300];
   sprintf(name3,"Events_PFEtamax_%s",Folders.at(j).c_str());
-  TH1D *histo_m_Evt_PFEtamax = new TH1D(name3,";Particle Flow #eta_{max}; N events",20,0,5.5);
+  TH1D *histo_m_Evt_PFEtamax = new TH1D(name3,";Particle Flow #eta_{max}; N events",bin,0,5.5);
   m_hVector_Evt_pfetamax.push_back(histo_m_Evt_PFEtamax);
 
   char name4[300];
   sprintf(name4,"Events_PFEtamin_%s",Folders.at(j).c_str());
-  TH1D *histo_m_Evt_PFEtamin = new TH1D(name4,";Particle Flow #eta_{min}; N events",20,-5.5,0);
+  TH1D *histo_m_Evt_PFEtamin = new TH1D(name4,";Particle Flow #eta_{min}; N events",bin,-5.5,0);
   m_hVector_Evt_pfetamin.push_back(histo_m_Evt_PFEtamin);
 
 }
@@ -253,6 +255,7 @@ outstring << "Output file: " << savehistofile << std::endl;
 outstring << " " << std::endl;
 outstring << "Trigger Ref Option: " << optTriggerRef << std::endl;
 outstring << "Trigger Option: " << optTrigger << std::endl;
+outstring << "Bin: " << bin << std::endl;
 outstring << " " << std::endl;
 outstring << "Number of Events: " << TotalE << std::endl;
 outstring << "Number of Events Without Cuts: " << counter[0] << std::endl;
@@ -308,14 +311,17 @@ std::string savehistofile_;
 std::string processname_;
 int optTrigger_;
 int optTriggerRef_;
+int bin_;
 
 if (argc > 1 && strcmp(s1,argv[1]) != 0)  filein_ = argv[1];
 if (argc > 2 && strcmp(s1,argv[2]) != 0)  savehistofile_  = argv[2];
 if (argc > 3 && strcmp(s1,argv[3]) != 0)  processname_  = argv[3];
 if (argc > 4 && strcmp(s1,argv[4]) != 0)  optTriggerRef_   = atoi(argv[4]);
 if (argc > 5 && strcmp(s1,argv[5]) != 0)  optTrigger_   = atoi(argv[5]);
+if (argc > 6 && strcmp(s1,argv[6]) != 0)  bin_   = atoi(argv[6]);
+
 TriggerEff* triggereff = new TriggerEff();   
-triggereff->Run(filein_, savehistofile_, processname_, optTriggerRef_, optTrigger_);
+triggereff->Run(filein_, savehistofile_, processname_, optTriggerRef_, optTrigger_, bin_);
 
 return 0;
 }
