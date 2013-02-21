@@ -244,7 +244,7 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
 
       char name11[300];
       sprintf(name11,"DiMuon_%s_%s",tag,Folders.at(j).c_str());
-      TH1D *histo_DiMuon = new TH1D(name11,"Dielectron Invariant Mass Distribution; M_{ee} [GeV]; N events",500,0,500);
+      TH1D *histo_DiMuon = new TH1D(name11,"DiMuon Invariant Mass Distribution; M_{#mu#mu} [GeV]; N events",500,0,500);
       m_hVector_DiMuon[j].push_back(histo_DiMuon);
 
       char name12[300];
@@ -479,7 +479,7 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
 	m_hVector_deltaphimuons[1].at(indexV)->Fill(deltaphimuons,mcweight);
 	m_hVector_vertexvslumi[1].at(indexV)->Fill(eventdiff->GetNVertex(),eventinfo->GetInstLumiBunch(),mcweight);
 
-        //Step2
+	//Step2
 	if (!switchPreSel || (switchPreSel && (eventdiffZ->GetLeadingElectronPt() > lepton1pt && eventdiffZ->GetSecondElectronPt() > lepton2pt) )) {
 	  m_hVector_DiElectron[2].at(indexV)->Fill(eventdiffZ->GetDiElectronMass(),mcweight);
 	  m_hVector_LeadingElectronPt[2].at(indexV)->Fill(eventdiffZ->GetLeadingElectronPt(),mcweight);
@@ -517,7 +517,7 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
 	  m_hVector_deltaphimuons[2].at(indexV)->Fill(deltaphimuons,mcweight);
 	  m_hVector_vertexvslumi[2].at(indexV)->Fill(eventdiff->GetNVertex(),eventinfo->GetInstLumiBunch(),mcweight);
 
-          // Step3
+	  // Step3
 	  if(eventdiff->GetNVertex() > 0 && eventdiff->GetNVertex()<= nVertex){
 	    m_hVector_DiElectron[3].at(indexV)->Fill(eventdiffZ->GetDiElectronMass(),mcweight);
 	    m_hVector_LeadingElectronPt[3].at(indexV)->Fill(eventdiffZ->GetLeadingElectronPt(),mcweight);
@@ -555,8 +555,7 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
 	    m_hVector_deltaphimuons[3].at(indexV)->Fill(deltaphimuons,mcweight);
 	    m_hVector_vertexvslumi[3].at(indexV)->Fill(eventdiff->GetNVertex(),eventinfo->GetInstLumiBunch(),mcweight);
 
-	    // Step4
-	    if( (eventdiffZ->GetLeadingElectronCharge()*eventdiffZ->GetSecondElectronCharge()==-1) || (eventdiffZ->GetLeadingMuonCharge()*eventdiffZ->GetSecondMuonCharge()==-1)){
+	    if((eventdiffZ->GetLeadingElectronCharge()*eventdiffZ->GetSecondElectronCharge()==-1)){
 	      m_hVector_DiElectron[4].at(indexV)->Fill(eventdiffZ->GetDiElectronMass(),mcweight);
 	      m_hVector_LeadingElectronPt[4].at(indexV)->Fill(eventdiffZ->GetLeadingElectronPt(),mcweight);
 	      m_hVector_LeadingElectronEta[4].at(indexV)->Fill(eventdiffZ->GetLeadingElectronEta(),mcweight);
@@ -593,8 +592,9 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
 	      m_hVector_deltaphimuons[4].at(indexV)->Fill(deltaphimuons,mcweight);
 	      m_hVector_vertexvslumi[4].at(indexV)->Fill(eventdiff->GetNVertex(),eventinfo->GetInstLumiBunch(),mcweight);
 
+
 	      // Step5
-	      if(eventdiffZ->GetElectronsN() == 2){
+	      if( eventdiffZ->GetDiElectronMass() > 60. ){
 		m_hVector_DiElectron[5].at(indexV)->Fill(eventdiffZ->GetDiElectronMass(),mcweight);
 		m_hVector_LeadingElectronPt[5].at(indexV)->Fill(eventdiffZ->GetLeadingElectronPt(),mcweight);
 		m_hVector_LeadingElectronEta[5].at(indexV)->Fill(eventdiffZ->GetLeadingElectronEta(),mcweight);
@@ -631,8 +631,8 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
 		m_hVector_deltaphimuons[5].at(indexV)->Fill(deltaphimuons,mcweight);
 		m_hVector_vertexvslumi[5].at(indexV)->Fill(eventdiff->GetNVertex(),eventinfo->GetInstLumiBunch(),mcweight);
 
-                // Step6          
-		if( (eventdiff->GetEtaMaxFromPFCands() < 3.) || (eventdiff->GetEtaMinFromPFCands() > -3.) ){
+		// Step6
+		if(eventdiffZ->GetElectronsN() == 2){
 		  m_hVector_DiElectron[6].at(indexV)->Fill(eventdiffZ->GetDiElectronMass(),mcweight);
 		  m_hVector_LeadingElectronPt[6].at(indexV)->Fill(eventdiffZ->GetLeadingElectronPt(),mcweight);
 		  m_hVector_LeadingElectronEta[6].at(indexV)->Fill(eventdiffZ->GetLeadingElectronEta(),mcweight);
@@ -667,9 +667,48 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
 		  m_hVector_vertex[6].at(indexV)->Fill(eventdiff->GetNVertex(),mcweight);
 		  m_hVector_deltaphielectrons[6].at(indexV)->Fill(deltaphielectrons,mcweight);
 		  m_hVector_deltaphimuons[6].at(indexV)->Fill(deltaphimuons,mcweight);
-		  m_hVector_vertexvslumi[6].at(indexV)->Fill(eventdiff->GetNVertex(),eventinfo->GetInstLumiBunch(),mcweight);	       
+		  m_hVector_vertexvslumi[6].at(indexV)->Fill(eventdiff->GetNVertex(),eventinfo->GetInstLumiBunch(),mcweight);
+
+		  // Step7          
+		  if( (eventdiff->GetEtaMaxFromPFCands() < 3.) || (eventdiff->GetEtaMinFromPFCands() > -3.) ){
+		    m_hVector_DiElectron[7].at(indexV)->Fill(eventdiffZ->GetDiElectronMass(),mcweight);
+		    m_hVector_LeadingElectronPt[7].at(indexV)->Fill(eventdiffZ->GetLeadingElectronPt(),mcweight);
+		    m_hVector_LeadingElectronEta[7].at(indexV)->Fill(eventdiffZ->GetLeadingElectronEta(),mcweight);
+		    m_hVector_LeadingElectronPhi[7].at(indexV)->Fill(eventdiffZ->GetLeadingElectronPhi(),mcweight);
+		    m_hVector_LeadingElectronCharge[7].at(indexV)->Fill(eventdiffZ->GetLeadingElectronCharge(),mcweight);
+		    m_hVector_SecondElectronPt[7].at(indexV)->Fill(eventdiffZ->GetSecondElectronPt(),mcweight);
+		    m_hVector_SecondElectronEta[7].at(indexV)->Fill(eventdiffZ->GetSecondElectronEta(),mcweight);
+		    m_hVector_SecondElectronPhi[7].at(indexV)->Fill(eventdiffZ->GetSecondElectronPhi(),mcweight);
+		    m_hVector_SecondElectronCharge[7].at(indexV)->Fill(eventdiffZ->GetSecondElectronCharge(),mcweight);
+		    m_hVector_ElectronsN[7].at(indexV)->Fill(eventdiffZ->GetElectronsN(),mcweight);
+		    m_hVector_DiMuon[7].at(indexV)->Fill(eventdiffZ->GetDiMuonMass(),mcweight);
+		    m_hVector_LeadingMuonPt[7].at(indexV)->Fill(eventdiffZ->GetLeadingMuonPt(),mcweight);
+		    m_hVector_LeadingMuonEta[7].at(indexV)->Fill(eventdiffZ->GetLeadingMuonEta(),mcweight);
+		    m_hVector_LeadingMuonPhi[7].at(indexV)->Fill(eventdiffZ->GetLeadingMuonPhi(),mcweight);
+		    m_hVector_LeadingMuonCharge[7].at(indexV)->Fill(eventdiffZ->GetLeadingMuonCharge(),mcweight);
+		    m_hVector_SecondMuonPt[7].at(indexV)->Fill(eventdiffZ->GetSecondMuonPt(),mcweight);
+		    m_hVector_SecondMuonEta[7].at(indexV)->Fill(eventdiffZ->GetSecondMuonEta(),mcweight);
+		    m_hVector_SecondMuonPhi[7].at(indexV)->Fill(eventdiffZ->GetSecondMuonPhi(),mcweight);
+		    m_hVector_SecondMuonCharge[7].at(indexV)->Fill(eventdiffZ->GetSecondMuonCharge(),mcweight);
+		    m_hVector_MuonsN[7].at(indexV)->Fill(eventdiffZ->GetMuonsN(),mcweight);
+		    m_hVector_sumEHFplus[7].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),mcweight);
+		    m_hVector_sumEHFminus[7].at(indexV)->Fill(eventdiff->GetSumEnergyHFMinus(),mcweight);
+		    m_hVector_sumEHEplus[7].at(indexV)->Fill(eventdiff->GetSumEnergyHEPlus(),mcweight);
+		    m_hVector_sumEHEminus[7].at(indexV)->Fill(eventdiff->GetSumEnergyHEMinus(),mcweight);
+		    m_hVector_lumi[7].at(indexV)->Fill(eventinfo->GetInstLumiBunch(),mcweight);
+		    m_hVector_asumE[7].at(indexV)->Fill(aSumE,mcweight);
+		    m_hVector_multhf[7].at(indexV)->Fill(eventdiff->GetMultiplicityHFPlus(),eventdiff->GetMultiplicityHFMinus(),mcweight);
+		    m_hVector_etcalos[7].at(indexV)->Fill(eventdiff->GetSumEnergyHFPlus(),log10(fabs(eventdiff->GetSumETotCastor())),mcweight);
+		    m_hVector_tracks[7].at(indexV)->Fill(eventdiff->GetMultiplicityTracks(),mcweight);
+		    m_hVector_pfetamax[7].at(indexV)->Fill(eventdiff->GetEtaMaxFromPFCands(),mcweight);
+		    m_hVector_pfetamin[7].at(indexV)->Fill(eventdiff->GetEtaMinFromPFCands(),mcweight);
+		    m_hVector_vertex[7].at(indexV)->Fill(eventdiff->GetNVertex(),mcweight);
+		    m_hVector_deltaphielectrons[7].at(indexV)->Fill(deltaphielectrons,mcweight);
+		    m_hVector_deltaphimuons[7].at(indexV)->Fill(deltaphimuons,mcweight);
+		    m_hVector_vertexvslumi[7].at(indexV)->Fill(eventdiff->GetNVertex(),eventinfo->GetInstLumiBunch(),mcweight);	       
+		  }
 		}
-              }
+	      }
 	    }
 	  }
 	}
