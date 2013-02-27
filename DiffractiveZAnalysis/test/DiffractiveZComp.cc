@@ -114,6 +114,10 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
   double aSumE = -999.;
   double deltaphielectrons = -999.;
   double deltaphimuons = -999.;
+  double deltaetaelectrons = -999;
+  double deltaetamuons = -999;
+  double deltapTelectrons = -999;
+  double deltapTmuons = -999;   
 
   // Each Cut Name Histogram tag.
   std::vector <std::string> Folders;
@@ -179,6 +183,10 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
     m_hVector_vertex.push_back( std::vector<TH1D*>() );
     m_hVector_deltaphielectrons.push_back( std::vector<TH1D*>() );
     m_hVector_deltaphimuons.push_back( std::vector<TH1D*>() );
+    m_hVector_deltapTelectrons.push_back( std::vector<TH1D*>() );
+    m_hVector_deltapTmuons.push_back( std::vector<TH1D*>() );
+    m_hVector_deltaetaelectrons.push_back( std::vector<TH1D*>() );
+    m_hVector_deltaetamuons.push_back( std::vector<TH1D*>() );
     m_hVector_vertexvslumi.push_back( std::vector<TH2F*>() );
 
     for (int k=0;k<nloop;k++){
@@ -363,8 +371,28 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
       m_hVector_deltaphimuons[j].push_back(histo_deltaphimuons);
 
       char name35[300];
-      sprintf(name35,"VertexVsLuminosity_%s_%s",tag,Folders.at(j).c_str());
-      TH2F *histo_vertexvslumi = new TH2F(name35,"Vertex vs Luminosity; # Vertex; Luminosity per Bunch [#mub^{-1}s^{-1}]", 25.,  0., 25., 25,  0., 2.);
+      sprintf(name35,"deltapTElectrons_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_deltapTelectrons = new TH1D(name35,"#Delta#pT_{ee} Distribution; #Delta#pT_{ee} [GeV.c^{-1}]; N events",50,0.0,150);
+      m_hVector_deltapTelectrons[j].push_back(histo_deltapTelectrons);
+
+      char name36[300];
+      sprintf(name36,"deltapTMuons_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_deltapTmuons = new TH1D(name36,"#Delta#pT_{#mu#mu} Distribution; #Delta#pT_{#mu#mu} [GeV.c^{-1}]; N events",50,0.0,150);
+      m_hVector_deltapTmuons[j].push_back(histo_deltapTmuons);
+
+      char name37[300];
+      sprintf(name37,"deltaetaElectrons_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_deltaetaelectrons = new TH1D(name37,"#Delta#eta_{ee} Distribution; #Delta#eta_{ee}; N events",50,-11,11);
+      m_hVector_deltaetaelectrons[j].push_back(histo_deltaetaelectrons);
+
+      char name38[300];
+      sprintf(name38,"deltaetaMuons_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_deltaetamuons = new TH1D(name38,"#Delta#eta_{#mu#mu} Distribution; #Delta#eta_{#mu#mu}; N events",50,-11,11);
+      m_hVector_deltaetamuons[j].push_back(histo_deltaetamuons);
+
+      char name39[300];
+      sprintf(name39,"VertexVsLuminosity_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_vertexvslumi = new TH2F(name39,"Vertex vs Luminosity; # Vertex; Luminosity per Bunch [#mub^{-1}s^{-1}]", 25.,  0., 25., 25,  0., 2.);
       m_hVector_vertexvslumi[j].push_back(histo_vertexvslumi);
 
     }
@@ -403,6 +431,11 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
       aSumE = (eventdiff->GetSumEnergyHFPlus() - eventdiff->GetSumEnergyHFMinus())/(eventdiff->GetSumEnergyHFPlus() + eventdiff->GetSumEnergyHFMinus());
       deltaphielectrons = fabs(eventdiffZ->GetLeadingElectronPhi() - eventdiffZ->GetSecondElectronPhi());
       deltaphimuons = fabs(eventdiffZ->GetLeadingMuonPhi() - eventdiffZ->GetSecondMuonPhi());
+      deltaetaelectrons = eventdiffZ->GetLeadingElectronEta() - eventdiffZ->GetSecondElectronEta();
+      deltaetamuons = eventdiffZ->GetLeadingMuonEta() - eventdiffZ->GetSecondMuonEta();
+      deltapTelectrons = eventdiffZ->GetLeadingElectronPt() - eventdiffZ->GetSecondElectronPt();
+      deltapTmuons = eventdiffZ->GetLeadingMuonPt() - eventdiffZ->GetSecondMuonPt();
+
 
       //No Cuts
       m_hVector_DiElectron[0].at(indexV)->Fill(eventdiffZ->GetDiElectronMass(),mcweight);
@@ -439,6 +472,10 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
       m_hVector_vertex[0].at(indexV)->Fill(eventdiff->GetNVertex(),mcweight);
       m_hVector_deltaphielectrons[0].at(indexV)->Fill(deltaphielectrons,mcweight);
       m_hVector_deltaphimuons[0].at(indexV)->Fill(deltaphimuons,mcweight);
+      m_hVector_deltaetaelectrons[0].at(indexV)->Fill(deltaetaelectrons,mcweight);
+      m_hVector_deltaetamuons[0].at(indexV)->Fill(deltaetamuons,mcweight);
+      m_hVector_deltapTelectrons[0].at(indexV)->Fill(deltapTelectrons,mcweight);
+      m_hVector_deltapTmuons[0].at(indexV)->Fill(deltapTmuons,mcweight);
       m_hVector_vertexvslumi[0].at(indexV)->Fill(eventdiff->GetNVertex(),eventinfo->GetInstLumiBunch(),mcweight);
 
       // Step1
@@ -477,6 +514,10 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
 	m_hVector_vertex[1].at(indexV)->Fill(eventdiff->GetNVertex(),mcweight);
 	m_hVector_deltaphielectrons[1].at(indexV)->Fill(deltaphielectrons,mcweight);
 	m_hVector_deltaphimuons[1].at(indexV)->Fill(deltaphimuons,mcweight);
+	m_hVector_deltaetaelectrons[1].at(indexV)->Fill(deltaetaelectrons,mcweight);
+	m_hVector_deltaetamuons[1].at(indexV)->Fill(deltaetamuons,mcweight);
+	m_hVector_deltapTelectrons[1].at(indexV)->Fill(deltapTelectrons,mcweight);
+	m_hVector_deltapTmuons[1].at(indexV)->Fill(deltapTmuons,mcweight);
 	m_hVector_vertexvslumi[1].at(indexV)->Fill(eventdiff->GetNVertex(),eventinfo->GetInstLumiBunch(),mcweight);
 
 	//Step2
@@ -515,6 +556,10 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
 	  m_hVector_vertex[2].at(indexV)->Fill(eventdiff->GetNVertex(),mcweight);
 	  m_hVector_deltaphielectrons[2].at(indexV)->Fill(deltaphielectrons,mcweight);
 	  m_hVector_deltaphimuons[2].at(indexV)->Fill(deltaphimuons,mcweight);
+	  m_hVector_deltaetaelectrons[2].at(indexV)->Fill(deltaetaelectrons,mcweight);
+	  m_hVector_deltaetamuons[2].at(indexV)->Fill(deltaetamuons,mcweight);
+	  m_hVector_deltapTelectrons[2].at(indexV)->Fill(deltapTelectrons,mcweight);
+	  m_hVector_deltapTmuons[2].at(indexV)->Fill(deltapTmuons,mcweight);
 	  m_hVector_vertexvslumi[2].at(indexV)->Fill(eventdiff->GetNVertex(),eventinfo->GetInstLumiBunch(),mcweight);
 
 	  // Step3
@@ -553,9 +598,13 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
 	    m_hVector_vertex[3].at(indexV)->Fill(eventdiff->GetNVertex(),mcweight);
 	    m_hVector_deltaphielectrons[3].at(indexV)->Fill(deltaphielectrons,mcweight);
 	    m_hVector_deltaphimuons[3].at(indexV)->Fill(deltaphimuons,mcweight);
+	    m_hVector_deltaetaelectrons[3].at(indexV)->Fill(deltaetaelectrons,mcweight);
+	    m_hVector_deltaetamuons[3].at(indexV)->Fill(deltaetamuons,mcweight);
+	    m_hVector_deltapTelectrons[3].at(indexV)->Fill(deltapTelectrons,mcweight);
+	    m_hVector_deltapTmuons[3].at(indexV)->Fill(deltapTmuons,mcweight);
 	    m_hVector_vertexvslumi[3].at(indexV)->Fill(eventdiff->GetNVertex(),eventinfo->GetInstLumiBunch(),mcweight);
 
-            // Step4
+	    // Step4
 	    if((eventdiffZ->GetLeadingElectronCharge()*eventdiffZ->GetSecondElectronCharge()==-1)){
 	      m_hVector_DiElectron[4].at(indexV)->Fill(eventdiffZ->GetDiElectronMass(),mcweight);
 	      m_hVector_LeadingElectronPt[4].at(indexV)->Fill(eventdiffZ->GetLeadingElectronPt(),mcweight);
@@ -591,6 +640,10 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
 	      m_hVector_vertex[4].at(indexV)->Fill(eventdiff->GetNVertex(),mcweight);
 	      m_hVector_deltaphielectrons[4].at(indexV)->Fill(deltaphielectrons,mcweight);
 	      m_hVector_deltaphimuons[4].at(indexV)->Fill(deltaphimuons,mcweight);
+	      m_hVector_deltaetaelectrons[4].at(indexV)->Fill(deltaetaelectrons,mcweight);
+	      m_hVector_deltaetamuons[4].at(indexV)->Fill(deltaetamuons,mcweight);
+	      m_hVector_deltapTelectrons[4].at(indexV)->Fill(deltapTelectrons,mcweight);
+	      m_hVector_deltapTmuons[4].at(indexV)->Fill(deltapTmuons,mcweight);
 	      m_hVector_vertexvslumi[4].at(indexV)->Fill(eventdiff->GetNVertex(),eventinfo->GetInstLumiBunch(),mcweight);
 
 
@@ -630,6 +683,10 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
 		m_hVector_vertex[5].at(indexV)->Fill(eventdiff->GetNVertex(),mcweight);
 		m_hVector_deltaphielectrons[5].at(indexV)->Fill(deltaphielectrons,mcweight);
 		m_hVector_deltaphimuons[5].at(indexV)->Fill(deltaphimuons,mcweight);
+		m_hVector_deltaetaelectrons[5].at(indexV)->Fill(deltaetaelectrons,mcweight);
+		m_hVector_deltaetamuons[5].at(indexV)->Fill(deltaetamuons,mcweight);
+		m_hVector_deltapTelectrons[5].at(indexV)->Fill(deltapTelectrons,mcweight);
+		m_hVector_deltapTmuons[5].at(indexV)->Fill(deltapTmuons,mcweight);
 		m_hVector_vertexvslumi[5].at(indexV)->Fill(eventdiff->GetNVertex(),eventinfo->GetInstLumiBunch(),mcweight);
 
 		// Step6
@@ -668,6 +725,10 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
 		  m_hVector_vertex[6].at(indexV)->Fill(eventdiff->GetNVertex(),mcweight);
 		  m_hVector_deltaphielectrons[6].at(indexV)->Fill(deltaphielectrons,mcweight);
 		  m_hVector_deltaphimuons[6].at(indexV)->Fill(deltaphimuons,mcweight);
+		  m_hVector_deltaetaelectrons[6].at(indexV)->Fill(deltaetaelectrons,mcweight);
+		  m_hVector_deltaetamuons[6].at(indexV)->Fill(deltaetamuons,mcweight);
+		  m_hVector_deltapTelectrons[6].at(indexV)->Fill(deltapTelectrons,mcweight);
+		  m_hVector_deltapTmuons[6].at(indexV)->Fill(deltapTmuons,mcweight);
 		  m_hVector_vertexvslumi[6].at(indexV)->Fill(eventdiff->GetNVertex(),eventinfo->GetInstLumiBunch(),mcweight);
 
 		  // Step7          
@@ -706,6 +767,10 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
 		    m_hVector_vertex[7].at(indexV)->Fill(eventdiff->GetNVertex(),mcweight);
 		    m_hVector_deltaphielectrons[7].at(indexV)->Fill(deltaphielectrons,mcweight);
 		    m_hVector_deltaphimuons[7].at(indexV)->Fill(deltaphimuons,mcweight);
+		    m_hVector_deltaetaelectrons[7].at(indexV)->Fill(deltaetaelectrons,mcweight);
+		    m_hVector_deltaetamuons[7].at(indexV)->Fill(deltaetamuons,mcweight);
+		    m_hVector_deltapTelectrons[7].at(indexV)->Fill(deltapTelectrons,mcweight);
+		    m_hVector_deltapTmuons[7].at(indexV)->Fill(deltapTmuons,mcweight);
 		    m_hVector_vertexvslumi[7].at(indexV)->Fill(eventdiff->GetNVertex(),eventinfo->GetInstLumiBunch(),mcweight);	       
 		  }
 		}

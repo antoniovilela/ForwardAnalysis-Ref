@@ -75,6 +75,11 @@ class DiffractiveZComp {
 
    std::vector<std::vector<TH1D*> > m_hVector_deltaphielectrons;
    std::vector<std::vector<TH1D*> > m_hVector_deltaphimuons;
+   std::vector<std::vector<TH1D*> > m_hVector_deltapTelectrons;
+   std::vector<std::vector<TH1D*> > m_hVector_deltapTmuons;
+   std::vector<std::vector<TH1D*> > m_hVector_deltaetaelectrons;
+   std::vector<std::vector<TH1D*> > m_hVector_deltaetamuons;
+
    std::vector<std::vector<TH2F*> > m_hVector_vertexvslumi;
  
    public :
