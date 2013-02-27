@@ -372,12 +372,12 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
 
       char name35[300];
       sprintf(name35,"deltapTElectrons_%s_%s",tag,Folders.at(j).c_str());
-      TH1D *histo_deltapTelectrons = new TH1D(name35,"#Delta#pT_{ee} Distribution; #Delta#pT_{ee} [GeV.c^{-1}]; N events",50,0.0,150);
+      TH1D *histo_deltapTelectrons = new TH1D(name35,"#Delta pT_{ee} Distribution; #Delta pT_{ee} [GeV.c^{-1}]; N events",50,0.0,150);
       m_hVector_deltapTelectrons[j].push_back(histo_deltapTelectrons);
 
       char name36[300];
       sprintf(name36,"deltapTMuons_%s_%s",tag,Folders.at(j).c_str());
-      TH1D *histo_deltapTmuons = new TH1D(name36,"#Delta#pT_{#mu#mu} Distribution; #Delta#pT_{#mu#mu} [GeV.c^{-1}]; N events",50,0.0,150);
+      TH1D *histo_deltapTmuons = new TH1D(name36,"#Delta pT_{#mu#mu} Distribution; #Delta pT_{#mu#mu} [GeV.c^{-1}]; N events",50,0.0,150);
       m_hVector_deltapTmuons[j].push_back(histo_deltapTmuons);
 
       char name37[300];
