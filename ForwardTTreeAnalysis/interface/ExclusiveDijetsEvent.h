@@ -125,9 +125,13 @@ class ExclusiveDijetsEvent {
   void SetLeadingJetEta(double fleadingJetEta)  { leadingJetEta_     = fleadingJetEta;}
   void SetLeadingJetPhi(double fleadingJetPhi)  { leadingJetPhi_    = fleadingJetPhi;}
 
+  
   void SetSecondJetPt(double fsecondJetPt)      { secondJetPt_      = fsecondJetPt;}
   void SetSecondJetEta(double fsecondJetEta)    { secondJetEta_     = fsecondJetEta;}
   void SetSecondJetPhi(double fsecondJetPhi)    { secondJetPhi_     = fsecondJetPhi;}
+
+  void SetUnc1(double func1)                    { unc1_             = func1;}
+  void SetUnc2(double func2)                    { unc2_             = func2;}
 
   void SetThirdJetPt(double fthirdJetPt)        { thirdJetPt_        = fthirdJetPt;}
   void SetThirdJetEta(double fthirdJetEta)      { thirdJetEta_       = fthirdJetEta;}
@@ -226,6 +230,9 @@ class ExclusiveDijetsEvent {
   double GetSecondJetPt()         const { return secondJetPt_ ;}
   double GetSecondJetEta()        const { return secondJetEta_;}
   double GetSecondJetPhi()        const { return secondJetPhi_;}
+
+  double GetUnc1()                const { return unc1_;}
+  double GetUnc2()                const { return unc2_;}  
 
   double GetThirdJetPt()          const { return thirdJetPt_;}
   double GetThirdJetEta()         const { return thirdJetEta_;}
@@ -418,6 +425,8 @@ class ExclusiveDijetsEvent {
      double secondJetPt_;
      double secondJetEta_;
      double secondJetPhi_;
+     double unc1_;
+     double unc2_;
      double secondJetBDiscriminator_;
      double thirdJetPt_;
      double thirdJetEta_;

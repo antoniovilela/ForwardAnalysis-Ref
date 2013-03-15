@@ -36,6 +36,7 @@ ExclusiveDijetsAnalysis = cms.PSet(
 ###ExclusiveDijetsAnalysis
     # Input tags
     JetTag = cms.InputTag("selectedPatJetsPFlow"),
+    ReadJetUncertainty = cms.bool(True),
     JetNonCorrTag = cms.InputTag("ak5PFJets"),
     TrackMultiplicityTag = cms.InputTag("trackMultiplicityTransverseRegion","trackMultiplicity"),
     TrackTag = cms.InputTag(""),

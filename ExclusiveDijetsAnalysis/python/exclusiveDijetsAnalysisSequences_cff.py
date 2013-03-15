@@ -77,6 +77,58 @@ tracksTransverseRegion.JetTag = "ak5PFJets"
 
 from ForwardAnalysis.Utilities.trackMultiplicity_cfi import *
 trackMultiplicityTransverseRegion = trackMultiplicity.clone( src = "tracksTransverseRegion" ) 
+
+#
+# Systematic Studies
+#
+
+pfCandidatesShiftedUp = cms.EDProducer("ShiftedPFCandidateProducer",
+                src = cms.InputTag('pfNoPileUpPFlow'),
+                binning = cms.VPSet(
+                    cms.PSet(
+                        binSelection = cms.string('particleId == 0'), # particleId == X
+                        binUncertainty = cms.double(0.10)
+                    ),
+                    cms.PSet(
+                        binSelection = cms.string('particleId == 1'), # particleId == h
+                        binUncertainty = cms.double(0.10)
+                    ),
+
+                    cms.PSet(
+                        binSelection = cms.string('particleId == 2'), # particleId == e
+                        binUncertainty = cms.double(0.10)
+                    ),
+                    cms.PSet(
+                        binSelection = cms.string('particleId == 3'), # particleId == mu
+                        binUncertainty = cms.double(0.10)
+                    ),
+
+                    cms.PSet(
+                        binSelection = cms.string('particleId == 4'), # particleId == gamma
+                        binUncertainty = cms.double(0.10)
+                    ),
+                    cms.PSet(
+                        binSelection = cms.string('particleId == 5'), # particleId == h0
+                        binUncertainty = cms.double(0.10)
+                    ),
+
+                    cms.PSet(
+                        binSelection = cms.string('particleId == 6'), # particleId == h_HF
+                        binUncertainty = cms.double(0.10)
+                    ),
+                    cms.PSet(
+                        binSelection = cms.string('particleId == 7'), # particleId == egamma_HF
+                        binUncertainty = cms.double(0.10)
+                    )
+
+                ),
+                shiftBy = cms.double(1)
+            )
+
+
+pfCandidatesShiftedDown = pfCandidatesShiftedUp.clone()
+pfCandidatesShiftedDown.shiftBy = cms.double(-1)
+
 #------------------------------
 # Particle flow
 Forward = cms.PSet(
@@ -89,32 +141,11 @@ from ForwardAnalysis.Utilities.ExcludeHFEdgesStringCut import ExcludeHFEdgesStri
 from ForwardAnalysis.Utilities.PFCandidateNoiseStringCut import PFCandidateNoiseStringCut
 # Change thresholds here if needed
 from pfThresholds_cfi import pfThresholds
-#pfThresholdsH0 = pfThresholds.clone()
+#pfThresholdsDhiftedUp = pfThresholds.clone()
 #pfThresholdsHF0.Transition.hadronHF.energy = 0.0
 #pfThresholdsHF0.Transition.emHF.energy = 0.0
 #pfThresholdsHF0.Forward.hadronHF.energy = 0.0
 #pfThresholdsHF0.Forward.emHF.energy = 0.0
-#pfThresholdsHF6 = pfThresholds.clone()
-#pfThresholdsHF6.Transition.hadronHF.energy = 6.0
-#pfThresholdsHF6.Transition.emHF.energy = 6.0
-#pfThresholdsHF6.Forward.hadronHF.energy = 6.0
-#pfThresholdsHF6.Forward.emHF.energy = 6.0
-#pfThresholdsHF7 = pfThresholds.clone()
-#pfThresholdsHF7.Transition.hadronHF.energy = 7.0
-#pfThresholdsHF7.Transition.emHF.energy = 7.0
-#pfThresholdsHF7.Forward.hadronHF.energy = 7.0
-#pfThresholdsHF7.Forward.emHF.energy = 7.0
-#pfThresholdsHF8 = pfThresholds.clone()
-#pfThresholdsHF8.Transition.hadronHF.energy = 8.0
-#pfThresholdsHF8.Transition.emHF.energy = 8.0
-#pfThresholdsHF8.Forward.hadronHF.energy = 8.0
-#pfThresholdsHF8.Forward.emHF.energy = 8.0
-#pfThresholdsHF0 = pfThresholds.clone()
-#pfThresholdsHF0.Transition.hadronHF.energy = 0.0
-#pfThresholdsHF0.Transition.emHF.energy = 0.0
-#pfThresholdsHF0.Forward.hadronHF.energy = 0.0
-#pfThresholdsHF0.Forward.emHF.energy = 0.0
-
 pfStrCut1 = ExcludeHFEdgesStringCut().cut()
 pfStrCut2 = PFCandidateNoiseStringCut(pfThresholds).cut()
 pfStrCut = '%s & %s' % (pfStrCut1,pfStrCut2)
@@ -123,14 +154,6 @@ pfCandidateNoiseThresholds.cut = pfStrCut
 # Change to no pile-up collection
 pfCandidateNoiseThresholds.src = "pfNoPileUpPFlow" 
 
-#pfStrCutHF0 = '%s & %s' % (pfStrCut1, PFCandidateNoiseStringCut(pfThresholdsHF0).cut() )
-#pfCandidateNoiseThresholdsHF0 = pfCandidateNoiseThresholds.clone( cut = pfStrCutHF0 )
-#pfStrCutHF6 = '%s & %s' % (pfStrCut1, PFCandidateNoiseStringCut(pfThresholdsHF6).cut() )
-#pfCandidateNoiseThresholdsHF6 = pfCandidateNoiseThresholds.clone( cut = pfStrCutHF6 )
-#pfStrCutHF7 = '%s & %s' % (pfStrCut1, PFCandidateNoiseStringCut(pfThresholdsHF7).cut() )
-#pfCandidateNoiseThresholdsHF7 = pfCandidateNoiseThresholds.clone( cut = pfStrCutHF7 )
-#pfStrCutHF8 = '%s & %s' % (pfStrCut1, PFCandidateNoiseStringCut(pfThresholdsHF8).cut() )
-#pfCandidateNoiseThresholdsHF8 = pfCandidateNoiseThresholds.clone( cut = pfStrCutHF8 )
 #pfStrCutHF0 = '%s & %s' % (pfStrCut1, PFCandidateNoiseStringCut(pfThresholdsHF0).cut() )
 #pfCandidateNoiseThresholdsHF0 = pfCandidateNoiseThresholds.clone( cut = pfStrCutHF0 )
 
@@ -147,6 +170,8 @@ genStableParticles.cut = 'status = 1 & ( ( pdgId != 2212 ) | ( pdgId == 2212 & a
 genProtonDissociative = genStableParticles.clone( cut = 'pdgId == 9902210' )
 etaMaxGen = etaMaxPFCands.clone(src = "genStableParticles")
 etaMinGen = etaMinPFCands.clone(src = "genStableParticles")
+
+
 
 from ForwardAnalysis.AnalysisSequences.edmNtupleCandView_cfi import edmNtupleCandView
 edmNtupleEtaMax = edmNtupleCandView.clone(src = "etaMaxPFCands")
@@ -169,6 +194,23 @@ etaMinFilter.src = "etaMinPFCands"
 
 etaMaxGenFilter = etaMaxFilter.clone(src = "etaMaxGen")
 etaMinGenFilter = etaMinFilter.clone(src = "etaMinGen")
+
+
+pfCandidateNoiseThresholdsShiftedUp = pfCandidateNoiseThresholds.clone( src= "pfCandidatesShiftedUp" )
+
+etaMaxPFCandsShiftedUp = etaMaxPFCands.clone( src = "pfCandidateNoiseThresholdsShiftedUp" )
+etaMinPFCandsShiftedUp = etaMinPFCands.clone( src = "pfCandidateNoiseThresholdsShiftedUp" )
+
+edmNtupleEtaMaxShiftedUp = edmNtupleEtaMax.clone(src = "etaMaxPFCandsShiftedUp")
+edmNtupleEtaMinShiftedUp = edmNtupleEtaMin.clone(src = "etaMinPFCandsShiftedUp")
+
+pfCandidateNoiseThresholdsShiftedDown = pfCandidateNoiseThresholds.clone( src= "pfCandidatesShiftedDown" )
+etaMaxPFCandsShiftedDown = etaMaxPFCands.clone( src = "pfCandidateNoiseThresholdsShiftedDown" )
+etaMinPFCandsShiftedDown = etaMinPFCands.clone( src = "pfCandidateNoiseThresholdsShiftedDown" )
+
+edmNtupleEtaMaxShiftedDown = edmNtupleEtaMax.clone(src = "etaMaxPFCandsShiftedDown")
+edmNtupleEtaMinShiftedDown = edmNtupleEtaMin.clone(src = "etaMinPFCandsShiftedDown")
+
 #------------------------------
 
 from ForwardAnalysis.Utilities.caloActivityFilter_cfi import caloActivityFilter
@@ -234,10 +276,17 @@ tracks = cms.Sequence(analysisTracks*
                      #tracksOutsideJets*
                       tracksTransverseRegion)
 
+pfCandidates_ShiftedUp = cms.Sequence(pfCandidatesShiftedUp+
+                                     pfCandidateNoiseThresholdsShiftedUp* 
+                                     etaMaxPFCandsShiftedUp+etaMinPFCandsShiftedUp)
+
+pfCandidates_ShiftedDown = cms.Sequence(pfCandidatesShiftedDown+
+                                     pfCandidateNoiseThresholdsShiftedDown*
+                                     etaMaxPFCandsShiftedDown+etaMinPFCandsShiftedDown)
+
+
 pfCandidates = cms.Sequence(pfCandidateNoiseThresholds* 
-                            etaMaxPFCands+etaMinPFCands)
-##pfCandidates = cms.Sequence(pfCandidateNoiseThresholdsHF0* 
-##                            etaMaxPFCands+etaMinPFCands)
+                              etaMaxPFCands+etaMinPFCands)
 
 edmDump = cms.Sequence(#trackMultiplicity+
                        #trackMultiplicityAssociatedToPV+
@@ -249,7 +298,27 @@ edmDump = cms.Sequence(#trackMultiplicity+
                        hcalActivitySummaryScale108+hcalActivitySummaryScale110+
                        #hfTower+xiTower+xiFromCaloTowers+
                        edmNtupleEtaMax+edmNtupleEtaMin)
+
+edmDumpShiftedUp = cms.Sequence(trackMultiplicityTransverseRegion+
+                       hcalActivitySummary+hcalActivitySummaryScale090+hcalActivitySummaryScale092+
+                       hcalActivitySummaryScale095+hcalActivitySummaryScale098+
+                       hcalActivitySummaryScale102+hcalActivitySummaryScale105+
+                       hcalActivitySummaryScale108+hcalActivitySummaryScale110+
+                       edmNtupleEtaMaxShiftedUp+edmNtupleEtaMinShiftedUp)
+
+edmDumpShiftedDown = cms.Sequence(trackMultiplicityTransverseRegion+
+                       hcalActivitySummary+hcalActivitySummaryScale090+hcalActivitySummaryScale092+
+                       hcalActivitySummaryScale095+hcalActivitySummaryScale098+
+                       hcalActivitySummaryScale102+hcalActivitySummaryScale105+
+                       hcalActivitySummaryScale108+hcalActivitySummaryScale110+
+                       edmNtupleEtaMaxShiftedDown+edmNtupleEtaMinShiftedDown)
+
 #edmDump = cms.Sequence(edmNtupleEtaMax+edmNtupleEtaMin)
 #-------------------------------------------
+analysisSequencesShiftedUp = cms.Sequence(tracks*pfCandidates_ShiftedUp*edmDumpShiftedUp)
+analysisSequencesShiftedDown = cms.Sequence(tracks*pfCandidates_ShiftedDown*edmDumpShiftedDown)
 analysisSequences = cms.Sequence(tracks*pfCandidates*edmDump)
-#-------------------------------------------
+
+#-------------------------------------------:x
+
+

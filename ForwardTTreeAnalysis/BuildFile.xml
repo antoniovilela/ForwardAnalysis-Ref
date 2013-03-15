@@ -9,6 +9,7 @@
 <use   name="DataFormats/Luminosity"/>
 <use   name="DataFormats/Math"/>
 <use   name="JetMETCorrections/Objects"/>
+<use   name="CondFormats/JetMETObjects"/>
 <use   name="PhysicsTools/PatAlgos"/>
 <use   name="PhysicsTools/PatUtils"/>
 <use   name="PhysicsTools/CandUtils"/>

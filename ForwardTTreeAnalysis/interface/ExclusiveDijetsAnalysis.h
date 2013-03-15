@@ -63,9 +63,11 @@ class ExclusiveDijetsAnalysis {
      edm::InputTag trackTag_;
      edm::InputTag metTag_;
      edm::InputTag jetTag_;
+     //bool direction_;
+     bool readJetUncertainty_;
      edm::InputTag jetNonCorrTag_;
      edm::InputTag particleFlowTag_;
-     edm::InputTag castorRecHitTag_; //eliza
+     edm::InputTag castorRecHitTag_; 
      edm::InputTag genChargedTag_;
      edm::InputTag triggerResultsTag_;
      edm::InputTag hcalTowerSummaryTag_;
@@ -104,6 +106,8 @@ class ExclusiveDijetsAnalysis {
     
      std::string jetCorrectionService_;
      const JetCorrector* corrector_;
+     //JetCorrectionUncertainty *jetUnc1;
+     //JetCorrectionUncertainty *jetUnc2;
 
      TH1F *hltTriggerPassHisto_,*hltTriggerNamesHisto_;
 };
