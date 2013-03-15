@@ -9,6 +9,13 @@
 #include "DataFormats/ParticleFlowCandidate/interface/PFCandidate.h"
 #include "DataFormats/ParticleFlowCandidate/interface/PFCandidateFwd.h" 
 
+#include "DataFormats/PatCandidates/interface/MET.h"
+#include "FWCore/Framework/interface/ESHandle.h"
+#include "CondFormats/JetMETObjects/interface/JetCorrectorParameters.h"
+#include "CondFormats/JetMETObjects/interface/JetCorrectionUncertainty.h"
+#include "JetMETCorrections/Objects/interface/JetCorrectionsRecord.h"
+#include "FWCore/Framework/interface/EventSetup.h"
+
 #include "DataFormats/HepMCCandidate/interface/GenParticle.h"
 #include "DataFormats/PatCandidates/interface/Jet.h"
 #include "DataFormats/VertexReco/interface/VertexFwd.h"
@@ -62,6 +69,8 @@ ExclusiveDijetsAnalysis::ExclusiveDijetsAnalysis(const edm::ParameterSet& pset):
   trackTag_(pset.getParameter<edm::InputTag>("TrackTag")),
   metTag_(pset.getParameter<edm::InputTag>("METTag")),
   jetTag_(pset.getParameter<edm::InputTag>("JetTag")),
+  //direction_(pset.getParameter<bool>("Direction", true)),
+  readJetUncertainty_(pset.getParameter<bool>("ReadJetUncertainty")),
   jetNonCorrTag_(pset.getParameter<edm::InputTag>("JetNonCorrTag")), 
   particleFlowTag_(pset.getParameter<edm::InputTag>("ParticleFlowTag")),
   castorRecHitTag_(pset.getParameter<edm::InputTag>("CastorRecHitTag")),  
@@ -76,7 +85,7 @@ ExclusiveDijetsAnalysis::ExclusiveDijetsAnalysis(const edm::ParameterSet& pset):
   energyScaleHCAL_(-1.),
   useJetCorrection_(pset.getParameter<bool>("UseJetCorrection")),
   accessPileUpInfo_(pset.getParameter<bool>("AccessPileUpInfo")),
-  Ebeam_(pset.getUntrackedParameter<double>("EBeam",4000.)),
+  Ebeam_(pset.getUntrackedParameter<double>("EBeam",3000.)),
   usePAT_(pset.getUntrackedParameter<bool>("UsePAT",true)),
   accessMCInfo_(pset.getUntrackedParameter<bool>("AccessMCInfo",true)),
   POMPYTMCInfo_(pset.getUntrackedParameter<bool>("POMPYTMCInfo",true)),
@@ -281,30 +290,72 @@ void ExclusiveDijetsAnalysis::fillVertexInfo(ExclusiveDijetsEvent& eventData, co
 }
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void ExclusiveDijetsAnalysis::fillJetInfo(ExclusiveDijetsEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
+
   edm::Handle<edm::View<reco::Jet> > jetCollectionH;
   event.getByLabel(jetTag_,jetCollectionH);
 
   edm::Handle<edm::View<reco::PFCandidate> > particleFlowCollectionH;
   event.getByLabel(particleFlowTag_,particleFlowCollectionH);
 
+  //JES
+  JetCorrectionUncertainty *jecUnc1 = 0;
+  JetCorrectionUncertainty *jecUnc2 = 0;
+  if(readJetUncertainty_){
+  edm::ESHandle<JetCorrectorParametersCollection> JetCorParColl;
+  setup.get<JetCorrectionsRecord>().get("AK5PF",JetCorParColl);
+  JetCorrectorParameters const & JetCorPar = (*JetCorParColl)["Uncertainty"];
+  //JetCorrectorParameters const & JetCorPar2 = (*JetCorParColl)[1];
+  jecUnc1 = new JetCorrectionUncertainty(JetCorPar);
+  jecUnc2 = new JetCorrectionUncertainty(JetCorPar);
+  
+ 
+  }
+
   if(jetCollectionH->size() > 1){
      const reco::Jet& jet1 = (*jetCollectionH)[0];// they come out ordered right?
      const reco::Jet& jet2 = (*jetCollectionH)[1];
 
+     const reco::Jet& jet1unc = (*jetCollectionH)[0];// they come out ordered right?
+     const reco::Jet& jet2unc = (*jetCollectionH)[1];
+
      eventData.SetLeadingJetPt(jet1.pt());
-   
      eventData.SetLeadingJetEta(jet1.eta());
      eventData.SetLeadingJetPhi(jet1.phi());
      eventData.SetLeadingJetP4(jet1.p4());
- 
      eventData.SetSecondJetPt(jet2.pt());
-    
      eventData.SetSecondJetEta(jet2.eta());
-     
      eventData.SetSecondJetPhi(jet2.phi());
+
+      //JES
+      double unc1 = 0.0;
+      double unc2 = 0.0;
+      //vector<double> uncert1(0);
+      //vector<double> uncert2(0);
+      if(readJetUncertainty_){
+         jecUnc1->setJetPt(jet1unc.pt());
+         jecUnc1->setJetEta(jet1unc.eta());
+         unc1 = jecUnc1->getUncertainty(true);  
+                
+         jecUnc2->setJetPt(jet2unc.pt());
+         jecUnc2->setJetEta(jet2unc.eta());
+         unc2 = jecUnc2->getUncertainty(true); 
+         
+         //std::cout << "JESUncertainty unc1 = " << unc1 << std::endl;
+         //std::cout << "JESUncertainty unc2 = " << unc2 << std::endl;
+
+     }else{
+
+         unc1 = -999;
+         unc2 = -999;
+     }
+     //std::cout << "JESUncertainty unc1 = " << unc1 << std::endl;
+     //std::cout << "JESUncertainty unc2 = " << unc2 << std::endl;  
+    
+     eventData.SetUnc1(unc1);
+     eventData.SetUnc2(unc2);
      //Using Lorentz Vector
      eventData.SetSecondJetP4(jet2.p4());
-  
+ 
      eventData.SetJetsAveEta((jet1.eta() + jet2.eta())/2);
      eventData.SetJetsDeltaEta(jet1.eta() - jet2.eta());
      eventData.SetJetsDeltaPhi(M_PI - fabs(jet1.phi() - jet2.phi()));
