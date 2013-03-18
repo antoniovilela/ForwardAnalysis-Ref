@@ -781,15 +781,15 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
 	  << "Trigger Eff. per Lumi. (Eta2): " << triggereff2 << std::endl
 	  << "Trigger Eff. per Lumi. (Eta1): " << triggereff1 << std::endl
 	  << "Lumi eff corr. Pre Sel. : " << triggereff_excl << std::endl
-          << "Lumi eff corr. Pre Sel. + Vertex: " << triggereff_vertex << std::endl
+	  << "Lumi eff corr. Pre Sel. + Vertex: " << triggereff_vertex << std::endl
 	  << "Lumi eff corr. Pre Sel. + Vertex + Eta_PF(max,min) < 4: " << triggereff_step4_4 << std::endl
 	  << "Lumi eff corr. Pre Sel. + Vertex + Eta_PF(max,min) < 3: " << triggereff_step4_3 << std::endl
 	  << "Lumi eff corr. Pre Sel. + Vertex + Eta_PF(max,min) < 2: " << triggereff_step4_2 << std::endl
 	  << "Lumi eff corr. Pre Sel. + Vertex + Eta_PF(max,min) < 1: " << triggereff_step4_1 << std::endl
 	  << "MC event weight   : " << weightepw << std::endl
-	  << "Total weight BX0  : " << totalweight << std::endl
+          << "Total weight BX0  : " << totalweight << std::endl
 	  << "Total weight BXm1 : " << totalweightbxm1 << std::endl
-	  << "Total weight BXp1 : " << totalweightbxp1 << std::endl;
+          << "Total weight BXp1 : " << totalweightbxp1 << std::endl;
       }
 
       counterlumi++;
@@ -1680,10 +1680,11 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
     outstring << "" << std::endl;
     outstring << "Histogram Trigger Efficiency Limits:" << std::endl;
     outstring << "" << std::endl;
-    outstring << "\nLumi. min1. : " << lumiminl1 << "  | Lumi. max1. : "<< lumimaxl1 << std::endl;
-    outstring << "\nLumi. min2. : " << lumiminl2 << "  | Lumi. max2. : "<< lumimaxl2 << std::endl;
-    outstring << "\nLumi. min3. : " << lumiminl3 << "  | Lumi. max3. : "<< lumimaxl3 << std::endl;
+    outstring << "Checking Histograms Range..." << std:: endl;
     outstring << "\nLumi. min4. : " << lumiminl4 << "  | Lumi. max4. : "<< lumimaxl4 << std::endl;
+    outstring << "Lumi. min3. : " << lumiminl3 << "  | Lumi. max3. : "<< lumimaxl3 << std::endl;
+    outstring << "Lumi. min2. : " << lumiminl2 << "  | Lumi. max2. : "<< lumimaxl2 << std::endl;
+    outstring << "Lumi. min1. : " << lumiminl1 << "  | Lumi. max1. : "<< lumimaxl1 << std::endl;
     outstring << " " << std::endl;
     outstring << "<< LEGEND >> " << std::endl;
     outstring << "STEP1: # Vertex selection." << std::endl;
