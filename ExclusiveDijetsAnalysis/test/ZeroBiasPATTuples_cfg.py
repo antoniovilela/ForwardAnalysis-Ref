@@ -7,7 +7,7 @@ import FWCore.ParameterSet.Config as cms
 class config: pass
 config.verbose = True
 config.writeEdmOutput = False
-config.outputTTreeFile = 'forwardTTreeAnalysis.root'
+config.outputTTreeFile = 'ZeroBiasTest.root'
 config.runPATSequences = True
 config.usePAT = True
 config.globalTagNameData = 'GR_R_42_V23::All' 
@@ -97,7 +97,8 @@ addCastorRecHitCorrector(process)
 
 process.load("ForwardAnalysis.ExclusiveDijetsAnalysis.exclusiveDijetsAnalysisSequences_cff")
 
-process.pfCandidateNoiseThresholds.src = "pfNoPileUpPFlow"
+#process.pfCandidateNoiseThresholds.src = "pfNoPileUpPFlow"
+process.pfCandidateNoiseThresholds.src = "particleFlow"
 process.tracksTransverseRegion.JetTag = "selectedPatJetsPFlow"
 
 
