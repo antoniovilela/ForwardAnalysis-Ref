@@ -83,7 +83,7 @@ trackMultiplicityTransverseRegion = trackMultiplicity.clone( src = "tracksTransv
 #
 
 pfCandidatesShiftedUp = cms.EDProducer("ShiftedPFCandidateProducer",
-                src = cms.InputTag('ParticleFlow'),
+                src = cms.InputTag('particleFlow'),
                 binning = cms.VPSet(
                     cms.PSet(
                         binSelection = cms.string('particleId == 0'), # particleId == X
@@ -152,7 +152,7 @@ pfStrCut = '%s & %s' % (pfStrCut1,pfStrCut2)
 pfCandidateNoiseThresholds.cut = pfStrCut
 
 # Change to no pile-up collection
-pfCandidateNoiseThresholds.src = "ParticleFlow" 
+pfCandidateNoiseThresholds.src = "particleFlow" 
 
 #pfStrCutHF0 = '%s & %s' % (pfStrCut1, PFCandidateNoiseStringCut(pfThresholdsHF0).cut() )
 #pfCandidateNoiseThresholdsHF0 = pfCandidateNoiseThresholds.clone( cut = pfStrCutHF0 )
