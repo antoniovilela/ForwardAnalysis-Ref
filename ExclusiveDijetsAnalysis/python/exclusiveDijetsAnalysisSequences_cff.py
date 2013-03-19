@@ -63,7 +63,7 @@ from ForwardAnalysis.Utilities.analysisTracks_cfi import *
 
 from ForwardAnalysis.Utilities.selectTracksAssociatedToPV_cfi import *
 selectTracksAssociatedToPV.src = "analysisTracks"
-selectTracksAssociatedToPV.vertexTag = "offlinePrimaryVertices"
+selectTracksAssociatedToPV.vertexTag = "goodOfflinePrimaryVertices"
 selectTracksAssociatedToPV.maxDistanceFromVertex = 0.4
 
 from ForwardAnalysis.Utilities.tracksOutsideJets_cfi import *
@@ -83,7 +83,7 @@ trackMultiplicityTransverseRegion = trackMultiplicity.clone( src = "tracksTransv
 #
 
 pfCandidatesShiftedUp = cms.EDProducer("ShiftedPFCandidateProducer",
-                src = cms.InputTag('pfNoPileUpPFlow'),
+                src = cms.InputTag('ParticleFlow'),
                 binning = cms.VPSet(
                     cms.PSet(
                         binSelection = cms.string('particleId == 0'), # particleId == X
@@ -152,7 +152,7 @@ pfStrCut = '%s & %s' % (pfStrCut1,pfStrCut2)
 pfCandidateNoiseThresholds.cut = pfStrCut
 
 # Change to no pile-up collection
-pfCandidateNoiseThresholds.src = "pfNoPileUpPFlow" 
+pfCandidateNoiseThresholds.src = "ParticleFlow" 
 
 #pfStrCutHF0 = '%s & %s' % (pfStrCut1, PFCandidateNoiseStringCut(pfThresholdsHF0).cut() )
 #pfCandidateNoiseThresholdsHF0 = pfCandidateNoiseThresholds.clone( cut = pfStrCutHF0 )
