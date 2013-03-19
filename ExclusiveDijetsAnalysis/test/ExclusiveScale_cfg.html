@@ -126,7 +126,7 @@
 </div>
 </div>
 <div class="sequence"><div id="seq_label_patPF2PATSequencePFlow" onClick="return toggleSequenceVisible('patPF2PATSequencePFlow')" class="sequence_label">Sequence <span class="title">patPF2PATSequencePFlow</span>
- <span id="seq_hidden_patPF2PATSequencePFlow" class="hidden">[55 children hidden]</span>
+ <span id="seq_hidden_patPF2PATSequencePFlow" class="hidden">[46 children hidden]</span>
 </div>
 <div id="seq_patPF2PATSequencePFlow" class="sequence_area"><div id="module_pfPileUpPFlow" class="module"><div class="module_label EDProducer" onClick="return toggleModuleVisible('mod_pfPileUpPFlow')"><a name="pfPileUpPFlow" class="title">pfPileUpPFlow</a>
 </div>
@@ -4727,61 +4727,6 @@
 </table>
 </div>
 </div>
-<div class="sequence"><div id="seq_label_makePatElectronsPFlow" onClick="return toggleSequenceVisible('makePatElectronsPFlow')" class="sequence_label">Sequence <span class="title">makePatElectronsPFlow</span>
- <span id="seq_hidden_makePatElectronsPFlow" class="hidden">[2 children hidden]</span>
-</div>
-<div id="seq_makePatElectronsPFlow" class="sequence_area"><div id="module_electronMatchPFlow" class="module"><div class="module_label EDProducer" onClick="return toggleModuleVisible('mod_electronMatchPFlow')"><a name="electronMatchPFlow" class="title">electronMatchPFlow</a>
-</div>
-<div id="mod_electronMatchPFlow" class="module_area"><table class="module_table"><tr ><td class="label">Type</td>
-<td >EDProducer</td>
-</tr>
-<tr ><td class="label">Class</td>
-<td >MCMatcher</td>
-</tr>
-</table>
-<table class="pset"><tr class="pset-item"><td class="param-name">src</td>
-<td class="param-class">cms.InputTag</td>
-<td class="param-value-inputtag">"gsfElectrons"</td>
-</tr>
-<tr class="pset-item"><td class="param-name">maxDPtRel</td>
-<td class="param-class">cms.double</td>
-<td class="param-value-double">0.5</td>
-</tr>
-<tr class="pset-item"><td class="param-name">mcPdgId</td>
-<td class="param-class">cms.vint32[1]</td>
-<td ><ol class="pset-list"><li class="pset-list-item param-value-int">11</li>
-</ol>
-</td>
-</tr>
-<tr class="pset-item"><td class="param-name">mcStatus</td>
-<td class="param-class">cms.vint32[1]</td>
-<td ><ol class="pset-list"><li class="pset-list-item param-value-int">1</li>
-</ol>
-</td>
-</tr>
-<tr class="pset-item"><td class="param-name">resolveByMatchQuality</td>
-<td class="param-class">cms.bool</td>
-<td class="param-value-bool">False</td>
-</tr>
-<tr class="pset-item"><td class="param-name">maxDeltaR</td>
-<td class="param-class">cms.double</td>
-<td class="param-value-double">0.5</td>
-</tr>
-<tr class="pset-item"><td class="param-name">checkCharge</td>
-<td class="param-class">cms.bool</td>
-<td class="param-value-bool">True</td>
-</tr>
-<tr class="pset-item"><td class="param-name">resolveAmbiguities</td>
-<td class="param-class">cms.bool</td>
-<td class="param-value-bool">True</td>
-</tr>
-<tr class="pset-item"><td class="param-name">matched</td>
-<td class="param-class">cms.InputTag</td>
-<td class="param-value-inputtag">"genParticles"</td>
-</tr>
-</table>
-</div>
-</div>
 <div id="module_patElectronsPFlow" class="module"><div class="module_label EDProducer" onClick="return toggleModuleVisible('mod_patElectronsPFlow')"><a name="patElectronsPFlow" class="title">patElectronsPFlow</a>
 </div>
 <div id="mod_patElectronsPFlow" class="module_area"><table class="module_table"><tr ><td class="label">Type</td>
@@ -4947,7 +4892,7 @@
 </tr>
 <tr class="pset-item"><td class="param-name">genParticleMatch</td>
 <td class="param-class">cms.InputTag</td>
-<td class="param-value-inputtag">"electronMatchPFlow"</td>
+<td class="param-value-inputtag">""</td>
 </tr>
 <tr class="pset-item"><td class="param-name">beamLineSrc</td>
 <td class="param-class">cms.InputTag</td>
@@ -4955,7 +4900,7 @@
 </tr>
 <tr class="pset-item"><td class="param-name">addGenMatch</td>
 <td class="param-class">cms.bool</td>
-<td class="param-value-bool">True</td>
+<td class="param-value-bool">False</td>
 </tr>
 <tr class="pset-item"><td class="param-name">addResolutions</td>
 <td class="param-class">cms.bool</td>
@@ -4980,7 +4925,7 @@
 </tr>
 <tr class="pset-item"><td class="param-name">embedGenMatch</td>
 <td class="param-class">cms.bool</td>
-<td class="param-value-bool">True</td>
+<td class="param-value-bool">False</td>
 </tr>
 <tr class="pset-item"><td class="param-name">isolationValues</td>
 <td class="param-class">cms.PSet</td>
@@ -4998,63 +4943,6 @@
 </tr>
 </table>
 </td>
-</tr>
-</table>
-</div>
-</div>
-</div>
-</div>
-<div class="sequence"><div id="seq_label_makePatMuonsPFlow" onClick="return toggleSequenceVisible('makePatMuonsPFlow')" class="sequence_label">Sequence <span class="title">makePatMuonsPFlow</span>
- <span id="seq_hidden_makePatMuonsPFlow" class="hidden">[2 children hidden]</span>
-</div>
-<div id="seq_makePatMuonsPFlow" class="sequence_area"><div id="module_muonMatchPFlow" class="module"><div class="module_label EDProducer" onClick="return toggleModuleVisible('mod_muonMatchPFlow')"><a name="muonMatchPFlow" class="title">muonMatchPFlow</a>
-</div>
-<div id="mod_muonMatchPFlow" class="module_area"><table class="module_table"><tr ><td class="label">Type</td>
-<td >EDProducer</td>
-</tr>
-<tr ><td class="label">Class</td>
-<td >MCMatcher</td>
-</tr>
-</table>
-<table class="pset"><tr class="pset-item"><td class="param-name">src</td>
-<td class="param-class">cms.InputTag</td>
-<td class="param-value-inputtag">"pfIsolatedMuonsPFlow"</td>
-</tr>
-<tr class="pset-item"><td class="param-name">maxDPtRel</td>
-<td class="param-class">cms.double</td>
-<td class="param-value-double">0.5</td>
-</tr>
-<tr class="pset-item"><td class="param-name">mcPdgId</td>
-<td class="param-class">cms.vint32[1]</td>
-<td ><ol class="pset-list"><li class="pset-list-item param-value-int">13</li>
-</ol>
-</td>
-</tr>
-<tr class="pset-item"><td class="param-name">mcStatus</td>
-<td class="param-class">cms.vint32[1]</td>
-<td ><ol class="pset-list"><li class="pset-list-item param-value-int">1</li>
-</ol>
-</td>
-</tr>
-<tr class="pset-item"><td class="param-name">resolveByMatchQuality</td>
-<td class="param-class">cms.bool</td>
-<td class="param-value-bool">False</td>
-</tr>
-<tr class="pset-item"><td class="param-name">maxDeltaR</td>
-<td class="param-class">cms.double</td>
-<td class="param-value-double">0.5</td>
-</tr>
-<tr class="pset-item"><td class="param-name">checkCharge</td>
-<td class="param-class">cms.bool</td>
-<td class="param-value-bool">True</td>
-</tr>
-<tr class="pset-item"><td class="param-name">resolveAmbiguities</td>
-<td class="param-class">cms.bool</td>
-<td class="param-value-bool">True</td>
-</tr>
-<tr class="pset-item"><td class="param-name">matched</td>
-<td class="param-class">cms.InputTag</td>
-<td class="param-value-inputtag">"genParticles"</td>
 </tr>
 </table>
 </div>
@@ -5207,7 +5095,7 @@
 </tr>
 <tr class="pset-item"><td class="param-name">genParticleMatch</td>
 <td class="param-class">cms.InputTag</td>
-<td class="param-value-inputtag">"muonMatchPFlow"</td>
+<td class="param-value-inputtag">""</td>
 </tr>
 <tr class="pset-item"><td class="param-name">beamLineSrc</td>
 <td class="param-class">cms.InputTag</td>
@@ -5219,7 +5107,7 @@
 </tr>
 <tr class="pset-item"><td class="param-name">addGenMatch</td>
 <td class="param-class">cms.bool</td>
-<td class="param-value-bool">True</td>
+<td class="param-value-bool">False</td>
 </tr>
 <tr class="pset-item"><td class="param-name">addResolutions</td>
 <td class="param-class">cms.bool</td>
@@ -5256,7 +5144,7 @@
 </tr>
 <tr class="pset-item"><td class="param-name">embedGenMatch</td>
 <td class="param-class">cms.bool</td>
-<td class="param-value-bool">True</td>
+<td class="param-value-bool">False</td>
 </tr>
 <tr class="pset-item"><td class="param-name">tcMETMuonCorrs</td>
 <td class="param-class">cms.InputTag</td>
@@ -5288,8 +5176,6 @@
 <td class="param-value-bool">True</td>
 </tr>
 </table>
-</div>
-</div>
 </div>
 </div>
 <div id="module_pfAllNeutralHadronsPFlow" class="module"><div class="module_label EDFilter" onClick="return toggleModuleVisible('mod_pfAllNeutralHadronsPFlow')"><a name="pfAllNeutralHadronsPFlow" class="title">pfAllNeutralHadronsPFlow</a>
@@ -5646,167 +5532,6 @@
 </table>
 </div>
 </div>
-</div>
-</div>
-<div id="module_tauMatchPFlow" class="module"><div class="module_label EDProducer" onClick="return toggleModuleVisible('mod_tauMatchPFlow')"><a name="tauMatchPFlow" class="title">tauMatchPFlow</a>
-</div>
-<div id="mod_tauMatchPFlow" class="module_area"><table class="module_table"><tr ><td class="label">Type</td>
-<td >EDProducer</td>
-</tr>
-<tr ><td class="label">Class</td>
-<td >MCMatcher</td>
-</tr>
-</table>
-<table class="pset"><tr class="pset-item"><td class="param-name">src</td>
-<td class="param-class">cms.InputTag</td>
-<td class="param-value-inputtag">"pfTausPFlow"</td>
-</tr>
-<tr class="pset-item"><td class="param-name">maxDPtRel</td>
-<td class="param-class">cms.double</td>
-<td class="param-value-double">999.9</td>
-</tr>
-<tr class="pset-item"><td class="param-name">mcPdgId</td>
-<td class="param-class">cms.vint32[1]</td>
-<td ><ol class="pset-list"><li class="pset-list-item param-value-int">15</li>
-</ol>
-</td>
-</tr>
-<tr class="pset-item"><td class="param-name">mcStatus</td>
-<td class="param-class">cms.vint32[1]</td>
-<td ><ol class="pset-list"><li class="pset-list-item param-value-int">2</li>
-</ol>
-</td>
-</tr>
-<tr class="pset-item"><td class="param-name">resolveByMatchQuality</td>
-<td class="param-class">cms.bool</td>
-<td class="param-value-bool">False</td>
-</tr>
-<tr class="pset-item"><td class="param-name">maxDeltaR</td>
-<td class="param-class">cms.double</td>
-<td class="param-value-double">999.9</td>
-</tr>
-<tr class="pset-item"><td class="param-name">checkCharge</td>
-<td class="param-class">cms.bool</td>
-<td class="param-value-bool">True</td>
-</tr>
-<tr class="pset-item"><td class="param-name">resolveAmbiguities</td>
-<td class="param-class">cms.bool</td>
-<td class="param-value-bool">True</td>
-</tr>
-<tr class="pset-item"><td class="param-name">matched</td>
-<td class="param-class">cms.InputTag</td>
-<td class="param-value-inputtag">"genParticles"</td>
-</tr>
-</table>
-</div>
-</div>
-<div id="module_tauGenJetsPFlow" class="module"><div class="module_label EDProducer" onClick="return toggleModuleVisible('mod_tauGenJetsPFlow')"><a name="tauGenJetsPFlow" class="title">tauGenJetsPFlow</a>
-</div>
-<div id="mod_tauGenJetsPFlow" class="module_area"><table class="module_table"><tr ><td class="label">Type</td>
-<td >EDProducer</td>
-</tr>
-<tr ><td class="label">Class</td>
-<td >TauGenJetProducer</td>
-</tr>
-</table>
-<table class="pset"><tr class="pset-item"><td class="param-name">includeNeutrinos</td>
-<td class="param-class">cms.bool</td>
-<td class="param-value-bool">False</td>
-</tr>
-<tr class="pset-item"><td class="param-name">GenParticles</td>
-<td class="param-class">cms.InputTag</td>
-<td class="param-value-inputtag">"genParticles"</td>
-</tr>
-<tr class="pset-item"><td class="param-name">verbose</td>
-<td class="param-class">cms.untracked.bool</td>
-<td class="param-value-bool">False</td>
-</tr>
-</table>
-</div>
-</div>
-<div id="module_tauGenJetsSelectorAllHadronsPFlow" class="module"><div class="module_label EDFilter" onClick="return toggleModuleVisible('mod_tauGenJetsSelectorAllHadronsPFlow')"><a name="tauGenJetsSelectorAllHadronsPFlow" class="title">tauGenJetsSelectorAllHadronsPFlow</a>
-</div>
-<div id="mod_tauGenJetsSelectorAllHadronsPFlow" class="module_area"><table class="module_table"><tr ><td class="label">Type</td>
-<td >EDFilter</td>
-</tr>
-<tr ><td class="label">Class</td>
-<td >TauGenJetDecayModeSelector</td>
-</tr>
-</table>
-<table class="pset"><tr class="pset-item"><td class="param-name">filter</td>
-<td class="param-class">cms.bool</td>
-<td class="param-value-bool">False</td>
-</tr>
-<tr class="pset-item"><td class="param-name">src</td>
-<td class="param-class">cms.InputTag</td>
-<td class="param-value-inputtag">"tauGenJetsPFlow"</td>
-</tr>
-<tr class="pset-item"><td class="param-name">select</td>
-<td class="param-class">cms.vstring[8]</td>
-<td ><ol class="pset-list"><li class="pset-list-item param-value-string">oneProng0Pi0</li>
-<li class="pset-list-item param-value-string">oneProng1Pi0</li>
-<li class="pset-list-item param-value-string">oneProng2Pi0</li>
-<li class="pset-list-item param-value-string">oneProngOther</li>
-<li class="pset-list-item param-value-string">threeProng0Pi0</li>
-<li class="pset-list-item param-value-string">threeProng1Pi0</li>
-<li class="pset-list-item param-value-string">threeProngOther</li>
-<li class="pset-list-item param-value-string">rare</li>
-</ol>
-</td>
-</tr>
-</table>
-</div>
-</div>
-<div id="module_tauGenJetMatchPFlow" class="module"><div class="module_label EDProducer" onClick="return toggleModuleVisible('mod_tauGenJetMatchPFlow')"><a name="tauGenJetMatchPFlow" class="title">tauGenJetMatchPFlow</a>
-</div>
-<div id="mod_tauGenJetMatchPFlow" class="module_area"><table class="module_table"><tr ><td class="label">Type</td>
-<td >EDProducer</td>
-</tr>
-<tr ><td class="label">Class</td>
-<td >GenJetMatcher</td>
-</tr>
-</table>
-<table class="pset"><tr class="pset-item"><td class="param-name">src</td>
-<td class="param-class">cms.InputTag</td>
-<td class="param-value-inputtag">"pfTausPFlow"</td>
-</tr>
-<tr class="pset-item"><td class="param-name">maxDPtRel</td>
-<td class="param-class">cms.double</td>
-<td class="param-value-double">3.0</td>
-</tr>
-<tr class="pset-item"><td class="param-name">mcPdgId</td>
-<td class="param-class">cms.vint32[0]</td>
-<td ><ol class="pset-list"><li class="label">(empty)</li>
-</ol>
-</td>
-</tr>
-<tr class="pset-item"><td class="param-name">mcStatus</td>
-<td class="param-class">cms.vint32[0]</td>
-<td ><ol class="pset-list"><li class="label">(empty)</li>
-</ol>
-</td>
-</tr>
-<tr class="pset-item"><td class="param-name">resolveByMatchQuality</td>
-<td class="param-class">cms.bool</td>
-<td class="param-value-bool">False</td>
-</tr>
-<tr class="pset-item"><td class="param-name">maxDeltaR</td>
-<td class="param-class">cms.double</td>
-<td class="param-value-double">0.1</td>
-</tr>
-<tr class="pset-item"><td class="param-name">checkCharge</td>
-<td class="param-class">cms.bool</td>
-<td class="param-value-bool">False</td>
-</tr>
-<tr class="pset-item"><td class="param-name">resolveAmbiguities</td>
-<td class="param-class">cms.bool</td>
-<td class="param-value-bool">True</td>
-</tr>
-<tr class="pset-item"><td class="param-name">matched</td>
-<td class="param-class">cms.InputTag</td>
-<td class="param-value-inputtag">"tauGenJetsSelectorAllHadronsPFlow"</td>
-</tr>
-</table>
 </div>
 </div>
 <div class="sequence"><div id="seq_label_patShrinkingConePFTauDiscriminationPFlow" onClick="return toggleSequenceVisible('patShrinkingConePFTauDiscriminationPFlow')" class="sequence_label">Sequence <span class="title">patShrinkingConePFTauDiscriminationPFlow</span>
@@ -7813,11 +7538,11 @@
 </tr>
 <tr class="pset-item"><td class="param-name">addGenJetMatch</td>
 <td class="param-class">cms.bool</td>
-<td class="param-value-bool">True</td>
+<td class="param-value-bool">False</td>
 </tr>
 <tr class="pset-item"><td class="param-name">embedGenJetMatch</td>
 <td class="param-class">cms.bool</td>
-<td class="param-value-bool">True</td>
+<td class="param-value-bool">False</td>
 </tr>
 <tr class="pset-item"><td class="param-name">embedLeadTrack</td>
 <td class="param-class">cms.bool</td>
@@ -7922,7 +7647,7 @@
 </tr>
 <tr class="pset-item"><td class="param-name">genJetMatch</td>
 <td class="param-class">cms.InputTag</td>
-<td class="param-value-inputtag">"tauGenJetMatchPFlow"</td>
+<td class="param-value-inputtag">""</td>
 </tr>
 <tr class="pset-item"><td class="param-name">embedIsolationPFCands</td>
 <td class="param-class">cms.bool</td>
@@ -8015,11 +7740,11 @@
 </tr>
 <tr class="pset-item"><td class="param-name">genParticleMatch</td>
 <td class="param-class">cms.InputTag</td>
-<td class="param-value-inputtag">"tauMatchPFlow"</td>
+<td class="param-value-inputtag">""</td>
 </tr>
 <tr class="pset-item"><td class="param-name">addGenMatch</td>
 <td class="param-class">cms.bool</td>
-<td class="param-value-bool">True</td>
+<td class="param-value-bool">False</td>
 </tr>
 <tr class="pset-item"><td class="param-name">addResolutions</td>
 <td class="param-class">cms.bool</td>
@@ -8064,63 +7789,11 @@
 </tr>
 <tr class="pset-item"><td class="param-name">embedGenMatch</td>
 <td class="param-class">cms.bool</td>
-<td class="param-value-bool">True</td>
+<td class="param-value-bool">False</td>
 </tr>
 <tr class="pset-item"><td class="param-name">embedLeadPFNeutralCand</td>
 <td class="param-class">cms.bool</td>
 <td class="param-value-bool">False</td>
-</tr>
-</table>
-</div>
-</div>
-<div id="module_photonMatchPFlow" class="module"><div class="module_label EDProducer" onClick="return toggleModuleVisible('mod_photonMatchPFlow')"><a name="photonMatchPFlow" class="title">photonMatchPFlow</a>
-</div>
-<div id="mod_photonMatchPFlow" class="module_area"><table class="module_table"><tr ><td class="label">Type</td>
-<td >EDProducer</td>
-</tr>
-<tr ><td class="label">Class</td>
-<td >MCMatcher</td>
-</tr>
-</table>
-<table class="pset"><tr class="pset-item"><td class="param-name">src</td>
-<td class="param-class">cms.InputTag</td>
-<td class="param-value-inputtag">"photons"</td>
-</tr>
-<tr class="pset-item"><td class="param-name">maxDPtRel</td>
-<td class="param-class">cms.double</td>
-<td class="param-value-double">1.0</td>
-</tr>
-<tr class="pset-item"><td class="param-name">mcPdgId</td>
-<td class="param-class">cms.vint32[1]</td>
-<td ><ol class="pset-list"><li class="pset-list-item param-value-int">22</li>
-</ol>
-</td>
-</tr>
-<tr class="pset-item"><td class="param-name">mcStatus</td>
-<td class="param-class">cms.vint32[1]</td>
-<td ><ol class="pset-list"><li class="pset-list-item param-value-int">1</li>
-</ol>
-</td>
-</tr>
-<tr class="pset-item"><td class="param-name">resolveByMatchQuality</td>
-<td class="param-class">cms.bool</td>
-<td class="param-value-bool">False</td>
-</tr>
-<tr class="pset-item"><td class="param-name">maxDeltaR</td>
-<td class="param-class">cms.double</td>
-<td class="param-value-double">0.2</td>
-</tr>
-<tr class="pset-item"><td class="param-name">checkCharge</td>
-<td class="param-class">cms.bool</td>
-<td class="param-value-bool">True</td>
-</tr>
-<tr class="pset-item"><td class="param-name">resolveAmbiguities</td>
-<td class="param-class">cms.bool</td>
-<td class="param-value-bool">True</td>
-</tr>
-<tr class="pset-item"><td class="param-name">matched</td>
-<td class="param-class">cms.InputTag</td>
-<td class="param-value-inputtag">"genParticles"</td>
 </tr>
 </table>
 </div>
@@ -8275,10 +7948,11 @@
 <td class="param-value-inputtag">"offlinePrimaryVertices"</td>
 </tr>
 <tr class="pset-item"><td class="param-name">levels</td>
-<td class="param-class">cms.vstring[3]</td>
+<td class="param-class">cms.vstring[4]</td>
 <td ><ol class="pset-list"><li class="pset-list-item param-value-string">L1FastJet</li>
 <li class="pset-list-item param-value-string">L2Relative</li>
 <li class="pset-list-item param-value-string">L3Absolute</li>
+<li class="pset-list-item param-value-string">L2L3Residual</li>
 </ol>
 </td>
 </tr>
@@ -8941,598 +8615,6 @@
 </table>
 </div>
 </div>
-<div id="module_patJetPartonMatchPFlow" class="module"><div class="module_label EDProducer" onClick="return toggleModuleVisible('mod_patJetPartonMatchPFlow')"><a name="patJetPartonMatchPFlow" class="title">patJetPartonMatchPFlow</a>
-</div>
-<div id="mod_patJetPartonMatchPFlow" class="module_area"><table class="module_table"><tr ><td class="label">Type</td>
-<td >EDProducer</td>
-</tr>
-<tr ><td class="label">Class</td>
-<td >MCMatcher</td>
-</tr>
-</table>
-<table class="pset"><tr class="pset-item"><td class="param-name">src</td>
-<td class="param-class">cms.InputTag</td>
-<td class="param-value-inputtag">"pfNoTauPFlow"</td>
-</tr>
-<tr class="pset-item"><td class="param-name">maxDPtRel</td>
-<td class="param-class">cms.double</td>
-<td class="param-value-double">3.0</td>
-</tr>
-<tr class="pset-item"><td class="param-name">mcPdgId</td>
-<td class="param-class">cms.vint32[6]</td>
-<td ><ol class="pset-list"><li class="pset-list-item param-value-int">1</li>
-<li class="pset-list-item param-value-int">2</li>
-<li class="pset-list-item param-value-int">3</li>
-<li class="pset-list-item param-value-int">4</li>
-<li class="pset-list-item param-value-int">5</li>
-<li class="pset-list-item param-value-int">21</li>
-</ol>
-</td>
-</tr>
-<tr class="pset-item"><td class="param-name">mcStatus</td>
-<td class="param-class">cms.vint32[1]</td>
-<td ><ol class="pset-list"><li class="pset-list-item param-value-int">3</li>
-</ol>
-</td>
-</tr>
-<tr class="pset-item"><td class="param-name">resolveByMatchQuality</td>
-<td class="param-class">cms.bool</td>
-<td class="param-value-bool">False</td>
-</tr>
-<tr class="pset-item"><td class="param-name">maxDeltaR</td>
-<td class="param-class">cms.double</td>
-<td class="param-value-double">0.4</td>
-</tr>
-<tr class="pset-item"><td class="param-name">checkCharge</td>
-<td class="param-class">cms.bool</td>
-<td class="param-value-bool">False</td>
-</tr>
-<tr class="pset-item"><td class="param-name">resolveAmbiguities</td>
-<td class="param-class">cms.bool</td>
-<td class="param-value-bool">True</td>
-</tr>
-<tr class="pset-item"><td class="param-name">matched</td>
-<td class="param-class">cms.InputTag</td>
-<td class="param-value-inputtag">"genParticles"</td>
-</tr>
-</table>
-</div>
-</div>
-<div class="sequence"><div id="seq_label_genForPF2PATSequence" onClick="return toggleSequenceVisible('genForPF2PATSequence')" class="sequence_label">Sequence <span class="title">genForPF2PATSequence</span>
- <span id="seq_hidden_genForPF2PATSequence" class="hidden">[4 children hidden]</span>
-</div>
-<div id="seq_genForPF2PATSequence" class="sequence_area"><div id="module_genParticlesForJetsNoNu" class="module"><div class="module_label EDProducer" onClick="return toggleModuleVisible('mod_genParticlesForJetsNoNu')"><a name="genParticlesForJetsNoNu" class="title">genParticlesForJetsNoNu</a>
-</div>
-<div id="mod_genParticlesForJetsNoNu" class="module_area"><table class="module_table"><tr ><td class="label">Type</td>
-<td >EDProducer</td>
-</tr>
-<tr ><td class="label">Class</td>
-<td >InputGenJetsParticleSelector</td>
-</tr>
-</table>
-<table class="pset"><tr class="pset-item"><td class="param-name">src</td>
-<td class="param-class">cms.InputTag</td>
-<td class="param-value-inputtag">"genParticles"</td>
-</tr>
-<tr class="pset-item"><td class="param-name">ignoreParticleIDs</td>
-<td class="param-class">cms.vuint32[19]</td>
-<td ><ol class="pset-list"><li class="pset-list-item param-value-int">1000022</li>
-<li class="pset-list-item param-value-int">1000012</li>
-<li class="pset-list-item param-value-int">1000014</li>
-<li class="pset-list-item param-value-int">1000016</li>
-<li class="pset-list-item param-value-int">2000012</li>
-<li class="pset-list-item param-value-int">2000014</li>
-<li class="pset-list-item param-value-int">2000016</li>
-<li class="pset-list-item param-value-int">1000039</li>
-<li class="pset-list-item param-value-int">5100039</li>
-<li class="pset-list-item param-value-int">4000012</li>
-<li class="pset-list-item param-value-int">4000014</li>
-<li class="pset-list-item param-value-int">4000016</li>
-<li class="pset-list-item param-value-int">9900012</li>
-<li class="pset-list-item param-value-int">9900014</li>
-<li class="pset-list-item param-value-int">9900016</li>
-<li class="pset-list-item param-value-int">39</li>
-<li class="pset-list-item param-value-int">12</li>
-<li class="pset-list-item param-value-int">14</li>
-<li class="pset-list-item param-value-int">16</li>
-</ol>
-</td>
-</tr>
-<tr class="pset-item"><td class="param-name">partonicFinalState</td>
-<td class="param-class">cms.bool</td>
-<td class="param-value-bool">False</td>
-</tr>
-<tr class="pset-item"><td class="param-name">excludeResonances</td>
-<td class="param-class">cms.bool</td>
-<td class="param-value-bool">True</td>
-</tr>
-<tr class="pset-item"><td class="param-name">excludeFromResonancePids</td>
-<td class="param-class">cms.vuint32[4]</td>
-<td ><ol class="pset-list"><li class="pset-list-item param-value-int">12</li>
-<li class="pset-list-item param-value-int">13</li>
-<li class="pset-list-item param-value-int">14</li>
-<li class="pset-list-item param-value-int">16</li>
-</ol>
-</td>
-</tr>
-<tr class="pset-item"><td class="param-name">tausAsJets</td>
-<td class="param-class">cms.bool</td>
-<td class="param-value-bool">False</td>
-</tr>
-</table>
-</div>
-</div>
-<div id="module_iterativeCone5GenJetsNoNu" class="module"><div class="module_label EDProducer" onClick="return toggleModuleVisible('mod_iterativeCone5GenJetsNoNu')"><a name="iterativeCone5GenJetsNoNu" class="title">iterativeCone5GenJetsNoNu</a>
-</div>
-<div id="mod_iterativeCone5GenJetsNoNu" class="module_area"><table class="module_table"><tr ><td class="label">Type</td>
-<td >EDProducer</td>
-</tr>
-<tr ><td class="label">Class</td>
-<td >FastjetJetProducer</td>
-</tr>
-</table>
-<table class="pset"><tr class="pset-item"><td class="param-name">Active_Area_Repeats</td>
-<td class="param-class">cms.int32</td>
-<td class="param-value-int">5</td>
-</tr>
-<tr class="pset-item"><td class="param-name">doAreaFastjet</td>
-<td class="param-class">cms.bool</td>
-<td class="param-value-bool">False</td>
-</tr>
-<tr class="pset-item"><td class="param-name">Ghost_EtaMax</td>
-<td class="param-class">cms.double</td>
-<td class="param-value-double">6.0</td>
-</tr>
-<tr class="pset-item"><td class="param-name">maxBadHcalCells</td>
-<td class="param-class">cms.uint32</td>
-<td class="param-value-int">9999999</td>
-</tr>
-<tr class="pset-item"><td class="param-name">maxRecoveredEcalCells</td>
-<td class="param-class">cms.uint32</td>
-<td class="param-value-int">9999999</td>
-</tr>
-<tr class="pset-item"><td class="param-name">jetType</td>
-<td class="param-class">cms.string</td>
-<td class="param-value-string">'GenJet'</td>
-</tr>
-<tr class="pset-item"><td class="param-name">minSeed</td>
-<td class="param-class">cms.uint32</td>
-<td class="param-value-int">14327</td>
-</tr>
-<tr class="pset-item"><td class="param-name">doRhoFastjet</td>
-<td class="param-class">cms.bool</td>
-<td class="param-value-bool">False</td>
-</tr>
-<tr class="pset-item"><td class="param-name">jetAlgorithm</td>
-<td class="param-class">cms.string</td>
-<td class="param-value-string">'IterativeCone'</td>
-</tr>
-<tr class="pset-item"><td class="param-name">nSigmaPU</td>
-<td class="param-class">cms.double</td>
-<td class="param-value-double">1.0</td>
-</tr>
-<tr class="pset-item"><td class="param-name">GhostArea</td>
-<td class="param-class">cms.double</td>
-<td class="param-value-double">0.01</td>
-</tr>
-<tr class="pset-item"><td class="param-name">Rho_EtaMax</td>
-<td class="param-class">cms.double</td>
-<td class="param-value-double">4.5</td>
-</tr>
-<tr class="pset-item"><td class="param-name">maxBadEcalCells</td>
-<td class="param-class">cms.uint32</td>
-<td class="param-value-int">9999999</td>
-</tr>
-<tr class="pset-item"><td class="param-name">useDeterministicSeed</td>
-<td class="param-class">cms.bool</td>
-<td class="param-value-bool">True</td>
-</tr>
-<tr class="pset-item"><td class="param-name">doPVCorrection</td>
-<td class="param-class">cms.bool</td>
-<td class="param-value-bool">False</td>
-</tr>
-<tr class="pset-item"><td class="param-name">maxRecoveredHcalCells</td>
-<td class="param-class">cms.uint32</td>
-<td class="param-value-int">9999999</td>
-</tr>
-<tr class="pset-item"><td class="param-name">rParam</td>
-<td class="param-class">cms.double</td>
-<td class="param-value-double">0.5</td>
-</tr>
-<tr class="pset-item"><td class="param-name">maxProblematicHcalCells</td>
-<td class="param-class">cms.uint32</td>
-<td class="param-value-int">9999999</td>
-</tr>
-<tr class="pset-item"><td class="param-name">src</td>
-<td class="param-class">cms.InputTag</td>
-<td class="param-value-inputtag">"genParticlesForJetsNoNu"</td>
-</tr>
-<tr class="pset-item"><td class="param-name">inputEtMin</td>
-<td class="param-class">cms.double</td>
-<td class="param-value-double">0.0</td>
-</tr>
-<tr class="pset-item"><td class="param-name">srcPVs</td>
-<td class="param-class">cms.InputTag</td>
-<td class="param-value-inputtag">"offlinePrimaryVertices"</td>
-</tr>
-<tr class="pset-item"><td class="param-name">jetPtMin</td>
-<td class="param-class">cms.double</td>
-<td class="param-value-double">3.0</td>
-</tr>
-<tr class="pset-item"><td class="param-name">radiusPU</td>
-<td class="param-class">cms.double</td>
-<td class="param-value-double">0.5</td>
-</tr>
-<tr class="pset-item"><td class="param-name">maxProblematicEcalCells</td>
-<td class="param-class">cms.uint32</td>
-<td class="param-value-int">9999999</td>
-</tr>
-<tr class="pset-item"><td class="param-name">doPUOffsetCorr</td>
-<td class="param-class">cms.bool</td>
-<td class="param-value-bool">False</td>
-</tr>
-<tr class="pset-item"><td class="param-name">inputEMin</td>
-<td class="param-class">cms.double</td>
-<td class="param-value-double">0.0</td>
-</tr>
-</table>
-</div>
-</div>
-<div id="module_ak5GenJetsNoNu" class="module"><div class="module_label EDProducer" onClick="return toggleModuleVisible('mod_ak5GenJetsNoNu')"><a name="ak5GenJetsNoNu" class="title">ak5GenJetsNoNu</a>
-</div>
-<div id="mod_ak5GenJetsNoNu" class="module_area"><table class="module_table"><tr ><td class="label">Type</td>
-<td >EDProducer</td>
-</tr>
-<tr ><td class="label">Class</td>
-<td >FastjetJetProducer</td>
-</tr>
-</table>
-<table class="pset"><tr class="pset-item"><td class="param-name">Active_Area_Repeats</td>
-<td class="param-class">cms.int32</td>
-<td class="param-value-int">5</td>
-</tr>
-<tr class="pset-item"><td class="param-name">doAreaFastjet</td>
-<td class="param-class">cms.bool</td>
-<td class="param-value-bool">False</td>
-</tr>
-<tr class="pset-item"><td class="param-name">Ghost_EtaMax</td>
-<td class="param-class">cms.double</td>
-<td class="param-value-double">6.0</td>
-</tr>
-<tr class="pset-item"><td class="param-name">maxBadHcalCells</td>
-<td class="param-class">cms.uint32</td>
-<td class="param-value-int">9999999</td>
-</tr>
-<tr class="pset-item"><td class="param-name">maxRecoveredEcalCells</td>
-<td class="param-class">cms.uint32</td>
-<td class="param-value-int">9999999</td>
-</tr>
-<tr class="pset-item"><td class="param-name">jetType</td>
-<td class="param-class">cms.string</td>
-<td class="param-value-string">'GenJet'</td>
-</tr>
-<tr class="pset-item"><td class="param-name">minSeed</td>
-<td class="param-class">cms.uint32</td>
-<td class="param-value-int">14327</td>
-</tr>
-<tr class="pset-item"><td class="param-name">doRhoFastjet</td>
-<td class="param-class">cms.bool</td>
-<td class="param-value-bool">False</td>
-</tr>
-<tr class="pset-item"><td class="param-name">jetAlgorithm</td>
-<td class="param-class">cms.string</td>
-<td class="param-value-string">'AntiKt'</td>
-</tr>
-<tr class="pset-item"><td class="param-name">nSigmaPU</td>
-<td class="param-class">cms.double</td>
-<td class="param-value-double">1.0</td>
-</tr>
-<tr class="pset-item"><td class="param-name">GhostArea</td>
-<td class="param-class">cms.double</td>
-<td class="param-value-double">0.01</td>
-</tr>
-<tr class="pset-item"><td class="param-name">Rho_EtaMax</td>
-<td class="param-class">cms.double</td>
-<td class="param-value-double">4.5</td>
-</tr>
-<tr class="pset-item"><td class="param-name">maxBadEcalCells</td>
-<td class="param-class">cms.uint32</td>
-<td class="param-value-int">9999999</td>
-</tr>
-<tr class="pset-item"><td class="param-name">useDeterministicSeed</td>
-<td class="param-class">cms.bool</td>
-<td class="param-value-bool">True</td>
-</tr>
-<tr class="pset-item"><td class="param-name">doPVCorrection</td>
-<td class="param-class">cms.bool</td>
-<td class="param-value-bool">False</td>
-</tr>
-<tr class="pset-item"><td class="param-name">maxRecoveredHcalCells</td>
-<td class="param-class">cms.uint32</td>
-<td class="param-value-int">9999999</td>
-</tr>
-<tr class="pset-item"><td class="param-name">rParam</td>
-<td class="param-class">cms.double</td>
-<td class="param-value-double">0.5</td>
-</tr>
-<tr class="pset-item"><td class="param-name">maxProblematicHcalCells</td>
-<td class="param-class">cms.uint32</td>
-<td class="param-value-int">9999999</td>
-</tr>
-<tr class="pset-item"><td class="param-name">src</td>
-<td class="param-class">cms.InputTag</td>
-<td class="param-value-inputtag">"genParticlesForJetsNoNu"</td>
-</tr>
-<tr class="pset-item"><td class="param-name">inputEtMin</td>
-<td class="param-class">cms.double</td>
-<td class="param-value-double">0.0</td>
-</tr>
-<tr class="pset-item"><td class="param-name">srcPVs</td>
-<td class="param-class">cms.InputTag</td>
-<td class="param-value-inputtag">"offlinePrimaryVertices"</td>
-</tr>
-<tr class="pset-item"><td class="param-name">jetPtMin</td>
-<td class="param-class">cms.double</td>
-<td class="param-value-double">3.0</td>
-</tr>
-<tr class="pset-item"><td class="param-name">radiusPU</td>
-<td class="param-class">cms.double</td>
-<td class="param-value-double">0.5</td>
-</tr>
-<tr class="pset-item"><td class="param-name">maxProblematicEcalCells</td>
-<td class="param-class">cms.uint32</td>
-<td class="param-value-int">9999999</td>
-</tr>
-<tr class="pset-item"><td class="param-name">doPUOffsetCorr</td>
-<td class="param-class">cms.bool</td>
-<td class="param-value-bool">False</td>
-</tr>
-<tr class="pset-item"><td class="param-name">inputEMin</td>
-<td class="param-class">cms.double</td>
-<td class="param-value-double">0.0</td>
-</tr>
-</table>
-</div>
-</div>
-<div id="module_ak7GenJetsNoNu" class="module"><div class="module_label EDProducer" onClick="return toggleModuleVisible('mod_ak7GenJetsNoNu')"><a name="ak7GenJetsNoNu" class="title">ak7GenJetsNoNu</a>
-</div>
-<div id="mod_ak7GenJetsNoNu" class="module_area"><table class="module_table"><tr ><td class="label">Type</td>
-<td >EDProducer</td>
-</tr>
-<tr ><td class="label">Class</td>
-<td >FastjetJetProducer</td>
-</tr>
-</table>
-<table class="pset"><tr class="pset-item"><td class="param-name">Active_Area_Repeats</td>
-<td class="param-class">cms.int32</td>
-<td class="param-value-int">5</td>
-</tr>
-<tr class="pset-item"><td class="param-name">doAreaFastjet</td>
-<td class="param-class">cms.bool</td>
-<td class="param-value-bool">False</td>
-</tr>
-<tr class="pset-item"><td class="param-name">Ghost_EtaMax</td>
-<td class="param-class">cms.double</td>
-<td class="param-value-double">6.0</td>
-</tr>
-<tr class="pset-item"><td class="param-name">maxBadHcalCells</td>
-<td class="param-class">cms.uint32</td>
-<td class="param-value-int">9999999</td>
-</tr>
-<tr class="pset-item"><td class="param-name">maxRecoveredEcalCells</td>
-<td class="param-class">cms.uint32</td>
-<td class="param-value-int">9999999</td>
-</tr>
-<tr class="pset-item"><td class="param-name">jetType</td>
-<td class="param-class">cms.string</td>
-<td class="param-value-string">'GenJet'</td>
-</tr>
-<tr class="pset-item"><td class="param-name">minSeed</td>
-<td class="param-class">cms.uint32</td>
-<td class="param-value-int">14327</td>
-</tr>
-<tr class="pset-item"><td class="param-name">doRhoFastjet</td>
-<td class="param-class">cms.bool</td>
-<td class="param-value-bool">False</td>
-</tr>
-<tr class="pset-item"><td class="param-name">jetAlgorithm</td>
-<td class="param-class">cms.string</td>
-<td class="param-value-string">'AntiKt'</td>
-</tr>
-<tr class="pset-item"><td class="param-name">nSigmaPU</td>
-<td class="param-class">cms.double</td>
-<td class="param-value-double">1.0</td>
-</tr>
-<tr class="pset-item"><td class="param-name">GhostArea</td>
-<td class="param-class">cms.double</td>
-<td class="param-value-double">0.01</td>
-</tr>
-<tr class="pset-item"><td class="param-name">Rho_EtaMax</td>
-<td class="param-class">cms.double</td>
-<td class="param-value-double">4.5</td>
-</tr>
-<tr class="pset-item"><td class="param-name">maxBadEcalCells</td>
-<td class="param-class">cms.uint32</td>
-<td class="param-value-int">9999999</td>
-</tr>
-<tr class="pset-item"><td class="param-name">useDeterministicSeed</td>
-<td class="param-class">cms.bool</td>
-<td class="param-value-bool">True</td>
-</tr>
-<tr class="pset-item"><td class="param-name">doPVCorrection</td>
-<td class="param-class">cms.bool</td>
-<td class="param-value-bool">False</td>
-</tr>
-<tr class="pset-item"><td class="param-name">maxRecoveredHcalCells</td>
-<td class="param-class">cms.uint32</td>
-<td class="param-value-int">9999999</td>
-</tr>
-<tr class="pset-item"><td class="param-name">rParam</td>
-<td class="param-class">cms.double</td>
-<td class="param-value-double">0.7</td>
-</tr>
-<tr class="pset-item"><td class="param-name">maxProblematicHcalCells</td>
-<td class="param-class">cms.uint32</td>
-<td class="param-value-int">9999999</td>
-</tr>
-<tr class="pset-item"><td class="param-name">src</td>
-<td class="param-class">cms.InputTag</td>
-<td class="param-value-inputtag">"genParticlesForJetsNoNu"</td>
-</tr>
-<tr class="pset-item"><td class="param-name">inputEtMin</td>
-<td class="param-class">cms.double</td>
-<td class="param-value-double">0.0</td>
-</tr>
-<tr class="pset-item"><td class="param-name">srcPVs</td>
-<td class="param-class">cms.InputTag</td>
-<td class="param-value-inputtag">"offlinePrimaryVertices"</td>
-</tr>
-<tr class="pset-item"><td class="param-name">jetPtMin</td>
-<td class="param-class">cms.double</td>
-<td class="param-value-double">3.0</td>
-</tr>
-<tr class="pset-item"><td class="param-name">radiusPU</td>
-<td class="param-class">cms.double</td>
-<td class="param-value-double">0.5</td>
-</tr>
-<tr class="pset-item"><td class="param-name">maxProblematicEcalCells</td>
-<td class="param-class">cms.uint32</td>
-<td class="param-value-int">9999999</td>
-</tr>
-<tr class="pset-item"><td class="param-name">doPUOffsetCorr</td>
-<td class="param-class">cms.bool</td>
-<td class="param-value-bool">False</td>
-</tr>
-<tr class="pset-item"><td class="param-name">inputEMin</td>
-<td class="param-class">cms.double</td>
-<td class="param-value-double">0.0</td>
-</tr>
-</table>
-</div>
-</div>
-</div>
-</div>
-<div id="module_patJetGenJetMatchPFlow" class="module"><div class="module_label EDProducer" onClick="return toggleModuleVisible('mod_patJetGenJetMatchPFlow')"><a name="patJetGenJetMatchPFlow" class="title">patJetGenJetMatchPFlow</a>
-</div>
-<div id="mod_patJetGenJetMatchPFlow" class="module_area"><table class="module_table"><tr ><td class="label">Type</td>
-<td >EDProducer</td>
-</tr>
-<tr ><td class="label">Class</td>
-<td >GenJetMatcher</td>
-</tr>
-</table>
-<table class="pset"><tr class="pset-item"><td class="param-name">src</td>
-<td class="param-class">cms.InputTag</td>
-<td class="param-value-inputtag">"pfNoTauPFlow"</td>
-</tr>
-<tr class="pset-item"><td class="param-name">maxDPtRel</td>
-<td class="param-class">cms.double</td>
-<td class="param-value-double">3.0</td>
-</tr>
-<tr class="pset-item"><td class="param-name">mcPdgId</td>
-<td class="param-class">cms.vint32[0]</td>
-<td ><ol class="pset-list"><li class="label">(empty)</li>
-</ol>
-</td>
-</tr>
-<tr class="pset-item"><td class="param-name">mcStatus</td>
-<td class="param-class">cms.vint32[0]</td>
-<td ><ol class="pset-list"><li class="label">(empty)</li>
-</ol>
-</td>
-</tr>
-<tr class="pset-item"><td class="param-name">resolveByMatchQuality</td>
-<td class="param-class">cms.bool</td>
-<td class="param-value-bool">False</td>
-</tr>
-<tr class="pset-item"><td class="param-name">maxDeltaR</td>
-<td class="param-class">cms.double</td>
-<td class="param-value-double">0.4</td>
-</tr>
-<tr class="pset-item"><td class="param-name">checkCharge</td>
-<td class="param-class">cms.bool</td>
-<td class="param-value-bool">False</td>
-</tr>
-<tr class="pset-item"><td class="param-name">resolveAmbiguities</td>
-<td class="param-class">cms.bool</td>
-<td class="param-value-bool">True</td>
-</tr>
-<tr class="pset-item"><td class="param-name">matched</td>
-<td class="param-class">cms.InputTag</td>
-<td class="param-value-inputtag">"ak5GenJetsNoNu"</td>
-</tr>
-</table>
-</div>
-</div>
-<div class="sequence"><div id="seq_label_patJetFlavourIdPFlow" onClick="return toggleSequenceVisible('patJetFlavourIdPFlow')" class="sequence_label">Sequence <span class="title">patJetFlavourIdPFlow</span>
- <span id="seq_hidden_patJetFlavourIdPFlow" class="hidden">[3 children hidden]</span>
-</div>
-<div id="seq_patJetFlavourIdPFlow" class="sequence_area"><div id="module_patJetPartonsPFlow" class="module"><div class="module_label EDProducer" onClick="return toggleModuleVisible('mod_patJetPartonsPFlow')"><a name="patJetPartonsPFlow" class="title">patJetPartonsPFlow</a>
-</div>
-<div id="mod_patJetPartonsPFlow" class="module_area"><table class="module_table"><tr ><td class="label">Type</td>
-<td >EDProducer</td>
-</tr>
-<tr ><td class="label">Class</td>
-<td >PartonSelector</td>
-</tr>
-</table>
-<table class="pset"><tr class="pset-item"><td class="param-name">src</td>
-<td class="param-class">cms.InputTag</td>
-<td class="param-value-inputtag">"genParticles"</td>
-</tr>
-<tr class="pset-item"><td class="param-name">withLeptons</td>
-<td class="param-class">cms.bool</td>
-<td class="param-value-bool">False</td>
-</tr>
-</table>
-</div>
-</div>
-<div id="module_patJetPartonAssociationPFlow" class="module"><div class="module_label EDProducer" onClick="return toggleModuleVisible('mod_patJetPartonAssociationPFlow')"><a name="patJetPartonAssociationPFlow" class="title">patJetPartonAssociationPFlow</a>
-</div>
-<div id="mod_patJetPartonAssociationPFlow" class="module_area"><table class="module_table"><tr ><td class="label">Type</td>
-<td >EDProducer</td>
-</tr>
-<tr ><td class="label">Class</td>
-<td >JetPartonMatcher</td>
-</tr>
-</table>
-<table class="pset"><tr class="pset-item"><td class="param-name">jets</td>
-<td class="param-class">cms.InputTag</td>
-<td class="param-value-inputtag">"pfNoTauPFlow"</td>
-</tr>
-<tr class="pset-item"><td class="param-name">coneSizeToAssociate</td>
-<td class="param-class">cms.double</td>
-<td class="param-value-double">0.3</td>
-</tr>
-<tr class="pset-item"><td class="param-name">partons</td>
-<td class="param-class">cms.InputTag</td>
-<td class="param-value-inputtag">"patJetPartonsPFlow"</td>
-</tr>
-</table>
-</div>
-</div>
-<div id="module_patJetFlavourAssociationPFlow" class="module"><div class="module_label EDProducer" onClick="return toggleModuleVisible('mod_patJetFlavourAssociationPFlow')"><a name="patJetFlavourAssociationPFlow" class="title">patJetFlavourAssociationPFlow</a>
-</div>
-<div id="mod_patJetFlavourAssociationPFlow" class="module_area"><table class="module_table"><tr ><td class="label">Type</td>
-<td >EDProducer</td>
-</tr>
-<tr ><td class="label">Class</td>
-<td >JetFlavourIdentifier</td>
-</tr>
-</table>
-<table class="pset"><tr class="pset-item"><td class="param-name">srcByReference</td>
-<td class="param-class">cms.InputTag</td>
-<td class="param-value-inputtag">"patJetPartonAssociationPFlow"</td>
-</tr>
-<tr class="pset-item"><td class="param-name">physicsDefinition</td>
-<td class="param-class">cms.bool</td>
-<td class="param-value-bool">False</td>
-</tr>
-</table>
-</div>
-</div>
-</div>
-</div>
 <div id="module_patJetsPFlow" class="module"><div class="module_label EDProducer" onClick="return toggleModuleVisible('mod_patJetsPFlow')"><a name="patJetsPFlow" class="title">patJetsPFlow</a>
 </div>
 <div id="mod_patJetsPFlow" class="module_area"><table class="module_table"><tr ><td class="label">Type</td>
@@ -9548,7 +8630,7 @@
 </tr>
 <tr class="pset-item"><td class="param-name">addGenJetMatch</td>
 <td class="param-class">cms.bool</td>
-<td class="param-value-bool">True</td>
+<td class="param-value-bool">False</td>
 </tr>
 <tr class="pset-item"><td class="param-name">embedPFCandidates</td>
 <td class="param-class">cms.bool</td>
@@ -9568,11 +8650,11 @@
 </tr>
 <tr class="pset-item"><td class="param-name">addGenPartonMatch</td>
 <td class="param-class">cms.bool</td>
-<td class="param-value-bool">True</td>
+<td class="param-value-bool">False</td>
 </tr>
 <tr class="pset-item"><td class="param-name">JetPartonMapSource</td>
 <td class="param-class">cms.InputTag</td>
-<td class="param-value-inputtag">"patJetFlavourAssociationPFlow"</td>
+<td class="param-value-inputtag">""</td>
 </tr>
 <tr class="pset-item"><td class="param-name">resolutions</td>
 <td class="param-class">cms.PSet</td>
@@ -9580,7 +8662,7 @@
 </tr>
 <tr class="pset-item"><td class="param-name">genPartonMatch</td>
 <td class="param-class">cms.InputTag</td>
-<td class="param-value-inputtag">"patJetPartonMatchPFlow"</td>
+<td class="param-value-inputtag">""</td>
 </tr>
 <tr class="pset-item"><td class="param-name">addTagInfos</td>
 <td class="param-class">cms.bool</td>
@@ -9592,7 +8674,7 @@
 </tr>
 <tr class="pset-item"><td class="param-name">embedGenPartonMatch</td>
 <td class="param-class">cms.bool</td>
-<td class="param-value-bool">True</td>
+<td class="param-value-bool">False</td>
 </tr>
 <tr class="pset-item"><td class="param-name">efficiencies</td>
 <td class="param-class">cms.PSet</td>
@@ -9600,7 +8682,7 @@
 </tr>
 <tr class="pset-item"><td class="param-name">genJetMatch</td>
 <td class="param-class">cms.InputTag</td>
-<td class="param-value-inputtag">"patJetGenJetMatchPFlow"</td>
+<td class="param-value-inputtag">""</td>
 </tr>
 <tr class="pset-item"><td class="param-name">userData</td>
 <td class="param-class">cms.PSet</td>
@@ -9719,7 +8801,7 @@
 </tr>
 <tr class="pset-item"><td class="param-name">getJetMCFlavour</td>
 <td class="param-class">cms.bool</td>
-<td class="param-value-bool">True</td>
+<td class="param-value-bool">False</td>
 </tr>
 <tr class="pset-item"><td class="param-name">addDiscriminators</td>
 <td class="param-class">cms.bool</td>
@@ -9828,7 +8910,7 @@
 </tr>
 <tr class="pset-item"><td class="param-name">genMETSource</td>
 <td class="param-class">cms.InputTag</td>
-<td class="param-value-inputtag">"genMetTrue"</td>
+<td class="param-value-inputtag">""</td>
 </tr>
 <tr class="pset-item"><td class="param-name">efficiencies</td>
 <td class="param-class">cms.PSet</td>
@@ -9836,7 +8918,7 @@
 </tr>
 <tr class="pset-item"><td class="param-name">addGenMET</td>
 <td class="param-class">cms.bool</td>
-<td class="param-value-bool">True</td>
+<td class="param-value-bool">False</td>
 </tr>
 <tr class="pset-item"><td class="param-name">addMuonCorrections</td>
 <td class="param-class">cms.bool</td>
@@ -10299,7 +9381,7 @@
 </tr>
 <tr class="pset-item"><td class="param-name">addL1Algos</td>
 <td class="param-class">cms.bool</td>
-<td class="param-value-bool">False</td>
+<td class="param-value-bool">True</td>
 </tr>
 </table>
 </div>
@@ -10337,253 +9419,6 @@
 </div>
 </div>
 </div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="path"><div class="sequence"><div id="seq_label_gen_step" onClick="return toggleSequenceVisible('gen_step')" class="sequence_label">Path <span class="title">gen_step</span>
- <span id="seq_hidden_gen_step" class="hidden">[8 children hidden]</span>
-</div>
-<div id="seq_gen_step" class="sequence_area"><div id="module_genChargedParticles" class="module"><div class="module_label EDFilter" onClick="return toggleModuleVisible('mod_genChargedParticles')"><a name="genChargedParticles" class="title">genChargedParticles</a>
-</div>
-<div id="mod_genChargedParticles" class="module_area"><table class="module_table"><tr ><td class="label">Type</td>
-<td >EDFilter</td>
-</tr>
-<tr ><td class="label">Class</td>
-<td >GenParticleSelector</td>
-</tr>
-</table>
-<table class="pset"><tr class="pset-item"><td class="param-name">filter</td>
-<td class="param-class">cms.bool</td>
-<td class="param-value-bool">False</td>
-</tr>
-<tr class="pset-item"><td class="param-name">src</td>
-<td class="param-class">cms.InputTag</td>
-<td class="param-value-inputtag">"genParticles"</td>
-</tr>
-<tr class="pset-item"><td class="param-name">cut</td>
-<td class="param-class">cms.string</td>
-<td class="param-value-string">'charge != 0 & pt > 0.5 & abs(eta) < 2.4 & status = 1'</td>
-</tr>
-</table>
-</div>
-</div>
-<div id="module_genProtonDissociative" class="module"><div class="module_label EDFilter" onClick="return toggleModuleVisible('mod_genProtonDissociative')"><a name="genProtonDissociative" class="title">genProtonDissociative</a>
-</div>
-<div id="mod_genProtonDissociative" class="module_area"><table class="module_table"><tr ><td class="label">Type</td>
-<td >EDFilter</td>
-</tr>
-<tr ><td class="label">Class</td>
-<td >GenParticleSelector</td>
-</tr>
-</table>
-<table class="pset"><tr class="pset-item"><td class="param-name">filter</td>
-<td class="param-class">cms.bool</td>
-<td class="param-value-bool">False</td>
-</tr>
-<tr class="pset-item"><td class="param-name">src</td>
-<td class="param-class">cms.InputTag</td>
-<td class="param-value-inputtag">"genParticles"</td>
-</tr>
-<tr class="pset-item"><td class="param-name">cut</td>
-<td class="param-class">cms.string</td>
-<td class="param-value-string">'pdgId == 9902210'</td>
-</tr>
-</table>
-</div>
-</div>
-<div id="module_edmNtupleMxGen" class="module"><div class="module_label EDProducer" onClick="return toggleModuleVisible('mod_edmNtupleMxGen')"><a name="edmNtupleMxGen" class="title">edmNtupleMxGen</a>
-</div>
-<div id="mod_edmNtupleMxGen" class="module_area"><table class="module_table"><tr ><td class="label">Type</td>
-<td >EDProducer</td>
-</tr>
-<tr ><td class="label">Class</td>
-<td >CandViewNtpProducer</td>
-</tr>
-</table>
-<table class="pset"><tr class="pset-item"><td class="param-name">src</td>
-<td class="param-class">cms.InputTag</td>
-<td class="param-value-inputtag">"genProtonDissociative"</td>
-</tr>
-<tr class="pset-item"><td class="param-name">variables</td>
-<td class="param-class">cms.VPSet[1]</td>
-<td ><ol class="pset-list"><li class="pset-list-item"><table class="pset"><tr class="pset-item"><td class="param-name">tag</td>
-<td class="param-class">cms.untracked.string</td>
-<td class="param-value-string">'Mx'</td>
-</tr>
-<tr class="pset-item"><td class="param-name">quantity</td>
-<td class="param-class">cms.untracked.string</td>
-<td class="param-value-string">'mass'</td>
-</tr>
-</table>
-</li>
-</ol>
-</td>
-</tr>
-<tr class="pset-item"><td class="param-name">prefix</td>
-<td class="param-class">cms.untracked.string</td>
-<td class="param-value-string">''</td>
-</tr>
-<tr class="pset-item"><td class="param-name">eventInfo</td>
-<td class="param-class">cms.untracked.bool</td>
-<td class="param-value-bool">True</td>
-</tr>
-<tr class="pset-item"><td class="param-name">lazyParser</td>
-<td class="param-class">cms.untracked.bool</td>
-<td class="param-value-bool">True</td>
-</tr>
-</table>
-</div>
-</div>
-<div id="module_genStableParticles" class="module"><div class="module_label EDFilter" onClick="return toggleModuleVisible('mod_genStableParticles')"><a name="genStableParticles" class="title">genStableParticles</a>
-</div>
-<div id="mod_genStableParticles" class="module_area"><table class="module_table"><tr ><td class="label">Type</td>
-<td >EDFilter</td>
-</tr>
-<tr ><td class="label">Class</td>
-<td >GenParticleSelector</td>
-</tr>
-</table>
-<table class="pset"><tr class="pset-item"><td class="param-name">filter</td>
-<td class="param-class">cms.bool</td>
-<td class="param-value-bool">False</td>
-</tr>
-<tr class="pset-item"><td class="param-name">src</td>
-<td class="param-class">cms.InputTag</td>
-<td class="param-value-inputtag">"genParticles"</td>
-</tr>
-<tr class="pset-item"><td class="param-name">cut</td>
-<td class="param-class">cms.string</td>
-<td class="param-value-string">'status = 1 & ( ( pdgId != 2212 ) | ( pdgId == 2212 & abs(pz) < 2625.000000 ) )'</td>
-</tr>
-</table>
-</div>
-</div>
-<div id="module_etaMaxGen" class="module"><div class="module_label EDFilter" onClick="return toggleModuleVisible('mod_etaMaxGen')"><a name="etaMaxGen" class="title">etaMaxGen</a>
-</div>
-<div id="mod_etaMaxGen" class="module_area"><table class="module_table"><tr ><td class="label">Type</td>
-<td >EDFilter</td>
-</tr>
-<tr ><td class="label">Class</td>
-<td >EtaMaxCandViewSelector</td>
-</tr>
-</table>
-<table class="pset"><tr class="pset-item"><td class="param-name">maxNumber</td>
-<td class="param-class">cms.uint32</td>
-<td class="param-value-int">1</td>
-</tr>
-<tr class="pset-item"><td class="param-name">src</td>
-<td class="param-class">cms.InputTag</td>
-<td class="param-value-inputtag">"genStableParticles"</td>
-</tr>
-</table>
-</div>
-</div>
-<div id="module_etaMinGen" class="module"><div class="module_label EDFilter" onClick="return toggleModuleVisible('mod_etaMinGen')"><a name="etaMinGen" class="title">etaMinGen</a>
-</div>
-<div id="mod_etaMinGen" class="module_area"><table class="module_table"><tr ><td class="label">Type</td>
-<td >EDFilter</td>
-</tr>
-<tr ><td class="label">Class</td>
-<td >EtaMinCandViewSelector</td>
-</tr>
-</table>
-<table class="pset"><tr class="pset-item"><td class="param-name">maxNumber</td>
-<td class="param-class">cms.uint32</td>
-<td class="param-value-int">1</td>
-</tr>
-<tr class="pset-item"><td class="param-name">src</td>
-<td class="param-class">cms.InputTag</td>
-<td class="param-value-inputtag">"genStableParticles"</td>
-</tr>
-</table>
-</div>
-</div>
-<div id="module_edmNtupleEtaMaxGen" class="module"><div class="module_label EDProducer" onClick="return toggleModuleVisible('mod_edmNtupleEtaMaxGen')"><a name="edmNtupleEtaMaxGen" class="title">edmNtupleEtaMaxGen</a>
-</div>
-<div id="mod_edmNtupleEtaMaxGen" class="module_area"><table class="module_table"><tr ><td class="label">Type</td>
-<td >EDProducer</td>
-</tr>
-<tr ><td class="label">Class</td>
-<td >CandViewNtpProducer</td>
-</tr>
-</table>
-<table class="pset"><tr class="pset-item"><td class="param-name">src</td>
-<td class="param-class">cms.InputTag</td>
-<td class="param-value-inputtag">"etaMaxGen"</td>
-</tr>
-<tr class="pset-item"><td class="param-name">variables</td>
-<td class="param-class">cms.VPSet[1]</td>
-<td ><ol class="pset-list"><li class="pset-list-item"><table class="pset"><tr class="pset-item"><td class="param-name">tag</td>
-<td class="param-class">cms.untracked.string</td>
-<td class="param-value-string">'etaMax'</td>
-</tr>
-<tr class="pset-item"><td class="param-name">quantity</td>
-<td class="param-class">cms.untracked.string</td>
-<td class="param-value-string">'eta'</td>
-</tr>
-</table>
-</li>
-</ol>
-</td>
-</tr>
-<tr class="pset-item"><td class="param-name">prefix</td>
-<td class="param-class">cms.untracked.string</td>
-<td class="param-value-string">''</td>
-</tr>
-<tr class="pset-item"><td class="param-name">lazyParser</td>
-<td class="param-class">cms.untracked.bool</td>
-<td class="param-value-bool">True</td>
-</tr>
-<tr class="pset-item"><td class="param-name">eventInfo</td>
-<td class="param-class">cms.untracked.bool</td>
-<td class="param-value-bool">True</td>
-</tr>
-</table>
-</div>
-</div>
-<div id="module_edmNtupleEtaMinGen" class="module"><div class="module_label EDProducer" onClick="return toggleModuleVisible('mod_edmNtupleEtaMinGen')"><a name="edmNtupleEtaMinGen" class="title">edmNtupleEtaMinGen</a>
-</div>
-<div id="mod_edmNtupleEtaMinGen" class="module_area"><table class="module_table"><tr ><td class="label">Type</td>
-<td >EDProducer</td>
-</tr>
-<tr ><td class="label">Class</td>
-<td >CandViewNtpProducer</td>
-</tr>
-</table>
-<table class="pset"><tr class="pset-item"><td class="param-name">src</td>
-<td class="param-class">cms.InputTag</td>
-<td class="param-value-inputtag">"etaMinGen"</td>
-</tr>
-<tr class="pset-item"><td class="param-name">variables</td>
-<td class="param-class">cms.VPSet[1]</td>
-<td ><ol class="pset-list"><li class="pset-list-item"><table class="pset"><tr class="pset-item"><td class="param-name">tag</td>
-<td class="param-class">cms.untracked.string</td>
-<td class="param-value-string">'etaMin'</td>
-</tr>
-<tr class="pset-item"><td class="param-name">quantity</td>
-<td class="param-class">cms.untracked.string</td>
-<td class="param-value-string">'eta'</td>
-</tr>
-</table>
-</li>
-</ol>
-</td>
-</tr>
-<tr class="pset-item"><td class="param-name">prefix</td>
-<td class="param-class">cms.untracked.string</td>
-<td class="param-value-string">''</td>
-</tr>
-<tr class="pset-item"><td class="param-name">lazyParser</td>
-<td class="param-class">cms.untracked.bool</td>
-<td class="param-value-bool">True</td>
-</tr>
-<tr class="pset-item"><td class="param-name">eventInfo</td>
-<td class="param-class">cms.untracked.bool</td>
-<td class="param-value-bool">True</td>
-</tr>
-</table>
 </div>
 </div>
 </div>
@@ -14298,7 +13133,7 @@
 </tr>
 <tr class="pset-item"><td class="param-name">AccessMCInfo</td>
 <td class="param-class">cms.untracked.bool</td>
-<td class="param-value-bool">True</td>
+<td class="param-value-bool">False</td>
 </tr>
 <tr class="pset-item"><td class="param-name">TrackMultiplicityTag</td>
 <td class="param-class">cms.InputTag</td>
@@ -14514,13 +13349,15 @@
 <td class="param-value-double">3500.0</td>
 </tr>
 <tr class="pset-item"><td class="param-name">hltPaths</td>
-<td class="param-class">cms.vstring[6]</td>
-<td ><ol class="pset-list"><li class="pset-list-item param-value-string">HLT_Jet30_v1</li>
-<li class="pset-list-item param-value-string">HLT_Jet30_v2</li>
-<li class="pset-list-item param-value-string">HLT_Jet30_v3</li>
-<li class="pset-list-item param-value-string">HLT_Jet30_v4</li>
-<li class="pset-list-item param-value-string">HLT_Jet30_v5</li>
-<li class="pset-list-item param-value-string">HLT_Jet30_v6</li>
+<td class="param-class">cms.vstring[8]</td>
+<td ><ol class="pset-list"><li class="pset-list-item param-value-string">HLT_Jet15U</li>
+<li class="pset-list-item param-value-string">HLT_Jet30U</li>
+<li class="pset-list-item param-value-string">HLT_Jet50U</li>
+<li class="pset-list-item param-value-string">HLT_ExclDiJet30U_HFOR_v*</li>
+<li class="pset-list-item param-value-string">HLT_ExclDiJet30U_HFAND_v*</li>
+<li class="pset-list-item param-value-string">HLT_DiJetAve15U</li>
+<li class="pset-list-item param-value-string">HLT_DiJetAve30U</li>
+<li class="pset-list-item param-value-string">HLT_DiJetAve50U</li>
 </ol>
 </td>
 </tr>
@@ -14567,7 +13404,7 @@
 </tr>
 <tr class="pset-item"><td class="param-name">RunOnData</td>
 <td class="param-class">cms.untracked.bool</td>
-<td class="param-value-bool">False</td>
+<td class="param-value-bool">True</td>
 </tr>
 <tr class="pset-item"><td class="param-name">RunWithGen</td>
 <td class="param-class">cms.untracked.bool</td>
@@ -14705,7 +13542,7 @@
 </tr>
 <tr class="pset-item"><td class="param-name">AccessMCInfo</td>
 <td class="param-class">cms.untracked.bool</td>
-<td class="param-value-bool">True</td>
+<td class="param-value-bool">False</td>
 </tr>
 <tr class="pset-item"><td class="param-name">TrackMultiplicityTag</td>
 <td class="param-class">cms.InputTag</td>
@@ -14921,13 +13758,15 @@
 <td class="param-value-double">3500.0</td>
 </tr>
 <tr class="pset-item"><td class="param-name">hltPaths</td>
-<td class="param-class">cms.vstring[6]</td>
-<td ><ol class="pset-list"><li class="pset-list-item param-value-string">HLT_Jet30_v1</li>
-<li class="pset-list-item param-value-string">HLT_Jet30_v2</li>
-<li class="pset-list-item param-value-string">HLT_Jet30_v3</li>
-<li class="pset-list-item param-value-string">HLT_Jet30_v4</li>
-<li class="pset-list-item param-value-string">HLT_Jet30_v5</li>
-<li class="pset-list-item param-value-string">HLT_Jet30_v6</li>
+<td class="param-class">cms.vstring[8]</td>
+<td ><ol class="pset-list"><li class="pset-list-item param-value-string">HLT_Jet15U</li>
+<li class="pset-list-item param-value-string">HLT_Jet30U</li>
+<li class="pset-list-item param-value-string">HLT_Jet50U</li>
+<li class="pset-list-item param-value-string">HLT_ExclDiJet30U_HFOR_v*</li>
+<li class="pset-list-item param-value-string">HLT_ExclDiJet30U_HFAND_v*</li>
+<li class="pset-list-item param-value-string">HLT_DiJetAve15U</li>
+<li class="pset-list-item param-value-string">HLT_DiJetAve30U</li>
+<li class="pset-list-item param-value-string">HLT_DiJetAve50U</li>
 </ol>
 </td>
 </tr>
@@ -14974,7 +13813,7 @@
 </tr>
 <tr class="pset-item"><td class="param-name">RunOnData</td>
 <td class="param-class">cms.untracked.bool</td>
-<td class="param-value-bool">False</td>
+<td class="param-value-bool">True</td>
 </tr>
 <tr class="pset-item"><td class="param-name">RunWithGen</td>
 <td class="param-class">cms.untracked.bool</td>
@@ -15112,7 +13951,7 @@
 </tr>
 <tr class="pset-item"><td class="param-name">AccessMCInfo</td>
 <td class="param-class">cms.untracked.bool</td>
-<td class="param-value-bool">True</td>
+<td class="param-value-bool">False</td>
 </tr>
 <tr class="pset-item"><td class="param-name">TrackMultiplicityTag</td>
 <td class="param-class">cms.InputTag</td>
@@ -15328,13 +14167,15 @@
 <td class="param-value-double">3500.0</td>
 </tr>
 <tr class="pset-item"><td class="param-name">hltPaths</td>
-<td class="param-class">cms.vstring[6]</td>
-<td ><ol class="pset-list"><li class="pset-list-item param-value-string">HLT_Jet30_v1</li>
-<li class="pset-list-item param-value-string">HLT_Jet30_v2</li>
-<li class="pset-list-item param-value-string">HLT_Jet30_v3</li>
-<li class="pset-list-item param-value-string">HLT_Jet30_v4</li>
-<li class="pset-list-item param-value-string">HLT_Jet30_v5</li>
-<li class="pset-list-item param-value-string">HLT_Jet30_v6</li>
+<td class="param-class">cms.vstring[8]</td>
+<td ><ol class="pset-list"><li class="pset-list-item param-value-string">HLT_Jet15U</li>
+<li class="pset-list-item param-value-string">HLT_Jet30U</li>
+<li class="pset-list-item param-value-string">HLT_Jet50U</li>
+<li class="pset-list-item param-value-string">HLT_ExclDiJet30U_HFOR_v*</li>
+<li class="pset-list-item param-value-string">HLT_ExclDiJet30U_HFAND_v*</li>
+<li class="pset-list-item param-value-string">HLT_DiJetAve15U</li>
+<li class="pset-list-item param-value-string">HLT_DiJetAve30U</li>
+<li class="pset-list-item param-value-string">HLT_DiJetAve50U</li>
 </ol>
 </td>
 </tr>
@@ -15381,7 +14222,7 @@
 </tr>
 <tr class="pset-item"><td class="param-name">RunOnData</td>
 <td class="param-class">cms.untracked.bool</td>
-<td class="param-value-bool">False</td>
+<td class="param-value-bool">True</td>
 </tr>
 <tr class="pset-item"><td class="param-name">RunWithGen</td>
 <td class="param-class">cms.untracked.bool</td>
@@ -15462,7 +14303,7 @@
 </tr>
 <tr class="pset-item"><td class="param-name">accessMCInfo</td>
 <td class="param-class">cms.untracked.bool</td>
-<td class="param-value-bool">True</td>
+<td class="param-value-bool">False</td>
 </tr>
 <tr class="pset-item"><td class="param-name">techTrigBit</td>
 <td class="param-class">cms.int32</td>
