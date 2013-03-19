@@ -96,11 +96,9 @@ addCastorRecHitCorrector(process)
 
 
 process.load("ForwardAnalysis.ExclusiveDijetsAnalysis.exclusiveDijetsAnalysisSequences_cff")
-
 #process.pfCandidateNoiseThresholds.src = "pfNoPileUpPFlow"
 process.pfCandidateNoiseThresholds.src = "particleFlow"
 process.tracksTransverseRegion.JetTag = "selectedPatJetsPFlow"
-
 
 from ForwardAnalysis.ForwardTTreeAnalysis.DiffractiveAnalysis_cfi import DiffractiveAnalysis
 from ForwardAnalysis.ForwardTTreeAnalysis.ExclusiveDijetsAnalysis_cfi import ExclusiveDijetsAnalysis
@@ -110,11 +108,9 @@ from ForwardAnalysis.ForwardTTreeAnalysis.DijetsTriggerAnalysis_cfi import Dijet
 #PATTriggerInfo.HLTAlgoBitName = config.hltPaths 
 PATTriggerInfo.runALLTriggerPath = True
 
-
 #
 # Module with EventInfo + DiffractiveAnalysis + ExclusiveDijets 
 #
-
 
 process.exclusiveDijetsAnalysisZeroBiasTTree = cms.EDAnalyzer("EventInfoDiffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree",
         EventInfo = cms.PSet(
