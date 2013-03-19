@@ -789,7 +789,9 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
 	  << "MC event weight   : " << weightepw << std::endl
           << "Total weight BX0  : " << totalweight << std::endl
 	  << "Total weight BXm1 : " << totalweightbxm1 << std::endl
-          << "Total weight BXp1 : " << totalweightbxp1 << std::endl;
+          << "Total weight BXp1 : " << totalweightbxp1 << std::endl
+          << "Leading Jet: " << eventexcl->GetLeadingJetPt() << " | Unc: " << eventexcl->GetUnc1() << std::endl
+          << "Second Jet: " << eventexcl->GetSecondJetPt() << " | Unc: " << eventexcl->GetUnc2() << std::endl;
       }
 
       counterlumi++;
