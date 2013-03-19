@@ -8,7 +8,7 @@ class config: pass
 config.verbose = True
 config.writeEdmOutput = False
 config.outputTTreeFile = 'ExclusiveDijetsPATTuple.root'
-config.runOnMC = False
+config.runOnMC = True
 config.runPATSequences = True
 config.usePAT = False
 config.globalTagNameData = 'GR_R_42_V23::All' 
@@ -17,8 +17,8 @@ config.globalTagNameMC = 'START42_V17D::All'
 config.comEnergy = 7000.0
 config.trackAnalyzerName = 'trackHistoAnalyzer'
 config.trackTagName = 'analysisTracks'
-config.NumberOfEvents = 100
-config.TriggerOn = True
+config.NumberOfEvents = 1000
+config.TriggerOn = False
 
 #
 # Define Triggers and Input Files
@@ -29,7 +29,7 @@ if config.runOnMC:
     config.hltPaths =('HLT_Jet30_v1','HLT_Jet30_v2','HLT_Jet30_v3','HLT_Jet30_v4','HLT_Jet30_v5','HLT_Jet30_v6')
     config.inputFileName = '/storage1/dmf/PrivateMCProduction/July2012Prod/Pythia/CMSSW_4_2_8_lowpupatch1/src/QCD_Pt_15to3000_TuneZ2_Flat_7TeV_pythia6_cff_py_RAW2DIGI_L1Reco_RECO_inRECOSIM.root'
     config.runPUMC = True  # MC With PU
-    config.runGen = True    # MC With Weight
+    config.runGen = True   # MC With Weight
 else:
     config.l1Paths = ('L1_SingleJet36','L1_SingleJet16','L1_DoubleJetC56')
     config.hltPaths = ('HLT_DiJetAve15U','HLT_DiJetAve30U','HLT_DiJetAve50U','HLT_ExclDiJet30U_HFAND_v*','HLT_ExclDiJet30U_HFOR_v*')
