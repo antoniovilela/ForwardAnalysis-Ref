@@ -10,14 +10,14 @@ config.writeEdmOutput = False
 config.outputTTreeFile = 'DiffractiveZDataPATTuple.root'
 config.runOnMC = False
 config.runPATSequences = True
-config.usePAT = False
+#config.usePAT = False
 config.globalTagNameData = 'GR_R_42_V23::All' 
 config.instLumiROOTFile=''
 config.globalTagNameMC = 'START42_V17D::All'
 config.comEnergy = 7000.0
 config.trackAnalyzerName = 'trackHistoAnalyzer'
 config.trackTagName = 'analysisTracks'
-config.NumberOfEvents = 1000
+config.NumberOfEvents = -1
 config.TriggerOn = False
 triggerlist = 'HLT_Mu0_L1MuOpen','HLT_Mu3','HLT_Mu5','HLT_DoubleMu0','HLT_Jet15U'
 
@@ -28,8 +28,7 @@ triggerlist = 'HLT_Mu0_L1MuOpen','HLT_Mu3','HLT_Mu5','HLT_DoubleMu0','HLT_Jet15U
 if config.runOnMC:
     config.l1Paths = ('L1_ZeroBias','L1_BptxMinus_NotBptxPlus','L1_SingleJet30U')
     config.hltPaths =('HLT_Jet30_v1','HLT_Jet30_v2','HLT_Jet30_v3','HLT_Jet30_v4','HLT_Jet30_v5','HLT_Jet30_v6')
-    config.inputFileName = '/afs/cern.ch/work/m/mmedinaj/private/ToMedina/QCD_Pt_15to3000_TuneZ2_Flat_7TeV_pythia6_cff_py_RAW2DIGI_L1Reco_RECO_233_3_nsm.root'
-    #config.inputFileName = '/storage1/dmf/PrivateMCProduction/July2012Prod/Pythia/CMSSW_4_2_8_lowpupatch1/src/QCD_Pt_15to3000_TuneZ2_Flat_7TeV_pythia6_cff_py_RAW2DIGI_L1Reco_RECO_inRECOSIM.root'
+    config.inputFileName = '/storage1/dmf/TestSamples/PYTHIA6_QCD_15to3000_private_SL_RECO/QCD_Pt_15to3000_TuneZ2_Flat_7TeV_pythia6_cff_py_RAW2DIGI_L1Reco_RECO_233_3_nsm.root'
     config.runPUMC = False  # MC With PU
     config.runGen = False    # MC With Weight
 
@@ -37,8 +36,8 @@ else:
     config.l1Paths = ('L1_SingleJet36','L1_SingleJet16','L1_DoubleJetC56')
 #    config.hltPaths = ('HLT_Mu0_L1MuOpen','HLT_Mu3','HLT_Mu5','HLT_DoubleMu0','HLT_Jet15U')
     config.hltPaths = (triggerlist)
+    config.inputFileName = '/afs/cern.ch/work/d/dmf/public/Samples/TestSamples/MuHad2011.root' 
     #config.inputFileName = '/storage1/dmf/TestSamples/MuRun2010/MuRunA2010.root'
-    config.inputFileName = '/afs/cern.ch/work/m/mmedinaj/private/ToMedina/MuRunA2010.root'
     config.runPUMC = False
     config.runGen = False
 
@@ -92,6 +91,18 @@ process.load('RecoJets.Configuration.RecoPFJets_cff')
 process.load('RecoJets.Configuration.RecoJets_cff')
 process.load('CommonTools/RecoAlgos/HBHENoiseFilterResultProducer_cfi')
 
+#
+# Remove PAT MCMatching for Data
+#
+
+# load the standard PAT config
+#process.load("PhysicsTools.PatAlgos.patSequences_cff")
+
+# load the coreTools of PAT
+#from PhysicsTools.PatAlgos.tools.coreTools import *
+
+#if not config.runOnMC: 
+#    removeMCMatching(process, ['Electrons','Muons'],"")
 
 #
 # PAT Sequences
@@ -112,11 +123,60 @@ from ForwardAnalysis.Utilities.addCastorRecHitCorrector import addCastorRecHitCo
 addCastorRecHitCorrector(process)
 
 #
+# Remove PAT MCMatching for Data
+#
+
+# load the standard PAT config
+#process.load("PhysicsTools.PatAlgos.patSequences_cff")
+
+# load the coreTools of PAT
+#from PhysicsTools.PatAlgos.tools.coreTools import *
+
+#if not config.runOnMC: 
+#    removeMCMatching(process, ['Electrons','Muons'],"")
+
+#
 # PAT Muons and Electrons WorkFlow
 #
 
-process.load('PhysicsTools.PatAlgos.producersLayer1.muonProducer_cff')
-process.load('PhysicsTools.PatAlgos.producersLayer1.electronProducer_cff')
+from PhysicsTools.PatAlgos.mcMatchLayer0.electronMatch_cfi import *
+from TrackingTools.TransientTrack.TransientTrackBuilder_cfi import *
+from PhysicsTools.PatAlgos.producersLayer1.electronProducer_cfi import *
+
+from PhysicsTools.PatAlgos.mcMatchLayer0.muonMatch_cfi import *
+from TrackingTools.TransientTrack.TransientTrackBuilder_cfi import *
+from PhysicsTools.PatAlgos.producersLayer1.muonProducer_cfi import *
+
+if not config.runOnMC:
+    ## for scheduled mode
+    makePatElectrons = cms.Sequence(
+        patElectrons
+    )
+
+    makePatMuons = cms.Sequence(
+         patMuons
+    )
+
+else: 
+    makePatElectrons = cms.Sequence(
+         electronMatch *
+         patElectrons
+    )
+   
+    makePatMuons = cms.Sequence(
+         muonMatch*
+         patMuons
+    )
+
+#
+# PAT Isolation Variables
+#
+
+#from PhysicsTools.PatAlgos.tools.muonTools import *
+#addMuonUserIsolation(process,['All'])
+
+#from PhysicsTools.PatAlgos.tools.electronTools import *
+#addElectronUserIsolation(process,['All'])
 
 
 #
@@ -200,9 +260,9 @@ process.castor_step = cms.Path(process.castorSequence)
 
 if config.TriggerOn:
     process.analysis_diffractiveDiffractiveZAnalysisPATTriggerInfoTTree_step = cms.Path(
-    process.eventSelectionHLT + process.diffractiveZAnalysisTTree)
+    process.eventSelectionHLT + makePatElectrons + makePatMuons + process.diffractiveZAnalysisTTree)
 
 else:
     process.analysis_diffractiveDiffractiveZAnalysisPATTriggerInfoTTree_step = cms.Path(
-    process.eventSelection + process.diffractiveZAnalysisTTree)
+    process.eventSelection + makePatElectrons + makePatMuons + process.diffractiveZAnalysisTTree)
 
