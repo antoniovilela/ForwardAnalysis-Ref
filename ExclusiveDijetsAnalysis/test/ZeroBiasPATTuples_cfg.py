@@ -112,14 +112,13 @@ PATTriggerInfo.runALLTriggerPath = True
 # Module with EventInfo + DiffractiveAnalysis + ExclusiveDijets 
 #
 
-process.exclusiveDijetsAnalysisZeroBiasTTree = cms.EDAnalyzer("EventInfoDiffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree",
+process.exclusiveDijetsAnalysisZeroBiasTTree = cms.EDAnalyzer("EventInfoDiffractiveExclusiveDijetsAnalysisTTree",
         EventInfo = cms.PSet(
                     RunOnData = cms.untracked.bool(True),
                     RunWithMCPU = cms.untracked.bool(False),
                     RunWithGen = cms.untracked.bool(False)
         ),
         DiffractiveAnalysis = DiffractiveAnalysis,
-        PATTriggerInfo = PATTriggerInfo,
         ExclusiveDijetsAnalysis = ExclusiveDijetsAnalysis
         )
 
