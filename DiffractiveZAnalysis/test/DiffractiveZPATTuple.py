@@ -18,7 +18,7 @@ config.comEnergy = 7000.0
 config.trackAnalyzerName = 'trackHistoAnalyzer'
 config.trackTagName = 'analysisTracks'
 config.NumberOfEvents = -1
-config.TriggerOn = False
+config.TriggerOn = True
 triggerlist = 'HLT_Mu0_L1MuOpen','HLT_Mu3','HLT_Mu5','HLT_DoubleMu0','HLT_Jet15U'
 
 #
@@ -36,8 +36,8 @@ else:
     config.l1Paths = ('L1_SingleJet36','L1_SingleJet16','L1_DoubleJetC56')
 #    config.hltPaths = ('HLT_Mu0_L1MuOpen','HLT_Mu3','HLT_Mu5','HLT_DoubleMu0','HLT_Jet15U')
     config.hltPaths = (triggerlist)
-    config.inputFileName = '/afs/cern.ch/work/d/dmf/public/Samples/TestSamples/MuHad2011.root' 
-    #config.inputFileName = '/storage1/dmf/TestSamples/MuRun2010/MuRunA2010.root'
+    #config.inputFileName = '/afs/cern.ch/work/d/dmf/public/Samples/TestSamples/MuHad2011.root' 
+    config.inputFileName = '/storage1/dmf/TestSamples/MuRun2010/MuRunA2010.root'
     config.runPUMC = False
     config.runGen = False
 
@@ -149,21 +149,21 @@ from PhysicsTools.PatAlgos.producersLayer1.muonProducer_cfi import *
 
 if not config.runOnMC:
     ## for scheduled mode
-    makePatElectrons = cms.Sequence(
+    process.makePatElectrons = cms.Sequence(
         patElectrons
     )
 
-    makePatMuons = cms.Sequence(
+    process.makePatMuons = cms.Sequence(
          patMuons
     )
 
 else: 
-    makePatElectrons = cms.Sequence(
+    process.makePatElectrons = cms.Sequence(
          electronMatch *
          patElectrons
     )
    
-    makePatMuons = cms.Sequence(
+    process.makePatMuons = cms.Sequence(
          muonMatch*
          patMuons
     )
@@ -260,9 +260,9 @@ process.castor_step = cms.Path(process.castorSequence)
 
 if config.TriggerOn:
     process.analysis_diffractiveDiffractiveZAnalysisPATTriggerInfoTTree_step = cms.Path(
-    process.eventSelectionHLT + makePatElectrons + makePatMuons + process.diffractiveZAnalysisTTree)
+    process.eventSelectionHLT + process.makePatElectrons + process.makePatMuons + process.diffractiveZAnalysisTTree)
 
 else:
     process.analysis_diffractiveDiffractiveZAnalysisPATTriggerInfoTTree_step = cms.Path(
-    process.eventSelection + makePatElectrons + makePatMuons + process.diffractiveZAnalysisTTree)
+    process.eventSelection + process.makePatElectrons + process.makePatMuons + process.diffractiveZAnalysisTTree)
 
