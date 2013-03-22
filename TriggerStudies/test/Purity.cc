@@ -22,7 +22,7 @@
 #include <iostream>
 #include <fstream>
 
-#include "EffMacro.h"
+#include "Purity.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/ExclusiveDijetsEvent.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/DiffractiveEvent.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/EventInfoEvent.h"
@@ -33,7 +33,7 @@ using namespace exclusiveDijetsAnalysis;
 using namespace eventInfo;
 using namespace reweight;
 
-void EffMacro::LoadFile(std::string fileinput, std::string processinput){
+void Purity::LoadFile(std::string fileinput, std::string processinput){
 
   inf = NULL;
   tr  = NULL;
@@ -51,7 +51,7 @@ void EffMacro::LoadFile(std::string fileinput, std::string processinput){
 
 }
 
-void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string processname_, int optnVertex_, int optTrigger_, bool switchPreSel_, bool switchVertex_, bool switchTrigger_){
+void Purity::Run(std::string filein_, std::string savehistofile_, std::string processname_, int optnVertex_, int optTrigger_, bool switchPreSel_, bool switchVertex_, bool switchTrigger_){
 
   filein = filein_;
   savehistofile = savehistofile_;
@@ -140,6 +140,18 @@ void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string 
   double counterAllstep4_2 = 0.;
   double counterAllstep4_1 = 0.;
 
+  std::vector <std::string> FoldersLum;
+  FoldersLum.push_back("without_cuts");
+  FoldersLum.push_back("with_trigger");
+  FoldersLum.push_back("with_trigger_presel");
+  FoldersLum.push_back("with_trigger_presel_vertex");
+  FoldersLum.push_back("with_trigger_dijets");
+  FoldersLum.push_back("with_trigger_deltaphi");
+  FoldersLum.push_back("All_step4_4");
+  FoldersLum.push_back("All_step4_3");
+  FoldersLum.push_back("All_step4_2");
+  FoldersLum.push_back("All_step4_1");
+
   std::vector <std::string> Folders;
   Folders.push_back("without_cuts");
   Folders.push_back("with_trigger");
@@ -147,23 +159,123 @@ void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string 
   Folders.push_back("with_trigger_presel_vertex");
   Folders.push_back("with_trigger_dijets");
   Folders.push_back("with_trigger_deltaphi");
-  Folders.push_back("All_step4_4");
-  Folders.push_back("All_step4_3");
-  Folders.push_back("All_step4_2");
-  Folders.push_back("All_step4_1");
 
-  for (int j=0; j<10; j++)
+  for (std::vector<std::string>::size_type j=0; j<FoldersLum.size(); j++)
   {
-
     char name1[300];
-    sprintf(name1,"Events_%s",Folders.at(j).c_str());
+    sprintf(name1,"Events_Lumi_%s",FoldersLum.at(j).c_str());
     TH1D *histo_m_Evt_lumis = new TH1D(name1,"; Lumis; N events",100,0,2.0);
     m_hVector_Evt_lumis.push_back(histo_m_Evt_lumis);
 
     char name2[300];
-    sprintf(name2,"Eff_%s",Folders.at(j).c_str());
+    sprintf(name2,"Eff_Lumi_%s",FoldersLum.at(j).c_str());
     TH1D *histo_m_Eff_lumis = new TH1D(name2,"; Lumis; Efficiency",100,0,2.0);
     m_hVector_Eff_lumis.push_back(histo_m_Eff_lumis);
+  }
+
+
+  for (std::vector<std::string>::size_type j=0; j<Folders.size(); j++)
+  {
+
+    char name3[300];
+    sprintf(name3,"Events_preplus_%s",Folders.at(j).c_str());
+    TH1D *histo_m_Evt_preplus = new TH1D(name3,"; #sum E_{HF^{+}} [GeV]; N events",100,0,2000);
+    m_hVector_Evt_preplus.push_back(histo_m_Evt_preplus);
+
+    char name4[300];
+    sprintf(name4,"Eff_preplus_%s",Folders.at(j).c_str());
+    TH1D *histo_m_Eff_preplus = new TH1D(name4,"; #sum E_{HF^{+}} [GeV]; Efficiency",100,0,2000);
+    m_hVector_Eff_preplus.push_back(histo_m_Eff_preplus);
+
+    char name5[300];
+    sprintf(name5,"Events_preminus_%s",Folders.at(j).c_str());
+    TH1D *histo_m_Evt_preminus = new TH1D(name5,"; #sum E_{HF^{-}} [GeV]; N events",100,0,2000);
+    m_hVector_Evt_preminus.push_back(histo_m_Evt_preminus);
+
+    char name6[300];
+    sprintf(name6,"Eff_preminus_%s",Folders.at(j).c_str());
+    TH1D *histo_m_Eff_preminus = new TH1D(name6,"; #sum E_{HF^{-}} [GeV]; Efficiency",100,0,2000);
+    m_hVector_Eff_preminus.push_back(histo_m_Eff_preminus);
+
+    char name7[300];
+    sprintf(name7,"Events_vertex_%s",Folders.at(j).c_str());
+    TH1D *histo_m_Evt_vertex = new TH1D(name7,"; # Vertex; N events",25,0,25);
+    m_hVector_Evt_vertex.push_back(histo_m_Evt_vertex);
+
+    char name8[300];
+    sprintf(name8,"Eff_vertex_%s",Folders.at(j).c_str());
+    TH1D *histo_m_Eff_vertex = new TH1D(name8,"; # Vertex; Efficiency",25,0,25);
+    m_hVector_Eff_vertex.push_back(histo_m_Eff_vertex);
+
+    char name9[300];
+    sprintf(name9,"Events_jet1pt_%s",Folders.at(j).c_str());
+    TH1D *histo_m_Evt_jet1pt = new TH1D(name9,"; P_{T} [GeV.c^{-1}]; N events",100,0,2000);
+    m_hVector_Evt_jet1pt.push_back(histo_m_Evt_jet1pt);
+
+    char name10[300];
+    sprintf(name10,"Eff_jet1pt_%s",Folders.at(j).c_str());
+    TH1D *histo_m_Eff_jet1pt = new TH1D(name10,"; P_{T} [GeV.c^{-1}]; Efficiency",100,0,2000);
+    m_hVector_Eff_jet1pt.push_back(histo_m_Eff_jet1pt);
+
+    char name11[300];
+    sprintf(name11,"Events_jet1phi_%s",Folders.at(j).c_str());
+    TH1D *histo_m_Evt_jet1phi = new TH1D(name11,"; #phi [rad]; N events",50,-3.3,3.3);
+    m_hVector_Evt_jet1phi.push_back(histo_m_Evt_jet1phi);
+
+    char name12[300];
+    sprintf(name12,"Eff_jet1phi_%s",Folders.at(j).c_str());
+    TH1D *histo_m_Eff_jet1phi = new TH1D(name12,"; #phi [rad]; Efficiency",50,-3.3,3.3);
+    m_hVector_Eff_jet1phi.push_back(histo_m_Eff_jet1phi);
+
+    char name13[300];
+    sprintf(name13,"Events_jet1eta_%s",Folders.at(j).c_str());
+    TH1D *histo_m_Evt_jet1eta = new TH1D(name13,"; #eta; N events",50,-5.2,5.2);
+    m_hVector_Evt_jet1eta.push_back(histo_m_Evt_jet1eta);
+
+    char name14[300];
+    sprintf(name14,"Eff_jet1eta_%s",Folders.at(j).c_str());
+    TH1D *histo_m_Eff_jet1eta = new TH1D(name14,"; #eta; Efficiency",50,-5.2,5.2);
+    m_hVector_Eff_jet1eta.push_back(histo_m_Eff_jet1eta);
+
+    char name15[300];
+    sprintf(name15,"Events_jet2pt_%s",Folders.at(j).c_str());
+    TH1D *histo_m_Evt_jet2pt = new TH1D(name15,"; P_{T} [GeV.c^{-1}]; N events",100,0,2000);
+    m_hVector_Evt_jet2pt.push_back(histo_m_Evt_jet2pt);
+
+    char name16[300];
+    sprintf(name16,"Eff_jet2pt_%s",Folders.at(j).c_str());
+    TH1D *histo_m_Eff_jet2pt = new TH1D(name16,"; P_{T} [GeV.c^{-1}]; Efficiency",100,0,2000);
+    m_hVector_Eff_jet2pt.push_back(histo_m_Eff_jet2pt);
+
+    char name17[300];
+    sprintf(name17,"Events_jet2phi_%s",Folders.at(j).c_str());
+    TH1D *histo_m_Evt_jet2phi = new TH1D(name17,"; #phi [rad]; N events",50,-3.3,3.3);
+    m_hVector_Evt_jet2phi.push_back(histo_m_Evt_jet2phi);
+
+    char name18[300];
+    sprintf(name18,"Eff_jet2phi_%s",Folders.at(j).c_str());
+    TH1D *histo_m_Eff_jet2phi = new TH1D(name18,"; #phi [rad]; Efficiency",50,-3.3,3.3);
+    m_hVector_Eff_jet2phi.push_back(histo_m_Eff_jet2phi);
+
+    char name19[300];
+    sprintf(name19,"Events_jet2eta_%s",Folders.at(j).c_str());
+    TH1D *histo_m_Evt_jet2eta = new TH1D(name19,"; #eta; N events",50,-5.2,5.2);
+    m_hVector_Evt_jet2eta.push_back(histo_m_Evt_jet2eta);
+
+    char name20[300];
+    sprintf(name20,"Eff_jet2eta_%s",Folders.at(j).c_str());
+    TH1D *histo_m_Eff_jet2eta = new TH1D(name20,"; #eta; Efficiency",50,-5.2,5.2);
+    m_hVector_Eff_jet2eta.push_back(histo_m_Eff_jet2eta);
+
+    char name21[300];
+    sprintf(name21,"Events_deltaphi_%s",Folders.at(j).c_str());
+    TH1D *histo_m_Evt_deltaphi = new TH1D(name21,"; #Delta#phi_{jj}; N events",20,0.0,3.2);
+    m_hVector_Evt_deltaphi.push_back(histo_m_Evt_deltaphi);
+
+    char name22[300];
+    sprintf(name22,"Eff_deltaphi_%s",Folders.at(j).c_str());
+    TH1D *histo_m_Eff_deltaphi = new TH1D(name22,"; #Delta#phi_{jj}; Efficiency",20,0.0,3.2);
+    m_hVector_Eff_deltaphi.push_back(histo_m_Eff_deltaphi);
 
   }
 
@@ -189,40 +301,158 @@ void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string 
 
     m_hVector_Evt_lumis.at(0)->Fill(eventinfo->GetInstLumiBunch());
     m_hVector_Eff_lumis.at(0)->Fill(eventinfo->GetInstLumiBunch());
-
+    m_hVector_Evt_preplus.at(0)->Fill(eventdiff->GetSumEnergyHFPlus());
+    m_hVector_Eff_preplus.at(0)->Fill(eventdiff->GetSumEnergyHFPlus());
+    m_hVector_Evt_preminus.at(0)->Fill(eventdiff->GetSumEnergyHFMinus());
+    m_hVector_Eff_preminus.at(0)->Fill(eventdiff->GetSumEnergyHFMinus());
+    m_hVector_Evt_vertex.at(0)->Fill(eventexcl->GetNVertex());
+    m_hVector_Eff_vertex.at(0)->Fill(eventexcl->GetNVertex());
+    m_hVector_Evt_jet1pt.at(0)->Fill(eventexcl->GetLeadingJetPt());
+    m_hVector_Eff_jet1pt.at(0)->Fill(eventexcl->GetLeadingJetPt());
+    m_hVector_Evt_jet1phi.at(0)->Fill(eventexcl->GetLeadingJetPhi());
+    m_hVector_Eff_jet1phi.at(0)->Fill(eventexcl->GetLeadingJetPhi());
+    m_hVector_Evt_jet1eta.at(0)->Fill(eventexcl->GetLeadingJetEta());
+    m_hVector_Eff_jet1eta.at(0)->Fill(eventexcl->GetLeadingJetEta());
+    m_hVector_Evt_jet2pt.at(0)->Fill(eventexcl->GetSecondJetPt());
+    m_hVector_Eff_jet2pt.at(0)->Fill(eventexcl->GetSecondJetPt());
+    m_hVector_Evt_jet2phi.at(0)->Fill(eventexcl->GetSecondJetPhi());
+    m_hVector_Eff_jet2phi.at(0)->Fill(eventexcl->GetSecondJetPhi());
+    m_hVector_Evt_jet2eta.at(0)->Fill(eventexcl->GetSecondJetEta());
+    m_hVector_Eff_jet2eta.at(0)->Fill(eventexcl->GetSecondJetEta());
+    m_hVector_Evt_deltaphi.at(0)->Fill(deltaphi_);
+    m_hVector_Eff_deltaphi.at(0)->Fill(deltaphi_);
 
     if (!switchTrigger || (switchTrigger && eventexcl->GetHLTPath(optTrigger))){
 
       ++counterTrigger;     
       m_hVector_Evt_lumis.at(1)->Fill(eventinfo->GetInstLumiBunch());
       m_hVector_Eff_lumis.at(1)->Fill(eventinfo->GetInstLumiBunch());
-
+      m_hVector_Evt_preplus.at(1)->Fill(eventdiff->GetSumEnergyHFPlus());
+      m_hVector_Eff_preplus.at(1)->Fill(eventdiff->GetSumEnergyHFPlus());
+      m_hVector_Evt_preminus.at(1)->Fill(eventdiff->GetSumEnergyHFMinus());
+      m_hVector_Eff_preminus.at(1)->Fill(eventdiff->GetSumEnergyHFMinus());
+      m_hVector_Evt_vertex.at(1)->Fill(eventexcl->GetNVertex());
+      m_hVector_Eff_vertex.at(1)->Fill(eventexcl->GetNVertex());
+      m_hVector_Evt_jet1pt.at(1)->Fill(eventexcl->GetLeadingJetPt());
+      m_hVector_Eff_jet1pt.at(1)->Fill(eventexcl->GetLeadingJetPt());
+      m_hVector_Evt_jet1phi.at(1)->Fill(eventexcl->GetLeadingJetPhi());
+      m_hVector_Eff_jet1phi.at(1)->Fill(eventexcl->GetLeadingJetPhi());
+      m_hVector_Evt_jet1eta.at(1)->Fill(eventexcl->GetLeadingJetEta());
+      m_hVector_Eff_jet1eta.at(1)->Fill(eventexcl->GetLeadingJetEta());
+      m_hVector_Evt_jet2pt.at(1)->Fill(eventexcl->GetSecondJetPt());
+      m_hVector_Eff_jet2pt.at(1)->Fill(eventexcl->GetSecondJetPt());
+      m_hVector_Evt_jet2phi.at(1)->Fill(eventexcl->GetSecondJetPhi());
+      m_hVector_Eff_jet2phi.at(1)->Fill(eventexcl->GetSecondJetPhi());
+      m_hVector_Evt_jet2eta.at(1)->Fill(eventexcl->GetSecondJetEta());
+      m_hVector_Eff_jet2eta.at(1)->Fill(eventexcl->GetSecondJetEta());
+      m_hVector_Evt_deltaphi.at(1)->Fill(deltaphi_);
+      m_hVector_Eff_deltaphi.at(1)->Fill(deltaphi_);
 
       if ( !switchPreSel || (switchPreSel && eventdiff->GetSumEnergyHFMinus() < 30 && eventdiff->GetSumEnergyHFPlus() < 30 )){
 
 	++counterPreSel;
 	m_hVector_Evt_lumis.at(2)->Fill(eventinfo->GetInstLumiBunch());
 	m_hVector_Eff_lumis.at(2)->Fill(eventinfo->GetInstLumiBunch());
-
+	m_hVector_Evt_preplus.at(2)->Fill(eventdiff->GetSumEnergyHFPlus());
+	m_hVector_Eff_preplus.at(2)->Fill(eventdiff->GetSumEnergyHFPlus());
+	m_hVector_Evt_preminus.at(2)->Fill(eventdiff->GetSumEnergyHFMinus());
+	m_hVector_Eff_preminus.at(2)->Fill(eventdiff->GetSumEnergyHFMinus());
+	m_hVector_Evt_vertex.at(2)->Fill(eventexcl->GetNVertex());
+	m_hVector_Eff_vertex.at(2)->Fill(eventexcl->GetNVertex());
+	m_hVector_Evt_jet1pt.at(2)->Fill(eventexcl->GetLeadingJetPt());
+	m_hVector_Eff_jet1pt.at(2)->Fill(eventexcl->GetLeadingJetPt());
+	m_hVector_Evt_jet1phi.at(2)->Fill(eventexcl->GetLeadingJetPhi());
+	m_hVector_Eff_jet1phi.at(2)->Fill(eventexcl->GetLeadingJetPhi());
+	m_hVector_Evt_jet1eta.at(2)->Fill(eventexcl->GetLeadingJetEta());
+	m_hVector_Eff_jet1eta.at(2)->Fill(eventexcl->GetLeadingJetEta());
+	m_hVector_Evt_jet2pt.at(2)->Fill(eventexcl->GetSecondJetPt());
+	m_hVector_Eff_jet2pt.at(2)->Fill(eventexcl->GetSecondJetPt());
+	m_hVector_Evt_jet2phi.at(2)->Fill(eventexcl->GetSecondJetPhi());
+	m_hVector_Eff_jet2phi.at(2)->Fill(eventexcl->GetSecondJetPhi());
+	m_hVector_Evt_jet2eta.at(2)->Fill(eventexcl->GetSecondJetEta());
+	m_hVector_Eff_jet2eta.at(2)->Fill(eventexcl->GetSecondJetEta());
+	m_hVector_Evt_deltaphi.at(2)->Fill(deltaphi_);
+	m_hVector_Eff_deltaphi.at(2)->Fill(deltaphi_);
 
 	if( !switchVertex || (switchVertex && eventexcl->GetNVertex()<= optnVertex )){
 
 	  ++counterVertex;
 	  m_hVector_Evt_lumis.at(3)->Fill(eventinfo->GetInstLumiBunch());
 	  m_hVector_Eff_lumis.at(3)->Fill(eventinfo->GetInstLumiBunch());
+	  m_hVector_Evt_preplus.at(3)->Fill(eventdiff->GetSumEnergyHFPlus());
+	  m_hVector_Eff_preplus.at(3)->Fill(eventdiff->GetSumEnergyHFPlus());
+	  m_hVector_Evt_preminus.at(3)->Fill(eventdiff->GetSumEnergyHFMinus());
+	  m_hVector_Eff_preminus.at(3)->Fill(eventdiff->GetSumEnergyHFMinus());
+	  m_hVector_Evt_vertex.at(3)->Fill(eventexcl->GetNVertex());
+	  m_hVector_Eff_vertex.at(3)->Fill(eventexcl->GetNVertex());
+	  m_hVector_Evt_jet1pt.at(3)->Fill(eventexcl->GetLeadingJetPt());
+	  m_hVector_Eff_jet1pt.at(3)->Fill(eventexcl->GetLeadingJetPt());
+	  m_hVector_Evt_jet1phi.at(3)->Fill(eventexcl->GetLeadingJetPhi());
+	  m_hVector_Eff_jet1phi.at(3)->Fill(eventexcl->GetLeadingJetPhi());
+	  m_hVector_Evt_jet1eta.at(3)->Fill(eventexcl->GetLeadingJetEta());
+	  m_hVector_Eff_jet1eta.at(3)->Fill(eventexcl->GetLeadingJetEta());
+	  m_hVector_Evt_jet2pt.at(3)->Fill(eventexcl->GetSecondJetPt());
+	  m_hVector_Eff_jet2pt.at(3)->Fill(eventexcl->GetSecondJetPt());
+	  m_hVector_Evt_jet2phi.at(3)->Fill(eventexcl->GetSecondJetPhi());
+	  m_hVector_Eff_jet2phi.at(3)->Fill(eventexcl->GetSecondJetPhi());
+	  m_hVector_Evt_jet2eta.at(3)->Fill(eventexcl->GetSecondJetEta());
+	  m_hVector_Eff_jet2eta.at(3)->Fill(eventexcl->GetSecondJetEta());
+	  m_hVector_Evt_deltaphi.at(3)->Fill(deltaphi_);
+	  m_hVector_Eff_deltaphi.at(3)->Fill(deltaphi_);
 
-
-	  if(eventexcl->GetLeadingJetP4().Pt() > 60. && eventexcl->GetSecondJetP4().Pt() > 60. ){
+	  if(eventexcl->GetLeadingJetPt() > 60. && eventexcl->GetSecondJetPt() > 60. ){
 	    ++counterdijets;
 	    m_hVector_Evt_lumis.at(4)->Fill(eventinfo->GetInstLumiBunch());
 	    m_hVector_Eff_lumis.at(4)->Fill(eventinfo->GetInstLumiBunch());
+	    m_hVector_Evt_preplus.at(4)->Fill(eventdiff->GetSumEnergyHFPlus());
+	    m_hVector_Eff_preplus.at(4)->Fill(eventdiff->GetSumEnergyHFPlus());
+	    m_hVector_Evt_preminus.at(4)->Fill(eventdiff->GetSumEnergyHFMinus());
+	    m_hVector_Eff_preminus.at(4)->Fill(eventdiff->GetSumEnergyHFMinus());
+	    m_hVector_Evt_vertex.at(4)->Fill(eventexcl->GetNVertex());
+	    m_hVector_Eff_vertex.at(4)->Fill(eventexcl->GetNVertex());
+	    m_hVector_Evt_jet1pt.at(4)->Fill(eventexcl->GetLeadingJetPt());
+	    m_hVector_Eff_jet1pt.at(4)->Fill(eventexcl->GetLeadingJetPt());
+	    m_hVector_Evt_jet1phi.at(4)->Fill(eventexcl->GetLeadingJetPhi());
+	    m_hVector_Eff_jet1phi.at(4)->Fill(eventexcl->GetLeadingJetPhi());
+	    m_hVector_Evt_jet1eta.at(4)->Fill(eventexcl->GetLeadingJetEta());
+	    m_hVector_Eff_jet1eta.at(4)->Fill(eventexcl->GetLeadingJetEta());
+	    m_hVector_Evt_jet2pt.at(4)->Fill(eventexcl->GetSecondJetPt());
+	    m_hVector_Eff_jet2pt.at(4)->Fill(eventexcl->GetSecondJetPt());
+	    m_hVector_Evt_jet2phi.at(4)->Fill(eventexcl->GetSecondJetPhi());
+	    m_hVector_Eff_jet2phi.at(4)->Fill(eventexcl->GetSecondJetPhi());
+	    m_hVector_Evt_jet2eta.at(4)->Fill(eventexcl->GetSecondJetEta());
+	    m_hVector_Eff_jet2eta.at(4)->Fill(eventexcl->GetSecondJetEta());
+	    m_hVector_Evt_deltaphi.at(4)->Fill(deltaphi_);
+	    m_hVector_Eff_deltaphi.at(4)->Fill(deltaphi_);
 
 	    if(deltaphi_>M_PI) deltaphi_=2.0*M_PI-deltaphi_;
 	    if(deltaphi_>0.5*M_PI) {
 
 	      ++counterdeltaphi;
 	      m_hVector_Evt_lumis.at(5)->Fill(eventinfo->GetInstLumiBunch());
-              m_hVector_Eff_lumis.at(5)->Fill(eventinfo->GetInstLumiBunch());
+	      m_hVector_Eff_lumis.at(5)->Fill(eventinfo->GetInstLumiBunch());
+	      m_hVector_Evt_preplus.at(5)->Fill(eventdiff->GetSumEnergyHFPlus());
+	      m_hVector_Eff_preplus.at(5)->Fill(eventdiff->GetSumEnergyHFPlus());
+	      m_hVector_Evt_preminus.at(5)->Fill(eventdiff->GetSumEnergyHFMinus());
+	      m_hVector_Eff_preminus.at(5)->Fill(eventdiff->GetSumEnergyHFMinus());
+	      m_hVector_Evt_vertex.at(5)->Fill(eventexcl->GetNVertex());
+	      m_hVector_Eff_vertex.at(5)->Fill(eventexcl->GetNVertex());
+	      m_hVector_Evt_jet1pt.at(5)->Fill(eventexcl->GetLeadingJetPt());
+	      m_hVector_Eff_jet1pt.at(5)->Fill(eventexcl->GetLeadingJetPt());
+	      m_hVector_Evt_jet1phi.at(5)->Fill(eventexcl->GetLeadingJetPhi());
+	      m_hVector_Eff_jet1phi.at(5)->Fill(eventexcl->GetLeadingJetPhi());
+	      m_hVector_Evt_jet1eta.at(5)->Fill(eventexcl->GetLeadingJetEta());
+	      m_hVector_Eff_jet1eta.at(5)->Fill(eventexcl->GetLeadingJetEta());
+	      m_hVector_Evt_jet2pt.at(5)->Fill(eventexcl->GetSecondJetPt());
+	      m_hVector_Eff_jet2pt.at(5)->Fill(eventexcl->GetSecondJetPt());
+	      m_hVector_Evt_jet2phi.at(5)->Fill(eventexcl->GetSecondJetPhi());
+	      m_hVector_Eff_jet2phi.at(5)->Fill(eventexcl->GetSecondJetPhi());
+	      m_hVector_Evt_jet2eta.at(5)->Fill(eventexcl->GetSecondJetEta());
+	      m_hVector_Eff_jet2eta.at(5)->Fill(eventexcl->GetSecondJetEta());
+	      m_hVector_Evt_deltaphi.at(5)->Fill(deltaphi_);
+	      m_hVector_Eff_deltaphi.at(5)->Fill(deltaphi_);
+
+
 
 	      // Eta max and Eta min cut
 	      if ((eventdiff->GetEtaMinFromPFCands() > -4. && eventdiff->GetEtaMaxFromPFCands() < 4.) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990) ){
@@ -267,7 +497,7 @@ void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string 
 
 
   //Scalling Plots
-  for (int k=0; k<10; k++){
+  for (std::vector<std::string>::size_type k=0; k<FoldersLum.size(); k++){
     m_hVector_Eff_lumis.at(k)->Scale(1./TotalE);
   }
 
@@ -335,8 +565,8 @@ int main(int argc, char **argv)
   if (argc > 8 && strcmp(s1,argv[8]) != 0)  switchTrigger_   = atoi(argv[8]);
 
 
-  EffMacro* exclDijets = new EffMacro();   
-  exclDijets->Run(filein_, savehistofile_, processname_, optnVertex_, optTrigger_, switchPreSel_, switchVertex_, switchTrigger_);
+  Purity* purity = new Purity();   
+  purity->Run(filein_, savehistofile_, processname_, optnVertex_, optTrigger_, switchPreSel_, switchVertex_, switchTrigger_);
 
   return 0;
 }
