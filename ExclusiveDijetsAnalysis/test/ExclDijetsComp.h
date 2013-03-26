@@ -80,6 +80,11 @@ class ExclDijetsComp {
    std::vector<std::vector<TH1D*> > m_hVector_sumEHFplusVsiEta;
    std::vector<std::vector<TH1D*> > m_hVector_sumEHFminusVsiEta;
    std::vector<std::vector<TH1D*> > m_hVector_lumi;
+   std::vector<std::vector<TH2D*> > m_hVector_sumEHFplusVsetaMax;
+   std::vector<std::vector<TH2D*> > m_hVector_sumEHFminusVsetaMin;
+   std::vector<std::vector<TH2D*> > m_hVector_sumEHFpfplusVsetaMax;
+   std::vector<std::vector<TH2D*> > m_hVector_sumEHFpfminusVsetaMin;
+
    //
    public :
    ExclDijetsComp() {}
