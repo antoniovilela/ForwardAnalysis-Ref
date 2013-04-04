@@ -980,7 +980,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
 
 
 	    // Setting Analysis Cut
-	    if ((eventexcl->GetLeadingJetP4().Pt() > jet1PT && eventexcl->GetSecondJetP4().Pt() > jet2PT) && (eventexcl->GetLeadingJetP4().Pt() < 220 && eventexcl->GetSecondJetP4().Pt() < 220) ){
+	    if ((eventexcl->GetLeadingJetPt() > jet1PT && eventexcl->GetSecondJetPt() > jet2PT) && (eventexcl->GetLeadingJetPt() < 400 && eventexcl->GetSecondJetPt() < 400) ){
 
 	      if(deltaphi_>M_PI) deltaphi_=2.0*M_PI-deltaphi_;
 	      if(deltaphi_>0.5*M_PI) {
