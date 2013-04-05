@@ -74,6 +74,7 @@ class ExclDijetsComp {
    std::vector<std::vector<TH1D*> > m_hVector_sumEHEminus;
    std::vector<std::vector<TH1D*> > m_hVector_sumEHFpfplus;
    std::vector<std::vector<TH1D*> > m_hVector_sumEHFpfminus;
+   std::vector<std::vector<TH1D*> > m_hVector_sumECastor;
    std::vector<std::vector<TH1D*> > m_hVector_deltaEtaPF;
    std::vector<std::vector<TH1D*> > m_hVector_absdeltaEtaPF;
    std::vector<std::vector<TH1D*> > m_hVector_vertex;
