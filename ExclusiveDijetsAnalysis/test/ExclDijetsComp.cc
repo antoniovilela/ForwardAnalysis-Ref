@@ -1041,7 +1041,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
 
 		////////////////////////////////////////////////
 
-		if (eventexcl->GetLeadingJetP4().Eta() < 5.2 && eventexcl->GetSecondJetP4().Eta() < 5.2 && eventexcl->GetLeadingJetP4().Eta() > -5.2 && eventexcl->GetSecondJetP4().Eta() > -5.2){
+		if (eventexcl->GetLeadingJetEta() < 5.2 && eventexcl->GetSecondJetEta() < 5.2 && eventexcl->GetLeadingJetEta() > -5.2 && eventexcl->GetSecondJetEta() > -5.2){
 
 		  counterJetsAllstep3+=totalweight*triggereff_vertex;
 
@@ -1271,7 +1271,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
 		}  
 		// end Jets at all CMS Acceptance
 
-		if (eventexcl->GetLeadingJetP4().Eta() < 2.9 && eventexcl->GetSecondJetP4().Eta() < 2.9 && eventexcl->GetLeadingJetP4().Eta() > -2.9 && eventexcl->GetSecondJetP4().Eta() > -2.9){
+		if (eventexcl->GetLeadingJetEta() < 2.9 && eventexcl->GetSecondJetEta() < 2.9 && eventexcl->GetLeadingJetEta() > -2.9 && eventexcl->GetSecondJetEta() > -2.9){
 
 		  counterJetsTrackerstep3+=totalweight*triggereff_vertex;
 
@@ -1502,7 +1502,7 @@ void ExclDijetsComp::Run(std::string filein_, std::string savehistofile_, std::s
 		} // end jets at tracker
 
 
-		if (eventexcl->GetLeadingJetP4().Eta() < 2. && eventexcl->GetSecondJetP4().Eta() < 2. && eventexcl->GetLeadingJetP4().Eta() > -2. && eventexcl->GetSecondJetP4().Eta() > -2.){
+		if (eventexcl->GetLeadingJetEta() < 2. && eventexcl->GetSecondJetEta() < 2. && eventexcl->GetLeadingJetEta() > -2. && eventexcl->GetSecondJetEta() > -2.){
 
 		  counterJetsEta2step3+=totalweight*triggereff_vertex;
 
