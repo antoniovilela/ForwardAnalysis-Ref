@@ -8,6 +8,15 @@
   <use   name="ForwardAnalysis/ForwardTTreeAnalysis"/>
   <use   name="KKousour/QCDAnalysis"/>
 </bin>
+<bin   file="Purity.cc" name="PurityCom">
+  <use   name="root"/>
+  <use   name="rootcore"/>
+  <use   name="FWCore/FWLite"/>
+  <use   name="PhysicsTools/Utilities"/>
+  <use   name="ForwardAnalysis/Utilities"/>
+  <use   name="ForwardAnalysis/ForwardTTreeAnalysis"/>
+  <use   name="KKousour/QCDAnalysis"/>
+</bin>
 <bin   file="EffMacroFWDTrigger.cc" name="EffMacroFWDTriggerCom">
   <use   name="root"/>
   <use   name="rootcore"/>
@@ -35,3 +44,13 @@
   <use   name="ForwardAnalysis/ForwardTTreeAnalysis"/>
   <use   name="KKousour/QCDAnalysis"/>
 </bin>
+<bin   file="CastorThreshold.cc" name="CastorThreshold">
+  <use   name="root"/>
+  <use   name="rootcore"/>
+  <use   name="FWCore/FWLite"/>
+  <use   name="PhysicsTools/Utilities"/>
+  <use   name="ForwardAnalysis/Utilities"/>
+  <use   name="ForwardAnalysis/ForwardTTreeAnalysis"/>
+  <use   name="KKousour/QCDAnalysis"/>
+</bin>
+

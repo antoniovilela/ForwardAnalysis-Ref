@@ -400,7 +400,7 @@ void Purity::Run(std::string filein_, std::string savehistofile_, std::string pr
 	  m_hVector_Evt_deltaphi.at(3)->Fill(deltaphi_);
 	  m_hVector_Eff_deltaphi.at(3)->Fill(deltaphi_);
 
-	  if(eventexcl->GetLeadingJetPt() > 60. && eventexcl->GetSecondJetPt() > 60. ){
+	  if(eventexcl->GetSecondJetPt() > 10. ){
 	    ++counterdijets;
 	    m_hVector_Evt_lumis.at(4)->Fill(eventinfo->GetInstLumiBunch());
 	    m_hVector_Eff_lumis.at(4)->Fill(eventinfo->GetInstLumiBunch());
