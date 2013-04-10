@@ -122,7 +122,7 @@ process.exclusiveDijetsAnalysisZeroBiasTTree = cms.EDAnalyzer("EventInfoDiffract
         ExclusiveDijetsAnalysis = ExclusiveDijetsAnalysis
         )
 
-process.exclusiveDijetsHLTFilter.HLTPaths = ['HLT_ZeroBias'] 
+process.exclusiveDijetsHLTFilter.HLTPaths = ['HLT_ZeroBias', 'HLT_BPTX_PlusOnly' ,'HLT_BPTX_MinusOnly'] 
 
 process.exclusiveDijetsAnalysisZeroBiasTTree.DiffractiveAnalysis.hltPath = ''
 process.exclusiveDijetsAnalysisZeroBiasTTree.DiffractiveAnalysis.trackTag = 'analysisTracks'
@@ -131,7 +131,7 @@ process.exclusiveDijetsAnalysisZeroBiasTTree.DiffractiveAnalysis.energyThreshold
 process.exclusiveDijetsAnalysisZeroBiasTTree.DiffractiveAnalysis.particleFlowTag = "pfCandidateNoiseThresholds"
 process.exclusiveDijetsAnalysisZeroBiasTTree.DiffractiveAnalysis.jetTag = "selectedPatJetsPFlow"
 
-process.exclusiveDijetsAnalysisZeroBiasTTree.ExclusiveDijetsAnalysis.hltPaths = ['HLT_ZeroBias']
+process.exclusiveDijetsAnalysisZeroBiasTTree.ExclusiveDijetsAnalysis.hltPaths = ['HLT_ZeroBias', 'HLT_BPTX_PlusOnly' ,'HLT_BPTX_MinusOnly']
 process.exclusiveDijetsAnalysisZeroBiasTTree.ExclusiveDijetsAnalysis.TrackTag = 'analysisTracks'
 process.exclusiveDijetsAnalysisZeroBiasTTree.ExclusiveDijetsAnalysis.VertexTag = "goodOfflinePrimaryVertices"
 process.exclusiveDijetsAnalysisZeroBiasTTree.ExclusiveDijetsAnalysis.ParticleFlowTag = "pfCandidateNoiseThresholds"
