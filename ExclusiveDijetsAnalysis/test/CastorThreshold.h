@@ -58,7 +58,7 @@ class CastorThreshold {
 
   void Run(std::string, std::string, std::string, std::string);
   void LoadFile(std::string,std::string);
-  void CreateHistos();
+  void CreateHistos(std::string);
   void FillHistos(int);
   void SaveHistos();
 

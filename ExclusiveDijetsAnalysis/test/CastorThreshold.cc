@@ -34,7 +34,8 @@ void CastorThreshold::LoadFile(std::string fileinput, std::string processinput){
   inf = NULL;
   tr  = NULL;
   inf = TFile::Open(fileinput.c_str(),"read");
-  tr = (TTree*)inf->Get(processinput.c_str());
+  std::string fdirectory = processinput + "/ProcessedTree";
+  tr = (TTree*)inf->Get(fdirectory.c_str());
   eventdiff = new DiffractiveEvent();
   eventexcl = new ExclusiveDijetsEvent();
   eventinfo = new EventInfoEvent();
@@ -47,14 +48,21 @@ void CastorThreshold::LoadFile(std::string fileinput, std::string processinput){
 
 }
 
-void CastorThreshold::CreateHistos(){
+void CastorThreshold::CreateHistos(std::string type){
 
-  Folders.push_back("without_cuts");
-  Folders.push_back("with_type");
-  Folders.push_back("d_eta4");
-  Folders.push_back("d_eta3");
-  Folders.push_back("d_eta2");
-  Folders.push_back("d_eta1");
+  std::string step0 = "without_cuts_" + type;
+  std::string step1 = "with_type_" + type;  
+  std::string step2 = "d_eta4_" + type;
+  std::string step3 = "d_eta3_" + type;
+  std::string step4 = "d_eta2_" + type;
+  std::string step5 = "d_eta1_" + type;
+
+  Folders.push_back(step0);
+  Folders.push_back(step1);
+  Folders.push_back(step2);
+  Folders.push_back(step3);
+  Folders.push_back(step4);
+  Folders.push_back(step5);
 
   for (std::vector<std::string>::size_type j=0; j<Folders.size(); j++){
 
@@ -187,20 +195,33 @@ void CastorThreshold::Run(std::string filein_, std::string savehistofile_, std::
   if (check1.IsZombie()){
 
     std::cout << "\n----------------------------------------------" << std::endl;
-    std::cout << " There is no PatTuple file or the"   << std::endl;
+    std::cout << " There is no the file " << filein << " or the"   << std::endl;
     std::cout << " path is not correct." << std::endl;
-    std::cout << " Edit the source and recompile." << std::endl;
-    std::cout << "----------------------------------------------" << std::endl;
+    std::cout << "------------------------------------------------" << std::endl;
     return;
 
   }
 
-  LoadFile(filein,processname);
+  if (check1.GetDirectory(processname.c_str())){
+    LoadFile(filein,processname);
+  }
+
+  else {
+    std::cout << "\n-------------------------------------------------" << std::endl;
+    std::cout << " There is no directory/path " << processname << std::endl;
+    std::cout << " in the file." << std::endl;
+    std::cout << "---------------------------------------------------" << std::endl;
+    return;
+  }
 
   TFile *outf = new TFile(savehistofile.c_str(),"RECREATE");
+  TString outtxt = savehistofile;
+  outtxt.ReplaceAll("root","txt");
+  std::ofstream outstring(outtxt);
 
   int NEVENTS = tr->GetEntries();
   int decade = 0;
+  int triggercounter[20]={0};
 
   TH1::SetDefaultSumw2(true);
   TH2::SetDefaultSumw2(true);
@@ -214,7 +235,6 @@ void CastorThreshold::Run(std::string filein_, std::string savehistofile_, std::
 
   for(int i=0;i<NEVENTS;i++){
 
-
     double progress = 10.0*i/(1.0*NEVENTS);
     int l = TMath::FloorNint(progress); 
 
@@ -226,6 +246,12 @@ void CastorThreshold::Run(std::string filein_, std::string savehistofile_, std::
     decade = l;          
 
     tr->GetEntry(i);
+
+    for (int nt=0;nt<20;nt++){
+      if(eventexcl->GetHLTPath(nt)){
+	triggercounter[nt]++;
+      }
+    }
 
     bool triggerZeroBias = false;
     bool triggerHLTPlus = false;
@@ -252,7 +278,7 @@ void CastorThreshold::Run(std::string filein_, std::string savehistofile_, std::
     if ((eventdiff->GetEtaMinFromPFCands() > -1. && eventdiff->GetEtaMaxFromPFCands() < 1.) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990) ) d_eta1 = true;
 
     if (type == "collisions"){
-     if (triggerZeroBias && vertex && tracks) collisions = true;
+      if (triggerZeroBias && vertex && tracks) collisions = true;
       status = "collisions";
       FillHistos(0); 
       if (collisions) FillHistos(1);
@@ -263,7 +289,7 @@ void CastorThreshold::Run(std::string filein_, std::string savehistofile_, std::
     }
 
     else if (type == "unpaired"){
-      if((triggerHLTPlus || triggerHLTMinus) && !vertex && !tracks) unpaired = true; 
+      if((triggerHLTPlus || triggerHLTMinus)) unpaired = true; 
       status = "unpaired";
       FillHistos(0);
       if (unpaired) FillHistos(1);
@@ -280,9 +306,40 @@ void CastorThreshold::Run(std::string filein_, std::string savehistofile_, std::
 
   }   
 
-std::cout << "Type: " << status << std::endl;
-SaveHistos();
-outf->Close();
+
+  outstring << "" << std::endl;
+  outstring << "<< INPUTS >>" << std::endl;
+  outstring << " " << std::endl;
+  outstring << "Input file: " << filein << std::endl;
+  outstring << "Output file: " << savehistofile << std::endl;
+  outstring << " " << std::endl;
+  outstring << "Type: " << status << std::endl;
+  outstring << "" << std::endl;
+  outstring << "Total Trigger Fired: " <<  std::endl;
+  outstring << "Trigger 0: " << triggercounter[0] << std::endl;
+  outstring << "Trigger 1: " << triggercounter[1] << std::endl;
+  outstring << "Trigger 2: " << triggercounter[2] << std::endl;
+  outstring << "Trigger 3: " << triggercounter[3] << std::endl;
+  outstring << "Trigger 4: " << triggercounter[4] << std::endl;
+  outstring << "Trigger 5: " << triggercounter[5] << std::endl;
+  outstring << "Trigger 6: " << triggercounter[6] << std::endl;
+  outstring << "Trigger 7: " << triggercounter[7] << std::endl;
+  outstring << "Trigger 8: " << triggercounter[8] << std::endl;
+  outstring << "Trigger 9: " << triggercounter[9] << std::endl;
+  outstring << "Trigger 10: " << triggercounter[10] << std::endl;
+  outstring << "Trigger 11: " << triggercounter[11] << std::endl;
+  outstring << "Trigger 12: " << triggercounter[12] << std::endl;
+  outstring << "Trigger 13: " << triggercounter[13] << std::endl;
+  outstring << "Trigger 14: " << triggercounter[14] << std::endl;
+  outstring << "Trigger 15: " << triggercounter[15] << std::endl;
+  outstring << "Trigger 16: " << triggercounter[16] << std::endl;
+  outstring << "Trigger 17: " << triggercounter[17] << std::endl;
+  outstring << "Trigger 18: " << triggercounter[18] << std::endl;
+  outstring << "Trigger 19: " << triggercounter[19] << std::endl;
+  outstring << "" << std::endl;
+
+  SaveHistos();
+  outf->Close();
 
 }
 
@@ -304,7 +361,7 @@ int main(int argc, char **argv)
   if (argc > 4 && strcmp(s1,argv[4]) != 0)  type_  = argv[4];
 
   CastorThreshold* castor = new CastorThreshold();   
-  castor->CreateHistos();
+  castor->CreateHistos(type_);
   castor->Run(filein_, savehistofile_, processname_, type_);
 
   return 0;
