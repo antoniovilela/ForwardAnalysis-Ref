@@ -289,7 +289,7 @@ void CastorThreshold::Run(std::string filein_, std::string savehistofile_, std::
     }
 
     else if (type == "unpaired"){
-      if((triggerHLTPlus || triggerHLTMinus)) unpaired = true; 
+      if((triggerHLTPlus || triggerHLTMinus) && !vertex && !tracks) unpaired = true; 
       status = "unpaired";
       FillHistos(0);
       if (unpaired) FillHistos(1);
