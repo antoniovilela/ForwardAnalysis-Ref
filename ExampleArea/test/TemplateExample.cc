@@ -2,7 +2,7 @@
 // UNIVERSIDADE DO ESTADO DO RIO DE JANEIRO - CMS/Brasil
 //-------------------------------------------------------------------------------------------------------->>
 //
-// Twiki: https://twiki.cern.ch/twiki/bin/view/CMS/FwdPhysicsExclusiveDijetsAnalysis#Example_Analysis_Macro
+// Twiki: https://twiki.cern.ch/twiki/bin/view/CMS/UsingPATonFWDDiJets#Macro_Analysis_Example
 //
 
 //
