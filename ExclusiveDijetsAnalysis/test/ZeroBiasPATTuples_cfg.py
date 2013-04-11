@@ -22,7 +22,7 @@ config.NumberOfEvents = 10
 #
 
 config.l1Paths = ('L1_ZeroBias','L1_BptxMinus_NotBptxPlus','L1_SingleJet30U')
-config.hltPaths = ('HLT_ZeroBias', 'HLT_BPTX_PlusOnly' ,'HLT_BPTX_MinusOnly')   
+config.hltPaths = ('HLT_ZeroBias', 'HLT_L1_BPTX_PlusOnly' ,'HLT_L1_BPTX_MinusOnly')   
 config.inputFileName = '/storage1/eliza/samples_test/MinimumBias_ZeorBias.root'
 config.runPUMC = False
 config.runGen = False
@@ -122,7 +122,7 @@ process.exclusiveDijetsAnalysisZeroBiasTTree = cms.EDAnalyzer("EventInfoDiffract
         ExclusiveDijetsAnalysis = ExclusiveDijetsAnalysis
         )
 
-process.exclusiveDijetsHLTFilter.HLTPaths = ['HLT_ZeroBias', 'HLT_BPTX_PlusOnly' ,'HLT_BPTX_MinusOnly'] 
+process.exclusiveDijetsHLTFilter.HLTPaths = ['HLT_ZeroBias', 'HLT_L1_BPTX_PlusOnly' ,'HLT_L1_BPTX_MinusOnly'] 
 
 process.exclusiveDijetsAnalysisZeroBiasTTree.DiffractiveAnalysis.hltPath = ''
 process.exclusiveDijetsAnalysisZeroBiasTTree.DiffractiveAnalysis.trackTag = 'analysisTracks'
@@ -131,7 +131,7 @@ process.exclusiveDijetsAnalysisZeroBiasTTree.DiffractiveAnalysis.energyThreshold
 process.exclusiveDijetsAnalysisZeroBiasTTree.DiffractiveAnalysis.particleFlowTag = "pfCandidateNoiseThresholds"
 process.exclusiveDijetsAnalysisZeroBiasTTree.DiffractiveAnalysis.jetTag = "selectedPatJetsPFlow"
 
-process.exclusiveDijetsAnalysisZeroBiasTTree.ExclusiveDijetsAnalysis.hltPaths = ['HLT_ZeroBias', 'HLT_BPTX_PlusOnly' ,'HLT_BPTX_MinusOnly']
+process.exclusiveDijetsAnalysisZeroBiasTTree.ExclusiveDijetsAnalysis.hltPaths = ['HLT_ZeroBias', 'HLT_L1_BPTX_PlusOnly' ,'HLT_L1_BPTX_MinusOnly']
 process.exclusiveDijetsAnalysisZeroBiasTTree.ExclusiveDijetsAnalysis.TrackTag = 'analysisTracks'
 process.exclusiveDijetsAnalysisZeroBiasTTree.ExclusiveDijetsAnalysis.VertexTag = "goodOfflinePrimaryVertices"
 process.exclusiveDijetsAnalysisZeroBiasTTree.ExclusiveDijetsAnalysis.ParticleFlowTag = "pfCandidateNoiseThresholds"
