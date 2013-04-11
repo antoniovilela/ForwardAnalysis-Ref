@@ -32,7 +32,6 @@ class CastorThreshold {
   std::string processname;
   std::string savehistofile;
   std::string type;
-  bool switchPreSel;
 
   std::vector<TH1D*> m_hVector_tracks;
   std::vector<TH1D*> m_hVector_pfetamax;
