@@ -687,16 +687,6 @@ int main(int argc, char **argv)
   std::string switchcutcorr_;
   std::string switchtriggercorr_;
 
-  TFile* pudata;
-  TFile* pumc;
-  TFile* effcut;
-  TFile* efftrigger;
-
-  pudata=NULL;
-  pumc=NULL;
-  effcut=NULL;
-  efftrigger=NULL;
-
   if (argc > 1 && strcmp(s1,argv[1]) != 0)  filein_ = argv[1];
   if (argc > 2 && strcmp(s1,argv[2]) != 0)  savehistofile_  = argv[2];
   if (argc > 3 && strcmp(s1,argv[3]) != 0)  processname_  = argv[3];
@@ -710,22 +700,20 @@ int main(int argc, char **argv)
   if (argc > 11 && strcmp(s1,argv[11]) != 0) switchcutcorr_ = argv[11];
   if (argc > 12 && strcmp(s1,argv[12]) != 0) switchtriggercorr_ = argv[12];
 
-
-
   if (type_=="multiple_pileup" || type_=="no_multiple_pileup") {
     ExclusiveDijet* exclusive = new ExclusiveDijet();
     exclusive->CreateHistos(type_);
 
-    pudata = TFile::Open(pudatafile_.c_str(),"read");
-    pumc = TFile::Open(pumcfile_.c_str(),"read");
-    if (pudata->IsZombie() || pumc->IsZombie()){
+    TFile pudata(pudatafile_.c_str());
+    TFile pumc(pumcfile_.c_str());
+    if (pudata.IsZombie() || pumc.IsZombie()){
       std::cout << "----------------------------------------------" << std::endl;
       std::cout << " There is no Pile-Up data/mc file or the"   << std::endl;
       std::cout << " path is not correct." << std::endl;
       std::cout << "----------------------------------------------" << std::endl; 
       return 0;
     }
-    else if (!pudata->GetListOfKeys()->Contains("pileup") || !pumc->GetListOfKeys()->Contains("pileUpBx0_complete_without_cuts") ){
+    else if (!pudata.GetListOfKeys()->Contains("pileup") || !pumc.GetListOfKeys()->Contains("pileUpBx0_complete_without_cuts") ){
       std::cout << "----------------------------------------------" << std::endl;
       std::cout << " There is no Pile-Up data/mc histograms: "   << std::endl;
       std::cout << " data: pileup" << std::endl;
@@ -735,15 +723,15 @@ int main(int argc, char **argv)
     }
 
     if(switchcutcorr_ == "cut_correction"){
-      effcut = TFile::Open(cutcorrfile_.c_str(),"read");
-      if (effcut->IsZombie()){
+      TFile effcut(cutcorrfile_.c_str());
+      if (effcut.IsZombie()){
 	std::cout << "---------------------------------------" << std::endl;
 	std::cout << " There is no Efficiency cut file or the"   << std::endl;
 	std::cout << " path is not correct." << std::endl;
 	std::cout << "---------------------------------------" << std::endl;
 	return 0;
       }
-      else if (!effcut->GetListOfKeys()->Contains("RatioPreSel") || !effcut->GetListOfKeys()->Contains("RatioVertex") || !effcut->GetListOfKeys()->Contains("RatioStep4_4") || !effcut->GetListOfKeys()->Contains("RatioStep4_3") || !effcut->GetListOfKeys()->Contains("RatioStep4_2")| !effcut->GetListOfKeys()->Contains("RatioStep4_1")){
+      else if (!effcut.GetListOfKeys()->Contains("RatioPreSel") || !effcut.GetListOfKeys()->Contains("RatioVertex") || !effcut.GetListOfKeys()->Contains("RatioStep4_4") || !effcut.GetListOfKeys()->Contains("RatioStep4_3") || !effcut.GetListOfKeys()->Contains("RatioStep4_2")| !effcut.GetListOfKeys()->Contains("RatioStep4_1")){
 	std::cout << "----------------------------------------------" << std::endl;
 	std::cout << " There is no Eff. Cuts histograms " << std::endl; 
 	std::cout << "----------------------------------------------" << std::endl;
@@ -752,15 +740,15 @@ int main(int argc, char **argv)
 
     }
     if(switchtriggercorr_ == "trigger_correction"){
-      efftrigger = TFile::Open(triggercorrfile_.c_str(),"read");
-      if (efftrigger->IsZombie()){
+      TFile efftrigger(triggercorrfile_.c_str());
+      if (efftrigger.IsZombie()){
 	std::cout << "-------------------------------------------" << std::endl;
 	std::cout << " There is no trigger efficiency file or the"   << std::endl;
 	std::cout << " path is not correct." << std::endl;
 	std::cout << "-------------------------------------------" << std::endl;
 	return 0;
       }
-      else if (!efftrigger->GetListOfKeys()->Contains("Events_with_RefTriggerCutsOffLineAndTrigger_eta4") || !efftrigger->GetListOfKeys()->Contains("Events_with_RefTriggerCutsOffLineAndTrigger_eta3") || !efftrigger->GetListOfKeys()->Contains("Events_with_RefTriggerCutsOffLineAndTrigger_eta2") || !efftrigger->GetListOfKeys()->Contains("Events_with_RefTriggerCutsOffLineAndTrigger_eta1")){
+      else if (!efftrigger.GetListOfKeys()->Contains("Events_with_RefTriggerCutsOffLineAndTrigger_eta4") || !efftrigger.GetListOfKeys()->Contains("Events_with_RefTriggerCutsOffLineAndTrigger_eta3") || !efftrigger.GetListOfKeys()->Contains("Events_with_RefTriggerCutsOffLineAndTrigger_eta2") || !efftrigger.GetListOfKeys()->Contains("Events_with_RefTriggerCutsOffLineAndTrigger_eta1")){
 	std::cout << "----------------------------------------------" << std::endl;
 	std::cout << " There is no Eff. Trigger histograms " << std::endl;
 	std::cout << "----------------------------------------------" << std::endl;
