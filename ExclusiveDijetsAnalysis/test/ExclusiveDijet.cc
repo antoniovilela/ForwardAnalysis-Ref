@@ -6,6 +6,7 @@
 //
 
 //#if !defined(__CINT__) || defined(__MAKECINT__)
+
 #include <TROOT.h>
 #include <TChain.h>
 #include <TString.h>
@@ -52,12 +53,15 @@ void ExclusiveDijet::LoadFile(std::string fileinput, std::string processinput){
 
 void ExclusiveDijet::CreateHistos(std::string type){
 
-  std::string step0 = "without_cuts";
-  std::string step1 = "with_type";  
-  std::string step2 = "d_eta4";
-  std::string step3 = "d_eta3";
-  std::string step4 = "d_eta2";
-  std::string step5 = "d_eta1";
+  std::string step0 = "without_cuts"; // Without cuts
+  std::string step1 = "with_trigger"; // Trigger
+  std::string step2 = "step1"; // Trigger + Presel
+  std::string step3 = "step2"; // Trigger + Presel + Vertex
+  std::string step4 = "step3"; // Trigger + Presel + Vertex + Dijet
+  std::string step5 = "step4_4"; // Trigger + Presel + Vertex + Dijet + Etamax/Etamin 4
+  std::string step6 = "step4_3"; // Trigger + Presel + Vertex + Dijet + Etamax/Etamin 3
+  std::string step7 = "step4_2"; // Trigger + Presel + Vertex + Dijet + Etamax/Etamin 2
+  std::string step8 = "step4_1"; // Trigger + Presel + Vertex + Dijet + Etamax/Etamin 1
 
   Folders.push_back(step0);
   Folders.push_back(step1);
@@ -65,12 +69,14 @@ void ExclusiveDijet::CreateHistos(std::string type){
   Folders.push_back(step3);
   Folders.push_back(step4);
   Folders.push_back(step5);
+  Folders.push_back(step6);
+  Folders.push_back(step7);
+  Folders.push_back(step8);
 
   int nloop=-999;
 
   if (type=="multiple_pileup") nloop=21;
   else if (type=="no_multiple_pileup") nloop=1;
-
 
   char tag[300];
 
@@ -112,7 +118,6 @@ void ExclusiveDijet::CreateHistos(std::string type){
     m_hVector_sumEHFpfminusVsetaMin.push_back( std::vector<TH2D*>() );
     m_hVector_sumEHFplusVsiEta.push_back( std::vector<TH1D*>() );
     m_hVector_sumEHFminusVsiEta.push_back( std::vector<TH1D*>() );
-
 
     for (int k=0;k<nloop;k++){
 
@@ -310,7 +315,6 @@ void ExclusiveDijet::CreateHistos(std::string type){
   }
 }
 
-
 void ExclusiveDijet::FillHistos(int index, int pileup, double totalweight){
 
   m_hVector_rjj[index].at(pileup)->Fill(eventexcl->GetRjjFromJets(),totalweight);
@@ -351,7 +355,6 @@ void ExclusiveDijet::FillHistos(int index, int pileup, double totalweight){
 }
 
 void ExclusiveDijet::SaveHistos(std::string type){
-
 
   int ipileup;
 
@@ -399,31 +402,69 @@ void ExclusiveDijet::SaveHistos(std::string type){
 
 }
 
-/*
-   double ExclusiveDijet::cutCorrection(std::string filecor, ){
+double* ExclusiveDijet::cutCorrection(){
 
-   TFile *l1  = TFile::Open(filecor.c_str());
-   TH1F* h_eff_excl = (TH1F*)l1->Get("RatioPreSel");
-   TH1F* h_eff_vertex = (TH1F*)l1->Get("RatioVertex");
-   TH1F* h_eff_step_4_4 = (TH1F*)l1->Get("RatioStep4_4");
-   TH1F* h_eff_step_4_3 = (TH1F*)l1->Get("RatioStep4_3");
-   TH1F* h_eff_step_4_2 = (TH1F*)l1->Get("RatioStep4_2");
-   TH1F* h_eff_step_4_1 = (TH1F*)l1->Get("RatioStep4_1");
+  if (eventinfo->GetInstLumiBunch() < -999){
+    std::cout << "\n--------------------------------------------------------------" << std::endl;
+    std::cout << " Only apply cut correction in data, not in MC."   << std::endl;
+    std::cout << "--------------------------------------------------------------" << std::endl;
+    exit(EXIT_FAILURE);
+  }
 
-   }
+  double cutCorrection[6];
+  double* cutfactor;
 
-   double ExclusiveDijet::triggerCorrection(std::string ){
+  cutfactor = cutCorrection;
 
-   TFile *l2  = TFile::Open(filetrigger.c_str());
-   TH1F* h_eff_trigger_eta1 = (TH1F*)l2->Get("Events_with_RefTriggerCutsOffLineAndTrigger_eta1");
-   TH1F* h_eff_trigger_eta2 = (TH1F*)l2->Get("Events_with_RefTriggerCutsOffLineAndTrigger_eta2");
-   TH1F* h_eff_trigger_eta3 = (TH1F*)l2->Get("Events_with_RefTriggerCutsOffLineAndTrigger_eta3");
-   TH1F* h_eff_trigger_eta4 = (TH1F*)l2->Get("Events_with_RefTriggerCutsOffLineAndTrigger_eta4");
+  TH1F* h_eff_excl = (TH1F*)effcut->Get("RatioPreSel");
+  TH1F* h_eff_vertex = (TH1F*)effcut->Get("RatioVertex");
+  TH1F* h_eff_step_4_4 = (TH1F*)effcut->Get("RatioStep4_4");
+  TH1F* h_eff_step_4_3 = (TH1F*)effcut->Get("RatioStep4_3");
+  TH1F* h_eff_step_4_2 = (TH1F*)effcut->Get("RatioStep4_2");
+  TH1F* h_eff_step_4_1 = (TH1F*)effcut->Get("RatioStep4_1");
 
-   }
- */
+  cutCorrection[0] = 1./h_eff_excl->GetBinContent(h_eff_excl->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
+  cutCorrection[1] = 1./h_eff_vertex->GetBinContent(h_eff_vertex->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
+  cutCorrection[2] = 1./h_eff_step_4_4->GetBinContent(h_eff_step_4_4->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
+  cutCorrection[3] = 1./h_eff_step_4_3->GetBinContent(h_eff_step_4_3->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
+  cutCorrection[4] = 1./h_eff_step_4_2->GetBinContent(h_eff_step_4_2->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
+  cutCorrection[5] = 1./h_eff_step_4_1->GetBinContent(h_eff_step_4_1->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
 
-void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::string processname_, std::string type_, std::string jetunc_, std::string switchpucorr_, std::string pudatafile_, std::string pumcfile_){
+  return cutfactor;
+
+}
+
+double* ExclusiveDijet::triggerCorrection(){
+
+  if (eventinfo->GetInstLumiBunch() < -999){
+    std::cout << "\n--------------------------------------------------------------" << std::endl;
+    std::cout << " Only apply trigger correction in data, not in MC."   << std::endl;
+    std::cout << "--------------------------------------------------------------" << std::endl;
+    exit(EXIT_FAILURE);
+  }
+
+  double triggerCorrection[4];
+  double* triggerfactor;
+
+  triggerfactor = triggerCorrection;
+
+  TH1F* h_eff_trigger_eta1 = (TH1F*)efftrigger->Get("Events_with_RefTriggerCutsOffLineAndTrigger_eta1");
+  TH1F* h_eff_trigger_eta2 = (TH1F*)efftrigger->Get("Events_with_RefTriggerCutsOffLineAndTrigger_eta2");
+  TH1F* h_eff_trigger_eta3 = (TH1F*)efftrigger->Get("Events_with_RefTriggerCutsOffLineAndTrigger_eta3");
+  TH1F* h_eff_trigger_eta4 = (TH1F*)efftrigger->Get("Events_with_RefTriggerCutsOffLineAndTrigger_eta4");
+
+  triggerCorrection[0] = 1./h_eff_trigger_eta4->GetBinContent(h_eff_trigger_eta4->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
+  triggerCorrection[1] = 1./h_eff_trigger_eta3->GetBinContent(h_eff_trigger_eta3->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
+  triggerCorrection[2] = 1./h_eff_trigger_eta2->GetBinContent(h_eff_trigger_eta2->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
+  triggerCorrection[3] = 1./h_eff_trigger_eta1->GetBinContent(h_eff_trigger_eta1->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
+
+  return triggerfactor;
+
+}
+
+void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::string processname_, std::string switchtrigger_, std::string type_, std::string jetunc_, std::string switchpucorr_, std::string pudatafile_, std::string pumcfile_, std::string switchcutcorr_, std::string switchtriggercorr_, std::string cutcorrfile_, std::string triggercorrfile_, std::string switchlumiweight_, double lumiweight_, std::string switchmceventweight_, int optnVertex_, int optTrigger_, double jet1pT_, double jet2pT_){
+
+  bool debug = true;
 
   TH1::SetDefaultSumw2(true);
   TH2::SetDefaultSumw2(true);
@@ -432,16 +473,28 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
   savehistofile = savehistofile_;
   processname = processname_;
   type = type_;
+  switchtrigger = switchtrigger_;
   jetunc = jetunc_;
   switchpucorr = switchpucorr_;
   pudatafile = pudatafile_;
   pumcfile = pumcfile_;
+  switchcutcorr = switchcutcorr_;
+  switchtriggercorr = switchtriggercorr_;
+  cutcorrfile = cutcorrfile_;
+  triggercorrfile = triggercorrfile_;
+  switchlumiweight = switchlumiweight_;
+  lumiweight = lumiweight_;
+  switchmceventweight = switchmceventweight_;
+  optnVertex = optnVertex_;
+  optTrigger = optTrigger_;
+  jet1pT = jet1pT_;
+  jet2pT = jet2pT_;
 
   TFile check1(filein.c_str());
 
   if (check1.IsZombie()){
 
-    std::cout << "\n----------------------------------------------" << std::endl;
+    std::cout << "------------------------------------------------" << std::endl;
     std::cout << " There is no the file " << filein << " or the"   << std::endl;
     std::cout << " path is not correct." << std::endl;
     std::cout << "------------------------------------------------" << std::endl;
@@ -454,7 +507,7 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
   }
 
   else {
-    std::cout << "\n-------------------------------------------------" << std::endl;
+    std::cout << "---------------------------------------------------" << std::endl;
     std::cout << " There is no directory/path " << processname << std::endl;
     std::cout << " in the file." << std::endl;
     std::cout << "---------------------------------------------------" << std::endl;
@@ -483,6 +536,9 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
 
   edm::LumiReWeighting LumiWeights_(pumcfile.c_str(),pudatafile.c_str(),"pileUpBx0_complete_without_cuts","pileup");
 
+  if (switchtriggercorr == "trigger_correction") efftrigger = TFile::Open(triggercorrfile_.c_str());
+  if (switchcutcorr == "cut_correction") effcut = TFile::Open(cutcorrfile_.c_str());
+
   for(int i=0;i<NEVENTS;i++){
 
     deltaphi = -999.;
@@ -491,7 +547,6 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
     deltaetapf = -999.;
     ptJet1 = -999.;
     ptJet2 = -999.;
-    totalweight = -999;
 
     double progress = 10.0*i/(1.0*NEVENTS);
     int l = TMath::FloorNint(progress); 
@@ -553,81 +608,143 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
     else {
       ptJet1 = eventexcl->GetLeadingJetPt();
       ptJet2 = eventexcl->GetSecondJetPt();
-      jetstatus = "Unrecognized jet energy scale correction. Defined without it.";
+      jetstatus = "Unrecognized jet energy scale correction. Jets without uncertainty.";
     }
 
-    double totalweight = 1.; 
-    double weightpu = 1.;
+    double totalcommon = 1;
+    double mclumiweight = 1.;
+    double mcweightpu = 1.;
+    double mcweight = 1.;
 
-    if (switchpucorr=="pileup_correction") weightpu = LumiWeights_.weight(eventexcl->GetNPileUpBx0());
+    double triggereff4 = 1.;
+    double triggereff3 = 1.;
+    double triggereff2 = 1.;
+    double triggereff1 = 1.;
 
-    totalweight = weightpu;
+    double cuteff_excl = 1.; // presel
+    double cuteff_vertex = 1.; // presel + vertex
+    double cuteff_step4_4 = 1. ; // presel + vertex + etamax 4
+    double cuteff_step4_3 = 1.; // presel + vertex + etamax 3
+    double cuteff_step4_2 = 1.; // presel + vertex + etamax 2
+    double cuteff_step4_1 = 1.; // presel + vertex + etamax 1
 
-
-    if(pileup<21){
-      FillHistos(0,pileup,totalweight);
+    if (switchlumiweight == "mc_lumi_weight"){
+      mclumiweight = lumiweight;
     }
 
+    if (switchmceventweight == "mc_event_weight"){
+      if (eventinfo->GetGeneratorWeight() < 0){
+	std::cout << "\n--------------------------------------------------------------" << std::endl;
+	std::cout << " The event mc weight is negative. Set up correct MC."   << std::endl;
+	std::cout << "--------------------------------------------------------------" << std::endl;
+	exit(EXIT_FAILURE);
+      }
+      mcweight = eventinfo->GetGeneratorWeight();
+    }
 
+    if (switchpucorr=="pileup_correction") mcweightpu = LumiWeights_.weight(eventexcl->GetNPileUpBx0());
 
+    if (switchtriggercorr == "trigger_correction"){
+      double* vfactortrigger = triggerCorrection();
+      triggereff4 = vfactortrigger[0];
+      triggereff3 = vfactortrigger[1];
+      triggereff2 = vfactortrigger[2];
+      triggereff1 = vfactortrigger[3];
+    }
 
-    /*
+    if (switchcutcorr == "cut_correction"){
+      double* vfactorcut = cutCorrection();
+      cuteff_excl = vfactorcut[0];
+      cuteff_vertex = vfactorcut[1];
+      cuteff_step4_4 = vfactorcut[2];
+      cuteff_step4_3 = vfactorcut[3];
+      cuteff_step4_2 = vfactorcut[4];
+      cuteff_step4_1 = vfactorcut[5];
+    }
 
-       bool triggerZeroBias = false;
-       bool triggerHLTPlus = false;
-       bool triggerHLTMinus = false;
-       bool vertex = false;
-       bool tracks = false;
-       bool d_eta4 = false;
-       bool d_eta3 = false;
-       bool d_eta2 = false;
-       bool d_eta1 = false;
-       bool collisions = false;
-       bool unpaired = false;
-       bool presel = false;
+    totalcommon = mcweightpu*mcweight*mclumiweight;
 
-       if (eventexcl->GetHLTPath(0)) triggerZeroBias = true;
-       if (eventexcl->GetHLTPath(1)) triggerHLTPlus = true;
-       if (eventexcl->GetHLTPath(2)) triggerHLTMinus = true;
-       if ((eventdiff->GetSumEnergyHFMinus() < 30 && eventdiff->GetSumEnergyHFPlus() < 30) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990)) presel = true;
-       if (eventdiff->GetMultiplicityTracks() > 0) tracks = true;  
-       if (eventexcl->GetNVertex() > 0) vertex = true;
-       if ((eventdiff->GetEtaMinFromPFCands() > -4. && eventdiff->GetEtaMaxFromPFCands() < 4.) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990) ) d_eta4 = true;
-       if ((eventdiff->GetEtaMinFromPFCands() > -3. && eventdiff->GetEtaMaxFromPFCands() < 3.) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990) ) d_eta3 = true; 
-       if ((eventdiff->GetEtaMinFromPFCands() > -2. && eventdiff->GetEtaMaxFromPFCands() < 2.) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990) ) d_eta2 = true;
-       if ((eventdiff->GetEtaMinFromPFCands() > -1. && eventdiff->GetEtaMaxFromPFCands() < 1.) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990) ) d_eta1 = true;
+    if (debug){
+      if( i % 1000 == 0 ){
+	std::cout << "\nEvent " << i << std::endl;
+	std::cout << "Nr. events Bx 0: " << eventexcl->GetNPileUpBx0() << std::endl;
+	std::cout << "Lumi per Bunch: " << eventinfo->GetInstLumiBunch() << std::endl;
+	std::cout << "Leading Jet: " << eventexcl->GetLeadingJetPt() << " | Unc: " << eventexcl->GetUnc1() << " | Unc*pT: " << eventexcl->GetLeadingJetPt()*eventexcl->GetUnc1() << " | Eta: " << eventexcl->GetLeadingJetEta() << std::endl;
+	std::cout << "Second Jet: " << eventexcl->GetSecondJetPt() << " | Unc: " << eventexcl->GetUnc2() << " | Unc*pT: " << eventexcl->GetSecondJetPt()*eventexcl->GetUnc2() << " | Eta: " << eventexcl->GetSecondJetEta() << std::endl;
+	std::cout << "Leading Jet P4: " << eventexcl->GetLeadingJetP4().Pt() << " | Unc: " << eventexcl->GetUnc1() << " | Unc*pT: " << eventexcl->GetLeadingJetP4().Pt()*eventexcl->GetUnc1() << " | Eta: " << eventexcl->GetLeadingJetP4().Eta() << std::endl;
+	std::cout << "Second Jet P4: " << eventexcl->GetSecondJetP4().Pt() << " | Unc: " << eventexcl->GetUnc2() << " | Unc*pT: " << eventexcl->GetSecondJetP4().Pt()*eventexcl->GetUnc2() << " | Eta: " << eventexcl->GetSecondJetP4().Eta() << std::endl;
+	std::cout << "ReWeight Pile-up (a): " << mcweightpu << std::endl;
+	std::cout << "Event by Event MC flat weight (b): " << mcweight << std::endl;
+	std::cout << "Luminosity weight (c): " << mclumiweight <<std::endl;
+	std::cout << "Total Common weight (a*b*c): " << totalcommon <<std::endl; 
+	std::cout << "Trigger Eff. Corr Eta 4: " <<triggereff4 <<std::endl;
+	std::cout << "Trigger Eff. Corr Eta 3: " <<triggereff3 <<std::endl;
+	std::cout << "Trigger Eff. Corr Eta 2: " <<triggereff2 <<std::endl;
+	std::cout << "Trigger Eff. Corr Eta 1: " <<triggereff1 <<std::endl;
+	std::cout << "Eff cuts Pre Sel.: " << cuteff_excl <<std::endl;
+	std::cout << "Eff cuts vertex: " << cuteff_vertex <<std::endl;
+	std::cout << "Eff cuts eta 4: " << cuteff_step4_4 <<std::endl;
+	std::cout << "Eff cuts eta 3: " << cuteff_step4_3 <<std::endl;
+	std::cout << "Eff cuts eta 2: " << cuteff_step4_2 <<std::endl;
+	std::cout << "Eff cuts eta 1: " << cuteff_step4_1 <<std::endl;  
+      }
+    }
 
-       if (type == "collisions"){
-       if (triggerZeroBias && vertex && tracks) collisions = true;
-       status = "collisions";
-       FillHistos(0); 
-       if (collisions) FillHistos(1);
-       if (collisions && d_eta4) FillHistos(2);
-       if (collisions && d_eta3) FillHistos(3);
-       if (collisions && d_eta2) FillHistos(4);
-       if (collisions && d_eta1) FillHistos(5);
-       }
+    bool pileupdefense = false;
+    bool trigger = false;
+    bool presel = false;
+    bool vertex = false;
+    bool dijetpt = false;
+    bool dijeteta = false;
+    bool d_eta4 = false;
+    bool d_eta3 = false;
+    bool d_eta2 = false;
+    bool d_eta1 = false;
 
-       else if (type == "unpaired"){
-       if((triggerHLTPlus || triggerHLTMinus) && !vertex && !tracks) unpaired = true; 
-       status = "unpaired";
-       FillHistos(0);
-       if (unpaired) FillHistos(1);
-       if (unpaired && d_eta4) FillHistos(2);
-       if (unpaired && d_eta3) FillHistos(3);
-       if (unpaired && d_eta2) FillHistos(4);
-       if (unpaired && d_eta1) FillHistos(5);
-       }
+    if (pileup<21) pileupdefense = true;
+    if (eventexcl->GetHLTPath(optTrigger)) trigger = true;
+    if ( (eventdiff->GetSumEnergyHFPlus() < 30 && eventdiff->GetSumEnergyHFMinus() < 30) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990) ) presel = true;
+    if (eventexcl->GetNVertex() > 0 && eventexcl->GetNVertex()<= optnVertex) vertex = true;
+    if (eventexcl->GetLeadingJetP4().Pt() > jet1pT && eventexcl->GetSecondJetP4().Pt() > jet2pT) dijetpt = true;
+    if (eventexcl->GetLeadingJetP4().Eta() < 2.9 && eventexcl->GetSecondJetP4().Eta() < 2.9 && eventexcl->GetLeadingJetP4().Eta() > -2.9 && eventexcl->GetSecondJetP4().Eta() > -2.9) dijeteta = true; 
+    if ((eventdiff->GetEtaMinFromPFCands() > -4. && eventdiff->GetEtaMaxFromPFCands() < 4.) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990) ) d_eta4 = true;
+    if ((eventdiff->GetEtaMinFromPFCands() > -3. && eventdiff->GetEtaMaxFromPFCands() < 3.) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990) ) d_eta3 = true;
+    if ((eventdiff->GetEtaMinFromPFCands() > -2. && eventdiff->GetEtaMaxFromPFCands() < 2.) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990) ) d_eta2 = true;
+    if ((eventdiff->GetEtaMinFromPFCands() > -1. && eventdiff->GetEtaMaxFromPFCands() < 1.) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990) ) d_eta1 = true; 
 
-       else {
-       std::cout << "\n Unrecognized Type of Selection." << std::endl;
-       return;
-       }
+    if(pileupdefense){ // Never comment this line. It is the program defense.
 
-     */
-  }   
+      if(switchtrigger == "trigger"){ 
+	FillHistos(0,pileup,totalcommon); 
+	if(trigger) FillHistos(1,pileup,totalcommon);
+	if(trigger && presel) FillHistos(2,pileup,totalcommon*cuteff_excl);
+	if(trigger && presel && vertex) FillHistos(3,pileup,totalcommon*cuteff_vertex);
+	if(trigger && presel && vertex && dijetpt && dijeteta) FillHistos(4,pileup,totalcommon*cuteff_vertex);
+	if(trigger && presel && vertex && dijetpt && dijeteta && d_eta4) FillHistos(5,pileup,totalcommon*cuteff_step4_4*triggereff4);
+	if(trigger && presel && vertex && dijetpt && dijeteta && d_eta3) FillHistos(6,pileup,totalcommon*cuteff_step4_3*triggereff3);
+	if(trigger && presel && vertex && dijetpt && dijeteta && d_eta2) FillHistos(7,pileup,totalcommon*cuteff_step4_2*triggereff2);
+	if(trigger && presel && vertex && dijetpt && dijeteta && d_eta1) FillHistos(8,pileup,totalcommon*cuteff_step4_1*triggereff1); 
+      }
 
+      else if (switchtrigger =="no_trigger"){
+	FillHistos(0,pileup,totalcommon);
+	if(presel) FillHistos(2,pileup,totalcommon*cuteff_excl);
+	if(presel && vertex) FillHistos(3,pileup,totalcommon*cuteff_vertex);
+	if(presel && vertex && dijetpt && dijeteta) FillHistos(4,pileup,totalcommon*cuteff_vertex);
+	if(presel && vertex && dijetpt && dijeteta && d_eta4) FillHistos(5,pileup,totalcommon*cuteff_step4_4*triggereff4);
+	if(presel && vertex && dijetpt && dijeteta && d_eta3) FillHistos(6,pileup,totalcommon*cuteff_step4_3*triggereff3);
+	if(presel && vertex && dijetpt && dijeteta && d_eta2) FillHistos(7,pileup,totalcommon*cuteff_step4_2*triggereff2);
+	if(presel && vertex && dijetpt && dijeteta && d_eta1) FillHistos(8,pileup,totalcommon*cuteff_step4_1*triggereff1); 
+      }
 
+      else {
+	std::cout << "Please Insert type of selection: " << std::endl;
+	std::cout << "1) trigger: with trigger. If PATTuple has trigger." << std::endl;
+	std::cout << "2) no_trigger: without trigger. If PATTuple has not trigger." << std::endl;
+	exit(EXIT_FAILURE);
+      }
+    }   
+  }
 
   outstring << "" << std::endl;
   outstring << "<< INPUTS >>" << std::endl;
@@ -677,6 +794,7 @@ int main(int argc, char **argv)
   std::string filein_;
   std::string savehistofile_;
   std::string processname_;
+  std::string switchtrigger_;
   std::string type_;
   std::string jetunc_;
   std::string switchpucorr_;
@@ -686,21 +804,37 @@ int main(int argc, char **argv)
   std::string triggercorrfile_;
   std::string switchcutcorr_;
   std::string switchtriggercorr_;
+  std::string switchlumiweight_;
+  double lumiweight_;
+  std::string switchmceventweight_;
+  int optnVertex_;
+  int optTrigger_;
+  double jet1pT_;
+  double jet2pT_;
 
-  if (argc > 1 && strcmp(s1,argv[1]) != 0)  filein_ = argv[1];
-  if (argc > 2 && strcmp(s1,argv[2]) != 0)  savehistofile_  = argv[2];
-  if (argc > 3 && strcmp(s1,argv[3]) != 0)  processname_  = argv[3];
-  if (argc > 4 && strcmp(s1,argv[4]) != 0)  type_  = argv[4];
-  if (argc > 5 && strcmp(s1,argv[5]) != 0)  jetunc_ = argv[5];
-  if (argc > 6 && strcmp(s1,argv[6]) != 0)  switchpucorr_  = argv[6];
-  if (argc > 7 && strcmp(s1,argv[7]) != 0)  pudatafile_ = argv[7];
-  if (argc > 8 && strcmp(s1,argv[8]) != 0)  pumcfile_ = argv[8];
-  if (argc > 9 && strcmp(s1,argv[9]) != 0)  cutcorrfile_ = argv[9];
-  if (argc > 10 && strcmp(s1,argv[10]) != 0) triggercorrfile_ = argv[10];
-  if (argc > 11 && strcmp(s1,argv[11]) != 0) switchcutcorr_ = argv[11];
-  if (argc > 12 && strcmp(s1,argv[12]) != 0) switchtriggercorr_ = argv[12];
+  if (argc > 1 && strcmp(s1,argv[1]) != 0) filein_ = argv[1];
+  if (argc > 2 && strcmp(s1,argv[2]) != 0) savehistofile_ = argv[2];
+  if (argc > 3 && strcmp(s1,argv[3]) != 0) processname_ = argv[3];
+  if (argc > 4 && strcmp(s1,argv[4]) != 0) switchtrigger_ = argv[4];
+  if (argc > 5 && strcmp(s1,argv[5]) != 0) type_ = argv[5];
+  if (argc > 6 && strcmp(s1,argv[6]) != 0) jetunc_ = argv[6];
+  if (argc > 7 && strcmp(s1,argv[7]) != 0) switchpucorr_ = argv[7];
+  if (argc > 8 && strcmp(s1,argv[8]) != 0) pudatafile_ = argv[8];
+  if (argc > 9 && strcmp(s1,argv[9]) != 0) pumcfile_ = argv[9];
+  if (argc > 10 && strcmp(s1,argv[10]) != 0) cutcorrfile_ = argv[10];
+  if (argc > 11 && strcmp(s1,argv[11]) != 0) triggercorrfile_ = argv[11];
+  if (argc > 12 && strcmp(s1,argv[12]) != 0) switchcutcorr_ = argv[12];
+  if (argc > 13 && strcmp(s1,argv[13]) != 0) switchtriggercorr_ = argv[13];
+  if (argc > 14 && strcmp(s1,argv[14]) != 0) switchlumiweight_ = argv[14];
+  if (argc > 15 && strcmp(s1,argv[15]) != 0) lumiweight_ = atof(argv[15]);
+  if (argc > 16 && strcmp(s1,argv[16]) != 0) switchmceventweight_ = argv[16];
+  if (argc > 17 && strcmp(s1,argv[17]) != 0) optnVertex_ = atoi(argv[17]);
+  if (argc > 18 && strcmp(s1,argv[18]) != 0) optTrigger_   = atoi(argv[18]);
+  if (argc > 19 && strcmp(s1,argv[19]) != 0) jet1pT_ = atof(argv[19]);
+  if (argc > 20 && strcmp(s1,argv[20]) != 0) jet2pT_ = atof(argv[20]);
 
   if (type_=="multiple_pileup" || type_=="no_multiple_pileup") {
+
     ExclusiveDijet* exclusive = new ExclusiveDijet();
     exclusive->CreateHistos(type_);
 
@@ -737,7 +871,6 @@ int main(int argc, char **argv)
 	std::cout << "----------------------------------------------" << std::endl;
 	return 0;
       }
-
     }
     if(switchtriggercorr_ == "trigger_correction"){
       TFile efftrigger(triggercorrfile_.c_str());
@@ -755,7 +888,7 @@ int main(int argc, char **argv)
 	return 0;
       }
     }
-    exclusive->Run(filein_, savehistofile_, processname_, type_, jetunc_, switchpucorr_, pudatafile_, pumcfile_);
+    exclusive->Run(filein_, savehistofile_, processname_, switchtrigger_, type_, jetunc_, switchpucorr_, pudatafile_, pumcfile_, switchcutcorr_, switchtriggercorr_, cutcorrfile_, triggercorrfile_, switchlumiweight_, lumiweight_, switchmceventweight_, optnVertex_, optTrigger_, jet1pT_, jet2pT_);
     return 0;
   }
 

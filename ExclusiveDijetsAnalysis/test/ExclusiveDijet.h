@@ -17,11 +17,11 @@ class EventInfoEvent;
 
 class ExclusiveDijet {
 
+  TFile* effcut;
+  TFile* efftrigger;
   TFile* inf;
   TFile* pudata;
   TFile* pumc;
-  TFile* effcut;
-  TFile* efftrigger;
   TTree* tr;
   TBranch *diff;
   TBranch *excl;
@@ -36,10 +36,11 @@ class ExclusiveDijet {
   int pileup;
   int totalweight;
   double deltaphi, aSumE, absdeltaetapf, deltaetapf, ptJet1, ptJet2;
- 
+
   std::string filein;
   std::string processname;
   std::string savehistofile;
+  std::string switchtrigger;
   std::string type;
   std::string jetunc;
   std::string switchpucorr;
@@ -49,6 +50,13 @@ class ExclusiveDijet {
   std::string triggercorrfile;
   std::string switchcutcorr;
   std::string switchtriggercorr;
+  std::string switchlumiweight;
+  double lumiweight;
+  std::string switchmceventweight;
+  int optnVertex;
+  int optTrigger;
+  double jet1pT;
+  double jet2pT;
 
   std::vector<std::vector<TH1D*> > m_hVector_rjj;
   std::vector<std::vector<TH1D*> > m_hVector_detagen;
@@ -93,16 +101,15 @@ class ExclusiveDijet {
   ExclusiveDijet() {}
   ~ExclusiveDijet() {
     inf->Close();
-    /*pudata->Close();
-    pumc->Close();
-    effcut->Close();
-    efftrigger->Close();  */
- }
+  }
 
-  void Run(std::string, std::string, std::string, std::string, std::string, std::string, std::string, std::string);
+  void Run(std::string, std::string, std::string, std::string, std::string, std::string, std::string, std::string, std::string, std::string, std::string, std::string, std::string, std::string, double, std::string, int, int, double, double);
   void LoadFile(std::string,std::string);
   void CreateHistos(std::string);
   void FillHistos(int, int, double);
   void SaveHistos(std::string);
+  double* cutCorrection();
+  double* triggerCorrection();
+
 };
 #endif
