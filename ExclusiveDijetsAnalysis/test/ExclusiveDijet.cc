@@ -32,6 +32,7 @@ using namespace exclusiveDijetsAnalysis;
 using namespace eventInfo;
 using namespace reweight;
 
+
 static inline void loadBar(int x, int n, int r, int w)
 {
   // Modified
@@ -61,6 +62,7 @@ static inline void loadBar(int x, int n, int r, int w)
   printf("\r"); // Move to the first column
   fflush(stdout);
 }
+
 
 void ExclusiveDijet::LoadFile(std::string fileinput, std::string processinput){
 
@@ -494,7 +496,7 @@ double* ExclusiveDijet::triggerCorrection(){
 
 void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::string processname_, std::string switchtrigger_, std::string type_, std::string jetunc_, std::string switchpucorr_, std::string pudatafile_, std::string pumcfile_, std::string switchcutcorr_, std::string switchtriggercorr_, std::string cutcorrfile_, std::string triggercorrfile_, std::string switchlumiweight_, double lumiweight_, std::string switchmceventweight_, int optnVertex_, int optTrigger_, double jet1pT_, double jet2pT_){
 
-  bool debug = true;
+  bool debug = false;
 
   TH1::SetDefaultSumw2(true);
   TH2::SetDefaultSumw2(true);
@@ -558,7 +560,6 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
   outstring << "Selected Events: Trigger + PreSel + Vertex + Dijets (pT and Tracker acceptance) + etamax/etamin 2 " << std::endl; 
 
   int NEVENTS = tr->GetEntries();
-  //int decade = 0;
   int pileup = -999;
   int triggercounter[20]={0};
 
@@ -590,19 +591,9 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
     ptJet1 = -999.;
     ptJet2 = -999.;
 
-    /*
-       double progress = 10.0*i/(1.0*NEVENTS);
-       int l = TMath::FloorNint(progress); 
-
-       if (l > decade){
-       std::cout <<"\n<<<<<< STATUS >>>>>>" << std::endl; 
-       std::cout<<10*l<<" % completed." << std::endl;
-       std::cout <<"<<<<<<<<<<>>>>>>>>>>\n" << std::endl;
-       }
-       decade = l;          
-     */
-
-    loadBar(i,NEVENTS,100,100);
+    if (!debug) {
+      loadBar(i,NEVENTS,100,100);
+    }
 
     tr->GetEntry(i);
 
@@ -658,7 +649,7 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
       jetstatus = "\nUnrecognized jet energy scale correction. Jets without uncertainty.";
     }
 
-    double totalcommon = 1;
+    double totalcommon = 1.;
     double mclumiweight = 1.;
     double mcweightpu = 1.;
     double mcweight = 1.;
@@ -690,7 +681,7 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
       mcweight = eventinfo->GetGeneratorWeight();
     }
 
-    if(switchtrigger == "trigger" || switchtrigger == "no_trigger") continue;
+    if(switchtrigger == "trigger" || switchtrigger == "no_trigger") {}
     else{
       std::cout << " " << std::endl;
       std::cout << "Please Insert type of selection: " << std::endl;
@@ -760,8 +751,8 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
     if (eventexcl->GetHLTPath(optTrigger)) trigger = true;
     if ( (eventdiff->GetSumEnergyHFPlus() < 30 && eventdiff->GetSumEnergyHFMinus() < 30) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990) ) presel = true;
     if (eventexcl->GetNVertex() > 0 && eventexcl->GetNVertex()<= optnVertex) vertex = true;
-    if (eventexcl->GetLeadingJetP4().Pt() > jet1pT && eventexcl->GetSecondJetP4().Pt() > jet2pT) dijetpt = true;
-    if (eventexcl->GetLeadingJetP4().Eta() < 2.9 && eventexcl->GetSecondJetP4().Eta() < 2.9 && eventexcl->GetLeadingJetP4().Eta() > -2.9 && eventexcl->GetSecondJetP4().Eta() > -2.9) dijeteta = true; 
+    if (eventexcl->GetLeadingJetPt() > jet1pT && eventexcl->GetSecondJetPt() > jet2pT) dijetpt = true;
+    if (eventexcl->GetLeadingJetEta() < 2.9 && eventexcl->GetSecondJetEta() < 2.9 && eventexcl->GetLeadingJetEta() > -2.9 && eventexcl->GetSecondJetEta() > -2.9) dijeteta = true; 
     if ((eventdiff->GetEtaMinFromPFCands() > -4. && eventdiff->GetEtaMaxFromPFCands() < 4.) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990) ) d_eta4 = true;
     if ((eventdiff->GetEtaMinFromPFCands() > -3. && eventdiff->GetEtaMaxFromPFCands() < 3.) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990) ) d_eta3 = true;
     if ((eventdiff->GetEtaMinFromPFCands() > -2. && eventdiff->GetEtaMaxFromPFCands() < 2.) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990) ) d_eta2 = true;
@@ -778,8 +769,10 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
 	if(trigger && presel && vertex && dijetpt && dijeteta && d_eta4) FillHistos(5,pileup,totalcommon*cuteff_step4_4*triggereff4);
 	if(trigger && presel && vertex && dijetpt && dijeteta && d_eta3) FillHistos(6,pileup,totalcommon*cuteff_step4_3*triggereff3);
 	if(trigger && presel && vertex && dijetpt && dijeteta && d_eta2) FillHistos(7,pileup,totalcommon*cuteff_step4_2*triggereff2);
-	if(trigger && presel && vertex && dijetpt && dijeteta && d_eta1) FillHistos(8,pileup,totalcommon*cuteff_step4_1*triggereff1);
-	outstring << eventdiff->GetRunNumber() << ":" << eventdiff->GetLumiSection() << ":" << eventdiff->GetEventNumber() << std::endl;
+	if(trigger && presel && vertex && dijetpt && dijeteta && d_eta1){
+	  FillHistos(8,pileup,totalcommon*cuteff_step4_1*triggereff1);
+	  outstring << eventdiff->GetRunNumber() << ":" << eventdiff->GetLumiSection() << ":" << eventdiff->GetEventNumber() << std::endl;
+	}
       }
 
       else if (switchtrigger =="no_trigger"){
