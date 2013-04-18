@@ -898,6 +898,19 @@ int main(int argc, char **argv)
 
   if (type_=="multiple_pileup" || type_=="no_multiple_pileup") {
 
+    if (optnVertex_ <= 0 || optTrigger_ < 0 || lumiweight_ <= 0 || jet1pT_ < 0 || jet2pT_ < 0 ){
+      std::cout << "----------------------------------------------" << std::endl;
+      std::cout << " Pay attention on the input numbers parameters" << std::endl;
+      std::cout << "----------------------------------------------" << std::endl;
+      std::cout << ">> Requirements:                             " << std::endl;
+      std::cout << "I)   optnVertex_ > 0 " << std::endl;
+      std::cout << "II)  optTrigger >= 0" << std::endl;
+      std::cout << "III) lumiweight_ > 0" << std::endl;
+      std::cout << "IV)  jet1pT_ and jet2pT_ >= 0" << std::endl;  
+      std::cout << "----------------------------------------------" << std::endl; 
+      return 0;
+    }
+
     ExclusiveDijet* exclusive = new ExclusiveDijet();
     exclusive->CreateHistos(type_);
 
