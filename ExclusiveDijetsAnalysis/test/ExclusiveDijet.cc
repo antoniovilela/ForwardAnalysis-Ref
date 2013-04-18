@@ -50,7 +50,7 @@ static inline void loadBar(int x, int n, int r, int w)
   // Show the load bar.
   for (int x=0; x<c; x++)
     printf("=");
- 
+
   for (int x=c; x<w; x++)
     printf(" ");
 
@@ -603,7 +603,7 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
      */
 
     loadBar(i,NEVENTS,100,100);
-    
+
     tr->GetEntry(i);
 
     if ( type=="multiple_pileup" && (eventexcl->GetNPileUpBx0()==-1 && eventexcl->GetNPileUpBxm1()==-1 && eventexcl->GetNPileUpBxp1()==-1 )){
@@ -681,7 +681,7 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
 
     if (switchmceventweight == "mc_event_weight"){
       if (eventinfo->GetGeneratorWeight() < 0){
-        std::cout << " " << std::endl; 
+	std::cout << " " << std::endl; 
 	std::cout << "--------------------------------------------------------------" << std::endl;
 	std::cout << " The event mc weight is negative. Set up correct MC."   << std::endl;
 	std::cout << "--------------------------------------------------------------" << std::endl;
@@ -747,7 +747,6 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
       }
     }
 
-    bool pileupdefense = false;
     bool trigger = false;
     bool presel = false;
     bool vertex = false;
@@ -758,7 +757,6 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
     bool d_eta2 = false;
     bool d_eta1 = false;
 
-    if (pileup<21) pileupdefense = true;
     if (eventexcl->GetHLTPath(optTrigger)) trigger = true;
     if ( (eventdiff->GetSumEnergyHFPlus() < 30 && eventdiff->GetSumEnergyHFMinus() < 30) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990) ) presel = true;
     if (eventexcl->GetNVertex() > 0 && eventexcl->GetNVertex()<= optnVertex) vertex = true;
@@ -769,7 +767,7 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
     if ((eventdiff->GetEtaMinFromPFCands() > -2. && eventdiff->GetEtaMaxFromPFCands() < 2.) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990) ) d_eta2 = true;
     if ((eventdiff->GetEtaMinFromPFCands() > -1. && eventdiff->GetEtaMaxFromPFCands() < 1.) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990) ) d_eta1 = true; 
 
-    if(pileupdefense){ // Never comment this line. It is the program defense.
+    if(pileup < 21){ // Never comment this line. It is the program defense.
 
       if(switchtrigger == "trigger"){ 
 	FillHistos(0,pileup,totalcommon); 
@@ -781,8 +779,8 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
 	if(trigger && presel && vertex && dijetpt && dijeteta && d_eta3) FillHistos(6,pileup,totalcommon*cuteff_step4_3*triggereff3);
 	if(trigger && presel && vertex && dijetpt && dijeteta && d_eta2) FillHistos(7,pileup,totalcommon*cuteff_step4_2*triggereff2);
 	if(trigger && presel && vertex && dijetpt && dijeteta && d_eta1) FillHistos(8,pileup,totalcommon*cuteff_step4_1*triggereff1);
-        outstring << eventdiff->GetRunNumber() << ":" << eventdiff->GetLumiSection() << ":" << eventdiff->GetEventNumber() << std::endl;
-          }
+	outstring << eventdiff->GetRunNumber() << ":" << eventdiff->GetLumiSection() << ":" << eventdiff->GetEventNumber() << std::endl;
+      }
 
       else if (switchtrigger =="no_trigger"){
 	FillHistos(0,pileup,totalcommon);
