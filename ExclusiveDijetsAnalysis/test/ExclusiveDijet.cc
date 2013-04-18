@@ -32,6 +32,36 @@ using namespace exclusiveDijetsAnalysis;
 using namespace eventInfo;
 using namespace reweight;
 
+static inline void loadBar(int x, int n, int r, int w)
+{
+  // Modified
+  // http://www.rosshemsley.co.uk/2011/02/creating-a-progress-bar-in-c-or-any-other-console-app/
+
+  // Only update r times.
+  if ( x % (n/r) != 0 ) return;
+
+  // Calculuate the ratio of complete-to-incomplete.
+  float ratio = x/(float)n;
+  int   c     = ratio * w;
+
+  // Show the percentage complete.
+  printf("%3d%%[", (int)(ratio*100) );
+
+  // Show the load bar.
+  for (int x=0; x<c; x++)
+    printf("=");
+ 
+  for (int x=c; x<w; x++)
+    printf(" ");
+
+  // ANSI Control codes to go back to the
+  // previous line and clear it.
+  // printf("]\n33[F33[J");
+
+  printf("\r"); // Move to the first column
+  fflush(stdout);
+}
+
 void ExclusiveDijet::LoadFile(std::string fileinput, std::string processinput){
 
   inf = NULL;
@@ -519,8 +549,16 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
   outtxt.ReplaceAll("root","txt");
   std::ofstream outstring(outtxt);
 
+  outstring << "" << std::endl;
+  outstring << "<< Gold Events >>" << std::endl;
+  outstring << "" << std::endl;
+  outstring << "Please, insert this events in another text file to be used by PickEvent Tool. " << std::endl;
+  outstring << "Twiki: https://twiki.cern.ch/twiki/bin/view/CMSPublic/WorkBookPickEvents " << std::endl;
+  outstring << ">>---------------------------------------------------------------------- " << std::endl;
+  outstring << "Selected Events: Trigger + PreSel + Vertex + Dijets (pT and Tracker acceptance) + etamax/etamin 2 " << std::endl; 
+
   int NEVENTS = tr->GetEntries();
-  int decade = 0;
+  //int decade = 0;
   int pileup = -999;
   int triggercounter[20]={0};
 
@@ -536,6 +574,10 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
 
   edm::LumiReWeighting LumiWeights_(pumcfile.c_str(),pudatafile.c_str(),"pileUpBx0_complete_without_cuts","pileup");
 
+  std::cout << "" << std::endl;
+  std::cout<< "Status Bar" << std::endl;
+  std::cout << "" << std::endl;
+
   if (switchtriggercorr == "trigger_correction") efftrigger = TFile::Open(triggercorrfile_.c_str());
   if (switchcutcorr == "cut_correction") effcut = TFile::Open(cutcorrfile_.c_str());
 
@@ -548,19 +590,24 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
     ptJet1 = -999.;
     ptJet2 = -999.;
 
-    double progress = 10.0*i/(1.0*NEVENTS);
-    int l = TMath::FloorNint(progress); 
+    /*
+       double progress = 10.0*i/(1.0*NEVENTS);
+       int l = TMath::FloorNint(progress); 
 
-    if (l > decade){
-      std::cout <<"\n<<<<<< STATUS >>>>>>" << std::endl; 
-      std::cout<<10*l<<" % completed." << std::endl;
-      std::cout <<"<<<<<<<<<<>>>>>>>>>>\n" << std::endl;
-    }
-    decade = l;          
+       if (l > decade){
+       std::cout <<"\n<<<<<< STATUS >>>>>>" << std::endl; 
+       std::cout<<10*l<<" % completed." << std::endl;
+       std::cout <<"<<<<<<<<<<>>>>>>>>>>\n" << std::endl;
+       }
+       decade = l;          
+     */
 
+    loadBar(i,NEVENTS,100,100);
+    
     tr->GetEntry(i);
 
     if ( type=="multiple_pileup" && (eventexcl->GetNPileUpBx0()==-1 && eventexcl->GetNPileUpBxm1()==-1 && eventexcl->GetNPileUpBxp1()==-1 )){
+      std::cout << " " << std::endl; 
       std::cout << "--------------------------------------------------------------" << std::endl;
       std::cout << " There is no pile-up TTree information in your PATTuplefile."   << std::endl;
       std::cout << " Please, use another PATTuple with PU information to run mul- " << std::endl;
@@ -608,7 +655,7 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
     else {
       ptJet1 = eventexcl->GetLeadingJetPt();
       ptJet2 = eventexcl->GetSecondJetPt();
-      jetstatus = "Unrecognized jet energy scale correction. Jets without uncertainty.";
+      jetstatus = "\nUnrecognized jet energy scale correction. Jets without uncertainty.";
     }
 
     double totalcommon = 1;
@@ -634,12 +681,22 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
 
     if (switchmceventweight == "mc_event_weight"){
       if (eventinfo->GetGeneratorWeight() < 0){
-	std::cout << "\n--------------------------------------------------------------" << std::endl;
+        std::cout << " " << std::endl; 
+	std::cout << "--------------------------------------------------------------" << std::endl;
 	std::cout << " The event mc weight is negative. Set up correct MC."   << std::endl;
 	std::cout << "--------------------------------------------------------------" << std::endl;
 	exit(EXIT_FAILURE);
       }
       mcweight = eventinfo->GetGeneratorWeight();
+    }
+
+    if(switchtrigger == "trigger" || switchtrigger == "no_trigger") continue;
+    else{
+      std::cout << " " << std::endl;
+      std::cout << "Please Insert type of selection: " << std::endl;
+      std::cout << "1) trigger: with trigger. If PATTuple has trigger." << std::endl;
+      std::cout << "2) no_trigger: without trigger. If PATTuple has not trigger." << std::endl;
+      exit(EXIT_FAILURE);
     }
 
     if (switchpucorr=="pileup_correction") mcweightpu = LumiWeights_.weight(eventexcl->GetNPileUpBx0());
@@ -723,8 +780,9 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
 	if(trigger && presel && vertex && dijetpt && dijeteta && d_eta4) FillHistos(5,pileup,totalcommon*cuteff_step4_4*triggereff4);
 	if(trigger && presel && vertex && dijetpt && dijeteta && d_eta3) FillHistos(6,pileup,totalcommon*cuteff_step4_3*triggereff3);
 	if(trigger && presel && vertex && dijetpt && dijeteta && d_eta2) FillHistos(7,pileup,totalcommon*cuteff_step4_2*triggereff2);
-	if(trigger && presel && vertex && dijetpt && dijeteta && d_eta1) FillHistos(8,pileup,totalcommon*cuteff_step4_1*triggereff1); 
-      }
+	if(trigger && presel && vertex && dijetpt && dijeteta && d_eta1) FillHistos(8,pileup,totalcommon*cuteff_step4_1*triggereff1);
+        outstring << eventdiff->GetRunNumber() << ":" << eventdiff->GetLumiSection() << ":" << eventdiff->GetEventNumber() << std::endl;
+          }
 
       else if (switchtrigger =="no_trigger"){
 	FillHistos(0,pileup,totalcommon);
@@ -738,9 +796,6 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
       }
 
       else {
-	std::cout << "Please Insert type of selection: " << std::endl;
-	std::cout << "1) trigger: with trigger. If PATTuple has trigger." << std::endl;
-	std::cout << "2) no_trigger: without trigger. If PATTuple has not trigger." << std::endl;
 	exit(EXIT_FAILURE);
       }
     }   
@@ -749,12 +804,29 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
   outstring << "" << std::endl;
   outstring << "<< INPUTS >>" << std::endl;
   outstring << " " << std::endl;
-  outstring << "Input file: " << filein << std::endl;
-  outstring << "Output file: " << savehistofile << std::endl;
+  outstring << ">> Input file: " << filein << std::endl;
+  outstring << ">> Output file: " << savehistofile << std::endl;
+  outstring << ">> TTree Name: " << processname << std::endl;
+  outstring << ">> Input PU Data file: " << pudatafile <<std::endl;
+  outstring << ">> Input PU MC file: " << pumcfile <<std::endl;
+  outstring << ">> Input Trigger Corr. file: " << triggercorrfile <<std::endl;
+  outstring << ">> Input Cuts Corr. file: " << cutcorrfile <<std::endl;
   outstring << " " << std::endl;
-  outstring << "Type: " << status << std::endl;
-  outstring << "Jet Uncertainty: " << jetstatus << std::endl; 
-  outstring << "" << std::endl;
+  outstring << "<< OPTIONS >>" << std::endl; 
+  outstring << " " << std::endl;
+  outstring << ">> Jet Uncertainty: " << jetstatus << std::endl; 
+  outstring << ">> Trigger: " << switchtrigger << " | Option: " << optTrigger << std::endl;
+  outstring << ">> # Vertex: " << optnVertex << std::endl;
+  outstring << ">> PU Reweight: " << switchpucorr << std::endl;
+  outstring << ">> Corr. Trigger: " << switchtriggercorr << std::endl;
+  outstring << ">> Corr. Cuts: " << switchcutcorr << std::endl;
+  outstring << ">> Lumi. Weight: " << switchlumiweight << " | Weight: " << lumiweight << std::endl;
+  outstring << ">> MC Event-Event Weight: " << switchmceventweight << std::endl;
+  outstring << ">> Jet1(pT) > " << jet1pT <<std::endl;
+  outstring << ">> Jet2(pT) > " << jet2pT <<std::endl;
+  outstring << " " << std::endl;
+  outstring << "<< TRIGGER >> " << std::endl;
+  outstring << " " << std::endl;
   outstring << "Total Trigger Fired: " <<  std::endl;
   outstring << "Trigger 0: " << triggercounter[0] << std::endl;
   outstring << "Trigger 1: " << triggercounter[1] << std::endl;
