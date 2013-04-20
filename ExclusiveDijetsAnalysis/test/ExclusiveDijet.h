@@ -94,6 +94,8 @@ class ExclusiveDijet {
   std::vector<std::vector<TH2D*> > m_hVector_sumEHFminusVsetaMin;
   std::vector<std::vector<TH2D*> > m_hVector_sumEHFpfplusVsetaMax;
   std::vector<std::vector<TH2D*> > m_hVector_sumEHFpfminusVsetaMin;
+  std::vector<std::vector<TH1D*> > m_hVector_uncJet1;
+  std::vector<std::vector<TH1D*> > m_hVector_uncJet2;
 
   std::vector <std::string> Folders;
 

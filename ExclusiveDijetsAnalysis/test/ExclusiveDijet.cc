@@ -150,6 +150,8 @@ void ExclusiveDijet::CreateHistos(std::string type){
     m_hVector_sumEHFpfminusVsetaMin.push_back( std::vector<TH2D*>() );
     m_hVector_sumEHFplusVsiEta.push_back( std::vector<TH1D*>() );
     m_hVector_sumEHFminusVsiEta.push_back( std::vector<TH1D*>() );
+    m_hVector_uncJet1.push_back( std::vector<TH1D*>() );
+    m_hVector_uncJet2.push_back( std::vector<TH1D*>() );
 
     for (int k=0;k<nloop;k++){
 
@@ -330,7 +332,6 @@ void ExclusiveDijet::CreateHistos(std::string type){
       TH1D *histo_sumECastor = new TH1D(name34,"Castor - Total Energy; #sum E_{Castor} [GeV]; N events",100,0,2000);
       m_hVector_sumECastor[j].push_back(histo_sumECastor);
 
-
       char name_ieta[300];
       for(int ieta = 29; ieta <= 41; ++ieta){
 	sprintf(name_ieta,"sumEHFplus_iEta_%d_%s_%s",ieta,tag,Folders.at(j).c_str());
@@ -342,6 +343,15 @@ void ExclusiveDijet::CreateHistos(std::string type){
 	m_hVector_sumEHFminusVsiEta[j].push_back(histo_sumEHFminus_ieta);
       }
 
+      char name35[300];
+      sprintf(name35,"UncJet1_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_uncJet1 = new TH1D(name35,"Uncertainty Leading Jet; Uncertainty Jet pT; N events",20,0,1);
+      m_hVector_uncJet1[j].push_back(histo_uncJet1);
+
+      char name36[300];
+      sprintf(name36,"UncJet2_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_uncJet2 = new TH1D(name36,"Uncertainty Second Jet; Uncertainty Jet pT; N events",20,0,1);
+      m_hVector_uncJet2[j].push_back(histo_uncJet2);
 
     }
   }
@@ -383,6 +393,8 @@ void ExclusiveDijet::FillHistos(int index, int pileup, double totalweight){
   m_hVector_sumEHFplusVsetaMax[index].at(pileup)->Fill(eventdiff->GetEtaMaxFromPFCands(),eventdiff->GetSumEnergyHFPlus(),totalweight);
   m_hVector_sumEHFminusVsetaMin[index].at(pileup)->Fill(eventdiff->GetEtaMinFromPFCands(),eventdiff->GetSumEnergyHFMinus(),totalweight);     
   m_hVector_sumECastor[index].at(pileup)->Fill(eventdiff->GetSumETotCastor(),totalweight);
+  m_hVector_uncJet1[index].at(pileup)->Fill(eventexcl->GetUnc1());
+  m_hVector_uncJet2[index].at(pileup)->Fill(eventexcl->GetUnc2());
 
 }
 
@@ -429,6 +441,8 @@ void ExclusiveDijet::SaveHistos(std::string type){
       m_hVector_sumEHFplusVsetaMax[j].at(i)->Write();
       m_hVector_sumEHFminusVsetaMin[j].at(i)->Write();
       m_hVector_sumECastor[j].at(i)->Write();
+      m_hVector_uncJet1[j].at(i)->Write();
+      m_hVector_uncJet2[j].at(i)->Write();
     }
   }
 
