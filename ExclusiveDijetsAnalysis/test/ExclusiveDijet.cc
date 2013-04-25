@@ -508,7 +508,7 @@ double* ExclusiveDijet::triggerCorrection(){
 
 }
 
-void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::string processname_, std::string switchtrigger_, std::string type_, std::string jetunc_, std::string switchpucorr_, std::string pudatafile_, std::string pumcfile_, std::string switchcutcorr_, std::string switchtriggercorr_, std::string cutcorrfile_, std::string triggercorrfile_, std::string switchlumiweight_, double lumiweight_, std::string switchmceventweight_, int optnVertex_, int optTrigger_, double jet1pT_, double jet2pT_){
+void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::string processname_, std::string switchtrigger_, std::string type_, std::string jetunc_, std::string switchpucorr_, std::string pudatafile_, std::string pumcfile_, std::string switchcutcorr_, std::string switchtriggercorr_, std::string cutcorrfile_, std::string triggercorrfile_, std::string switchlumiweight_, double lumiweight_, std::string switchmceventweight_, int optnVertex_, int optTrigger_, double jet1pT_, double jet2pT_, std::string switchcastor_){
 
   bool debug = false;
 
@@ -535,6 +535,7 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
   optTrigger = optTrigger_;
   jet1pT = jet1pT_;
   jet2pT = jet2pT_;
+  switchcastor = switchcastor_;
 
   TFile check1(filein.c_str());
 
@@ -687,7 +688,7 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
     if (switchmceventweight == "mc_event_weight"){
       if (eventinfo->GetGeneratorWeight() < 0){
 	std::cout << " " << std::endl; 
-	std::cout << "--------------------------------------------------------------" << std::endl;
+	std::cout << "\n--------------------------------------------------------------" << std::endl;
 	std::cout << " The event mc weight is negative. Set up correct MC."   << std::endl;
 	std::cout << "--------------------------------------------------------------" << std::endl;
 	exit(EXIT_FAILURE);
@@ -698,9 +699,18 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
     if(switchtrigger == "trigger" || switchtrigger == "no_trigger") {}
     else{
       std::cout << " " << std::endl;
-      std::cout << "Please Insert type of selection: " << std::endl;
+      std::cout << "\nPlease Insert type of selection: " << std::endl;
       std::cout << "1) trigger: with trigger. If PATTuple has trigger." << std::endl;
       std::cout << "2) no_trigger: without trigger. If PATTuple has not trigger." << std::endl;
+      exit(EXIT_FAILURE);
+    }
+
+    if(switchcastor == "castor" || switchcastor == "no_castor") {}
+    else{
+      std::cout << " " << std::endl;
+      std::cout << "\nPlease Insert Castor Option: " << std::endl;
+      std::cout << "1) castor: calorimeter castor is included with threshold of 400 GeV." << std::endl;
+      std::cout << "2) no_castor: without castor requirements." << std::endl;
       exit(EXIT_FAILURE);
     }
 
@@ -753,6 +763,7 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
     }
 
     bool trigger = false;
+    bool castor = false;
     bool presel = false;
     bool vertex = false;
     bool dijetpt = false;
@@ -763,6 +774,10 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
     bool d_eta1 = false;
 
     if (eventexcl->GetHLTPath(optTrigger)) trigger = true;
+    if (switchcastor == "castor") {
+      if (eventdiff->GetSumETotCastor() < 400) castor = true;
+    }
+    if (switchcastor == "no_castor") castor = true;
     if ( (eventdiff->GetSumEnergyHFPlus() < 30 && eventdiff->GetSumEnergyHFMinus() < 30) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990) ) presel = true;
     if (eventexcl->GetNVertex() > 0 && eventexcl->GetNVertex()<= optnVertex) vertex = true;
     if (eventexcl->GetLeadingJetPt() > jet1pT && eventexcl->GetSecondJetPt() > jet2pT) dijetpt = true;
@@ -777,13 +792,13 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
       if(switchtrigger == "trigger"){ 
 	FillHistos(0,pileup,totalcommon); 
 	if(trigger) FillHistos(1,pileup,totalcommon);
-	if(trigger && presel) FillHistos(2,pileup,totalcommon*cuteff_excl);
-	if(trigger && presel && vertex) FillHistos(3,pileup,totalcommon*cuteff_vertex);
-	if(trigger && presel && vertex && dijetpt && dijeteta) FillHistos(4,pileup,totalcommon*cuteff_vertex);
-	if(trigger && presel && vertex && dijetpt && dijeteta && d_eta4) FillHistos(5,pileup,totalcommon*cuteff_step4_4*triggereff4);
-	if(trigger && presel && vertex && dijetpt && dijeteta && d_eta3) FillHistos(6,pileup,totalcommon*cuteff_step4_3*triggereff3);
-	if(trigger && presel && vertex && dijetpt && dijeteta && d_eta2) FillHistos(7,pileup,totalcommon*cuteff_step4_2*triggereff2);
-	if(trigger && presel && vertex && dijetpt && dijeteta && d_eta1){
+	if(trigger && presel && castor) FillHistos(2,pileup,totalcommon*cuteff_excl);        
+	if(trigger && presel && castor && vertex) FillHistos(3,pileup,totalcommon*cuteff_vertex);
+	if(trigger && presel && castor && vertex && dijetpt && dijeteta) FillHistos(4,pileup,totalcommon*cuteff_vertex);
+	if(trigger && presel && castor && vertex && dijetpt && dijeteta && d_eta4) FillHistos(5,pileup,totalcommon*cuteff_step4_4*triggereff4);
+	if(trigger && presel && castor && vertex && dijetpt && dijeteta && d_eta3) FillHistos(6,pileup,totalcommon*cuteff_step4_3*triggereff3);
+	if(trigger && presel && castor && vertex && dijetpt && dijeteta && d_eta2) FillHistos(7,pileup,totalcommon*cuteff_step4_2*triggereff2);
+	if(trigger && presel && castor && vertex && dijetpt && dijeteta && d_eta1){
 	  FillHistos(8,pileup,totalcommon*cuteff_step4_1*triggereff1);
 	  outstring << eventdiff->GetRunNumber() << ":" << eventdiff->GetLumiSection() << ":" << eventdiff->GetEventNumber() << std::endl;
 	}
@@ -791,13 +806,13 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
 
       else if (switchtrigger =="no_trigger"){
 	FillHistos(0,pileup,totalcommon);
-	if(presel) FillHistos(2,pileup,totalcommon*cuteff_excl);
-	if(presel && vertex) FillHistos(3,pileup,totalcommon*cuteff_vertex);
-	if(presel && vertex && dijetpt && dijeteta) FillHistos(4,pileup,totalcommon*cuteff_vertex);
-	if(presel && vertex && dijetpt && dijeteta && d_eta4) FillHistos(5,pileup,totalcommon*cuteff_step4_4*triggereff4);
-	if(presel && vertex && dijetpt && dijeteta && d_eta3) FillHistos(6,pileup,totalcommon*cuteff_step4_3*triggereff3);
-	if(presel && vertex && dijetpt && dijeteta && d_eta2) FillHistos(7,pileup,totalcommon*cuteff_step4_2*triggereff2);
-	if(presel && vertex && dijetpt && dijeteta && d_eta1) FillHistos(8,pileup,totalcommon*cuteff_step4_1*triggereff1); 
+	if(presel && castor) FillHistos(2,pileup,totalcommon*cuteff_excl);
+	if(presel && castor && vertex) FillHistos(3,pileup,totalcommon*cuteff_vertex);
+	if(presel && castor && vertex && dijetpt && dijeteta) FillHistos(4,pileup,totalcommon*cuteff_vertex);
+	if(presel && castor && vertex && dijetpt && dijeteta && d_eta4) FillHistos(5,pileup,totalcommon*cuteff_step4_4*triggereff4);
+	if(presel && castor && vertex && dijetpt && dijeteta && d_eta3) FillHistos(6,pileup,totalcommon*cuteff_step4_3*triggereff3);
+	if(presel && castor && vertex && dijetpt && dijeteta && d_eta2) FillHistos(7,pileup,totalcommon*cuteff_step4_2*triggereff2);
+	if(presel && castor && vertex && dijetpt && dijeteta && d_eta1) FillHistos(8,pileup,totalcommon*cuteff_step4_1*triggereff1); 
       }
 
       else {
@@ -829,6 +844,7 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
   outstring << ">> MC Event-Event Weight: " << switchmceventweight << std::endl;
   outstring << ">> Jet1(pT) > " << jet1pT <<std::endl;
   outstring << ">> Jet2(pT) > " << jet2pT <<std::endl;
+  outstring << ">> Castor: " << switchcastor << std::endl;
   outstring << " " << std::endl;
   outstring << "<< TRIGGER >> " << std::endl;
   outstring << " " << std::endl;
@@ -882,6 +898,7 @@ int main(int argc, char **argv)
   std::string switchcutcorr_;
   std::string switchtriggercorr_;
   std::string switchlumiweight_;
+  std::string switchcastor_; 
   double lumiweight_;
   std::string switchmceventweight_;
   int optnVertex_;
@@ -909,6 +926,7 @@ int main(int argc, char **argv)
   if (argc > 18 && strcmp(s1,argv[18]) != 0) optTrigger_   = atoi(argv[18]);
   if (argc > 19 && strcmp(s1,argv[19]) != 0) jet1pT_ = atof(argv[19]);
   if (argc > 20 && strcmp(s1,argv[20]) != 0) jet2pT_ = atof(argv[20]);
+  if (argc > 21 && strcmp(s1,argv[21]) != 0) switchcastor_ = argv[21];
 
   if (type_=="multiple_pileup" || type_=="no_multiple_pileup") {
 
@@ -978,7 +996,7 @@ int main(int argc, char **argv)
 	return 0;
       }
     }
-    exclusive->Run(filein_, savehistofile_, processname_, switchtrigger_, type_, jetunc_, switchpucorr_, pudatafile_, pumcfile_, switchcutcorr_, switchtriggercorr_, cutcorrfile_, triggercorrfile_, switchlumiweight_, lumiweight_, switchmceventweight_, optnVertex_, optTrigger_, jet1pT_, jet2pT_);
+    exclusive->Run(filein_, savehistofile_, processname_, switchtrigger_, type_, jetunc_, switchpucorr_, pudatafile_, pumcfile_, switchcutcorr_, switchtriggercorr_, cutcorrfile_, triggercorrfile_, switchlumiweight_, lumiweight_, switchmceventweight_, optnVertex_, optTrigger_, jet1pT_, jet2pT_, switchcastor_);
     return 0;
   }
 

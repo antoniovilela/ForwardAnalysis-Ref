@@ -51,6 +51,7 @@ class ExclusiveDijet {
   std::string switchcutcorr;
   std::string switchtriggercorr;
   std::string switchlumiweight;
+  std::string switchcastor;
   double lumiweight;
   std::string switchmceventweight;
   int optnVertex;
@@ -105,7 +106,7 @@ class ExclusiveDijet {
     inf->Close();
   }
 
-  void Run(std::string, std::string, std::string, std::string, std::string, std::string, std::string, std::string, std::string, std::string, std::string, std::string, std::string, std::string, double, std::string, int, int, double, double);
+  void Run(std::string, std::string, std::string, std::string, std::string, std::string, std::string, std::string, std::string, std::string, std::string, std::string, std::string, std::string, double, std::string, int, int, double, double, std::string);
   void LoadFile(std::string,std::string);
   void CreateHistos(std::string);
   void FillHistos(int, int, double);
