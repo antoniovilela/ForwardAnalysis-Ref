@@ -32,6 +32,7 @@ class TriggerEff {
    int optTrigger;
    int optTriggerRef;
    int bin;
+   bool castor;
    std::vector<TH1D*> m_hVector_Evt_lumis;
    std::vector<TH1D*> m_hVector_Eff_lumis;
    std::vector<TH1D*> m_hVector_Evt_pfetamax;
@@ -40,7 +41,7 @@ class TriggerEff {
    TriggerEff() {}
    ~TriggerEff() { inf->Close(); }
    
-   void Run(std::string, std::string, std::string, int, int, int);
+   void Run(std::string, std::string, std::string, int, int, int, bool);
    void LoadFile(std::string,std::string);
    void FillHistograms();
 

@@ -52,7 +52,7 @@ void TriggerEff::LoadFile(std::string fileinput, std::string processinput){
 
 }
 
-void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::string processname_, int optTriggerRef_, int optTrigger_, int bin_){
+void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::string processname_, int optTriggerRef_, int optTrigger_, int bin_, bool castor_){
 
   filein = filein_;
   savehistofile = savehistofile_;
@@ -61,6 +61,7 @@ void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::strin
   optTrigger = optTrigger_;
   optTriggerRef = optTriggerRef_;
   bin = bin_;
+  castor = castor_;
 
   std::cout << "" << std::endl;
   std::cout << "Running..." << std::endl;
@@ -74,6 +75,7 @@ void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::strin
   std::cout << "Reference Trigger Option: " << optTriggerRef << std::endl;
   std::cout << "Trigger Option: " << optTrigger << std::endl;
   std::cout << "Bin: " << bin << std::endl;
+  std::cout << "Castor: " << castor << std::endl;
   std::cout << " " << std::endl;
 
 
@@ -213,28 +215,30 @@ void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::strin
 	if(i==3) etacut = 1.;
 
 	if(eventdiff->GetEtaMinFromPFCands() < -990. && eventdiff->GetEtaMaxFromPFCands() < -990.) gap = true;
-	if((eventexcl->GetLeadingJetPt() > 60. && eventexcl->GetSecondJetPt() > 60. ) && (eventexcl->GetLeadingJetPt() < 400. && eventexcl->GetSecondJetPt() < 400.)){
+	if((eventexcl->GetLeadingJetPt() > 60. && eventexcl->GetSecondJetPt() > 60.)){
 	  if(deltaphi_>M_PI) deltaphi_=2.0*M_PI-deltaphi_;
 	  if(deltaphi_>0.5*M_PI) {
-	    if(eventdiff->GetSumEnergyHFPlus() < 30 && eventdiff->GetSumEnergyHFMinus() < 30){
-	      if(eventexcl->GetNVertex() > 0 && eventexcl->GetNVertex()<= 1){         
-		if( (eventdiff->GetEtaMinFromPFCands() > -etacut && eventdiff->GetEtaMaxFromPFCands() < etacut ) || (gap) ){
+	    if((eventdiff->GetSumEnergyHFPlus() < 30 && eventdiff->GetSumEnergyHFMinus() < 30) || (gap)){
+	      if ( !castor || (castor && (eventdiff->GetSumETotCastor() < 400) )){
+		if(eventexcl->GetNVertex() > 0 && eventexcl->GetNVertex()<= 1){         
+		  if( (eventdiff->GetEtaMinFromPFCands() > -etacut && eventdiff->GetEtaMaxFromPFCands() < etacut ) || (gap) ){
 
-		  counter[i+2]++;
-		  m_hVector_Evt_lumis.at(i+2)->Fill(eventinfo->GetInstLumiBunch());
-		  m_hVector_Eff_lumis.at(i+2)->Fill(eventinfo->GetInstLumiBunch());
-		  m_hVector_Evt_pfetamax.at(i+2)->Fill(eventdiff->GetEtaMaxFromPFCands());
-		  m_hVector_Evt_pfetamin.at(i+2)->Fill(eventdiff->GetEtaMinFromPFCands());
+		    counter[i+2]++;
+		    m_hVector_Evt_lumis.at(i+2)->Fill(eventinfo->GetInstLumiBunch());
+		    m_hVector_Eff_lumis.at(i+2)->Fill(eventinfo->GetInstLumiBunch());
+		    m_hVector_Evt_pfetamax.at(i+2)->Fill(eventdiff->GetEtaMaxFromPFCands());
+		    m_hVector_Evt_pfetamin.at(i+2)->Fill(eventdiff->GetEtaMinFromPFCands());
 
-		  if(eventexcl->GetHLTPath(optTrigger)){
-		    counter[i+6]++;
-		    m_hVector_Evt_lumis.at(i+6)->Fill(eventinfo->GetInstLumiBunch());
-		    m_hVector_Eff_lumis.at(i+6)->Fill(eventinfo->GetInstLumiBunch());
-		    m_hVector_Evt_pfetamax.at(i+6)->Fill(eventdiff->GetEtaMaxFromPFCands());
-		    m_hVector_Evt_pfetamin.at(i+6)->Fill(eventdiff->GetEtaMinFromPFCands());
-		  } 	
-		}
-	      } 
+		    if(eventexcl->GetHLTPath(optTrigger)){
+		      counter[i+6]++;
+		      m_hVector_Evt_lumis.at(i+6)->Fill(eventinfo->GetInstLumiBunch());
+		      m_hVector_Eff_lumis.at(i+6)->Fill(eventinfo->GetInstLumiBunch());
+		      m_hVector_Evt_pfetamax.at(i+6)->Fill(eventdiff->GetEtaMaxFromPFCands());
+		      m_hVector_Evt_pfetamin.at(i+6)->Fill(eventdiff->GetEtaMinFromPFCands());
+		    } 	
+		  }
+		} 
+	      }
 	    }
 	  }
 	}  
@@ -255,6 +259,7 @@ void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::strin
   outstring << " " << std::endl;
   outstring << "Trigger Ref Option: " << optTriggerRef << std::endl;
   outstring << "Trigger Option: " << optTrigger << std::endl;
+  outstring << "Castor: " << castor << std::endl;
   outstring << "Bin: " << bin << std::endl;
   outstring << " " << std::endl;
   outstring << "Number of Events: " << TotalE << std::endl;
@@ -312,6 +317,7 @@ int main(int argc, char **argv)
   int optTrigger_;
   int optTriggerRef_;
   int bin_;
+  bool castor_;
 
   if (argc > 1 && strcmp(s1,argv[1]) != 0)  filein_ = argv[1];
   if (argc > 2 && strcmp(s1,argv[2]) != 0)  savehistofile_  = argv[2];
@@ -319,9 +325,10 @@ int main(int argc, char **argv)
   if (argc > 4 && strcmp(s1,argv[4]) != 0)  optTriggerRef_   = atoi(argv[4]);
   if (argc > 5 && strcmp(s1,argv[5]) != 0)  optTrigger_   = atoi(argv[5]);
   if (argc > 6 && strcmp(s1,argv[6]) != 0)  bin_   = atoi(argv[6]);
+  if (argc > 7 && strcmp(s1,argv[7]) != 0)  castor_   = atoi(argv[7]);
 
   TriggerEff* triggereff = new TriggerEff();   
-  triggereff->Run(filein_, savehistofile_, processname_, optTriggerRef_, optTrigger_, bin_);
+  triggereff->Run(filein_, savehistofile_, processname_, optTriggerRef_, optTrigger_, bin_, castor_);
 
   return 0;
 }

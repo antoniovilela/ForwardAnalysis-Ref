@@ -51,7 +51,7 @@ void EffMacro::LoadFile(std::string fileinput, std::string processinput){
 
 }
 
-void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string processname_, int optnVertex_, int optTrigger_, bool switchPreSel_, bool switchVertex_, bool switchTrigger_){
+void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string processname_, int optnVertex_, int optTrigger_, bool switchPreSel_, bool switchVertex_, bool switchTrigger_, bool switchcastor_){
 
   filein = filein_;
   savehistofile = savehistofile_;
@@ -62,6 +62,7 @@ void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string 
   switchPreSel = switchPreSel_;
   switchVertex = switchVertex_;
   switchTrigger = switchTrigger_;
+  switchcastor = switchcastor_;
 
   std::cout << "" << std::endl;
   std::cout << "Running..." << std::endl;
@@ -192,54 +193,58 @@ void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string 
       m_hVector_Eff_lumis.at(1)->Fill(eventinfo->GetInstLumiBunch());
 
 
-      if ( !switchPreSel || (switchPreSel && eventdiff->GetSumEnergyHFMinus() < 30 && eventdiff->GetSumEnergyHFPlus() < 30 )){
+      if ( !switchPreSel || (switchPreSel && ( (eventdiff->GetSumEnergyHFMinus() < 30 && eventdiff->GetSumEnergyHFPlus() < 30) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990) ))){
 
-	++counterPreSel;
-	m_hVector_Evt_lumis.at(2)->Fill(eventinfo->GetInstLumiBunch());
-	m_hVector_Eff_lumis.at(2)->Fill(eventinfo->GetInstLumiBunch());
+	if ( !switchcastor || (switchcastor && eventdiff->GetSumETotCastor() < 400) ){
 
-
-	if( !switchVertex || (switchVertex && eventexcl->GetNVertex()<= optnVertex )){
-
-	  ++counterVertex;
-	  m_hVector_Evt_lumis.at(3)->Fill(eventinfo->GetInstLumiBunch());
-	  m_hVector_Eff_lumis.at(3)->Fill(eventinfo->GetInstLumiBunch());
+	  ++counterPreSel;
+	  m_hVector_Evt_lumis.at(2)->Fill(eventinfo->GetInstLumiBunch());
+	  m_hVector_Eff_lumis.at(2)->Fill(eventinfo->GetInstLumiBunch());
 
 
-	  // Eta max and Eta min cut
-	  if ((eventdiff->GetEtaMinFromPFCands() > -4. && eventdiff->GetEtaMaxFromPFCands() < 4.) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990) ){
+	  if( !switchVertex || (switchVertex && eventexcl->GetNVertex()<= optnVertex )){
 
-	    ++counterAllstep4_4;
-	    m_hVector_Evt_lumis.at(4)->Fill(eventinfo->GetInstLumiBunch());
-	    m_hVector_Eff_lumis.at(4)->Fill(eventinfo->GetInstLumiBunch());
-	  }
+	    ++counterVertex;
+	    m_hVector_Evt_lumis.at(3)->Fill(eventinfo->GetInstLumiBunch());
+	    m_hVector_Eff_lumis.at(3)->Fill(eventinfo->GetInstLumiBunch());
 
-	  if ((eventdiff->GetEtaMinFromPFCands() > -3. && eventdiff->GetEtaMaxFromPFCands() < 3.) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990)){
 
-	    ++counterAllstep4_3;
-	    m_hVector_Evt_lumis[5]->Fill(eventinfo->GetInstLumiBunch());
-	    m_hVector_Eff_lumis[5]->Fill(eventinfo->GetInstLumiBunch());
-	  }
+	    // Eta max and Eta min cut
+	    if ((eventdiff->GetEtaMinFromPFCands() > -4. && eventdiff->GetEtaMaxFromPFCands() < 4.) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990) ){
 
-	  if ((eventdiff->GetEtaMinFromPFCands() > -2. && eventdiff->GetEtaMaxFromPFCands() < 2.) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990)){
+	      ++counterAllstep4_4;
+	      m_hVector_Evt_lumis.at(4)->Fill(eventinfo->GetInstLumiBunch());
+	      m_hVector_Eff_lumis.at(4)->Fill(eventinfo->GetInstLumiBunch());
+	    }
 
-	    ++counterAllstep4_2;
-	    m_hVector_Evt_lumis.at(6)->Fill(eventinfo->GetInstLumiBunch());
-	    m_hVector_Eff_lumis.at(6)->Fill(eventinfo->GetInstLumiBunch());
-	  }
+	    if ((eventdiff->GetEtaMinFromPFCands() > -3. && eventdiff->GetEtaMaxFromPFCands() < 3.) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990)){
 
-	  if ((eventdiff->GetEtaMinFromPFCands() > -1. && eventdiff->GetEtaMaxFromPFCands() < 1.) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990)){
+	      ++counterAllstep4_3;
+	      m_hVector_Evt_lumis[5]->Fill(eventinfo->GetInstLumiBunch());
+	      m_hVector_Eff_lumis[5]->Fill(eventinfo->GetInstLumiBunch());
+	    }
 
-	    ++counterAllstep4_1;
-	    m_hVector_Evt_lumis.at(7)->Fill(eventinfo->GetInstLumiBunch());
-	    m_hVector_Eff_lumis.at(7)->Fill(eventinfo->GetInstLumiBunch());
-	  }
+	    if ((eventdiff->GetEtaMinFromPFCands() > -2. && eventdiff->GetEtaMaxFromPFCands() < 2.) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990)){
 
-	}  
+	      ++counterAllstep4_2;
+	      m_hVector_Evt_lumis.at(6)->Fill(eventinfo->GetInstLumiBunch());
+	      m_hVector_Eff_lumis.at(6)->Fill(eventinfo->GetInstLumiBunch());
+	    }
 
-      } 
+	    if ((eventdiff->GetEtaMinFromPFCands() > -1. && eventdiff->GetEtaMaxFromPFCands() < 1.) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990)){
 
-    }   
+	      ++counterAllstep4_1;
+	      m_hVector_Evt_lumis.at(7)->Fill(eventinfo->GetInstLumiBunch());
+	      m_hVector_Eff_lumis.at(7)->Fill(eventinfo->GetInstLumiBunch());
+	    }
+
+	  }  
+
+	} 
+
+      }   
+
+    }
 
   }
 
@@ -262,6 +267,7 @@ void EffMacro::Run(std::string filein_, std::string savehistofile_, std::string 
   outstring << "Trigger Switch: " << switchTrigger << std::endl;
   outstring << "Vertex  Switch: " << switchVertex << std::endl;
   outstring << "Pre-Selection Switch: " << switchPreSel << std::endl;
+  outstring << "Castor Switch: " << switchcastor << std::endl;
   outstring << "" << std::endl;
   outstring << "<< EVENT INFO >> " << std::endl;
   outstring << " " << std::endl;
@@ -300,6 +306,7 @@ int main(int argc, char **argv)
   bool switchPreSel_;
   bool switchVertex_;
   bool switchTrigger_;
+  bool switchcastor_;
 
   if (argc > 1 && strcmp(s1,argv[1]) != 0)  filein_ = argv[1];
   if (argc > 2 && strcmp(s1,argv[2]) != 0)  savehistofile_  = argv[2];
@@ -309,10 +316,10 @@ int main(int argc, char **argv)
   if (argc > 6 && strcmp(s1,argv[6]) != 0)  switchPreSel_   = atoi(argv[6]);
   if (argc > 7 && strcmp(s1,argv[7]) != 0)  switchVertex_   = atoi(argv[7]);
   if (argc > 8 && strcmp(s1,argv[8]) != 0)  switchTrigger_   = atoi(argv[8]);
-
+  if (argc > 9 && strcmp(s1,argv[9]) != 0)  switchcastor_   = atoi(argv[9]);
 
   EffMacro* exclDijets = new EffMacro();   
-  exclDijets->Run(filein_, savehistofile_, processname_, optnVertex_, optTrigger_, switchPreSel_, switchVertex_, switchTrigger_);
+  exclDijets->Run(filein_, savehistofile_, processname_, optnVertex_, optTrigger_, switchPreSel_, switchVertex_, switchTrigger_, switchcastor_);
 
   return 0;
 }
