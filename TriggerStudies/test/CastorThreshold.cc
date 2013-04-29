@@ -299,6 +299,28 @@ void CastorThreshold::Run(std::string filein_, std::string savehistofile_, std::
       if (unpaired && d_eta1) FillHistos(5);
     }
 
+     else if (type == "collisionsmc"){
+      if (vertex && tracks) collisions = true;
+      status = "collisionsmc";
+      FillHistos(0);
+      if (collisions) FillHistos(1);
+      if (collisions && d_eta4) FillHistos(2);
+      if (collisions && d_eta3) FillHistos(3);
+      if (collisions && d_eta2) FillHistos(4);
+      if (collisions && d_eta1) FillHistos(5);
+    }
+
+    else if (type == "unpairedmc"){
+      if(!vertex && !tracks) unpaired = true;
+      status = "unpairedmc";
+      FillHistos(0);
+      if (unpaired) FillHistos(1);
+      if (unpaired && d_eta4) FillHistos(2);
+      if (unpaired && d_eta3) FillHistos(3);
+      if (unpaired && d_eta2) FillHistos(4);
+      if (unpaired && d_eta1) FillHistos(5);
+    }
+
     else {
       std::cout << "\n Unrecognized Type of Selection." << std::endl;
       return;
