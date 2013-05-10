@@ -3,6 +3,7 @@ import FWCore.ParameterSet.Config as cms
 #
 # Program Settings
 #
+######################################################################################
 
 class config: pass
 config.verbose = True
@@ -19,32 +20,33 @@ config.trackAnalyzerName = 'trackHistoAnalyzer'
 config.trackTagName = 'analysisTracks'
 config.NumberOfEvents = -1
 config.TriggerOn = True
-triggerlist = 'HLT_Mu0_L1MuOpen','HLT_Mu3','HLT_Mu5','HLT_DoubleMu0','HLT_Jet15U'
+triggerlist = 'HLT_Mu0_L1MuOpen','HLT_Mu3','HLT_Mu5','HLT_DoubleMu0'
+l1list = 'L1_ZeroBias','L1_BptxMinus_NotBptxPlus'
 
 #
 # Define Triggers and Input Files
 #
+######################################################################################
 
 if config.runOnMC:
-    config.l1Paths = ('L1_ZeroBias','L1_BptxMinus_NotBptxPlus','L1_SingleJet30U')
-    config.hltPaths =('HLT_Jet30_v1','HLT_Jet30_v2','HLT_Jet30_v3','HLT_Jet30_v4','HLT_Jet30_v5','HLT_Jet30_v6')
+    config.l1Paths = (l1list)
+    config.hltPaths =(triggerlist)
     config.inputFileName = '/storage1/dmf/TestSamples/PYTHIA6_QCD_15to3000_private_SL_RECO/QCD_Pt_15to3000_TuneZ2_Flat_7TeV_pythia6_cff_py_RAW2DIGI_L1Reco_RECO_233_3_nsm.root'
     config.runPUMC = False  # MC With PU
     config.runGen = False    # MC With Weight
 
 else:
-    config.l1Paths = ('L1_SingleJet36','L1_SingleJet16','L1_DoubleJetC56')
-#    config.hltPaths = ('HLT_Mu0_L1MuOpen','HLT_Mu3','HLT_Mu5','HLT_DoubleMu0','HLT_Jet15U')
+    config.l1Paths = (l1list)
     config.hltPaths = (triggerlist)
-    #config.inputFileName = '/afs/cern.ch/work/d/dmf/public/Samples/TestSamples/MuHad2011.root' 
-    config.inputFileName = '/storage1/dmf/TestSamples/MuRun2010/MuRunA2010.root'
+    #config.inputFileName = '/storage1/dmf/TestSamples/MuRun2010/MuRunA2010.root'
+    config.inputFileName = '/storage1/dmf/TestSamples/Electron2010B/Electron2010B.root'
     config.runPUMC = False
     config.runGen = False
 
 #
 # CMSSW Main Code
 #
-
+######################################################################################
 
 process = cms.Process("Analysis")
 
@@ -65,6 +67,7 @@ process.source = cms.Source("PoolSource",
 #
 # Output
 #
+######################################################################################
 
 process.TFileService = cms.Service("TFileService",
                                    fileName = cms.string(config.outputTTreeFile))
@@ -72,6 +75,7 @@ process.TFileService = cms.Service("TFileService",
 #
 # Detector Conditions and Scales
 #
+######################################################################################
 
 process.load('Configuration.StandardSequences.Services_cff')
 process.load('Configuration.StandardSequences.GeometryExtended_cff')
@@ -82,6 +86,7 @@ process.load('Configuration.StandardSequences.FrontierConditions_GlobalTag_cff')
 #
 # Global Tag Input
 #
+######################################################################################
 
 if config.runOnMC: process.GlobalTag.globaltag = config.globalTagNameMC
 else: process.GlobalTag.globaltag = config.globalTagNameData
@@ -92,21 +97,9 @@ process.load('RecoJets.Configuration.RecoJets_cff')
 process.load('CommonTools/RecoAlgos/HBHENoiseFilterResultProducer_cfi')
 
 #
-# Remove PAT MCMatching for Data
-#
-
-# load the standard PAT config
-#process.load("PhysicsTools.PatAlgos.patSequences_cff")
-
-# load the coreTools of PAT
-#from PhysicsTools.PatAlgos.tools.coreTools import *
-
-#if not config.runOnMC: 
-#    removeMCMatching(process, ['Electrons','Muons'],"")
-
-#
 # PAT Sequences
 #
+######################################################################################
 
 if config.runPATSequences:
     from ForwardAnalysis.Skimming.addPATSequences import addPATSequences
@@ -125,19 +118,21 @@ addCastorRecHitCorrector(process)
 #
 # Remove PAT MCMatching for Data
 #
+######################################################################################
 
 # load the standard PAT config
-#process.load("PhysicsTools.PatAlgos.patSequences_cff")
+process.load("PhysicsTools.PatAlgos.patSequences_cff")
 
 # load the coreTools of PAT
-#from PhysicsTools.PatAlgos.tools.coreTools import *
+from PhysicsTools.PatAlgos.tools.coreTools import *
 
 #if not config.runOnMC: 
-#    removeMCMatching(process, ['Electrons','Muons'],"")
+#    removeMCMatching(process, ['All'])
 
 #
 # PAT Muons and Electrons WorkFlow
 #
+######################################################################################
 
 from PhysicsTools.PatAlgos.mcMatchLayer0.electronMatch_cfi import *
 from TrackingTools.TransientTrack.TransientTrackBuilder_cfi import *
@@ -147,7 +142,11 @@ from PhysicsTools.PatAlgos.mcMatchLayer0.muonMatch_cfi import *
 from TrackingTools.TransientTrack.TransientTrackBuilder_cfi import *
 from PhysicsTools.PatAlgos.producersLayer1.muonProducer_cfi import *
 
+#process.patElectrons.pvSrc="goodOfflinePrimaryVertices"
+#process.patMuons.pvSrc="goodOfflinePrimaryVertices"
+
 if not config.runOnMC:
+
     ## for scheduled mode
     process.makePatElectrons = cms.Sequence(
         patElectrons
@@ -171,37 +170,32 @@ else:
 #
 # PAT Isolation Variables
 #
+######################################################################################
 
 #from PhysicsTools.PatAlgos.tools.muonTools import *
-#addMuonUserIsolation(process,['All'])
+#addMuonUserIsolation(process)
 
 #from PhysicsTools.PatAlgos.tools.electronTools import *
-#addElectronUserIsolation(process,['All'])
-
+#addElectronUserIsolation(process)
 
 #
 # Open Common Modules
 #
+######################################################################################
 
 process.load("ForwardAnalysis.AnalysisSequences.CommonModulesSequences_cff")
 process.pfCandidateNoiseThresholds.src = "pfNoPileUpPFlow"
 process.tracksTransverseRegion.JetTag = "selectedPatJetsPFlow"
 
-
-#
-# Open Analysis Modules
-#
-
 #
 # Import PSET for each Module
 #
+######################################################################################
 
 from ForwardAnalysis.ForwardTTreeAnalysis.DiffractiveAnalysis_cfi import DiffractiveAnalysis
 from ForwardAnalysis.DiffractiveZAnalysis.DiffractiveZAnalysis_cfi import DiffractiveZAnalysis
 from ForwardAnalysis.ForwardTTreeAnalysis.PATTriggerInfo_cfi import PATTriggerInfo
-from ForwardAnalysis.ForwardTTreeAnalysis.DijetsTriggerAnalysis_cfi import DijetsTriggerAnalysis
 
-# PATInfo Without Wildcard * (FIX ME)
 #PATTriggerInfo.L1AlgoBitName =  config.l1Paths 
 PATTriggerInfo.HLTAlgoBitName = config.hltPaths
 PATTriggerInfo.runALLTriggerPath = True
@@ -209,6 +203,7 @@ PATTriggerInfo.runALLTriggerPath = True
 #
 # Define Analyzers
 #
+######################################################################################
 
 process.diffractiveZAnalysisTTree = cms.EDAnalyzer("EventInfoDiffractiveDiffractiveZAnalysisTTree",
         EventInfo = cms.PSet(
@@ -224,7 +219,7 @@ process.CommonHLTFilter.HLTPaths = config.hltPaths
 
 process.diffractiveZAnalysisTTree.DiffractiveAnalysis.hltPath = ''
 process.diffractiveZAnalysisTTree.DiffractiveAnalysis.trackTag = 'analysisTracks'
-process.diffractiveZAnalysisTTree.DiffractiveAnalysis.vertexTag = "offlinePrimaryVertices"
+process.diffractiveZAnalysisTTree.DiffractiveAnalysis.vertexTag = "goodOfflinePrimaryVertices"
 process.diffractiveZAnalysisTTree.DiffractiveAnalysis.particleFlowTag = "pfCandidateNoiseThresholds"
 process.diffractiveZAnalysisTTree.DiffractiveAnalysis.jetTag = "selectedPatJetsPFlow"
 
@@ -237,6 +232,7 @@ else:
 #
 # Define MC Access
 #
+######################################################################################
 
 if config.runOnMC:
      process.diffractiveZAnalysisTTree.DiffractiveAnalysis.accessMCInfo = True
@@ -253,16 +249,18 @@ else:
 # Run Path. 
 # If TriggerOn = True (Run with trigger)
 #
+######################################################################################
 
+process.pat_Producer = cms.Path(process.makePatElectrons + process.makePatMuons)
 process.analysis_reco_step = cms.Path(process.analysisSequences)
 process.castor_step = cms.Path(process.castorSequence)
 
 
 if config.TriggerOn:
     process.analysis_diffractiveDiffractiveZAnalysisPATTriggerInfoTTree_step = cms.Path(
-    process.eventSelectionHLT + process.makePatElectrons + process.makePatMuons + process.diffractiveZAnalysisTTree)
+    process.eventSelectionHLT + process.diffractiveZAnalysisTTree)
 
 else:
     process.analysis_diffractiveDiffractiveZAnalysisPATTriggerInfoTTree_step = cms.Path(
-    process.eventSelection + process.makePatElectrons + process.makePatMuons + process.diffractiveZAnalysisTTree)
+    process.eventSelection + process.diffractiveZAnalysisTTree)
 
