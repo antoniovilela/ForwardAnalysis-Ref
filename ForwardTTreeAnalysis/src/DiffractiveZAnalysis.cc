@@ -293,10 +293,6 @@ void DiffractiveZAnalysis::fillMuonsInfo(DiffractiveZEvent& eventData, const edm
 
 void DiffractiveZAnalysis::fillTracksInfo(DiffractiveZEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
 
-  //=======================================================
-  // Retrieve the Track information
-  //=======================================================
-
   std::vector<double> vertexNDOF;
   std::vector<double> vertexChiNorm;
   std::vector<double> vertexMultiplicity;
@@ -374,6 +370,8 @@ void DiffractiveZAnalysis::fillTracksInfo(DiffractiveZEvent& eventData, const ed
 
 void DiffractiveZAnalysis::fillGenInfo(DiffractiveZEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
 
+  bool debug=false;
+
   //Variable declaration
   int count=0;
   int Nstable_gen=0;
@@ -428,11 +426,9 @@ void DiffractiveZAnalysis::fillGenInfo(DiffractiveZEvent& eventData, const edm::
     bool electronFromZ=false;
     int motherId=0;
 
-
     if (  p.mother() ) motherId =  p.mother()->pdgId();
 
     math::XYZTLorentzVector tmp( px_gen ,py_gen , pz_gen ,ener_gen );
-
 
     if (fabs(pdg)==11 || fabs(pdg)==22){ 	    
       if (motherId==23) {
@@ -449,13 +445,13 @@ void DiffractiveZAnalysis::fillGenInfo(DiffractiveZEvent& eventData, const edm::
 	energyOutcomingProton= ener_gen;
       }
     }
+
     if (( pdg == 23)){
       xi_Z_gen_minus=( ener_gen - pz_gen )/7000;
       xi_Z_gen_plus=( ener_gen + pz_gen )/7000;
       etaZ_gen=eta_gen;
       energyZ_gen= ener_gen;
     }
-
 
     if (status == 1) 
     {
@@ -470,6 +466,7 @@ void DiffractiveZAnalysis::fillGenInfo(DiffractiveZEvent& eventData, const edm::
       if (  count>2) {   
 	part+=tmp;
       }
+
       if (  (fabs(eta_gen) < 4.7) && (part_pt > 0.10) ) {   // if particle has a chance to reach the detector ...
 	partVis+=tmp;
       }
@@ -501,14 +498,15 @@ void DiffractiveZAnalysis::fillGenInfo(DiffractiveZEvent& eventData, const edm::
 	  }
 	}
       }
+
       if ( fabs(eta_gen)>5.2 && fabs(eta_gen)<6.6 ){
-	//if (debug_deep) std::cout<<"Particle in Castor, having eta "<<eta_gen<<" and energy "<< ener_gen<<endl;
+	if (debug) std::cout<<"Particle in Castor, having eta "<<eta_gen<<" and energy "<< ener_gen<<std::endl;
 	if (eta_gen<0) sumECastor_minus_gen += ener_gen;
 	if (eta_gen>0) sumECastor_plus_gen += ener_gen;
       }
 
       if ( fabs(eta_gen)>8.2  && ( pdg == 2112 || pdg == 22) ){
-	//if (debug_deep) std::cout<<"Particle in ZDC, having eta "<<eta_gen<<" and energy "<< ener_gen<<endl;
+	if (debug) std::cout<<"Particle in ZDC, having eta "<<eta_gen<<" and energy "<< ener_gen<<std::endl;
 	if (eta_gen<0) sumEZDC_minus_gen += ener_gen;
 	if (eta_gen>0) sumEZDC_plus_gen += ener_gen;
       }      
@@ -519,10 +517,7 @@ void DiffractiveZAnalysis::fillGenInfo(DiffractiveZEvent& eventData, const edm::
 
   } // loop over particles
 
-
   //// Computing GAPs
-
-
   const int  size = (int) eta_gen_vec.size();
   int *sortedgen=   new int[size];
   double *vgen = new double[size];
@@ -531,7 +526,7 @@ void DiffractiveZAnalysis::fillGenInfo(DiffractiveZEvent& eventData, const edm::
 
   for (int i=0; i<size; i++) {
     vgen[i] = eta_gen_vec[i];
-    // if (debug_deep) cout<<vgen[i]<<endl;
+    if (debug) std::cout<<vgen[i]<<std::endl;
   }
   TMath::Sort(size, vgen, sortedgen, true);
 
@@ -540,9 +535,11 @@ void DiffractiveZAnalysis::fillGenInfo(DiffractiveZEvent& eventData, const edm::
     int *diffsorted = new int[size-1];
     for (int i=0; i<(size-1); i++) {
       diff[i] = fabs(eta_gen_vec[sortedgen[i+1]]-eta_gen_vec[sortedgen[i]]);
-      //if (debug_deep) cout<<" eta " << i << " size " << size << " diff "<< diff[i]<<endl;
-      //	    cout<<"GEN  etas "  << " = " << eta_gen_vec[sortedgen[i+1]] << " - " <<  eta_gen_vec[sortedgen[i]] <<  " GAP diff "<< diff[i]<<endl;
-      //cout<<" GEN etas "  << " = " << eta_gen_vec[sortedgen[i]] <<endl;
+      if (debug) {
+	std::cout<<" eta " << i << " size " << size << " diff "<< diff[i]<< std::endl;
+	std::cout<<"GEN  etas "  << " = " << eta_gen_vec[sortedgen[i+1]] << " - " <<  eta_gen_vec[sortedgen[i]] <<  " GAP diff "<< diff[i] << std::endl;
+	std::cout<<" GEN etas "  << " = " << eta_gen_vec[sortedgen[i]] << std::endl;
+      }
     }
 
     TMath::Sort(size-1, diff, diffsorted, true);
@@ -552,36 +549,27 @@ void DiffractiveZAnalysis::fillGenInfo(DiffractiveZEvent& eventData, const edm::
     eta_gap_limminus_gen = eta_gen_vec[sortedgen[diffsorted[0]+1]] ;
     eta_gap_limplus_gen = eta_gen_vec[sortedgen[diffsorted[0]]] ;
 
-    //cout << "GEN eta ranges " <<  eta_gap_limplus_gen  << " " <<  eta_gap_limminus_gen  << endl;
-
-    //Rootuple->max_eta_gap_gen=max_eta_gap_gen;
+    if (debug) std::cout << "GEN eta ranges " <<  eta_gap_limplus_gen  << " " <<  eta_gap_limminus_gen  << std::endl;
     eventData.SetPrimaryGapMaxGen(max_eta_gap_gen);
 
     if (size>2) {
       double max_second_eta_gap_gen=diff[diffsorted[1]];
       eventData.SetSecondGapMaxGen(max_second_eta_gap_gen);
-      //Rootuple->max_second_eta_gap_gen=max_second_eta_gap_gen;
-      //if (debug_deep) cout<<" diff  " << diff[diffsorted[0]] << " sec " << diff[diffsorted[1]] << " diff size "<< diff[size-2] <<endl;
+      if (debug) std::cout<<" diff  " << diff[diffsorted[0]] << " sec " << diff[diffsorted[1]] << " diff size "<< diff[size-2] << std::endl;
     }
 
     delete [] diff;
     delete [] diffsorted;
   }
 
-
   delete [] sortedgen;
   delete [] vgen;
-
-
-
-  /// Loop to compute Mx2 Generated a destra e a sinistra del GAP
 
   math::XYZTLorentzVector dataMassG_plus(0.,0.,0.,0.);
   math::XYZTLorentzVector dataMassG_minus(0.,0.,0.,0.);
   int nplusG =0;
   int nminusG =0;
   int numseltracks =0;
-
 
   for(size_t i = 0; i < genParticles->size(); ++ i) {
     const reco::GenParticle & p = (*genParticles)[i];
@@ -613,12 +601,12 @@ void DiffractiveZAnalysis::fillGenInfo(DiffractiveZEvent& eventData, const edm::
     }
   } // end of genparticle loop
 
-
   float Mx2_gen=partVis.M2(); /// massaquadro visibile generata
   math::XYZTLorentzVector NOZ=partVis-partZ;
   float Mx2_NOZ_gen=NOZ.M2();
-  //std::cout<<"Particle XL "<< mostEnergeticXL << " id "<< mostEnergeticXLType <<endl;
-  //if (debug_deep) cout<<"Mx2_gen is "<<Mx2_gen<<" while eta of the outcoming proton is "<<etaOutcomingProton<<" and the energy "<<energyOutcomingProton<<endl;
+  if (debug) {
+    std::cout << "Mx2_gen is "<< Mx2_gen<<" while eta of the outcoming proton is "<< etaOutcomingProton <<" and the energy "<< energyOutcomingProton << std::endl;
+  }
 
   mostEnergeticXL = xL_etaGTP5/3500.;
   mostEnergeticXLNum = xL_GTP5Num ;
@@ -628,8 +616,7 @@ void DiffractiveZAnalysis::fillGenInfo(DiffractiveZEvent& eventData, const edm::
     mostEnergeticXLNum = xL_LTM5Num ;
   }
 
-  // cout << "* XLgen " << mostEnergeticXL << " num " << mostEnergeticXLNum << " + " << xL_etaGTP5 << " - " << xL_etaLTM5 <<  endl;
-
+  if (debug) std::cout << "* XLgen " << mostEnergeticXL << " num " << mostEnergeticXLNum << " + " << xL_etaGTP5 << " - " << xL_etaLTM5 <<  std::endl;
 
   const int  size2 = (int) genpt.size();
   int *sorted = new int[size2];
@@ -648,15 +635,11 @@ void DiffractiveZAnalysis::fillGenInfo(DiffractiveZEvent& eventData, const edm::
   eventData.SetEtaOfTracksPtGen(etaPT);
   eventData.SetNTracksGen(tracks.size());
 
-  //    Rootuple->tracksPT_gen=tracks;
-  //    Rootuple->etaOfTracksPT_gen=etaPT;   
-  //    Rootuple->numberOfTracks_gen=tracks.size();  
   genpt.clear();
   eta.clear();
 
   delete [] sorted;
   delete [] vv;
-
 
   eventData.SetMx2PlusGen(dataMassG_plus.M2());
   eventData.SetMx2MinusGen(dataMassG_minus.M2());
@@ -683,6 +666,9 @@ void DiffractiveZAnalysis::fillGenInfo(DiffractiveZEvent& eventData, const edm::
 
 }
 
+//
+// Fill Pat:Muon and Pat:Electron objects 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
 
@@ -707,12 +693,10 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
   reco::PFCandidateCollection::const_iterator iter;
 
   edm::Handle<std::vector<pat::Muon> > muons;
-  //event.getByLabel("patMuons", muons);
-  event.getByLabel("selectedPatMuonsPFlow", muons);
+  event.getByLabel("patMuons", muons);
 
   edm::Handle<std::vector<pat::Electron> > electrons;
-  //event.getByLabel("patElectrons", electrons);
-  event.getByLabel("selectedPatElectronsPFlow", electrons);
+  event.getByLabel("patElectrons", electrons);
 
   for( std::vector<pat::Electron>::const_iterator elec=electrons->begin(); elec!=electrons->end(); ++elec ){
 
