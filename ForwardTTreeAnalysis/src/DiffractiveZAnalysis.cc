@@ -56,7 +56,12 @@ DiffractiveZAnalysis::DiffractiveZAnalysis(const edm::ParameterSet& pset):
   pTPFThresholdCharged_(pset.getParameter<double>("pTPFThresholdCharged")),
   energyPFThresholdBar_(pset.getParameter<double>("energyPFThresholdBar")),
   energyPFThresholdEnd_(pset.getParameter<double>("energyPFThresholdEnd")),
-  energyPFThresholdHF_(pset.getParameter<double>("energyPFThresholdHF"))
+  energyPFThresholdHF_(pset.getParameter<double>("energyPFThresholdHF")),
+  energyThresholdHB_(pset.getParameter<double>("energyThresholdHB")),
+  energyThresholdHE_(pset.getParameter<double>("energyThresholdHE")),
+  energyThresholdHF_(pset.getParameter<double>("energyThresholdHF")),
+  energyThresholdEB_(pset.getParameter<double>("energyThresholdEB")),
+  energyThresholdEE_(pset.getParameter<double>("energyThresholdEE"))
 {
 }
 
@@ -663,6 +668,797 @@ void DiffractiveZAnalysis::fillGenInfo(DiffractiveZEvent& eventData, const edm::
   eventData.SetEnergyZGen(energyZ_gen);
   eventData.SetpDissMassGen(p_diss_mass);
   eventData.SetxLpDissMass(xL_p_diss);
+
+}
+
+//
+// Fill Detector Variables
+//
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void DiffractiveZAnalysis::fillDetectorVariables(DiffractiveZEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
+
+/*
+
+      //Rootuple->zee=zee;
+      TLorentzVector e1;
+      TLorentzVector e2;
+      // Use directly the et,eta,phi from pat::Electron; assume e mass = 0.0
+      e1.SetPtEtaPhiM(maxETelec.et(),maxETelec.eta(),maxETelec.phi(),0.0);
+      e2.SetPtEtaPhiM(maxETelec2.et(),maxETelec2.eta(),maxETelec2.phi(),0.0);
+      TLorentzVector Z = e1+e2;
+      Double_t mee = Z.M();
+      xi_Z_minus=(maxETelec.et()*pow(2.71,-maxETelec.eta()))/7000;
+      xi_Z_minus+=(maxETelec2.et()*pow(2.71,-maxETelec2.eta()))/7000;
+      xi_Z_plus=(maxETelec.et()*pow(2.71,maxETelec.eta()))/7000;
+      xi_Z_plus+=(maxETelec2.et()*pow(2.71,maxETelec2.eta()))/7000;
+          
+      Rootuple->ZMass=mee;  
+      Rootuple->etaZ=Z.Eta();   
+      
+
+  //*************************************************************************
+  // Calo Towers
+  //************************************************************************* 
+
+  double energyThresholdHB = 1.25;
+  double energyThresholdHE = 1.5; // 1.9;
+  double energyThresholdHF = 6.0; // 4.0;
+  double energyThresholdEB = 0.6;
+  double energyThresholdEE = 1.5; //2.45;
+ 
+  double etaMax=-999;
+  double etaMin=999;
+  double Epz_plus=0;  
+  double Epz_minus=0;  
+
+  int nTowersHF_plus = 0;
+  int nTowersHF_minus = 0;
+  int nTowersHE_plus = 0;
+  int nTowersHE_minus = 0;
+  int nTowersHB_plus = 0;
+  int nTowersHB_minus = 0;
+  int nTowersEE_plus = 0;
+  int nTowersEE_minus = 0;
+  int nTowersEB_plus = 0;
+  int nTowersEB_minus = 0;
+    
+  //Sum(E)
+  double sumEHF_plus = 0.;
+  double sumEHF_minus = 0.;
+  double sumEHF_L_plus = 0.;
+  double sumEHF_L_minus = 0.;
+  double sumEHF_S_plus = 0.;
+  double sumEHF_S_minus = 0.;
+  double sumEHE_plus = 0.;
+  double sumEHE_minus = 0.;
+  double sumEHB_plus = 0.;
+  double sumEHB_minus = 0.;
+  double sumEEE_plus = 0.;
+  double sumEEE_minus = 0.;
+  double sumEEB_plus = 0.;
+  double sumEEB_minus = 0.;
+  
+  // Sum(ET)
+  double sumETHF_plus = 0.;
+  double sumETHF_minus = 0.;
+  double sumETHE_plus = 0.;
+  double sumETHE_minus = 0.;
+  double sumETHB_plus = 0.;
+  double sumETHB_minus = 0.;
+  double sumETEB_plus = 0.;
+  double sumETEB_minus = 0.;
+  double sumETEE_plus = 0.;
+  double sumETEE_minus = 0.;
+  double xi_Calo_minus =0;
+  double xi_Calo_plus =0;
+
+  edm::Handle<CaloTowerCollection> towerCollectionH;
+  iEvent.getByLabel(caloTowerTag_,towerCollectionH);
+  const CaloTowerCollection& towerCollection = *towerCollectionH;
+
+  CaloTowerCollection::const_iterator calotower;
+  calotower = towerCollection.begin();
+  CaloTowerCollection::const_iterator calotowers_end = towerCollection.end();
+  //cout<< " before calotower loop "  <<endl;
+  for(; calotower != calotowers_end; ++calotower) {
+    
+    if (fabs(calotower->eta())> 4.7) continue;   /// excluding ring12 and ring13 of HF
+    
+    bool hasHCAL = false;
+    bool hasHF = false;
+    bool hasHE = false;
+    bool hasHB = false;
+    bool hasHO = false;
+    bool hasECAL = false;
+    bool hasEE = false;
+    bool hasEB = false;     
+    for(size_t iconst = 0; iconst < calotower->constituentsSize(); iconst++){
+      DetId adetId = calotower->constituent(iconst);
+      if(adetId.det()==DetId::Hcal){
+	hasHCAL = true;
+	HcalDetId hcalDetId(adetId);
+	if(hcalDetId.subdet()==HcalForward) hasHF = true;
+	else if(hcalDetId.subdet()==HcalEndcap) hasHE = true;
+	else if(hcalDetId.subdet()==HcalBarrel) hasHB = true;
+	else if(hcalDetId.subdet()==HcalOuter) hasHO = true;  
+      } 
+      else if(adetId.det()==DetId::Ecal){
+	hasECAL = true;
+	EcalSubdetector ecalSubDet = (EcalSubdetector)adetId.subdetId();
+	if(ecalSubDet == EcalEndcap) hasEE = true;
+	else if(ecalSubDet == EcalBarrel) hasEB = true;
+      }
+    }
+    int zside = calotower->zside();
+    double caloTowerEnergy = calotower->energy();
+    double caloTowerEmEnergy = calotower->emEnergy();
+    double caloTowerHadEnergy = calotower->hadEnergy();
+    double caloTowerPz = calotower->pz();
+
+    // FIXME
+    //double caloTowerET = calotower->et(primVtx.position());
+    //double caloTowerET = calotower->et(primVtx.z());
+    double caloTowerEt = calotower->et();
+    double caloTowerEmEt = calotower->emEt();
+    double caloTowerHadEt = calotower->hadEt();
+    double EHF_S = 0;
+    double EHF_L = 0;
+    //double CaloTheta = calotower->p4(0.0).theta();
+    //double pzck = calotower->p() * TMath::Cos(CaloTheta) ;
+    ///// old wrong  Epz+= caloTowerEnergy + pt*zside;
+
+    bool CalAboveTh = false;
+    
+    if( hasHF && !hasHE )
+      {
+	if( caloTowerEnergy > energyThresholdHF && fabs(calotower->eta())> 2.98 )   //// excluding HF ring1
+	  {
+	    CalAboveTh = true;
+	    //cout << "HF>> " <<  calotower->id() << " HAD energy "     << caloTowerHadEnergy << " EM energy " << caloTowerEmEnergy << " energy " << caloTowerEnergy << endl; 
+	    // Added Long and short fibers
+	    //emc=L-S
+	    //hac=2*S
+	    //Tot = L+S
+	    // S = hac/2
+	    // L = Tot - S
+
+	    EHF_S = caloTowerHadEnergy/2;
+	    EHF_L = caloTowerEnergy - caloTowerHadEnergy/2;
+
+	    if(zside >= 0)
+	      {
+		++nTowersHF_plus;
+		sumEHF_plus += caloTowerEnergy;
+		sumEHF_S_plus += EHF_S;
+		sumEHF_L_plus += EHF_L;
+		sumETHF_plus += caloTowerEt;
+	      }
+	    else
+	      {
+		++nTowersHF_minus;
+		sumEHF_minus += caloTowerEnergy;
+		sumEHF_S_minus += EHF_S;
+		sumEHF_L_minus += EHF_L;
+		sumETHF_minus += caloTowerEt;
+	      }
+	    HistoEtaEnergyHFS->Fill(calotower->eta(),EHF_S);
+	    HistoEtaEnergyHFL->Fill(calotower->eta(),EHF_L);
+	  }
+      }
+    else if( hasHE && !hasHF && !hasHB )
+      {
+	if( caloTowerHadEnergy > energyThresholdHE)
+	  {
+	    CalAboveTh = true;
+	    //cout << "HE>> " <<  calotower->id() << "  HAD energy "     << caloTowerHadEnergy << " EM energy " << caloTowerEmEnergy << " energy " << caloTowerEnergy << endl;
+	    if(zside >= 0)
+	      {
+		++nTowersHE_plus;
+		sumEHE_plus += caloTowerHadEnergy;
+		sumETHE_plus += caloTowerHadEt;
+	      }
+	    else
+	      {
+		++nTowersHE_minus;
+		sumEHE_minus += caloTowerHadEnergy;
+		sumETHE_minus += caloTowerHadEt;
+	      }
+	  }
+      }
+    else if( hasHB && !hasHE )
+      {
+	if( caloTowerHadEnergy > energyThresholdHB)
+	  {
+	    CalAboveTh = true;
+	    //cout << "HB>> " <<  calotower->id() << "  HAD energy "     << caloTowerHadEnergy << " EM energy " << caloTowerEmEnergy << " energy " << caloTowerEnergy << endl;
+	    if(zside >= 0)
+	      {
+		++nTowersHB_plus;
+		sumEHB_plus += caloTowerHadEnergy;
+		sumETHB_plus += caloTowerHadEt;
+	      }
+	    else
+	      {
+		++nTowersHB_minus;
+		sumEHB_minus += caloTowerHadEnergy;
+		sumETHB_minus += caloTowerHadEt;
+	      }
+	  }
+      }
+    
+    if( hasEE && !hasEB )
+      {
+	if( caloTowerEmEnergy >= energyThresholdEE)
+	  {
+	    CalAboveTh = true;
+	    //cout << "EE>> " <<  calotower->id() << "  HAD energy "     << caloTowerHadEnergy << " EM energy " << caloTowerEmEnergy << " energy " << caloTowerEnergy << endl;
+	    if(zside >= 0)
+	      {
+		++nTowersEE_plus;
+		sumEEE_plus += caloTowerEmEnergy;
+		sumETEE_plus += caloTowerEmEt;
+	      }
+	    else
+	      {
+		++nTowersEE_minus;
+		sumEEE_minus += caloTowerEmEnergy;
+		sumETEE_minus += caloTowerEmEt;
+	      }
+	  }
+      }
+    else if( hasEB && !hasEE )
+      {
+	if( caloTowerEmEnergy >= energyThresholdEB)
+	  {
+	    CalAboveTh = true;
+	    //cout << "EB>> " <<  calotower->id() << " HAD energy "     << caloTowerHadEnergy << " EM energy " << caloTowerEmEnergy << " energy " << caloTowerEnergy << endl; 
+	    if(zside >= 0)
+	      {
+		++nTowersEB_plus;
+		sumEEB_plus += caloTowerEmEnergy;
+		sumETEB_plus += caloTowerEmEt;
+	      }
+	    else
+	      {
+		++nTowersEB_minus;
+		sumEEB_minus += caloTowerEmEnergy;
+		sumETEB_minus += caloTowerEmEt;
+	      }
+	  }
+      }
+    
+    if(CalAboveTh)
+      {
+	if (calotower->eta() >= etaMax) etaMax=calotower->eta();
+	if (calotower->eta() <= etaMin) etaMin=calotower->eta();
+	xi_Calo_minus += caloTowerEt * pow(2.71,-calotower->eta()) / (7000);
+	xi_Calo_plus += caloTowerEt * pow(2.71,calotower->eta()) / (7000);
+	Epz_plus  += caloTowerEnergy + caloTowerPz;
+	Epz_minus += caloTowerEnergy - caloTowerPz;
+
+	//    cout << "NIK CALO " <<  calotower->id()  << " " <<  CaloTheta   << " - cos " << TMath::Cos(CaloTheta) ;
+	//    cout << " -pz "     << caloTowerPz << " energy " << caloTowerEnergy << endl; 
+	//    << " ck    " <<  pzck <<  endl;
+	//    cout << " Epz_plus "     << Epz_plus << " Epz_minus   " <<  Epz_minus <<  endl;
+      }
+    
+  }  ////has to close calotower loop
+
+  
+  //Fill the variables
+  Rootuple->xi_Calo_minus=xi_Calo_minus;
+  Rootuple->xi_Calo_plus=xi_Calo_plus;
+  Rootuple->Epz_Calo_plus=Epz_plus;
+  Rootuple->Epz_Calo_minus=Epz_minus;
+  Rootuple->sumEHF_plus=sumEHF_plus;
+  Rootuple->sumEHF_minus=sumEHF_minus;
+  Rootuple->sumEHF_L_plus=sumEHF_L_plus;
+  Rootuple->sumEHF_L_minus=sumEHF_L_minus;
+  Rootuple->sumEHF_S_plus=sumEHF_S_plus;
+  Rootuple->sumEHF_S_minus=sumEHF_S_minus;
+  Rootuple->etaMax_Calo=etaMax;
+  Rootuple->etaMin_Calo=etaMin;
+  Rootuple->nTowersHF_plus=nTowersHF_plus;
+  Rootuple->nTowersHF_minus=nTowersHF_minus;  
+  if (sumEHF_plus>sumEHF_minus) Rootuple->minEHF=sumEHF_minus;
+  if (sumEHF_plus<sumEHF_minus) Rootuple->minEHF=sumEHF_plus;
+
+   edm::Handle<reco::VertexCollection> Vertexes;
+  iEvent.getByLabel(VertexCollectionTag_, Vertexes); 
+  Rootuple->numberOfVertexes = Vertexes->size(); 
+
+  // *************************************************************************
+  // Particle Flow Analysis
+  // *************************************************************************
+  
+  double etaMin_PF,etaMax_PF;
+  etaMin_PF=999;
+  etaMax_PF=-999;
+  double etaMin_PF_NOHF=999;
+  double etaMax_PF_NOHF=-999;
+  double etaMin_PF_Vertex_Selection=999;
+  double etaMax_PF_Vertex_Selection=-999;
+  edm::Handle <reco::PFCandidateCollection> PFCandidates;
+  iEvent.getByLabel("particleFlow",PFCandidates); 
+  reco::PFCandidateCollection::const_iterator iter;
+  float etamin,etamax;
+  etamin=etamax=0;
+  float Epz_PF_plus=0;
+  float Epz_PF_minus=0;
+  float Epz_PF_plus_NOHF=0;
+  float Epz_PF_minus_NOHF=0;
+  double xi_PF_minus=0;
+  double xi_PF_plus=0;
+  double xi_PF_minus_charged_Vertex_Selection=0;
+  double xi_PF_plus_charged_Vertex_Selection=0;  
+
+  bool cold=false;
+  bool MoreThanOneVertex=false;
+  //std::vector<math::XYZPoint> vertexes;
+  math::XYZPoint oldvertex;
+  math::XYZPoint vertex;
+  math::XYZPoint PrimaryVertex;
+  double sumpx=0;
+  double sumpy=0;
+  double sumpz=0;
+  double energyModule=0;
+  double sumpxModule=0;
+  double sumpyModule=0;
+  double sumpzModule=0;
+  double etaTimesEnergy=0;
+  double energyTot_PF_Barrel_minus=0;
+  double energyTot_PF_Barrel_plus=0;  
+  double energyTot_PF_minus=0;
+  double energyTot_PF_plus=0;
+  std::vector<double> etas;
+  int nPart_PF=0;
+  double energyTot_PF_EE_minus=0;
+  double energyTot_PF_EE_plus=0; 
+  double sumEHF_minus_PF=0;
+  double sumEHF_plus_PF=0;
+  //double xi_PF_NOZED_minus=0;
+  //double xi_PF_NOZED_plus=0;
+  double xi_PF_NOHF_minus=0;
+  double xi_PF_NOHF_plus=0; 
+  TLorentzVector m1;
+  TLorentzVector m2;
+  bool first=false;
+  bool second=false;
+  double mmumu=0; 
+
+  if (electrons_){
+    // Detect the Z->ee vertex!
+    for (reco::PFCandidateCollection::const_iterator iter = PFCandidates->begin(); iter != PFCandidates->end(); ++iter) {
+      const reco::PFCandidate *particle = &(*iter);
+      double et=particle->et();
+      double charge=particle->charge();
+      double phi=particle->phi();
+      double eta=particle->eta();
+      if (et>=20 && fabs(charge)>0){
+	PrimaryVertex=particle->vertex();
+	if (debug_deep) std::cout<<"The electron was in vertex "<<PrimaryVertex<<std::endl;
+	if (charge<0) Rootuple->lepton2Phi=phi;
+	if (charge<0) Rootuple->lepton2Eta=eta;
+	if (charge>0) Rootuple->lepton1Phi=phi;
+	if (charge>0) Rootuple->lepton1Eta=eta;
+      }
+    }
+    
+    //JPsi case
+    if (JPsi_){
+      for (reco::PFCandidateCollection::const_iterator iter = PFCandidates->begin(); iter != PFCandidates->end(); ++iter) {
+	const reco::PFCandidate *particle = &(*iter);
+	double et=particle->et();
+	double charge=particle->charge();
+	double phi=particle->phi();
+	double eta=particle->eta();
+	if (et>=4 && fabs(charge)>0){
+	  PrimaryVertex=particle->vertex();
+	  if (debug_deep) std::cout<<"The electron (JPsi case) was in vertex "<<PrimaryVertex<<std::endl;
+	  if (charge<0) Rootuple->lepton2Phi=phi;
+	  if (charge<0) Rootuple->lepton2Eta=eta;
+	  if (charge>0) Rootuple->lepton1Phi=phi;
+	  if (charge>0) Rootuple->lepton1Eta=eta;
+	}
+      }
+    }
+  }
+  int count2=0;
+
+  if (muons_){
+    for (reco::PFCandidateCollection::const_iterator iter = PFCandidates->begin(); iter != PFCandidates->end(); ++iter) {
+      const reco::PFCandidate *particle = &(*iter);
+      double et=particle->et();
+      double charge=particle->charge();
+      double phi=particle->phi();
+      double eta=particle->eta();
+      double pt=particle->pt();
+      if (et>=20 && (charge)>0){
+	PrimaryVertex=particle->vertex();
+	//std::cout<<"The muon was in vertex "<<PrimaryVertex<<std::endl;
+	m1.SetPtEtaPhiM(pt,eta,phi,0.0);     
+	//cout<<" the p4 is "<<particle->p4()<<endl;
+	first=true;
+	count2++;
+	Rootuple->lepton1Phi=phi;
+	Rootuple->lepton1Eta=eta;
+        xi_Z_minus+=pt*pow(2.71,-eta)/7000;
+	xi_Z_plus+=pt*pow(2.71,eta)/7000;	  
+      }
+      if (et>=20 && (charge)<0){
+	PrimaryVertex=particle->vertex();
+	//std::cout<<"The muon was in vertex "<<PrimaryVertex<<std::endl;
+	m2.SetPtEtaPhiM(pt,eta,phi,0.0); 
+	//cout<<" the p4 is "<<particle->p4()<<endl;
+	second=true;
+	count2++;
+	Rootuple->lepton2Phi=phi;
+	Rootuple->lepton2Eta=eta;
+	xi_Z_minus+=pt*pow(2.71,-eta)/7000;
+	xi_Z_plus+=pt*pow(2.71,eta)/7000;
+      }
+    }
+    if (first==true && second==true){
+      TLorentzVector Z = m1+m2;
+      mmumu = Z.M();
+      if (NoMassCuts_) Rootuple->ZMass=mmumu;     
+      //cout<<"Invariant Mass is "<<mmumu<<endl;
+      first=false;
+      second=false;
+    }
+      
+    if (!NoMassCuts_){
+      edm::Handle<reco::CompositeCandidateCollection> ZmumuCands;
+      iEvent.getByLabel(zmumuCollectionTag_, ZmumuCands);
+      try{
+	iEvent.getByLabel(zmumuCollectionTag_, ZmumuCands);
+      }
+      catch(cms::Exception& e)
+	{
+	  std::cout<<"No Zmumu Composite Candidate found"<<e.what();
+	  return false;
+	}
+      const reco::CompositeCandidateCollection *zcands = ZmumuCands.product();
+      const reco::CompositeCandidateCollection::const_iterator zmumuIter = zcands->begin();
+      const reco::CompositeCandidate zmumu = *zmumuIter;
+      //const pat::Muon * myElec1 = dynamic_cast<const pat::Muon*>( zmumu.daughter("muon1") );
+      //const pat::Muon * myElec2 = dynamic_cast<const pat::Muon*>( zmumu.daughter("muon2") );
+      mmumu=zmumu.mass(); 
+      double eta=zmumu.eta();
+      //xi_Z_minus=(zmumu.et()*pow(2.71,-eta))/7000;
+      //xi_Z_plus=(zmumu.et()*pow(2.71,eta))/7000;
+      double mmumu_down=60;
+      double mmumu_up=120;
+      if ((mmumu<mmumu_down || mmumu >mmumu_up) || NoMassCuts_){
+	//std::cout<<"Zmumu invariant mass outside the limit "<<mmumu_down<<"-"<<mmumu_up<<" GeV"<<std::endl;
+	return false;
+      }
+      Rootuple->ZMass=mmumu; 
+      Rootuple->numberOfLeptons=count2;
+      Rootuple->etaZ=eta;
+    }
+  }
+  
+  Rootuple->xi_Z_minus=xi_Z_minus;
+  Rootuple->xi_Z_plus=xi_Z_plus;
+
+  TLorentzVector dataMass(0.,0.,0.,0.);
+  std::vector<double> electronEnergy;
+  std::vector<double> muEnergy;
+
+  /// PFlow loop 
+  double PtThPFCharged = 0.1;  // it was 0.15
+  double EnThPFBar = 1.5;
+  double EnThPFEnd = 3.5; // 4.;
+  double EnThPFFw  = 6.0; // 6; 
+
+  for (reco::PFCandidateCollection::const_iterator iter = PFCandidates->begin(); iter != PFCandidates->end(); ++iter) {
+    float MaxAllowableDistance=0.1; //Maximum difference between two vertixes
+    const reco::PFCandidate *particle = &(*iter);
+    double et=particle->et();
+    double energy=particle->energy();
+    double pt=particle->pt();
+    double p=particle->p();
+    double px=particle->px();
+    double py=particle->py();
+    double pz=particle->pz();
+    double eta=particle->eta();
+    //double phi=particle->phi();
+    double charge=particle->charge();
+    double theta=particle->theta();
+
+    HistoEtaEnergyW->Fill(eta,energy);
+
+    //eta cut - excluding ring 12 13 HF  
+    if (fabs(eta)>4.7) continue;
+
+    if (cold==true) 
+      {
+	oldvertex=vertex;
+      }
+    vertex=particle->vertex();
+    int type=particle->particleId();
+    if (particle->particleId()==reco::PFCandidate::e) electronEnergy.push_back(et);
+    if (particle->particleId()==reco::PFCandidate::mu) muEnergy.push_back(et);
+    if (cold==true) {
+      float dx=oldvertex.x()-vertex.x();
+      float dy=oldvertex.y()-vertex.y();
+      float dz=oldvertex.z()-vertex.z();
+      if (fabs(dx) > 0.1 || fabs(dz) > 0.2 || fabs(dy) > 0.1  ){
+	MoreThanOneVertex=true;
+      }
+    }
+    cold=true;
+    
+    TLorentzVector tmp(px,py,pz,energy); 
+    //Calculate the distance between the primary vertex and the relative vertex
+    double distance= pow( pow(PrimaryVertex.x()-vertex.x(),2)+  pow(PrimaryVertex.y()-vertex.y(),2) +  pow(PrimaryVertex.z()-vertex.z(),2) , 0.5);
+
+    //Rootuple->distance.push_back(distance);  
+    //Rootuple->charge.push_back(charge);
+
+    if (debug_deep)std::cout<<"The particle type "<<type<<" has eta "<<eta<<" and pt "<<pt<<" and p "<<p<<" and energy "<<energy<<" and charge "<<charge<<" and theta "<<theta << endl;
+    //if (debug_deep) std::cout<<"The particle type "<<type<<" has eta "<<eta<<" and pt "<<pt<<" and energy "<<energy<<" and charge "<<charge<<" having vertex "<<vertex<<" (far from P.V "<<distance<<")"<<std::endl;
+
+
+    if  (  (fabs(charge) >0 && pt >  PtThPFCharged ) ||
+	   (fabs(charge) == 0  && ( (fabs(eta) <= 1.5 && energy > EnThPFBar)  ||
+				     (fabs(eta) > 1.5 && fabs(eta) <= 3 && energy > EnThPFEnd) ||
+				     (fabs(eta) > 3 && energy >EnThPFFw) ) )   )
+      {        
+	nPart_PF++;
+	Epz_PF_plus+=p+p*TMath::Cos(theta);
+	Epz_PF_minus+=p-p*TMath::Cos(theta);
+	xi_PF_minus += et * pow(2.71,-eta) / (7000);
+	xi_PF_plus += et * pow(2.71,eta) / (7000);
+
+	etaTimesEnergy+=eta*energy;
+	sumpxModule +=fabs(px);
+	sumpyModule +=fabs(py);
+	sumpzModule +=fabs(pz);
+	sumpx +=px;
+	sumpy +=py;
+	sumpz +=pz;
+	energyModule +=energy;
+
+	if (fabs(charge) >0 && distance < MaxAllowableDistance ) {
+	  if (eta<0) xi_PF_minus_charged_Vertex_Selection += et * pow(2.71,-eta) / (7000);
+	  if (eta>0) xi_PF_plus_charged_Vertex_Selection += et * pow(2.71,eta) / (7000);
+	  if (eta>etaMax_PF_Vertex_Selection ) etaMax_PF_Vertex_Selection=eta;
+	  if (eta<etaMin_PF_Vertex_Selection ) etaMin_PF_Vertex_Selection=eta;
+	    //// MaxAllow = 0.1 
+	}
+	
+	if (eta>0) energyTot_PF_plus+=energy;
+	if (eta<0) energyTot_PF_minus+=energy;
+	if (fabs(eta)<3)
+	  {
+	    xi_PF_NOHF_minus += et * pow(2.71,-eta) / (7000);
+	    xi_PF_NOHF_plus += et * pow(2.71,eta) / (7000);
+	    Epz_PF_plus_NOHF+=p+p*TMath::Cos(theta);
+	    Epz_PF_minus_NOHF+=p-p*TMath::Cos(theta);
+	    if (eta>-3. && eta <-1.5 ) energyTot_PF_EE_minus+=energy;
+	    else if (eta>=-1.5 && eta < 0) energyTot_PF_Barrel_minus+=energy;
+	    else if (eta>0 && eta <=1.5) energyTot_PF_Barrel_plus+=energy;
+	    else  energyTot_PF_EE_plus+=energy;
+	  }
+	
+	if (eta>etaMax_PF) etaMax_PF=eta;
+	if (eta<etaMin_PF) etaMin_PF=eta;
+	if (eta>etaMax_PF_NOHF && eta<3) etaMax_PF_NOHF=eta;
+	if (eta<etaMin_PF_NOHF && eta>-3) etaMin_PF_NOHF=eta;
+
+	if (fabs(eta) > 3 ) {
+	  if (eta<0) sumEHF_minus_PF += energy;
+	  if (eta>0) sumEHF_plus_PF += energy;
+	}
+	etas.push_back(eta);
+	dataMass+=tmp;
+      }
+  }  // PF loop
+
+
+
+  Rootuple->Mx2=dataMass.M2();  /// massaquadro misurata
+  Rootuple->P_x=dataMass.X();
+  Rootuple->P_y=dataMass.Y();
+  Rootuple->P_z=dataMass.Z();
+  //  float * pippo =  HistoEtaEnergyW->GetArray();
+  //cout << HistoEtaEnergyW->GetNbinsX() << endl;
+  for (int i=1;i<=HistoEtaEnergyW->GetNbinsX();i++) {
+    //cout << "ARRAY " <<  *(pippo+i) << "  " << HistoEtaEnergyW->GetBinContent(i) << endl;
+    Rootuple->EnergyInEta.push_back(HistoEtaEnergyW->GetBinContent(i)) ;
+  }
+  for (int i=1;i<=HistoEtaEnergyHFS->GetNbinsX();i++) {
+    Rootuple->EnergyInEtaHFS.push_back(HistoEtaEnergyHFS->GetBinContent(i)) ;
+    Rootuple->EnergyInEtaHFL.push_back(HistoEtaEnergyHFL->GetBinContent(i)) ;
+  }
+
+  /// clearing bin contents
+  HistoEtaEnergyW->Reset();
+  HistoEtaEnergyHFS->Reset() ;
+  HistoEtaEnergyHFL->Reset() ;
+ 
+ 
+  
+
+  if (debug_deep)    std::cout<<"DATA has "<<sumEHF_minus_PF<<" "<<sumEHF_plus_PF<<std::endl;  
+  //if (debug_deep) std::cout<<"Eta Min PF is "<<etaMin_PF<<" while max is "<<etaMax_PF<<" and Eta Min No Vertex "<<etaMin_PF_Vertex_Selection<<" and Eta Max No Vertes "<<etaMax_PF_Vertex_Selection<<" and csi_PF_minus is "<<xi_PF_minus<<endl; 
+
+ 
+  //// Computing GAPs
+  //// adding two fake entries at +-4.9 in etas!!!
+
+  etas.push_back(4.9);
+  etas.push_back(-4.9);
+
+  const int  size = (int) etas.size();
+  int *sorted = new int[size];
+  double *v = new double[size];
+  double eta_gap_limplus = -10.0;
+  double eta_gap_limminus = -10.0;
+  
+  for (int i=0; i<size; i++) {
+    v[i] = etas[i];
+    if (debug_deep) cout<<v[i]<<endl;
+  }
+  TMath::Sort(size, v, sorted, true);
+
+  if (size > 1) {
+    double *diff = new double[size-1];
+    int *diffsorted = new int[size-1];
+    for (int i=0; i<(size-1); i++) {
+      diff[i] = fabs(etas[sorted[i+1]]-etas[sorted[i]]);
+      //if (debug_deep) cout<<" etas " << i << " size " << size << " diff "<< diff[i]<<endl;
+      //cout<<"PF etas "  << " = " << etas[sorted[i+1]] << " - " <<  etas[sorted[i]] <<  " GAP  "<< diff[i]<<endl;
+      //cout<<"PF  etas "  << " = " << etas[sorted[i]] << endl;
+    }
+  
+    TMath::Sort(size-1, diff, diffsorted, true);
+    
+    //checking the max gap
+    double max_eta_gap=diff[diffsorted[0]];
+    eta_gap_limminus = etas[sorted[diffsorted[0]+1]] ;
+    eta_gap_limplus = etas[sorted[diffsorted[0]]] ;
+
+    //cout << "PF eta ranges " <<  eta_gap_limplus  << " " <<  eta_gap_limminus  << endl;
+
+    Rootuple->max_eta_gap_PF=max_eta_gap;
+
+    if (size>2) {
+      double max_second_eta_gap=diff[diffsorted[1]];
+      Rootuple->max_second_eta_gap_PF=max_second_eta_gap;
+      if (debug_deep) cout<<" diff  " << diff[diffsorted[0]] << " sec " << diff[diffsorted[1]] << " diff size "<< diff[size-2] <<endl;
+    }
+    
+    delete [] diff;
+    delete [] diffsorted;
+  }
+  
+  //cout<<" GAPs (1-2) " << Rootuple->max_eta_gap_PF << "  " <<  Rootuple->max_second_eta_gap_PF <<endl;
+  
+  delete [] sorted;
+  delete [] v;
+
+  //sorting electron energy
+  const int  size3 = (int) electronEnergy.size();
+  int *sorted3 = new int[size3];
+  double *v3 = new double[size3];
+  
+  for (int i=0; i<size3; i++) {
+    v3[i] = electronEnergy[i];
+  }
+  TMath::Sort(size3, v3, sorted3, true);
+  for (int i=0; i<size3; i++) {
+    electronEnergy[i] = v3[sorted3[i]];
+  }
+
+  //sorting muon energy
+  const int  size4 = (int) muEnergy.size();
+  int *sorted4 = new int[size4];
+  double *v4 = new double[size4];
+  
+  for (int i=0; i<size4; i++) {
+    v4[i] = muEnergy[i];
+  }
+  TMath::Sort(size4, v4, sorted4, true);
+  for (int i=0; i<size4; i++) {
+    muEnergy[i] = v4[sorted4[i]];
+  }
+  delete [] sorted3;
+  delete [] v3;
+  delete [] sorted4;
+  delete [] v4;
+
+  /// Loop to compute Mx2 a destra e a sinistra del GAP
+ 
+  TLorentzVector dataMass_plus(0.,0.,0.,0.);
+  TLorentzVector dataMass_minus(0.,0.,0.,0.);
+  int nplus =0;
+  int nminus =0;
+
+  for (reco::PFCandidateCollection::const_iterator iter = PFCandidates->begin(); iter != PFCandidates->end(); ++iter) {
+    const reco::PFCandidate *particle = &(*iter);
+    double energy=particle->energy();
+    double pt=particle->pt();
+    double px=particle->px();
+    double py=particle->py();
+    double pz=particle->pz();
+    double eta=particle->eta();
+    double charge=particle->charge();
+    
+    //eta cut - excluding ring 12 13 HF  
+    if (fabs(eta)>4.7) continue;
+    
+    TLorentzVector tmp(px,py,pz,energy); 
+    
+    if  (  (fabs(charge) >0 && pt >  PtThPFCharged ) ||
+	   (fabs(charge) == 0  && ( (fabs(eta) <= 1.5 && energy > EnThPFBar)  ||
+				    (fabs(eta) > 1.5 && fabs(eta) <= 3 && energy > EnThPFEnd) ||
+				    (fabs(eta) > 3 && energy >EnThPFFw) ) )   )
+      {        
+	
+	if ( eta >= eta_gap_limplus ) {
+	  dataMass_plus+=tmp;
+	  nplus++;
+	}
+	else {
+	  dataMass_minus+=tmp;
+	  nminus++;
+	}
+      }
+  }  // PF loop
+
+
+  Rootuple->Mx2_plus=dataMass_plus.M2();  /// massaquadro misurata
+  Rootuple->Mx2_minus=dataMass_minus.M2();  /// massaquadro misurata
+  Rootuple->N_mx2plus=nplus;  /// massaquadro misurata
+  Rootuple->N_mx2minus=nminus;  /// massaquadro misurata
+  Rootuple->eta_gap_limplus=eta_gap_limplus;  /// massaquadro misurata
+
+  //  cout << "Mass2 "  << nPart_PF << " " << Rootuple->Mx2 << " " <<  nplus << " " << Rootuple->Mx2_plus << " " << nminus << " " <<  Rootuple->Mx2_minus << " " << "  eta  " <<  eta_gap_limplus <<   endl;
+  Rootuple->electronEnergy=electronEnergy;
+  Rootuple->muEnergy=muEnergy;
+
+
+  if (debug_deep) std::cout<<"sumpxModule "<<sumpxModule<<" sumpyModule "<<sumpyModule<<" sumpzModule "<<sumpzModule<<" sumpx "<<sumpx<<" sumpy "<<sumpy<<" sumpz "<<sumpz<<std::endl;
+  math::XYZVector ResultingAllTracks(sumpx,sumpy,sumpz);
+  double etaAllTracks=ResultingAllTracks.eta();
+  if (debug_deep) std::cout<<"etaAllTracks "<<etaAllTracks<<endl;
+  Rootuple->etaAllTracks_PF=etaAllTracks;
+  Rootuple->energyTot_PF=energyModule;
+  double etaWeightedOnEnergy=etaTimesEnergy/energyModule;
+  Rootuple->etaWeightedOnEnergy_PF=etaWeightedOnEnergy;
+  Rootuple->Epz_PF_plus=Epz_PF_plus;
+  Rootuple->Epz_PF_minus=Epz_PF_minus;
+  Rootuple->etaMax_PF=etaMax_PF;
+  Rootuple->etaMin_PF=etaMin_PF;
+  Rootuple->Epz_NOHF_PF_plus=Epz_PF_plus_NOHF;
+  Rootuple->Epz_NOHF_PF_minus=Epz_PF_minus_NOHF;
+  Rootuple->etaMax_NOHF_PF=etaMax_PF_NOHF;
+  Rootuple->etaMin_NOHF_PF=etaMin_PF_NOHF;
+  Rootuple->etaMax_Charged_PV_PF=etaMax_PF_Vertex_Selection;
+  Rootuple->etaMin_Charged_PV_PF=etaMin_PF_Vertex_Selection;
+  Rootuple->energyTot_PF_minus=energyTot_PF_minus;
+  Rootuple->energyTot_PF_plus=energyTot_PF_plus;
+  Rootuple->xi_PF_minus=xi_PF_minus;  
+  Rootuple->xi_PF_plus=xi_PF_plus; 
+  Rootuple->xi_Z_minus=xi_Z_minus;  
+  Rootuple->xi_Z_plus=xi_Z_plus; 
+  Rootuple->xi_PF_NOHF_minus=xi_PF_NOHF_minus;  
+  Rootuple->xi_PF_NOHF_plus=xi_PF_NOHF_plus; 
+  Rootuple-> xi_PV_PF_charged_minus=xi_PF_minus_charged_Vertex_Selection;
+  Rootuple-> xi_PV_PF_charged_plus=xi_PF_plus_charged_Vertex_Selection;
+  Rootuple-> nPart_PF=nPart_PF;
+  Rootuple-> energyTot_PF_EE_minus=energyTot_PF_EE_minus;
+  Rootuple-> energyTot_PF_EE_plus=energyTot_PF_EE_plus;
+  Rootuple-> energyTot_PF_Barrel_minus= energyTot_PF_Barrel_minus;
+  Rootuple-> energyTot_PF_Barrel_plus= energyTot_PF_Barrel_plus; 
+  Rootuple-> sumEHF_PF_minus=sumEHF_minus_PF;
+  Rootuple-> sumEHF_PF_plus=sumEHF_plus_PF;
+
+*/
 
 }
 
