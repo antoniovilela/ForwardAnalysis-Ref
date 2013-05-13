@@ -685,6 +685,8 @@ void DiffractiveZAnalysis::fillGenInfo(DiffractiveZEvent& eventData, const edm::
 
 void DiffractiveZAnalysis::fillDetectorVariables(DiffractiveZEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
 
+  bool debug = false;
+
   double etaMax=-999;
   double etaMin=999;
   double Epz_plus=0;  
@@ -788,7 +790,7 @@ void DiffractiveZAnalysis::fillDetectorVariables(DiffractiveZEvent& eventData, c
       {
 	CalAboveTh = true;
 
-	//cout << "HF>> " <<  calotower->id() << " HAD energy "     << caloTowerHadEnergy << " EM energy " << caloTowerEmEnergy << " energy " << caloTowerEnergy << endl; 
+	if (debug) std::cout << "HF>> " <<  calotower->id() << " HAD energy "     << caloTowerHadEnergy << " EM energy " << caloTowerEmEnergy << " energy " << caloTowerEnergy << std::endl; 
 
 	// Added Long and short fibers
 	// emc=L-S
@@ -796,7 +798,6 @@ void DiffractiveZAnalysis::fillDetectorVariables(DiffractiveZEvent& eventData, c
 	// Tot = L+S
 	// S = hac/2
 	// L = Tot - S
-
 
 	EHF_S = caloTowerHadEnergy/2;
 	EHF_L = caloTowerEnergy - caloTowerHadEnergy/2;
@@ -817,8 +818,10 @@ void DiffractiveZAnalysis::fillDetectorVariables(DiffractiveZEvent& eventData, c
 	  sumEHF_L_minus += EHF_L;
 	  sumETHF_minus += caloTowerEt;
 	}
-	//HistoEtaEnergyHFS->Fill(calotower->eta(),EHF_S);
-	//HistoEtaEnergyHFL->Fill(calotower->eta(),EHF_L);
+
+	//If you wish, fill (calotower->eta(),EHF_S) here.
+	//If you wish, fill (calotower->eta(),EHF_L) here.
+
       }
     }
     else if( hasHE && !hasHF && !hasHB )
@@ -827,7 +830,8 @@ void DiffractiveZAnalysis::fillDetectorVariables(DiffractiveZEvent& eventData, c
       {
 	CalAboveTh = true;
 
-	//cout << "HE>> " <<  calotower->id() << "  HAD energy "     << caloTowerHadEnergy << " EM energy " << caloTowerEmEnergy << " energy " << caloTowerEnergy << endl;
+	if (debug) std::cout << "HE>> " <<  calotower->id() << "  HAD energy "     << caloTowerHadEnergy << " EM energy " << caloTowerEmEnergy << " energy " << caloTowerEnergy << std::endl;
+
 	if(zside >= 0)
 	{
 	  ++nTowersHE_plus;
@@ -848,7 +852,8 @@ void DiffractiveZAnalysis::fillDetectorVariables(DiffractiveZEvent& eventData, c
       {
 	CalAboveTh = true;
 
-	//cout << "HB>> " <<  calotower->id() << "  HAD energy "     << caloTowerHadEnergy << " EM energy " << caloTowerEmEnergy << " energy " << caloTowerEnergy << endl;
+	if (debug) std::cout << "HB>> " <<  calotower->id() << "  HAD energy "     << caloTowerHadEnergy << " EM energy " << caloTowerEmEnergy << " energy " << caloTowerEnergy << std::endl;
+
 	if(zside >= 0)
 	{
 	  ++nTowersHB_plus;
@@ -870,7 +875,8 @@ void DiffractiveZAnalysis::fillDetectorVariables(DiffractiveZEvent& eventData, c
       {
 	CalAboveTh = true;
 
-	//cout << "EE>> " <<  calotower->id() << "  HAD energy "     << caloTowerHadEnergy << " EM energy " << caloTowerEmEnergy << " energy " << caloTowerEnergy << endl;
+	if (debug) std::cout << "EE>> " <<  calotower->id() << "  HAD energy "     << caloTowerHadEnergy << " EM energy " << caloTowerEmEnergy << " energy " << caloTowerEnergy << std::endl;
+
 	if(zside >= 0)
 	{
 	  ++nTowersEE_plus;
@@ -891,7 +897,8 @@ void DiffractiveZAnalysis::fillDetectorVariables(DiffractiveZEvent& eventData, c
       {
 	CalAboveTh = true;
 
-	//cout << "EB>> " <<  calotower->id() << " HAD energy "     << caloTowerHadEnergy << " EM energy " << caloTowerEmEnergy << " energy " << caloTowerEnergy << endl; 
+	if (debug) std::cout << "EB>> " <<  calotower->id() << " HAD energy "     << caloTowerHadEnergy << " EM energy " << caloTowerEmEnergy << " energy " << caloTowerEnergy << std::endl; 
+
 	if(zside >= 0)
 	{
 	  ++nTowersEB_plus;
@@ -919,62 +926,45 @@ void DiffractiveZAnalysis::fillDetectorVariables(DiffractiveZEvent& eventData, c
 
   }  ////has to close calotower loop
 
+  eventData.SetSumEHFPlus(sumEHF_plus);
+  eventData.SetSumEHF_SPlus(sumEHF_S_plus);
+  eventData.SetSumEHF_LPlus(sumEHF_L_plus);
+  eventData.SetSumEtHFPlus(sumETHF_plus);
 
-  //Fill the variables
+  eventData.SetSumEHFMinus(sumEHF_minus);
+  eventData.SetSumEHF_SMinus(sumEHF_S_minus);
+  eventData.SetSumEHF_LMinus(sumEHF_L_minus);
+  eventData.SetSumEtHFMinus(sumETHF_minus);
+
+  eventData.SetSumEHEPlus(sumEHE_plus);
+  eventData.SetSumEtHEPlus(sumETHE_plus);
+  eventData.SetSumEHEMinus(sumEHE_minus);
+  eventData.SetSumEtHEMinus(sumETHE_minus);
+
+  eventData.SetSumEHBPlus(sumEHB_plus);
+  eventData.SetSumEtHBPlus(sumETHB_plus);
+  eventData.SetSumEHBMinus(sumEHB_minus);
+  eventData.SetSumEtHBMinus(sumETHB_minus);
+
+  eventData.SetSumEEEPlus(sumEEE_plus);
+  eventData.SetSumEtEEPlus(sumETEE_plus);
+  eventData.SetSumEEEMinus(sumEEE_minus);
+  eventData.SetSumEtEEMinus(sumETEE_minus);
+
+  eventData.SetSumEEBPlus(sumEEB_plus);
+  eventData.SetSumEtEBPlus(sumETEB_plus);
+  eventData.SetSumEEBMinus(sumEEB_minus);
+  eventData.SetSumEtEBMinus(sumETEB_minus);
+
+  eventData.SetEPZCaloPlus(Epz_plus);
+  eventData.SetEPZCaloMinus(Epz_minus);
+  eventData.SetXiCaloPlus(xi_Calo_plus);
+  eventData.SetXiCaloMinus(xi_Calo_minus);
+
+  eventData.SetEtaCaloMax(etaMax);
+  eventData.SetEtaCaloMin(etaMin);
+
   /*
-      eventData.SetSumEHFPlus(sumEHF_plus);
-      eventData.SetSumEHF_SPlus(sumEHF_S_plus);
-      eventData.SetSumEHF_LPlus(sumEHF_L_plus);
-      eventData.SetSumEtHFPlus(sumETHF_plus);
-
-      eventData.SetSumEHFMinus(sumEHF_minus);
-      eventData.SetSumEHF_SMinus(sumEHF_S_minus);
-      eventData.SetSumEHF_LMinus(sumEHF_L_minus);
-      eventData.SetSumEtHFMinus(sumETHF_minus);
-
-      eventData.SetSumEHEPlus();
-      eventData.SetSumEtHEPlus();
-      eventData.SetSumEHEMinus();
-      eventData.SetSumEtHEMinus();
-
-      eventData.SetSumEHBPlus();
-      eventData.SetSumEtHBPlus();
-      eventData.SetSumEHBMinus();
-      eventData.SetSumEtHBMinus();
-
-      eventData.SetSumEEEPlus();
-      eventData.SetSumEtEEPlus();
-      eventData.SetSumEEEMinus();
-      eventData.SetSumEtEEMinus();
-
-      eventData.SetSumEEBPlus();
-      eventData.SetSumEtEBPlus();
-      eventData.SetSumEEBMinus();
-      eventData.SetSumEtEBMinus();
-
-      eventData.SetEPZCaloPlus();
-      eventData.SetEPZCaloMinus();
-      eventData.SetXiCaloPlus();
-      eventData.SetXiCaloMinus();
-
-      eventData.SetEtaCaloMax();
-      eventData.SetEtaCaloMin();
-
-
-
-
-     Rootuple->xi_Calo_minus=xi_Calo_minus;
-     Rootuple->xi_Calo_plus=xi_Calo_plus;
-     Rootuple->Epz_Calo_plus=Epz_plus;
-     Rootuple->Epz_Calo_minus=Epz_minus;
-     Rootuple->sumEHF_plus=sumEHF_plus;
-     Rootuple->sumEHF_minus=sumEHF_minus;
-     Rootuple->sumEHF_L_plus=sumEHF_L_plus;
-     Rootuple->sumEHF_L_minus=sumEHF_L_minus;
-     Rootuple->sumEHF_S_plus=sumEHF_S_plus;
-     Rootuple->sumEHF_S_minus=sumEHF_S_minus;
-     Rootuple->etaMax_Calo=etaMax;
-     Rootuple->etaMin_Calo=etaMin;
      Rootuple->nTowersHF_plus=nTowersHF_plus;
      Rootuple->nTowersHF_minus=nTowersHF_minus;  
      if (sumEHF_plus>sumEHF_minus) Rootuple->minEHF=sumEHF_minus;

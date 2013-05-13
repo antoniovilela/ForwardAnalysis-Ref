@@ -22,7 +22,7 @@ void DiffractiveZEvent::reset(){
   SecondElectronCharge_=-999.;
   DiElectronMass_=-999.;
   ElectronsN_=-999;
- 
+
   LeadingMuonPt_=-999.;
   LeadingMuonEta_=-999.;
   LeadingMuonPhi_=-999.;
@@ -72,4 +72,36 @@ void DiffractiveZEvent::reset(){
 
   DiElectronMassPF_=-999.;
   DiMuonMassPF_=-999.;
+
+  SumEHFPlus_ = -999.; 
+  SumEHF_SPlus_ = -999.; 
+  SumEHF_LPlus_ = -999.; 
+  SumEtHFPlus_ = -999.; 
+  SumEHFMinus_ = -999.; 
+  SumEHF_SMinus_ = -999.; 
+  SumEHF_LMinus_ = -999.; 
+  SumEtHFMinus_ = -999.; 
+  SumEHEPlus_ = -999.; 
+  SumEtHEPlus_ = -999.; 
+  SumEHEMinus_ = -999.; 
+  SumEtHEMinus_ = -999.; 
+  SumEHBPlus_ = -999.; 
+  SumEtHBPlus_ = -999.;   
+  SumEHBMinus_ = -999.; 
+  SumEtHBMinus_ = -999.; 
+  SumEEEPlus_ = -999.;    
+  SumEtEEPlus_ = -999.; 
+  SumEEEMinus_ = -999.; 
+  SumEtEEMinus_ = -999.; 
+  SumEEBPlus_ = -999.; 
+  SumEtEBPlus_ = -999.; 
+  SumEEBMinus_ = -999.; 
+  SumEtEBMinus_ = -999.; 
+  EPZCaloPlus_ = -999.; 
+  EPZCaloMinus_ = -999.; 
+  XiCaloPlus_ = -999.; 
+  XiCaloMinus_ = -999.; 
+  EtaCaloMax_ = -999.; 
+  EtaCaloMin_ = -999.; 
+
 }
