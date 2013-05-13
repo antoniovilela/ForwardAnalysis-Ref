@@ -922,6 +922,47 @@ void DiffractiveZAnalysis::fillDetectorVariables(DiffractiveZEvent& eventData, c
 
   //Fill the variables
   /*
+      eventData.SetSumEHFPlus(sumEHF_plus);
+      eventData.SetSumEHF_SPlus(sumEHF_S_plus);
+      eventData.SetSumEHF_LPlus(sumEHF_L_plus);
+      eventData.SetSumEtHFPlus(sumETHF_plus);
+
+      eventData.SetSumEHFMinus(sumEHF_minus);
+      eventData.SetSumEHF_SMinus(sumEHF_S_minus);
+      eventData.SetSumEHF_LMinus(sumEHF_L_minus);
+      eventData.SetSumEtHFMinus(sumETHF_minus);
+
+      eventData.SetSumEHEPlus();
+      eventData.SetSumEtHEPlus();
+      eventData.SetSumEHEMinus();
+      eventData.SetSumEtHEMinus();
+
+      eventData.SetSumEHBPlus();
+      eventData.SetSumEtHBPlus();
+      eventData.SetSumEHBMinus();
+      eventData.SetSumEtHBMinus();
+
+      eventData.SetSumEEEPlus();
+      eventData.SetSumEtEEPlus();
+      eventData.SetSumEEEMinus();
+      eventData.SetSumEtEEMinus();
+
+      eventData.SetSumEEBPlus();
+      eventData.SetSumEtEBPlus();
+      eventData.SetSumEEBMinus();
+      eventData.SetSumEtEBMinus();
+
+      eventData.SetEPZCaloPlus();
+      eventData.SetEPZCaloMinus();
+      eventData.SetXiCaloPlus();
+      eventData.SetXiCaloMinus();
+
+      eventData.SetEtaCaloMax();
+      eventData.SetEtaCaloMin();
+
+
+
+
      Rootuple->xi_Calo_minus=xi_Calo_minus;
      Rootuple->xi_Calo_plus=xi_Calo_plus;
      Rootuple->Epz_Calo_plus=Epz_plus;
