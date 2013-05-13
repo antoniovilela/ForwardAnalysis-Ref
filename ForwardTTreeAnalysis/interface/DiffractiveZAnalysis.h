@@ -39,6 +39,8 @@ class DiffractiveZAnalysis {
       void fillTracksInfo(DiffractiveZEvent&, const edm::Event&, const edm::EventSetup&);
       void fillGenInfo(DiffractiveZEvent&, const edm::Event&, const edm::EventSetup&);
       void fillZPat(DiffractiveZEvent&, const edm::Event&, const edm::EventSetup&);
+      void fillDetectorVariables(DiffractiveZEvent&, const edm::Event&, const edm::EventSetup&);
+      void fillVariables(DiffractiveZEvent&, const edm::Event&, const edm::EventSetup&);
 
       edm::InputTag triggerResultsTag_;
       std::vector<std::string> hltPathNames_;
@@ -51,6 +53,12 @@ class DiffractiveZAnalysis {
       double energyPFThresholdBar_;
       double energyPFThresholdEnd_;
       double energyPFThresholdHF_;
+      double energyThresholdHB_;
+      double energyThresholdHE_;
+      double energyThresholdHF_;
+      double energyThresholdEB_;
+      double energyThresholdEE_;
+      edm::InputTag caloTowerTag_; 
 
       std::string selectionPathName_;
 
