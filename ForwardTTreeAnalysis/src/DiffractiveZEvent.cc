@@ -104,4 +104,27 @@ void DiffractiveZEvent::reset(){
   EtaCaloMax_ = -999.; 
   EtaCaloMin_ = -999.; 
 
+  Vertex_ = -999;
+  Xi_PF_minus_ = -999.;
+  Xi_PF_plus_ = -999.;
+  Epz_PF_minus_ = -999.;
+  Epz_PF_plus_ = -999.;
+  MultiplicityPF_ = -999;
+  SumEtaTimesEnergyPF_ = -999.;
+  SumpxModulePF_ = -999.;
+  SumpyModulePF_ = -999.;
+  SumpzModulePF_ = -999.;
+  SumpxPF_ = -999.;
+  SumpyPF_ = -999.;
+  SumpzPF_ = -999.;
+  SumEnergyPF_ = -999.;
+  MuEnergyPF_ = -999.;
+  ElectronEnergyPF_ = -999.;
+  MaxGapPF_ = -999.;
+  SecondMaxGapPF_ = -999.;
+  LimPlusGapPF_ = -999.;
+  LimMinusGapPF_ = -999.;
+  MultiplicityGapPlusPF_ = -999;
+  MultiplicityGapMinusPF_ = -999;
+
 }

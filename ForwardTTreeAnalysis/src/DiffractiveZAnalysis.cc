@@ -964,12 +964,8 @@ void DiffractiveZAnalysis::fillDetectorVariables(DiffractiveZEvent& eventData, c
   eventData.SetEtaCaloMax(etaMax);
   eventData.SetEtaCaloMin(etaMin);
 
-  /*
-     Rootuple->nTowersHF_plus=nTowersHF_plus;
-     Rootuple->nTowersHF_minus=nTowersHF_minus;  
-     if (sumEHF_plus>sumEHF_minus) Rootuple->minEHF=sumEHF_minus;
-     if (sumEHF_plus<sumEHF_minus) Rootuple->minEHF=sumEHF_plus;
-   */
+  // Do not forget to Fill Calo Multiplicities!!! 
+  
 
 }
 
@@ -983,20 +979,18 @@ void DiffractiveZAnalysis::fillVariables(DiffractiveZEvent& eventData, const edm
   bool debug=false;
 
   std::vector<double> etas;
-  double etaTimesEnergy=0;
-  float Epz_PF_plus=0;
-  float Epz_PF_minus=0;
-  double xi_PF_minus=0;
-  double xi_PF_plus=0;
-  double xi_Z_minus;
-  double xi_Z_plus;
-  double sumpx=0;
-  double sumpy=0;
-  double sumpz=0;
-  double sumpxModule=0;
-  double sumpyModule=0;
-  double sumpzModule=0;
-  double energyModule=0;
+  double etaTimesEnergy=0.;
+  float Epz_PF_plus=0.;
+  float Epz_PF_minus=0.;
+  double xi_PF_minus=0.;
+  double xi_PF_plus=0.;
+  double sumpx=0.;
+  double sumpy=0.;
+  double sumpz=0.;
+  double sumpxModule=0.;
+  double sumpyModule=0.;
+  double sumpzModule=0.;
+  double sumEnergyPF=0.;
 
   double PtThPFCharged = 0.1;  // it was 0.15
   double EnThPFBar = 1.5;
@@ -1015,27 +1009,10 @@ void DiffractiveZAnalysis::fillVariables(DiffractiveZEvent& eventData, const edm
   event.getByLabel("particleFlow",PFCandidates);
   reco::PFCandidateCollection::const_iterator iter;
 
-  //Rootuple->numberOfVertexes = Vertexes->size(); 
+  eventData.SetVertex(Vertexes->size());
 
   for (reco::PFCandidateCollection::const_iterator iter = PFCandidates->begin(); iter != PFCandidates->end(); ++iter) {
 
-    const reco::PFCandidate *particle = &(*iter);
-    //double et = particle->et();
-    //double charge = particle->charge();
-    //double phi = particle->phi();
-    double eta = particle->eta();
-    double pt = particle->pt();
-    xi_Z_minus += pt*pow(2.71,-eta)/7000.;
-    xi_Z_plus += pt*pow(2.71,eta)/7000.;	  
-
-  }
-
-  //Rootuple->xi_Z_minus=xi_Z_minus;
-  //Rootuple->xi_Z_plus=xi_Z_plus;
-
-  for (reco::PFCandidateCollection::const_iterator iter = PFCandidates->begin(); iter != PFCandidates->end(); ++iter) {
-
-    //float MaxAllowableDistance=0.1; //Maximum difference between two vertixes
     const reco::PFCandidate *particle = &(*iter);
     double et=particle->et();
     double energy=particle->energy();
@@ -1045,11 +1022,10 @@ void DiffractiveZAnalysis::fillVariables(DiffractiveZEvent& eventData, const edm
     double py=particle->py();
     double pz=particle->pz();
     double eta=particle->eta();
-    //double phi=particle->phi();
     double charge=particle->charge();
     double theta=particle->theta();
 
-    //HistoEtaEnergyW->Fill(eta,energy);
+    // Fill 2D TTree (eta,energy);
 
     //eta cut - excluding ring 12 13 HF  
     if (fabs(eta)>4.7) continue;
@@ -1081,24 +1057,26 @@ void DiffractiveZAnalysis::fillVariables(DiffractiveZEvent& eventData, const edm
       sumpx +=px;
       sumpy +=py;
       sumpz +=pz;
-      energyModule +=energy;
+      sumEnergyPF +=energy;
       etas.push_back(eta);
-
-      if (eta<0){
-      }
-      if (eta>0){
-      }
 
     } 
 
   }
 
-  /*
-     Rootuple->Mx2=dataMass.M2();  /// massaquadro misurata
-     Rootuple->P_x=dataMass.X();
-     Rootuple->P_y=dataMass.Y();
-     Rootuple->P_z=dataMass.Z();
-   */
+  eventData.SetXi_PF_minus(xi_PF_minus);
+  eventData.SetXi_PF_plus(xi_PF_plus);
+  eventData.SetEpz_PF_minus(Epz_PF_minus);
+  eventData.SetEpz_PF_plus(Epz_PF_plus);
+  eventData.SetMultiplicityPF(nPart_PF);
+  eventData.SetSumEtaTimesEnergyPF(etaTimesEnergy);
+  eventData.SetSumpxModulePF(sumpxModule);
+  eventData.SetSumpyModulePF(sumpyModule);
+  eventData.SetSumpzModulePF(sumpzModule);
+  eventData.SetSumpxPF(sumpx);
+  eventData.SetSumpyPF(sumpy);
+  eventData.SetSumpzPF(sumpz);
+  eventData.SetSumEnergyPF(sumEnergyPF);
 
   //// Computing GAPs
   //// adding two fake entries at +-4.9 in etas!!!
@@ -1127,23 +1105,37 @@ void DiffractiveZAnalysis::fillVariables(DiffractiveZEvent& eventData, const edm
     TMath::Sort(size-1, diff, diffsorted, true);
 
     //checking the max gap
-    //double max_eta_gap=diff[diffsorted[0]];
+    double max_eta_gap=diff[diffsorted[0]];
     eta_gap_limminus = etas[sorted[diffsorted[0]+1]] ;
     eta_gap_limplus = etas[sorted[diffsorted[0]]] ;
 
-    //Rootuple->max_eta_gap_PF=max_eta_gap;
+    eventData.SetMaxGapPF(max_eta_gap);
+    eventData.SetLimPlusGapPF(eta_gap_limplus);
+    eventData.SetLimMinusGapPF(eta_gap_limminus);
 
     if (size>2) {
-      //double max_second_eta_gap=diff[diffsorted[1]];
-      //Rootuple->max_second_eta_gap_PF=max_second_eta_gap;
+      double max_second_eta_gap=diff[diffsorted[1]];
       if (debug) std::cout<<" diff  " << diff[diffsorted[0]] << " sec " << diff[diffsorted[1]] << " diff size "<< diff[size-2] <<std::endl;
+      eventData.SetSecondMaxGapPF(max_second_eta_gap);
+    }
+
+    else {
+      eventData.SetSecondMaxGapPF(-999.);
     }
 
     delete [] diff;
     delete [] diffsorted;
+
   }
 
-  //cout<<" GAPs (1-2) " << Rootuple->max_eta_gap_PF << "  " <<  Rootuple->max_second_eta_gap_PF <<endl;
+  else {
+
+    eventData.SetMaxGapPF(-999.);
+    eventData.SetSecondMaxGapPF(-999.);
+    eventData.SetLimPlusGapPF(-999.);
+    eventData.SetLimMinusGapPF(-999.);
+
+  }
 
   delete [] sorted;
   delete [] v;
@@ -1179,7 +1171,6 @@ void DiffractiveZAnalysis::fillVariables(DiffractiveZEvent& eventData, const edm
   delete [] v4;
 
   /// Loop to compute Mx2 a destra e a sinistra del GAP
-
   TLorentzVector dataMass_plus(0.,0.,0.,0.);
   TLorentzVector dataMass_minus(0.,0.,0.,0.);
   int nplus =0;
@@ -1217,56 +1208,10 @@ void DiffractiveZAnalysis::fillVariables(DiffractiveZEvent& eventData, const edm
     }
   }  // PF loop
 
-  /*
-
-     Rootuple->Mx2_plus=dataMass_plus.M2();  /// massaquadro misurata
-     Rootuple->Mx2_minus=dataMass_minus.M2();  /// massaquadro misurata
-     Rootuple->N_mx2plus=nplus;  /// massaquadro misurata
-     Rootuple->N_mx2minus=nminus;  /// massaquadro misurata
-     Rootuple->eta_gap_limplus=eta_gap_limplus;  /// massaquadro misurata
-
-  //  cout << "Mass2 "  << nPart_PF << " " << Rootuple->Mx2 << " " <<  nplus << " " << Rootuple->Mx2_plus << " " << nminus << " " <<  Rootuple->Mx2_minus << " " << "  eta  " <<  eta_gap_limplus <<   endl;
-  Rootuple->electronEnergy=electronEnergy;
-  Rootuple->muEnergy=muEnergy;
-
-
-  if (debug_deep) std::cout<<"sumpxModule "<<sumpxModule<<" sumpyModule "<<sumpyModule<<" sumpzModule "<<sumpzModule<<" sumpx "<<sumpx<<" sumpy "<<sumpy<<" sumpz "<<sumpz<<std::endl;
-  math::XYZVector ResultingAllTracks(sumpx,sumpy,sumpz);
-  double etaAllTracks=ResultingAllTracks.eta();
-  if (debug_deep) std::cout<<"etaAllTracks "<<etaAllTracks<<endl;
-  Rootuple->etaAllTracks_PF=etaAllTracks;
-  Rootuple->energyTot_PF=energyModule;
-  double etaWeightedOnEnergy=etaTimesEnergy/energyModule;
-  Rootuple->etaWeightedOnEnergy_PF=etaWeightedOnEnergy;
-  Rootuple->Epz_PF_plus=Epz_PF_plus;
-  Rootuple->Epz_PF_minus=Epz_PF_minus;
-  Rootuple->etaMax_PF=etaMax_PF;
-  Rootuple->etaMin_PF=etaMin_PF;
-  Rootuple->Epz_NOHF_PF_plus=Epz_PF_plus_NOHF;
-  Rootuple->Epz_NOHF_PF_minus=Epz_PF_minus_NOHF;
-  Rootuple->etaMax_NOHF_PF=etaMax_PF_NOHF;
-  Rootuple->etaMin_NOHF_PF=etaMin_PF_NOHF;
-  Rootuple->etaMax_Charged_PV_PF=etaMax_PF_Vertex_Selection;
-  Rootuple->etaMin_Charged_PV_PF=etaMin_PF_Vertex_Selection;
-  Rootuple->energyTot_PF_minus=energyTot_PF_minus;
-  Rootuple->energyTot_PF_plus=energyTot_PF_plus;
-  Rootuple->xi_PF_minus=xi_PF_minus;  
-  Rootuple->xi_PF_plus=xi_PF_plus; 
-  Rootuple->xi_Z_minus=xi_Z_minus;  
-  Rootuple->xi_Z_plus=xi_Z_plus; 
-  Rootuple->xi_PF_NOHF_minus=xi_PF_NOHF_minus;  
-  Rootuple->xi_PF_NOHF_plus=xi_PF_NOHF_plus; 
-  Rootuple-> xi_PV_PF_charged_minus=xi_PF_minus_charged_Vertex_Selection;
-  Rootuple-> xi_PV_PF_charged_plus=xi_PF_plus_charged_Vertex_Selection;
-  Rootuple-> nPart_PF=nPart_PF;
-  Rootuple-> energyTot_PF_EE_minus=energyTot_PF_EE_minus;
-  Rootuple-> energyTot_PF_EE_plus=energyTot_PF_EE_plus;
-  Rootuple-> energyTot_PF_Barrel_minus= energyTot_PF_Barrel_minus;
-  Rootuple-> energyTot_PF_Barrel_plus= energyTot_PF_Barrel_plus; 
-  Rootuple-> sumEHF_PF_minus=sumEHF_minus_PF;
-  Rootuple-> sumEHF_PF_plus=sumEHF_plus_PF;
-
-   */
+  eventData.SetElectronEnergyPF(electronEnergy[0]); // First Electron, Fill Second Electron also. Eta, phi, pT and ISO from PF.
+  eventData.SetMuEnergyPF(muEnergy[0]); // First Muon, Fill Second Muon also. Eta, phi, pT and ISO from PF.
+  eventData.SetMultiplicityGapPlusPF(nplus);
+  eventData.SetMultiplicityGapMinusPF(nminus);
 
 }
 

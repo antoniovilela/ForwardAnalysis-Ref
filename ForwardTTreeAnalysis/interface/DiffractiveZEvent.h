@@ -124,6 +124,29 @@ class DiffractiveZEvent {
     void SetEtaCaloMax(double fEtaCaloMax)    { EtaCaloMax_ = fEtaCaloMax;}
     void SetEtaCaloMin(double fEtaCaloMin)    { EtaCaloMin_ = fEtaCaloMin;}
 
+    void SetVertex(int fVertex)    { Vertex_ = fVertex;}
+    void SetXi_PF_minus(double fXi_PF_minus)    { Xi_PF_minus_ = fXi_PF_minus;}
+    void SetXi_PF_plus(double fXi_PF_plus)    { Xi_PF_plus_ = fXi_PF_plus;}
+    void SetEpz_PF_minus(double fEpz_PF_minus)    { Epz_PF_minus_= fEpz_PF_minus;}
+    void SetEpz_PF_plus(double fEpz_PF_plus)    { Epz_PF_plus_ = fEpz_PF_plus;}
+    void SetMultiplicityPF(int fMultiplicityPF)    { MultiplicityPF_ = fMultiplicityPF;}
+    void SetSumEtaTimesEnergyPF(double fSumEtaTimesEnergyPF)    { SumEtaTimesEnergyPF_ = fSumEtaTimesEnergyPF;}
+    void SetSumpxModulePF(double fSumpxModulePF)    { SumpxModulePF_ = fSumpxModulePF;}
+    void SetSumpyModulePF(double fSumpyModulePF)    { SumpyModulePF_ = fSumpyModulePF;}
+    void SetSumpzModulePF(double fSumpzModulePF)    { SumpzModulePF_ = fSumpzModulePF;}
+    void SetSumpxPF(double fSumpxPF)    { SumpxPF_ = fSumpxPF;}
+    void SetSumpyPF(double fSumpyPF)    { SumpyPF_ = fSumpyPF;}
+    void SetSumpzPF(double fSumpzPF)    { SumpzPF_ = fSumpzPF;}
+    void SetSumEnergyPF(double fSumEnergyPF)    { SumEnergyPF_ = fSumEnergyPF;}
+    void SetMuEnergyPF(double fMuEnergyPF)    { MuEnergyPF_ = fMuEnergyPF;}
+    void SetElectronEnergyPF(double fElectronEnergyPF)    { ElectronEnergyPF_ = fElectronEnergyPF;}
+    void SetMaxGapPF(double fMaxGapPF)    { MaxGapPF_ = fMaxGapPF;}
+    void SetSecondMaxGapPF(double fSecondMaxGapPF)    { SecondMaxGapPF_ = fSecondMaxGapPF;}
+    void SetLimPlusGapPF(double fLimPlusGapPF)    { LimPlusGapPF_ = fLimPlusGapPF;}
+    void SetLimMinusGapPF(double fLimMinusGapPF)    { LimMinusGapPF_ = fLimMinusGapPF;}
+    void SetMultiplicityGapPlusPF(int fMultiplicityGapPlusPF)    { MultiplicityGapPlusPF_ = fMultiplicityGapPlusPF;}
+    void SetMultiplicityGapMinusPF(int fMultiplicityGapMinusPF)    { MultiplicityGapMinusPF_ = fMultiplicityGapMinusPF;}
+
     int GetHLTPath(int idx)                    const { return hltTrigResults_[idx]; }
     double GetDiElectronMass() const {return DiElectronMass_;}
     double GetDiMuonMass() const {return DiMuonMass_;}
@@ -229,6 +252,29 @@ class DiffractiveZEvent {
     double GetEtaCaloMax()    const {return EtaCaloMax_;}
     double GetEtaCaloMin()    const {return EtaCaloMin_;}
 
+    int GetVertex()    const {return Vertex_;}
+    double GetXi_PF_minus()    const {return Xi_PF_minus_;}
+    double GetXi_PF_plus()    const {return Xi_PF_plus_;}
+    double GetEpz_PF_minus()    const {return Epz_PF_minus_;}
+    double GetEpz_PF_plus()    const {return Epz_PF_plus_;}
+    int GetMultiplicityPF()    const {return MultiplicityPF_;}
+    double GetSumEtaTimesEnergyPF()    const {return SumEtaTimesEnergyPF_;}
+    double GetSumpxModulePF()    const {return SumpxModulePF_;}
+    double GetSumpyModulePF()    const {return SumpyModulePF_;}
+    double GetSumpzModulePF()    const {return SumpzModulePF_;}
+    double GetSumpxPF()    const {return SumpxPF_;}
+    double GetSumpyPF()    const {return SumpyPF_;}
+    double GetSumpzPF()    const {return SumpzPF_;}
+    double GetSumEnergyPF()    const {return SumEnergyPF_;}
+    double GetMuEnergyPF()    const {return MuEnergyPF_;}
+    double GetElectronEnergyPF()    const {return MaxGapPF_;}
+    double GetMaxGapPF()    const {return EtaCaloMin_;}
+    double GetSecondMaxGapPF()    const {return SecondMaxGapPF_;}
+    double GetLimPlusGapPF()    const {return LimPlusGapPF_;}
+    double GetLimMinusGapPF()    const {return LimMinusGapPF_;}
+    int GetMultiplicityGapPlusPF()    const {return MultiplicityGapPlusPF_;}
+    int GetMultiplicityGapMinusPF()    const {return MultiplicityGapMinusPF_;}
+
   private:
     friend class diffractiveZAnalysis::DiffractiveZAnalysis;
 
@@ -331,6 +377,29 @@ class DiffractiveZEvent {
     double XiCaloMinus_;
     double EtaCaloMax_;
     double EtaCaloMin_;
+
+    int Vertex_;
+    double Xi_PF_minus_;
+    double Xi_PF_plus_;
+    double Epz_PF_minus_;
+    double Epz_PF_plus_;
+    int MultiplicityPF_;
+    double SumEtaTimesEnergyPF_;
+    double SumpxModulePF_;
+    double SumpyModulePF_;
+    double SumpzModulePF_;
+    double SumpxPF_;
+    double SumpyPF_;
+    double SumpzPF_;
+    double SumEnergyPF_;
+    double MuEnergyPF_;
+    double ElectronEnergyPF_;
+    double MaxGapPF_;
+    double SecondMaxGapPF_;
+    double LimPlusGapPF_;
+    double LimMinusGapPF_;
+    int MultiplicityGapPlusPF_;
+    int MultiplicityGapMinusPF_;
 
 };
 
