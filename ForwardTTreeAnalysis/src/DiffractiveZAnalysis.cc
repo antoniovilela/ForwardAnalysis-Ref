@@ -1387,10 +1387,6 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
     if (debug) {
       std::cout << "electron1 -> dr03 TK: " << electron1->dr03TkSumPt() << "| dr03 Ecal: " << electron1->dr03EcalRecHitSumEt() << " | dr03 Hcal: " << electron1->dr03HcalTowerSumEt() << std::endl;
       std::cout << "electron1 -> dr04 TK: " << electron1->dr04TkSumPt() << "| dr04 Ecal: " << electron1->dr04EcalRecHitSumEt() << " | dr04 Hcal: " << electron1->dr04HcalTowerSumEt() <<  std::endl;
-      std::cout << "electron1 -> dr03 TK: " << electron1->dr03TkSumPt() << "| dr03 Ecal: " << electron1->dr03EcalRecHitSumEt() << " | dr03 Hcal: " << electron1->dr03HcalTowerSumEt() << std::endl;
-      std::cout << "electron1 -> dr04 TK: " << electron1->dr04TkSumPt() << "| dr04 Ecal: " << electron1->dr04EcalRecHitSumEt() << " | dr04 Hcal: " << electron1->dr04HcalTowerSumEt() <<  std::endl;
-      std::cout << "electron2 -> dr03 TK: " << electron2->dr03TkSumPt() << "| dr03 Ecal: " << electron2->dr03EcalRecHitSumEt() << " | dr03 Hcal: " << electron2->dr03HcalTowerSumEt() << std::endl;
-      std::cout << "electron2 -> dr04 TK: " << electron2->dr04TkSumPt() << "| dr04 Ecal: " << electron2->dr04EcalRecHitSumEt() << " | dr04 Hcal: " << electron2->dr04HcalTowerSumEt() <<  std::endl;
       std::cout << "electron2 -> dr03 TK: " << electron2->dr03TkSumPt() << "| dr03 Ecal: " << electron2->dr03EcalRecHitSumEt() << " | dr03 Hcal: " << electron2->dr03HcalTowerSumEt() << std::endl;
       std::cout << "electron2 -> dr04 TK: " << electron2->dr04TkSumPt() << "| dr04 Ecal: " << electron2->dr04EcalRecHitSumEt() << " | dr04 Hcal: " << electron2->dr04HcalTowerSumEt() <<  std::endl;
       std::cout << "NElectron: " << ElectronsN << std::endl;
