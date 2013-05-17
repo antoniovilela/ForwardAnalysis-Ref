@@ -214,8 +214,8 @@ void DiffractiveZAnalysis::fillElectronsInfo(DiffractiveZEvent& eventData, const
     if (debug){
       std::cout << "NElectron: " << ElectronN << std::endl;
       std::cout << "NSize: " << electrons->size() << std::endl;
-      std::cout << "Muon1: " << electron1->pt() << std::endl;
-      std::cout << "Muon2: " << electron2->pt() << std::endl;
+      std::cout << "Electron1: " << electron1->pt() << std::endl;
+      std::cout << "Electron2: " << electron2->pt() << std::endl;
     }
 
   }
@@ -417,7 +417,6 @@ void DiffractiveZAnalysis::fillGenInfo(DiffractiveZEvent& eventData, const edm::
   std::vector<double> eta;
   std::vector<double> etaPT;
   std::vector<double> tracksPT;
-
 
   edm::Handle<reco::GenParticleCollection> genParticles;     
   event.getByLabel("genParticles",genParticles);  // standard PYTHIA collection
@@ -965,7 +964,7 @@ void DiffractiveZAnalysis::fillDetectorVariables(DiffractiveZEvent& eventData, c
   eventData.SetEtaCaloMin(etaMin);
 
   // Do not forget to Fill Calo Multiplicities!!! 
-  
+
 
 }
 
@@ -1221,21 +1220,27 @@ void DiffractiveZAnalysis::fillVariables(DiffractiveZEvent& eventData, const edm
 
 void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
 
-  math::XYZPoint PrimaryVertex;
-  TLorentzVector m1electron(0.,0.,0.,0.);
-  TLorentzVector m2electron(0.,0.,0.,0.);
-  bool firstelectron=false;
-  bool secondelectron=false;
-  double mee=0.;
-  TLorentzVector m1muon(0.,0.,0.,0.);
-  TLorentzVector m2muon(0.,0.,0.,0.);
-  bool firstmuon=false;
-  bool secondmuon=false;
-  double mmumu=0.;
-  double relIso=0.;
+  // Declaring Variables
 
-  edm::Handle<reco::VertexCollection> Vertexes;
-  event.getByLabel("offlinePrimaryVertices", Vertexes); 
+  bool debug = true;
+
+  double relIsoFirstElectronDr03=0.;
+  double relIsoFirstElectronDr04=0.;
+  double relIsoSecondElectronDr03=0.;
+  double relIsoSecondElectronDr04=0.;
+
+  double relIsoFirstMuonDr03=0.;
+  double relIsoFirstMuonDr05=0.;
+  double relIsoSecondMuonDr03=0.;
+  double relIsoSecondMuonDr05=0.;
+
+  double relIsoFirstMuon=0.;
+  double relIsoSecondMuon=0.;
+
+  int ElectronsN=0;
+  int MuonsN=0;
+
+  // Detector Objects and Candidates
 
   edm::Handle <reco::PFCandidateCollection> PFCandidates;
   event.getByLabel("particleFlow",PFCandidates); 
@@ -1247,101 +1252,153 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
   edm::Handle<std::vector<pat::Electron> > electrons;
   event.getByLabel("patElectrons", electrons);
 
-  for( std::vector<pat::Electron>::const_iterator elec=electrons->begin(); elec!=electrons->end(); ++elec ){
+  if (debug) {
 
-    double pt=elec->pt();
-    double charge=elec->charge();
-    double phi=elec->phi();
-    double eta=elec->eta();
-    double relIsoE;
-
-    relIsoE = (elec->dr03TkSumPt()+elec->dr03EcalRecHitSumEt()+elec->dr03HcalTowerSumEt())/elec->et();
-
-    std::cout << "electron -> dr03 TK: " << elec->dr03TkSumPt() << "| dr04 Ecal: " << elec->dr04EcalRecHitSumEt() << " | dr04 Hcal: " << elec->dr04HcalTowerSumEt() << "relIsoE: " << relIsoE <<  std::endl;
-
-    /*
-       double sumPtR03e = elec->isolationR03().sumPt;
-       double emEtR03e = elec->isolationR03().emEt;
-       double hadEtR03e = elec->isolationR03().hadEt;    
-       double relIsoR03e = (sumPtR03e + emEtR03e + hadEtR03e)/elec->pt();
-       double sumPtR05e = elec->isolationR05().sumPt;
-       double emEtR05e = elec->isolationR05().emEt;
-       double hadEtR05e = elec->isolationR05().hadEt;
-       double relIsoR05e = (sumPtR05e + emEtR05e + hadEtR05e)/elec->pt();
-       std::cout<<"e 0.3 Radion Rel Iso: "<<relIsoR03e<<"e sumPt "<<sumPtR03e<<"e emEt "<<emEtR03e<<"e hadEt "<<hadEtR03e<<std::endl;
-       std::cout<<"e 0.5 Radion Rel Iso: "<<relIsoR05e<<"e sumPt "<<sumPtR05e<<"e emEt "<<emEtR05e<<"e hadEt "<<hadEtR05e<<std::endl;
-     */
-
-
-    if (pt>=2 && (charge)>0){
-      PrimaryVertex=elec->vertex();
-      m1electron.SetPtEtaPhiM(pt,eta,phi,0.0);
-      firstmuon=true;
+    if (muons->size() > 0) {
+      std::cout << "More than 2 Muons!" << std::endl; 
     }
 
-    if (pt>=2 && (charge)<0){
-      PrimaryVertex=elec->vertex();
-      m2electron.SetPtEtaPhiM(pt,eta,phi,0.0);
-      secondelectron=true;
+    if (electrons->size() > 0) {    
+      std::cout << "More than 2 Electrons!" << std::endl;
     }
 
   }
-  if (firstelectron==true && secondelectron==true){
-    TLorentzVector Zee = m1electron+m2electron;
-    mee = Zee.M();
-    firstelectron=false;
-    secondelectron=false;
-    std::cout << "Dielectron Mass: " << mee << std::endl;
-    eventData.SetDiElectronMassPF(mee);
+
+  // Read information of Muon Candidate
+
+  const pat::Muon* muon1=NULL;
+  const pat::Muon* muon2=NULL;
+
+  int muonsize = muons->size();
+  int itMuon;
+
+  if(muons->size()>1){
+
+    for(itMuon=0; itMuon < muonsize; ++itMuon){
+
+      ++MuonsN;
+
+      const pat::Muon* muonAll = &((*muons)[itMuon]);
+
+      if (muonAll==NULL) continue;
+
+      if (muon1==NULL) {muon1=muonAll; continue;}
+      if (muonAll->pt()>muon1->pt()) {
+	muon2=muon1;
+	muon1=muonAll;
+	continue;
+      }
+
+      if (muon2==NULL) {muon2=muonAll; continue;}
+      if (muonAll->pt()>muon2->pt()) muon2 = muonAll;
+
+    }
+
+    double muon1Pt=muon1->pt();
+    double muon1Charge=muon1->charge();
+    double muon1Phi=muon1->phi();
+    double muon1Eta=muon1->eta();
+
+    double muon2Pt=muon2->pt();
+    double muon2Charge=muon2->charge();
+    double muon2Phi=muon2->phi();
+    double muon2Eta=muon2->eta();
+
+    double muon1SumPtR03 = muon1->isolationR03().sumPt;
+    double muon1EmEtR03 = muon1->isolationR03().emEt;
+    double muon1HadEtR03 = muon1->isolationR03().hadEt;    
+    double muon1SumPtR05 = muon1->isolationR05().sumPt;
+    double muon1EmEtR05 = muon1->isolationR05().emEt;
+    double muon1HadEtR05 = muon1->isolationR05().hadEt;    
+
+    double muon2SumPtR03 = muon2->isolationR03().sumPt;
+    double muon2EmEtR03 = muon2->isolationR03().emEt;
+    double muon2HadEtR03 = muon2->isolationR03().hadEt;
+    double muon2SumPtR05 = muon2->isolationR05().sumPt;
+    double muon2EmEtR05 = muon2->isolationR05().emEt;
+    double muon2HadEtR05 = muon2->isolationR05().hadEt;
+
+    relIsoFirstMuonDr03 = (muon1SumPtR03 + muon1EmEtR03 + muon1HadEtR03)/muon1->pt();
+    relIsoSecondMuonDr03 = (muon2SumPtR03 + muon2EmEtR03 + muon2HadEtR03)/muon2->pt();
+    relIsoFirstMuonDr05 = (muon1SumPtR05 + muon1EmEtR05 + muon1HadEtR05)/muon1->pt();
+    relIsoSecondMuonDr05 = (muon2SumPtR05 + muon2EmEtR05 + muon2HadEtR05)/muon2->pt();
+
+    relIsoFirstMuon = (muon1->trackIso()+muon1->ecalIso()+muon1->hcalIso())/muon1->pt();
+    relIsoSecondMuon = (muon2->trackIso()+muon2->ecalIso()+muon2->hcalIso())/muon2->pt();
+
+    if (debug){
+      std::cout<<"Muon1 -> 0.3 Radion Rel Iso: "<<relIsoFirstMuonDr03<<" sumPt "<<muon1SumPtR03<<" emEt "<<muon1EmEtR03<<" hadEt "<<muon1HadEtR03<<std::endl;
+      std::cout<<"Muon1 -> 0.5 Radion Rel Iso: "<<relIsoFirstMuonDr05<<" sumPt "<<muon1SumPtR05<<" emEt "<<muon1EmEtR05<<" hadEt "<<muon1HadEtR05<<std::endl;
+      std::cout << "Muon1 -> trackIso(): " << muon1->trackIso() << " | muon1 -> ecalIso(): " << muon1->ecalIso() << " | muon1 -> hcalIso(): " << muon1->hcalIso() << " | muon1->Iso(): " << relIsoFirstMuon << std::endl; 
+      std::cout<<"Muon2 -> 0.3 Radion Rel Iso: "<<relIsoSecondMuonDr03<<" sumPt "<<muon2SumPtR03<<" emEt "<<muon2EmEtR03<<" hadEt "<<muon2HadEtR03<<std::endl;
+      std::cout<<"Muon2 -> 0.5 Radion Rel Iso: "<<relIsoSecondMuonDr05<<" sumPt "<<muon2SumPtR05<<" emEt "<<muon2EmEtR05<<" hadEt "<<muon2HadEtR05<<std::endl;
+      std::cout << "Muon2 -> trackIso(): " << muon2->trackIso() << " | muon2 -> ecalIso(): " << muon2->ecalIso() << " | muon2 -> hcalIso(): " << muon2->hcalIso() << " | muon2->Iso(): " << relIsoSecondMuon << std::endl;  
+      std::cout << "NSize: " << muons->size() << std::endl;
+      std::cout << "Muon1: " << muon1->pt() << std::endl;
+      std::cout << "Muon2: " << muon2->pt() << std::endl;
+    }
+
   }
 
-  for( std::vector<pat::Muon>::const_iterator muon=muons->begin(); muon!=muons->end(); ++muon ){
+  // Read Information of Electron Candidate 
 
-    double charge=muon->charge();
-    double phi=muon->phi();
-    double eta=muon->eta();
-    double pt=muon->pt();
+  const pat::Electron* electron1=NULL;
+  const pat::Electron* electron2=NULL;
 
+  int electronsize = electrons->size();
+  int itElectron;
 
-    double sumPtR03 = muon->isolationR03().sumPt;
-    double emEtR03 = muon->isolationR03().emEt;
-    double hadEtR03 = muon->isolationR03().hadEt;    
-    double relIsoR03 = (sumPtR03 + emEtR03 + hadEtR03)/muon->pt();
-    double sumPtR05 = muon->isolationR05().sumPt;
-    double emEtR05 = muon->isolationR05().emEt;
-    double hadEtR05 = muon->isolationR05().hadEt;    
-    double relIsoR05 = (sumPtR05 + emEtR05 + hadEtR05)/muon->pt();
-    std::cout<<" 0.3 Radion Rel Iso: "<<relIsoR03<<" sumPt "<<sumPtR03<<" emEt "<<emEtR03<<" hadEt "<<hadEtR03<<std::endl;
-    std::cout<<" 0.5 Radion Rel Iso: "<<relIsoR05<<" sumPt "<<sumPtR05<<" emEt "<<emEtR05<<" hadEt "<<hadEtR05<<std::endl;
+  if(electrons->size()>1){
 
-    relIso = (muon->trackIso()+muon->ecalIso()+muon->hcalIso())/muon->pt();
+    for(itElectron=0; itElectron < electronsize; ++itElectron){
 
-    //std::cout << "muon -> dr03 TK: " << muon->dr03TkSumPt() << "| dr04 Ecal: " << muon->dr04EcalRecHitSumEt() << " | dr04 Hcal: " << muon->dr04HcalTowerSumEt() << std::endl;
+      ++ElectronsN;
 
-    //std::cout << "muon -> TrackIso(): " << muon->userIsolation() << std::endl;
+      const pat::Electron* electronAll = &((*electrons)[itElectron]);
 
-    std::cout << "muon -> trackIso(): " << muon->trackIso() << " | muon -> ecalIso(): " << muon->ecalIso() << " | muon -> hcalIso(): " << muon->hcalIso() << " | muon->Iso(): " << relIso << std::endl; 
+      if (electronAll==NULL) continue;
+      if (electron1==NULL) {electron1=electronAll; continue;}
+      if (electronAll->pt()>electron1->pt()) {
+	electron2=electron1;
+	electron1=electronAll;
+	continue;
+      }
 
+      if (electron2==NULL) {electron2=electronAll; continue;}
+      if (electronAll->pt()>electron2->pt()) electron2 = electronAll;
 
-
-    if (pt>=2 && (charge)>0){
-      PrimaryVertex=muon->vertex();
-      m1muon.SetPtEtaPhiM(pt,eta,phi,0.0);     
-      firstmuon=true;
     }
-    if (pt>=2 && (charge)<0){
-      PrimaryVertex=muon->vertex();
-      m2muon.SetPtEtaPhiM(pt,eta,phi,0.0); 
-      secondmuon=true;
+
+    double electron1Pt=electron1->pt();
+    double electron1Charge=electron1->charge();
+    double electron1Phi=electron1->phi();
+    double electron1Eta=electron1->eta();
+
+    double electron2Pt=electron2->pt();
+    double electron2Charge=electron2->charge();
+    double electron2Phi=electron2->phi();
+    double electron2Eta=electron2->eta();
+
+    relIsoFirstElectronDr03 = (electron1->dr03TkSumPt()+electron1->dr03EcalRecHitSumEt()+electron1->dr03HcalTowerSumEt())/electron1->et();
+    relIsoFirstElectronDr04 = (electron1->dr04TkSumPt()+electron1->dr04EcalRecHitSumEt()+electron1->dr04HcalTowerSumEt())/electron1->et();
+    relIsoSecondElectronDr03 = (electron2->dr03TkSumPt()+electron2->dr03EcalRecHitSumEt()+electron2->dr03HcalTowerSumEt())/electron2->et();
+    relIsoSecondElectronDr04 = (electron2->dr04TkSumPt()+electron2->dr04EcalRecHitSumEt()+electron2->dr04HcalTowerSumEt())/electron2->et();
+
+    if (debug) {
+      std::cout << "electron1 -> dr03 TK: " << electron1->dr03TkSumPt() << "| dr03 Ecal: " << electron1->dr03EcalRecHitSumEt() << " | dr03 Hcal: " << electron1->dr03HcalTowerSumEt() << std::endl;
+      std::cout << "electron1 -> dr04 TK: " << electron1->dr04TkSumPt() << "| dr04 Ecal: " << electron1->dr04EcalRecHitSumEt() << " | dr04 Hcal: " << electron1->dr04HcalTowerSumEt() <<  std::endl;
+      std::cout << "electron1 -> dr03 TK: " << electron1->dr03TkSumPt() << "| dr03 Ecal: " << electron1->dr03EcalRecHitSumEt() << " | dr03 Hcal: " << electron1->dr03HcalTowerSumEt() << std::endl;
+      std::cout << "electron1 -> dr04 TK: " << electron1->dr04TkSumPt() << "| dr04 Ecal: " << electron1->dr04EcalRecHitSumEt() << " | dr04 Hcal: " << electron1->dr04HcalTowerSumEt() <<  std::endl;
+      std::cout << "electron2 -> dr03 TK: " << electron2->dr03TkSumPt() << "| dr03 Ecal: " << electron2->dr03EcalRecHitSumEt() << " | dr03 Hcal: " << electron2->dr03HcalTowerSumEt() << std::endl;
+      std::cout << "electron2 -> dr04 TK: " << electron2->dr04TkSumPt() << "| dr04 Ecal: " << electron2->dr04EcalRecHitSumEt() << " | dr04 Hcal: " << electron2->dr04HcalTowerSumEt() <<  std::endl;
+      std::cout << "electron2 -> dr03 TK: " << electron2->dr03TkSumPt() << "| dr03 Ecal: " << electron2->dr03EcalRecHitSumEt() << " | dr03 Hcal: " << electron2->dr03HcalTowerSumEt() << std::endl;
+      std::cout << "electron2 -> dr04 TK: " << electron2->dr04TkSumPt() << "| dr04 Ecal: " << electron2->dr04EcalRecHitSumEt() << " | dr04 Hcal: " << electron2->dr04HcalTowerSumEt() <<  std::endl;
+      std::cout << "NElectron: " << ElectronsN << std::endl;
+      std::cout << "NSize: " << electrons->size() << std::endl;
+      std::cout << "Electron1: "<< electron1->pt() << std::endl;
+      std::cout << "Electron2: " << electron2->pt() << std::endl;
     }
-  }
-  if (firstmuon==true && secondmuon==true){
-    TLorentzVector Zmumu = m1muon+m2muon;
-    mmumu = Zmumu.M();
-    firstmuon=false;
-    secondmuon=false;
-    std::cout << "Dimuon Mass: " << mmumu << std::endl;
-    eventData.SetDiMuonMassPF(mmumu);
+
   }
 
 }
