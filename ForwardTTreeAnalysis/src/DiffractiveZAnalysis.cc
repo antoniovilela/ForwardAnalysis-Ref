@@ -1254,11 +1254,11 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
 
   if (debug) {
 
-    if (muons->size() > 0) {
+    if (muons->size() > 1) {
       std::cout << "More than 2 Muons!" << std::endl; 
     }
 
-    if (electrons->size() > 0) {    
+    if (electrons->size() > 1) {    
       std::cout << "More than 2 Electrons!" << std::endl;
     }
 
