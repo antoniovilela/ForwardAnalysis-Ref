@@ -127,4 +127,51 @@ void DiffractiveZEvent::reset(){
   MultiplicityGapPlusPF_ = -999;
   MultiplicityGapMinusPF_ = -999;
 
+  patMuon1Pt_=-999.;
+  patMuon1Charge_=-999;
+  patMuon1Phi_=-999.;
+  patMuon1Eta_=-999.;
+
+  patMuon2Pt_=-999.;
+  patMuon2Charge_=-999;
+  patMuon2Phi_= -999.;
+  patMuon2Eta_=-999.;
+
+  patMuon1SumPtR03_=-999.;
+  patMuon1EmEtR03_=-999.;
+  patMuon1HadEtR03_=-999.;   
+  patMuon1SumPtR05_=-999.;
+  patMuon1EmEtR05_=-999.;
+  patMuon1HadEtR05_=-999.;   
+
+  patMuon2SumPtR03_=-999.;
+  patMuon2EmEtR03_=-999.;
+  patMuon2HadEtR03_=-999.;
+  patMuon2SumPtR05_=-999.;
+  patMuon2EmEtR05_=-999.;
+  patMuon2HadEtR05_=-999.;  
+
+  patMuon1relIsoDr03_=-999.;
+  patMuon2relIsoDr03_=-999.;
+  patMuon1relIsoDr05_=-999.;
+  patMuon2relIsoDr05_=-999.;
+
+  patMuon1relIso_=-999.;
+  patMuon2relIso_=-999.;
+
+  patElectron1Pt_=-999.;
+  patElectron1Charge_=-999;
+  patElectron1Phi_=-999.;
+  patElectron1Eta_=-999.;
+
+  patElectron2Pt_=-999.;
+  patElectron2Charge_=-999;
+  patElectron2Phi_=-999.;
+  patElectron2Eta_=-999.;
+
+  patElectron1relIsoDr03_=-999.;
+  patElectron2relIsoDr04_=-999.;
+  patElectron1relIsoDr03_=-999.;
+  patElectron2relIsoDr04_=-999.;
+
 }

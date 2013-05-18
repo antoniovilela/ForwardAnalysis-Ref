@@ -147,6 +147,53 @@ class DiffractiveZEvent {
     void SetMultiplicityGapPlusPF(int fMultiplicityGapPlusPF)    { MultiplicityGapPlusPF_ = fMultiplicityGapPlusPF;}
     void SetMultiplicityGapMinusPF(int fMultiplicityGapMinusPF)    { MultiplicityGapMinusPF_ = fMultiplicityGapMinusPF;}
 
+    void SetPatMuon1Pt(double fpatMuon1Pt)    {patMuon1Pt_ = fpatMuon1Pt;}
+    void SetPatMuon1Charge(int fpatMuon1Charge)    {patMuon1Charge_ = fpatMuon1Charge;}
+    void SetPatMuon1Phi(double fpatMuon1Phi)    {patMuon1Phi_ = fpatMuon1Phi;}
+    void SetPatMuon1Eta(double fpatMuon1Eta)    {patMuon1Eta_ = fpatMuon1Eta;}
+
+    void SetPatMuon2Pt(double fpatMuon2Pt)    {patMuon2Pt_ = fpatMuon2Pt;}
+    void SetPatMuon2Charge(int fpatMuon2Charge)    {patMuon2Charge_ = fpatMuon2Charge;}
+    void SetPatMuon2Phi(double fpatMuon2Phi)    {patMuon2Phi_ = fpatMuon2Phi;}
+    void SetPatMuon2Eta(double fpatMuon2Eta)    {patMuon2Eta_ = fpatMuon2Eta;}
+
+    void SetPatMuon1SumPtR03(double fpatMuon1SumPtR03)    {patMuon1SumPtR03_ = fpatMuon1SumPtR03;}
+    void SetPatMuon1EmEtR03(double fpatMuon1EmEtR03)    {patMuon1EmEtR03_ = fpatMuon1EmEtR03;}
+    void SetPatMuon1HadEtR03(double fpatMuon1HadEtR03)    {patMuon1HadEtR03_ = fpatMuon1HadEtR03;}    
+    void SetPatMuon1SumPtR05(double fpatMuon1SumPtR05)    {patMuon1SumPtR05_ = fpatMuon1SumPtR05;}
+    void SetPatMuon1EmEtR05(double fpatMuon1EmEtR05)    {patMuon1EmEtR05_ = fpatMuon1EmEtR05;}
+    void SetPatMuon1HadEtR05(double fpatMuon1HadEtR05)    {patMuon1HadEtR05_ = fpatMuon1HadEtR05;}    
+
+    void SetPatMuon2SumPtR03(double fpatMuon2SumPtR03)    {patMuon2SumPtR03_ = fpatMuon2SumPtR03;}
+    void SetPatMuon2EmEtR03(double fpatMuon2EmEtR03)    {patMuon2EmEtR03_ = fpatMuon2EmEtR03;}
+    void SetPatMuon2HadEtR03(double fpatMuon2HadEtR03)    {patMuon2HadEtR03_ = fpatMuon2HadEtR03;}    
+    void SetPatMuon2SumPtR05(double fpatMuon2SumPtR05)    {patMuon2SumPtR05_ = fpatMuon2SumPtR05;}
+    void SetPatMuon2EmEtR05(double fpatMuon2EmEtR05)    {patMuon2EmEtR05_ = fpatMuon2EmEtR05;}
+    void SetPatMuon2HadEtR05(double fpatMuon2HadEtR05)    {patMuon2HadEtR05_ = fpatMuon2HadEtR05;}  
+
+    void SetPatMuon1relIsoDr03(double fpatMuon1relIsoDr03)    {patMuon1relIsoDr03_ = fpatMuon1relIsoDr03;}
+    void SetPatMuon2relIsoDr03(double fpatMuon2relIsoDr03)    {patMuon2relIsoDr03_ = fpatMuon2relIsoDr03;}
+    void SetPatMuon1relIsoDr05(double fpatMuon1relIsoDr05)    {patMuon1relIsoDr05_ = fpatMuon1relIsoDr05;}
+    void SetPatMuon2relIsoDr05(double fpatMuon2relIsoDr05)    {patMuon2relIsoDr05_ = fpatMuon2relIsoDr05;}
+
+    void SetPatMuon1relIso(double fpatMuon1relIso)    {patMuon1relIso_ = fpatMuon1relIso;}
+    void SetPatMuon2relIso(double fpatMuon2relIso)    {patMuon2relIso_ = fpatMuon2relIso;}
+
+    void SetPatElectron1Pt(double fpatElectron1Pt)    {patElectron1Pt_ = fpatElectron1Pt;}
+    void SetPatElectron1Charge(int fpatElectron1Charge)    {patElectron1Charge_ = fpatElectron1Charge;}
+    void SetPatElectron1Phi(double fpatElectron1Phi)    {patElectron1Phi_ = fpatElectron1Phi;}
+    void SetPatElectron1Eta(double fpatElectron1Eta)    {patElectron1Eta_ = fpatElectron1Eta;}
+
+    void SetPatElectron2Pt(double fpatElectron2Pt)    {patElectron2Pt_ = fpatElectron2Pt;}
+    void SetPatElectron2Charge(int fpatElectron2Charge)    {patElectron2Charge_ = fpatElectron2Charge;}
+    void SetPatElectron2Phi(double fpatElectron2Phi)    {patElectron2Phi_ = fpatElectron2Phi;}
+    void SetPatElectron2Eta(double fpatElectron2Eta)    {patElectron2Eta_ = fpatElectron2Eta;}
+
+    void SetPatElectron1relIsoDr03(double fpatElectron1relIsoDr03)    {patElectron1relIsoDr03_ = fpatElectron1relIsoDr03;}
+    void SetPatElectron1relIsoDr04(double fpatElectron1relIsoDr04)    {patElectron1relIsoDr04_ = fpatElectron1relIsoDr04;}
+    void SetPatElectron2relIsoDr03(double fpatElectron2relIsoDr03)    {patElectron2relIsoDr03_ = fpatElectron2relIsoDr03;}
+    void SetPatElectron2relIsoDr04(double fpatElectron2relIsoDr04)    {patElectron2relIsoDr04_ = fpatElectron2relIsoDr04;}
+
     int GetHLTPath(int idx)                    const { return hltTrigResults_[idx]; }
     double GetDiElectronMass() const {return DiElectronMass_;}
     double GetDiMuonMass() const {return DiMuonMass_;}
@@ -275,6 +322,53 @@ class DiffractiveZEvent {
     int GetMultiplicityGapPlusPF()    const {return MultiplicityGapPlusPF_;}
     int GetMultiplicityGapMinusPF()    const {return MultiplicityGapMinusPF_;}
 
+    double GetPatMuon1Pt() const {return patMuon1Pt_;}
+    int GetPatMuon1Charge() const {return patMuon1Charge_;}
+    double GetPatMuon1Phi() const {return patMuon1Phi_;}
+    double GetPatMuon1Eta() const {return patMuon1Eta_;}
+
+    double GetPatMuon2Pt() const {return patMuon2Pt_;}
+    int GetPatMuon2Charge() const {return patMuon2Charge_;}
+    double GetPatMuon2Phi() const {return patMuon2Phi_;}
+    double GetPatMuon2Eta() const {return patMuon2Eta_;}
+
+    double GetPatMuon1SumPtR03() const {return patMuon1SumPtR03_;}
+    double GetPatMuon1EmEtR03() const {return patMuon1EmEtR03_;}
+    double GetPatMuon1HadEtR03() const {return patMuon1HadEtR03_;}    
+    double GetPatMuon1SumPtR05() const {return patMuon1SumPtR05_;}
+    double GetPatMuon1EmEtR05() const {return patMuon1EmEtR05_;}
+    double GetPatMuon1HadEtR05() const {return patMuon1HadEtR05_;}    
+
+    double GetPatMuon2SumPtR03() const {return patMuon2SumPtR03_;}
+    double GetPatMuon2EmEtR03() const {return patMuon2EmEtR03_;}
+    double GetPatMuon2HadEtR03() const {return patMuon2HadEtR03_;}    
+    double GetPatMuon2SumPtR05() const {return patMuon2SumPtR05_;}
+    double GetPatMuon2EmEtR05() const {return patMuon2EmEtR05_;}
+    double GetPatMuon2HadEtR05() const {return patMuon2HadEtR05_;}  
+
+    double GetPatMuon1relIsoDr03() const {return patMuon1relIsoDr03_;}
+    double GetPatMuon2relIsoDr03() const {return patMuon2relIsoDr03_;}
+    double GetPatMuon1relIsoDr05() const {return patMuon1relIsoDr05_;}
+    double GetPatMuon2relIsoDr05() const {return patMuon2relIsoDr05_;}
+
+    double GetPatMuon1relIso() const {return patMuon1relIso_;}
+    double GetPatMuon2relIso() const {return patMuon2relIso_;}
+
+    double GetPatElectron1Pt() const {return patElectron1Pt_;}
+    int GetPatElectron1Charge() const {return patElectron1Charge_;}
+    double GetPatElectron1Phi() const {return patElectron1Phi_;}
+    double GetPatElectron1Eta() const {return patElectron1Eta_;}
+
+    double GetPatElectron2Pt() const {return patElectron2Pt_;}
+    int GetPatElectron2Charge() const {return patElectron2Charge_;}
+    double GetPatElectron2Phi() const {return patElectron2Phi_;}
+    double GetPatElectron2Eta() const {return patElectron2Eta_;}
+
+    double GetPatElectron1relIsoDr03() const {return patElectron1relIsoDr03_;}
+    double GetPatElectron1relIsoDr04() const {return patElectron1relIsoDr04_;}
+    double GetPatElectron2relIsoDr03() const {return patElectron2relIsoDr03_;}
+    double GetPatElectron2relIsoDr04() const {return patElectron2relIsoDr04_;}
+
   private:
     friend class diffractiveZAnalysis::DiffractiveZAnalysis;
 
@@ -400,6 +494,53 @@ class DiffractiveZEvent {
     double LimMinusGapPF_;
     int MultiplicityGapPlusPF_;
     int MultiplicityGapMinusPF_;
+
+    double patMuon1Pt_;
+    int patMuon1Charge_;
+    double patMuon1Phi_;
+    double patMuon1Eta_;
+
+    double patMuon2Pt_;
+    int patMuon2Charge_;
+    double patMuon2Phi_ ;
+    double patMuon2Eta_;
+
+    double patMuon1SumPtR03_;
+    double patMuon1EmEtR03_;
+    double patMuon1HadEtR03_;   
+    double patMuon1SumPtR05_;
+    double patMuon1EmEtR05_;
+    double patMuon1HadEtR05_;   
+
+    double patMuon2SumPtR03_;
+    double patMuon2EmEtR03_;
+    double patMuon2HadEtR03_;    
+    double patMuon2SumPtR05_;
+    double patMuon2EmEtR05_;
+    double patMuon2HadEtR05_;  
+
+    double patMuon1relIsoDr03_;
+    double patMuon2relIsoDr03_;
+    double patMuon1relIsoDr05_;
+    double patMuon2relIsoDr05_;
+
+    double patMuon1relIso_;
+    double patMuon2relIso_;
+
+    double patElectron1Pt_;
+    int patElectron1Charge_;
+    double patElectron1Phi_;
+    double patElectron1Eta_;
+
+    double patElectron2Pt_;
+    int patElectron2Charge_;
+    double patElectron2Phi_;
+    double patElectron2Eta_;
+
+    double patElectron1relIsoDr03_;
+    double patElectron1relIsoDr04_;
+    double patElectron2relIsoDr03_;
+    double patElectron2relIsoDr04_;
 
 };
 
