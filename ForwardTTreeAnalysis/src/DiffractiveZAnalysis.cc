@@ -61,6 +61,8 @@ DiffractiveZAnalysis::DiffractiveZAnalysis(const edm::ParameterSet& pset):
   hltPathNames_(pset.getParameter<std::vector<std::string> >("hltPaths")),
   electronTag_(pset.getParameter<edm::InputTag>("electronTag")),
   muonTag_(pset.getParameter<edm::InputTag>("muonTag")),
+  pfTag_(pset.getParameter<edm::InputTag>("pfTag")),
+  genTag_(pset.getParameter<edm::InputTag>("genTag")),
   PVtxCollectionTag_(pset.getParameter<edm::InputTag>("PVtxCollectionTag")),
   RunMC_(pset.getUntrackedParameter<Bool_t>("RunMC", false)),
   RunZPat_(pset.getUntrackedParameter<Bool_t>("RunZPat", false)),
@@ -419,7 +421,7 @@ void DiffractiveZAnalysis::fillGenInfo(DiffractiveZEvent& eventData, const edm::
   std::vector<double> tracksPT;
 
   edm::Handle<reco::GenParticleCollection> genParticles;     
-  event.getByLabel("genParticles",genParticles);  // standard PYTHIA collection
+  event.getByLabel(genTag_,genParticles);  // standard PYTHIA collection
 
   for(size_t i = 0; i < genParticles->size(); ++ i) {
 
@@ -1005,7 +1007,7 @@ void DiffractiveZAnalysis::fillVariables(DiffractiveZEvent& eventData, const edm
   event.getByLabel(PVtxCollectionTag_, Vertexes); 
 
   edm::Handle <reco::PFCandidateCollection> PFCandidates;
-  event.getByLabel("particleFlow",PFCandidates);
+  event.getByLabel(pfTag_,PFCandidates);
   reco::PFCandidateCollection::const_iterator iter;
 
   eventData.SetVertex(Vertexes->size());
@@ -1257,7 +1259,7 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
   // Detector Objects and Candidates
 
   edm::Handle <reco::PFCandidateCollection> PFCandidates;
-  event.getByLabel("particleFlow",PFCandidates); 
+  event.getByLabel(pfTag_,PFCandidates); 
   reco::PFCandidateCollection::const_iterator iter;
 
   edm::Handle<std::vector<pat::Muon> > muons;

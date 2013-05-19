@@ -38,8 +38,8 @@ if config.runOnMC:
 else:
     config.l1Paths = (l1list)
     config.hltPaths = (triggerlist)
-    #config.inputFileName = '/storage1/dmf/TestSamples/MuRun2010/MuRunA2010.root'
-    config.inputFileName = '/storage1/dmf/TestSamples/Electron2010B/Electron2010B.root'
+    config.inputFileName = '/storage1/dmf/TestSamples/MuRun2010/MuRunA2010.root'
+    #config.inputFileName = '/storage1/dmf/TestSamples/Electron2010B/Electron2010B.root'
     config.runPUMC = False
     config.runGen = False
 

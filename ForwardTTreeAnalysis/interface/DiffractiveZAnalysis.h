@@ -46,6 +46,8 @@ class DiffractiveZAnalysis {
       std::vector<std::string> hltPathNames_;
       edm::InputTag electronTag_;
       edm::InputTag muonTag_;
+      edm::InputTag pfTag_;
+      edm::InputTag genTag_;
       edm::InputTag PVtxCollectionTag_;
       bool RunMC_;
       bool RunZPat_;
