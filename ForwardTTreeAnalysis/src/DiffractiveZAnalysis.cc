@@ -1224,6 +1224,20 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
 
   bool debug = true;
 
+  double muon1SumPtR03=0.;
+  double muon1EmEtR03=0.;
+  double muon1HadEtR03=0.;
+  double muon1SumPtR05=0.;
+  double muon1EmEtR05=0.;
+  double muon1HadEtR05=0.;
+
+  double muon2SumPtR03=0.;
+  double muon2EmEtR03=0.;
+  double muon2HadEtR03=0.;
+  double muon2SumPtR05=0.;
+  double muon2EmEtR05=0.;
+  double muon2HadEtR05=0.;
+
   double relIsoFirstElectronDr03=0.;
   double relIsoFirstElectronDr04=0.;
   double relIsoSecondElectronDr03=0.;
@@ -1294,29 +1308,19 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
 
     }
 
-    double muon1Pt=muon1->pt();
-    double muon1Charge=muon1->charge();
-    double muon1Phi=muon1->phi();
-    double muon1Eta=muon1->eta();
+    muon1SumPtR03 = muon1->isolationR03().sumPt;
+    muon1EmEtR03 = muon1->isolationR03().emEt;
+    muon1HadEtR03 = muon1->isolationR03().hadEt;    
+    muon1SumPtR05 = muon1->isolationR05().sumPt;
+    muon1EmEtR05 = muon1->isolationR05().emEt;
+    muon1HadEtR05 = muon1->isolationR05().hadEt;    
 
-    double muon2Pt=muon2->pt();
-    double muon2Charge=muon2->charge();
-    double muon2Phi=muon2->phi();
-    double muon2Eta=muon2->eta();
-
-    double muon1SumPtR03 = muon1->isolationR03().sumPt;
-    double muon1EmEtR03 = muon1->isolationR03().emEt;
-    double muon1HadEtR03 = muon1->isolationR03().hadEt;    
-    double muon1SumPtR05 = muon1->isolationR05().sumPt;
-    double muon1EmEtR05 = muon1->isolationR05().emEt;
-    double muon1HadEtR05 = muon1->isolationR05().hadEt;    
-
-    double muon2SumPtR03 = muon2->isolationR03().sumPt;
-    double muon2EmEtR03 = muon2->isolationR03().emEt;
-    double muon2HadEtR03 = muon2->isolationR03().hadEt;
-    double muon2SumPtR05 = muon2->isolationR05().sumPt;
-    double muon2EmEtR05 = muon2->isolationR05().emEt;
-    double muon2HadEtR05 = muon2->isolationR05().hadEt;
+    muon2SumPtR03 = muon2->isolationR03().sumPt;
+    muon2EmEtR03 = muon2->isolationR03().emEt;
+    muon2HadEtR03 = muon2->isolationR03().hadEt;
+    muon2SumPtR05 = muon2->isolationR05().sumPt;
+    muon2EmEtR05 = muon2->isolationR05().emEt;
+    muon2HadEtR05 = muon2->isolationR05().hadEt;
 
     relIsoFirstMuonDr03 = (muon1SumPtR03 + muon1EmEtR03 + muon1HadEtR03)/muon1->pt();
     relIsoSecondMuonDr03 = (muon2SumPtR03 + muon2EmEtR03 + muon2HadEtR03)/muon2->pt();
@@ -1325,6 +1329,38 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
 
     relIsoFirstMuon = (muon1->trackIso()+muon1->ecalIso()+muon1->hcalIso())/muon1->pt();
     relIsoSecondMuon = (muon2->trackIso()+muon2->ecalIso()+muon2->hcalIso())/muon2->pt();
+
+    eventData.SetPatMuon1Pt(muon1->pt());
+    eventData.SetPatMuon1Charge(muon1->charge());
+    eventData.SetPatMuon1Phi(muon1->phi());
+    eventData.SetPatMuon1Eta(muon1->eta());
+
+    eventData.SetPatMuon2Pt(muon2->pt());
+    eventData.SetPatMuon2Charge(muon2->charge());
+    eventData.SetPatMuon2Phi(muon2->phi());
+    eventData.SetPatMuon2Eta(muon2->eta());
+
+    eventData.SetPatMuon1SumPtR03(muon1SumPtR03);
+    eventData.SetPatMuon1EmEtR03(muon1EmEtR03);
+    eventData.SetPatMuon1HadEtR03(muon1HadEtR03);    
+    eventData.SetPatMuon1SumPtR05(muon1SumPtR05);
+    eventData.SetPatMuon1EmEtR05(muon1EmEtR05);
+    eventData.SetPatMuon1HadEtR05(muon1HadEtR05);    
+
+    eventData.SetPatMuon2SumPtR03(muon2SumPtR03);
+    eventData.SetPatMuon2EmEtR03(muon2EmEtR03);
+    eventData.SetPatMuon2HadEtR03(muon2HadEtR03);    
+    eventData.SetPatMuon2SumPtR05(muon2SumPtR05);
+    eventData.SetPatMuon2EmEtR05(muon2EmEtR05);
+    eventData.SetPatMuon2HadEtR05(muon2HadEtR05);  
+
+    eventData.SetPatMuon1relIsoDr03(relIsoFirstMuonDr03);
+    eventData.SetPatMuon2relIsoDr03(relIsoSecondMuonDr03);
+    eventData.SetPatMuon1relIsoDr05(relIsoFirstMuonDr05);
+    eventData.SetPatMuon2relIsoDr05(relIsoSecondMuonDr05);
+
+    eventData.SetPatMuon1relIso(relIsoFirstMuon);
+    eventData.SetPatMuon2relIso(relIsoSecondMuon);
 
     if (debug){
       std::cout<<"Muon1 -> 0.3 Radion Rel Iso: "<<relIsoFirstMuonDr03<<" sumPt "<<muon1SumPtR03<<" emEt "<<muon1EmEtR03<<" hadEt "<<muon1HadEtR03<<std::endl;
@@ -1369,20 +1405,26 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
 
     }
 
-    double electron1Pt=electron1->pt();
-    double electron1Charge=electron1->charge();
-    double electron1Phi=electron1->phi();
-    double electron1Eta=electron1->eta();
-
-    double electron2Pt=electron2->pt();
-    double electron2Charge=electron2->charge();
-    double electron2Phi=electron2->phi();
-    double electron2Eta=electron2->eta();
-
     relIsoFirstElectronDr03 = (electron1->dr03TkSumPt()+electron1->dr03EcalRecHitSumEt()+electron1->dr03HcalTowerSumEt())/electron1->et();
     relIsoFirstElectronDr04 = (electron1->dr04TkSumPt()+electron1->dr04EcalRecHitSumEt()+electron1->dr04HcalTowerSumEt())/electron1->et();
     relIsoSecondElectronDr03 = (electron2->dr03TkSumPt()+electron2->dr03EcalRecHitSumEt()+electron2->dr03HcalTowerSumEt())/electron2->et();
     relIsoSecondElectronDr04 = (electron2->dr04TkSumPt()+electron2->dr04EcalRecHitSumEt()+electron2->dr04HcalTowerSumEt())/electron2->et();
+
+    // Fill Electron Variables
+    eventData.SetPatElectron1Pt(electron1->pt());
+    eventData.SetPatElectron1Charge(electron1->charge());
+    eventData.SetPatElectron1Phi(electron1->phi());
+    eventData.SetPatElectron1Eta(electron1->eta());
+
+    eventData.SetPatElectron2Pt(electron2->pt());
+    eventData.SetPatElectron2Charge(electron2->charge());
+    eventData.SetPatElectron2Phi(electron2->phi());
+    eventData.SetPatElectron2Eta(electron2->eta());
+
+    eventData.SetPatElectron1relIsoDr03(relIsoFirstElectronDr03);
+    eventData.SetPatElectron1relIsoDr04(relIsoFirstElectronDr04);
+    eventData.SetPatElectron2relIsoDr03(relIsoSecondElectronDr03);
+    eventData.SetPatElectron2relIsoDr04(relIsoSecondElectronDr04);
 
     if (debug) {
       std::cout << "electron1 -> dr03 TK: " << electron1->dr03TkSumPt() << "| dr03 Ecal: " << electron1->dr03EcalRecHitSumEt() << " | dr03 Hcal: " << electron1->dr03HcalTowerSumEt() << std::endl;
