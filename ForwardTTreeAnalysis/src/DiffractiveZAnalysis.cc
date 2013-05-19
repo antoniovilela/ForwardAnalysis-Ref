@@ -1222,7 +1222,7 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
 
   // Declaring Variables
 
-  bool debug = true;
+  bool debug = false;
 
   double muon1SumPtR03=0.;
   double muon1EmEtR03=0.;
@@ -1334,11 +1334,13 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
     eventData.SetPatMuon1Charge(muon1->charge());
     eventData.SetPatMuon1Phi(muon1->phi());
     eventData.SetPatMuon1Eta(muon1->eta());
+    eventData.SetPatMuon1Et(muon1->et());
 
     eventData.SetPatMuon2Pt(muon2->pt());
     eventData.SetPatMuon2Charge(muon2->charge());
     eventData.SetPatMuon2Phi(muon2->phi());
     eventData.SetPatMuon2Eta(muon2->eta());
+    eventData.SetPatMuon2Et(muon2->et());
 
     eventData.SetPatMuon1SumPtR03(muon1SumPtR03);
     eventData.SetPatMuon1EmEtR03(muon1EmEtR03);
@@ -1375,6 +1377,44 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
     }
 
   }
+
+  else {
+
+    eventData.SetPatMuon1Pt(-999.);
+    eventData.SetPatMuon1Charge(-999);
+    eventData.SetPatMuon1Phi(-999.);
+    eventData.SetPatMuon1Eta(-999.);
+    eventData.SetPatMuon1Et(-999.);
+
+    eventData.SetPatMuon2Pt(-999.);
+    eventData.SetPatMuon2Charge(-999);
+    eventData.SetPatMuon2Phi(-999.);
+    eventData.SetPatMuon2Eta(-999.);
+    eventData.SetPatMuon2Et(-999.);
+
+    eventData.SetPatMuon1SumPtR03(-999.);
+    eventData.SetPatMuon1EmEtR03(-999.);
+    eventData.SetPatMuon1HadEtR03(-999.);
+    eventData.SetPatMuon1SumPtR05(-999.);
+    eventData.SetPatMuon1EmEtR05(-999.);
+    eventData.SetPatMuon1HadEtR05(-999.);
+
+    eventData.SetPatMuon2SumPtR03(-999.);
+    eventData.SetPatMuon2EmEtR03(-999.);
+    eventData.SetPatMuon2HadEtR03(-999.);
+    eventData.SetPatMuon2SumPtR05(-999.);
+    eventData.SetPatMuon2EmEtR05(-999.);
+    eventData.SetPatMuon2HadEtR05(-999.);
+
+    eventData.SetPatMuon1relIsoDr03(-999.);
+    eventData.SetPatMuon2relIsoDr03(-999.);
+    eventData.SetPatMuon1relIsoDr05(-999.);
+    eventData.SetPatMuon2relIsoDr05(-999.);
+
+    eventData.SetPatMuon1relIso(-999.);
+    eventData.SetPatMuon2relIso(-999.);
+
+  } 
 
   // Read Information of Electron Candidate 
 
@@ -1415,11 +1455,29 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
     eventData.SetPatElectron1Charge(electron1->charge());
     eventData.SetPatElectron1Phi(electron1->phi());
     eventData.SetPatElectron1Eta(electron1->eta());
+    eventData.SetPatElectron1Et(electron1->et());
 
     eventData.SetPatElectron2Pt(electron2->pt());
     eventData.SetPatElectron2Charge(electron2->charge());
     eventData.SetPatElectron2Phi(electron2->phi());
     eventData.SetPatElectron2Eta(electron2->eta());
+    eventData.SetPatElectron2Et(electron2->et());
+
+    eventData.SetPatElectron1TkDr03(electron1->dr03TkSumPt());
+    eventData.SetPatElectron1EcalDr03(electron1->dr03EcalRecHitSumEt());
+    eventData.SetPatElectron1HcalDr03(electron1->dr03HcalTowerSumEt());
+
+    eventData.SetPatElectron2TkDr03(electron2->dr03TkSumPt());
+    eventData.SetPatElectron2EcalDr03(electron2->dr03EcalRecHitSumEt());
+    eventData.SetPatElectron2HcalDr03(electron2->dr03HcalTowerSumEt());
+
+    eventData.SetPatElectron1TkDr04(electron1->dr04TkSumPt());
+    eventData.SetPatElectron1EcalDr04(electron1->dr04EcalRecHitSumEt());
+    eventData.SetPatElectron1HcalDr04(electron1->dr04HcalTowerSumEt());
+
+    eventData.SetPatElectron2TkDr04(electron2->dr04TkSumPt());
+    eventData.SetPatElectron2EcalDr04(electron2->dr04EcalRecHitSumEt());
+    eventData.SetPatElectron2HcalDr04(electron2->dr04HcalTowerSumEt());
 
     eventData.SetPatElectron1relIsoDr03(relIsoFirstElectronDr03);
     eventData.SetPatElectron1relIsoDr04(relIsoFirstElectronDr04);
@@ -1438,5 +1496,40 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
     }
 
   }
+  else{
+    eventData.SetPatElectron1Pt(-999.);
+    eventData.SetPatElectron1Charge(-999);
+    eventData.SetPatElectron1Phi(-999.);
+    eventData.SetPatElectron1Eta(-999.);
+    eventData.SetPatElectron1Et(-999.);
+
+    eventData.SetPatElectron2Pt(-999.);
+    eventData.SetPatElectron2Charge(-999);
+    eventData.SetPatElectron2Phi(-999.);
+    eventData.SetPatElectron2Eta(-999.);
+    eventData.SetPatElectron2Et(-999.);
+
+    eventData.SetPatElectron1TkDr03(-999.);
+    eventData.SetPatElectron1EcalDr03(-999.);
+    eventData.SetPatElectron1HcalDr03(-999.);
+
+    eventData.SetPatElectron2TkDr03(-999.);
+    eventData.SetPatElectron2EcalDr03(-999.);
+    eventData.SetPatElectron2HcalDr03(-999.);
+
+    eventData.SetPatElectron1TkDr04(-999.);
+    eventData.SetPatElectron1EcalDr04(-999.);
+    eventData.SetPatElectron1HcalDr04(-999.);
+
+    eventData.SetPatElectron2TkDr04(-999.);
+    eventData.SetPatElectron2EcalDr04(-999.);
+    eventData.SetPatElectron2HcalDr04(-999.);
+
+    eventData.SetPatElectron1relIsoDr03(-999.);
+    eventData.SetPatElectron1relIsoDr04(-999.);
+    eventData.SetPatElectron2relIsoDr03(-999.);
+    eventData.SetPatElectron2relIsoDr04(-999.);
+  }
+
 
 }
