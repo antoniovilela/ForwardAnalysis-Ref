@@ -521,7 +521,7 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
 	m_hVector_vertexvslumi[1].at(indexV)->Fill(eventdiff->GetNVertex(),eventinfo->GetInstLumiBunch(),mcweight);
 
 	//Step2
-	if (!switchPreSel || (switchPreSel && (eventdiffZ->GetLeadingElectronPt() > lepton1pt && eventdiffZ->GetSecondElectronPt() > lepton2pt) )) {
+	if (!switchPreSel || (switchPreSel && (eventdiffZ->GetLeadingMuonPt() > lepton1pt && eventdiffZ->GetSecondMuonPt() > lepton2pt) )) {
 	  m_hVector_DiElectron[2].at(indexV)->Fill(eventdiffZ->GetDiElectronMass(),mcweight);
 	  m_hVector_LeadingElectronPt[2].at(indexV)->Fill(eventdiffZ->GetLeadingElectronPt(),mcweight);
 	  m_hVector_LeadingElectronEta[2].at(indexV)->Fill(eventdiffZ->GetLeadingElectronEta(),mcweight);
@@ -605,7 +605,7 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
 	    m_hVector_vertexvslumi[3].at(indexV)->Fill(eventdiff->GetNVertex(),eventinfo->GetInstLumiBunch(),mcweight);
 
 	    // Step4
-	    if((eventdiffZ->GetLeadingElectronCharge()*eventdiffZ->GetSecondElectronCharge()==-1)){
+	    if((eventdiffZ->GetLeadingMuonCharge()*eventdiffZ->GetSecondMuonCharge()==-1)){
 	      m_hVector_DiElectron[4].at(indexV)->Fill(eventdiffZ->GetDiElectronMass(),mcweight);
 	      m_hVector_LeadingElectronPt[4].at(indexV)->Fill(eventdiffZ->GetLeadingElectronPt(),mcweight);
 	      m_hVector_LeadingElectronEta[4].at(indexV)->Fill(eventdiffZ->GetLeadingElectronEta(),mcweight);
@@ -648,7 +648,7 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
 
 
 	      // Step5
-	      if( eventdiffZ->GetDiElectronMass() > 60. && eventdiffZ->GetDiElectronMass() < 110. ){
+	      if( eventdiffZ->GetDiMuonMass() > 60. && eventdiffZ->GetDiMuonMass() < 110. ){
 		m_hVector_DiElectron[5].at(indexV)->Fill(eventdiffZ->GetDiElectronMass(),mcweight);
 		m_hVector_LeadingElectronPt[5].at(indexV)->Fill(eventdiffZ->GetLeadingElectronPt(),mcweight);
 		m_hVector_LeadingElectronEta[5].at(indexV)->Fill(eventdiffZ->GetLeadingElectronEta(),mcweight);
@@ -690,7 +690,7 @@ void DiffractiveZComp::Run(std::string filein_, std::string ttreename_, std::str
 		m_hVector_vertexvslumi[5].at(indexV)->Fill(eventdiff->GetNVertex(),eventinfo->GetInstLumiBunch(),mcweight);
 
 		// Step6
-		if(eventdiffZ->GetElectronsN() == 2){
+		if(eventdiffZ->GetMuonsN() == 2){
 		  m_hVector_DiElectron[6].at(indexV)->Fill(eventdiffZ->GetDiElectronMass(),mcweight);
 		  m_hVector_LeadingElectronPt[6].at(indexV)->Fill(eventdiffZ->GetLeadingElectronPt(),mcweight);
 		  m_hVector_LeadingElectronEta[6].at(indexV)->Fill(eventdiffZ->GetLeadingElectronEta(),mcweight);

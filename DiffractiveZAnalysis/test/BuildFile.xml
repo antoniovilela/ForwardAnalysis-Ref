@@ -1,5 +1,5 @@
 <flags CXXFLAGS="-g -O0"/>
-<bin   file="DiffractiveZExclusive.cc" name="DiffractiveZExclusive">
+<bin   file="DiffractiveZ.cc" name="DiffractiveZ">
   <use   name="root"/>
   <use   name="rootcore"/>
   <use   name="FWCore/FWLite"/>
