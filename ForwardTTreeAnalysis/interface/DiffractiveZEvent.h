@@ -181,6 +181,8 @@ class DiffractiveZEvent {
     void SetPatMuon1relIso(double fpatMuon1relIso)    {patMuon1relIso_ = fpatMuon1relIso;}
     void SetPatMuon2relIso(double fpatMuon2relIso)    {patMuon2relIso_ = fpatMuon2relIso;}
 
+    void SetPatDiMuonMass(double fpatDiMuonMass) { patDiMuonMass_ = fpatDiMuonMass;}
+
     void SetPatElectron1Pt(double fpatElectron1Pt)    {patElectron1Pt_ = fpatElectron1Pt;}
     void SetPatElectron1Charge(int fpatElectron1Charge)    {patElectron1Charge_ = fpatElectron1Charge;}
     void SetPatElectron1Phi(double fpatElectron1Phi)    {patElectron1Phi_ = fpatElectron1Phi;}
@@ -211,6 +213,8 @@ class DiffractiveZEvent {
     void SetPatElectron1relIsoDr04(double fpatElectron1relIsoDr04)    {patElectron1relIsoDr04_ = fpatElectron1relIsoDr04;}
     void SetPatElectron2relIsoDr03(double fpatElectron2relIsoDr03)    {patElectron2relIsoDr03_ = fpatElectron2relIsoDr03;}
     void SetPatElectron2relIsoDr04(double fpatElectron2relIsoDr04)    {patElectron2relIsoDr04_ = fpatElectron2relIsoDr04;}
+
+    void SetPatDiElectronMass(double fpatDiElectronMass) { patDiElectronMass_ = fpatDiElectronMass;}
 
     int GetHLTPath(int idx)                    const { return hltTrigResults_[idx]; }
     double GetDiElectronMass() const {return DiElectronMass_;}
@@ -374,6 +378,8 @@ class DiffractiveZEvent {
     double GetPatMuon1relIso() const {return patMuon1relIso_;}
     double GetPatMuon2relIso() const {return patMuon2relIso_;}
 
+    double GetPatDiMuonMass() const {return patDiMuonMass_;}
+
     double GetPatElectron1Pt() const {return patElectron1Pt_;}
     int GetPatElectron1Charge() const {return patElectron1Charge_;}
     double GetPatElectron1Phi() const {return patElectron1Phi_;}
@@ -404,6 +410,8 @@ class DiffractiveZEvent {
     double GetPatElectron1relIsoDr04() const {return patElectron1relIsoDr04_;}
     double GetPatElectron2relIsoDr03() const {return patElectron2relIsoDr03_;}
     double GetPatElectron2relIsoDr04() const {return patElectron2relIsoDr04_;}
+
+    double GetPatDiElectronMass() const {return patDiElectronMass_;}
 
   private:
     friend class diffractiveZAnalysis::DiffractiveZAnalysis;
@@ -565,6 +573,8 @@ class DiffractiveZEvent {
     double patMuon1relIso_;
     double patMuon2relIso_;
 
+    double patDiMuonMass_;
+
     double patElectron1Pt_;
     int patElectron1Charge_;
     double patElectron1Phi_;
@@ -595,6 +605,8 @@ class DiffractiveZEvent {
     double patElectron1relIsoDr04_;
     double patElectron2relIsoDr03_;
     double patElectron2relIsoDr04_;
+
+    double patDiElectronMass_;
 
 };
 

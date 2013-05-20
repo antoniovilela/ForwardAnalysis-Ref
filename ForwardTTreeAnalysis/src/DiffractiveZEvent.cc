@@ -161,6 +161,8 @@ patMuon2relIsoDr05_=-999.;
 patMuon1relIso_=-999.;
 patMuon2relIso_=-999.;
 
+patDiMuonMass_ = -999.;
+
 patElectron1Pt_=-999.;
 patElectron1Charge_=-999;
 patElectron1Phi_=-999.;
@@ -191,5 +193,8 @@ patElectron1relIsoDr03_=-999.;
 patElectron2relIsoDr04_=-999.;
 patElectron1relIsoDr03_=-999.;
 patElectron2relIsoDr04_=-999.;
+
+patDiElectronMass_ = -999.;
+
 
 }

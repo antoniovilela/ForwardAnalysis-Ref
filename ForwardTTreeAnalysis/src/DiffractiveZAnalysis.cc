@@ -1332,6 +1332,11 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
     relIsoFirstMuon = (muon1->trackIso()+muon1->ecalIso()+muon1->hcalIso())/muon1->pt();
     relIsoSecondMuon = (muon2->trackIso()+muon2->ecalIso()+muon2->hcalIso())/muon2->pt();
 
+    // DiMuon Mass
+    math::XYZTLorentzVector DipatMuonSystem(0.,0.,0.,0.);
+    DipatMuonSystem += muon1->p4();
+    DipatMuonSystem += muon2->p4();
+
     eventData.SetPatMuon1Pt(muon1->pt());
     eventData.SetPatMuon1Charge(muon1->charge());
     eventData.SetPatMuon1Phi(muon1->phi());
@@ -1365,6 +1370,9 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
 
     eventData.SetPatMuon1relIso(relIsoFirstMuon);
     eventData.SetPatMuon2relIso(relIsoSecondMuon);
+
+    eventData.SetPatDiMuonMass(DipatMuonSystem.M());
+
 
     if (debug){
       std::cout<<"Muon1 -> 0.3 Radion Rel Iso: "<<relIsoFirstMuonDr03<<" sumPt "<<muon1SumPtR03<<" emEt "<<muon1EmEtR03<<" hadEt "<<muon1HadEtR03<<std::endl;
@@ -1416,6 +1424,8 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
     eventData.SetPatMuon1relIso(-999.);
     eventData.SetPatMuon2relIso(-999.);
 
+    eventData.SetPatDiMuonMass(-999.);
+
   } 
 
   // Read Information of Electron Candidate 
@@ -1452,6 +1462,12 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
     relIsoSecondElectronDr03 = (electron2->dr03TkSumPt()+electron2->dr03EcalRecHitSumEt()+electron2->dr03HcalTowerSumEt())/electron2->et();
     relIsoSecondElectronDr04 = (electron2->dr04TkSumPt()+electron2->dr04EcalRecHitSumEt()+electron2->dr04HcalTowerSumEt())/electron2->et();
 
+    // Dielectron Mass
+    math::XYZTLorentzVector DipatElectronSystem(0.,0.,0.,0.);
+    DipatElectronSystem += electron1->p4();
+    DipatElectronSystem += electron2->p4();
+
+
     // Fill Electron Variables
     eventData.SetPatElectron1Pt(electron1->pt());
     eventData.SetPatElectron1Charge(electron1->charge());
@@ -1485,6 +1501,8 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
     eventData.SetPatElectron1relIsoDr04(relIsoFirstElectronDr04);
     eventData.SetPatElectron2relIsoDr03(relIsoSecondElectronDr03);
     eventData.SetPatElectron2relIsoDr04(relIsoSecondElectronDr04);
+
+    eventData.SetPatDiElectronMass(DipatElectronSystem.M());
 
     if (debug) {
       std::cout << "electron1 -> dr03 TK: " << electron1->dr03TkSumPt() << "| dr03 Ecal: " << electron1->dr03EcalRecHitSumEt() << " | dr03 Hcal: " << electron1->dr03HcalTowerSumEt() << std::endl;
@@ -1531,6 +1549,9 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
     eventData.SetPatElectron1relIsoDr04(-999.);
     eventData.SetPatElectron2relIsoDr03(-999.);
     eventData.SetPatElectron2relIsoDr04(-999.);
+  
+    eventData.SetPatDiElectronMass(-999.);
+
   }
 
 
