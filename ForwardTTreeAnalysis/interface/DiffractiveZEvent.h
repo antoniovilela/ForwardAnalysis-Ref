@@ -147,6 +147,7 @@ class DiffractiveZEvent {
     void SetMultiplicityGapPlusPF(int fMultiplicityGapPlusPF)    { MultiplicityGapPlusPF_ = fMultiplicityGapPlusPF;}
     void SetMultiplicityGapMinusPF(int fMultiplicityGapMinusPF)    { MultiplicityGapMinusPF_ = fMultiplicityGapMinusPF;}
 
+    void SetPatNMuon(int fpatNMuon)    {patNMuon_ = fpatNMuon;}
     void SetPatMuon1Pt(double fpatMuon1Pt)    {patMuon1Pt_ = fpatMuon1Pt;}
     void SetPatMuon1Charge(int fpatMuon1Charge)    {patMuon1Charge_ = fpatMuon1Charge;}
     void SetPatMuon1Phi(double fpatMuon1Phi)    {patMuon1Phi_ = fpatMuon1Phi;}
@@ -183,6 +184,7 @@ class DiffractiveZEvent {
 
     void SetPatDiMuonMass(double fpatDiMuonMass) { patDiMuonMass_ = fpatDiMuonMass;}
 
+    void SetPatNElectron(int fpatNElectron)    {patNElectron_ = fpatNElectron;}
     void SetPatElectron1Pt(double fpatElectron1Pt)    {patElectron1Pt_ = fpatElectron1Pt;}
     void SetPatElectron1Charge(int fpatElectron1Charge)    {patElectron1Charge_ = fpatElectron1Charge;}
     void SetPatElectron1Phi(double fpatElectron1Phi)    {patElectron1Phi_ = fpatElectron1Phi;}
@@ -344,6 +346,7 @@ class DiffractiveZEvent {
     int GetMultiplicityGapPlusPF()    const {return MultiplicityGapPlusPF_;}
     int GetMultiplicityGapMinusPF()    const {return MultiplicityGapMinusPF_;}
 
+    int GetPatNMuon() const {return patNMuon_;}
     double GetPatMuon1Pt() const {return patMuon1Pt_;}
     int GetPatMuon1Charge() const {return patMuon1Charge_;}
     double GetPatMuon1Phi() const {return patMuon1Phi_;}
@@ -380,6 +383,7 @@ class DiffractiveZEvent {
 
     double GetPatDiMuonMass() const {return patDiMuonMass_;}
 
+    int GetPatNElectron() const {return patNElectron_;}
     double GetPatElectron1Pt() const {return patElectron1Pt_;}
     int GetPatElectron1Charge() const {return patElectron1Charge_;}
     double GetPatElectron1Phi() const {return patElectron1Phi_;}
@@ -539,6 +543,8 @@ class DiffractiveZEvent {
     int MultiplicityGapPlusPF_;
     int MultiplicityGapMinusPF_;
 
+    int patNMuon_;
+
     double patMuon1Pt_;
     int patMuon1Charge_;
     double patMuon1Phi_;
@@ -574,6 +580,8 @@ class DiffractiveZEvent {
     double patMuon2relIso_;
 
     double patDiMuonMass_;
+
+    int patNElectron_; 
 
     double patElectron1Pt_;
     int patElectron1Charge_;

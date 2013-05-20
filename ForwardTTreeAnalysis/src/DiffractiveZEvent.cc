@@ -127,6 +127,8 @@ LimMinusGapPF_ = -999.;
 MultiplicityGapPlusPF_ = -999;
 MultiplicityGapMinusPF_ = -999;
 
+patNMuon_ = 0;
+
 patMuon1Pt_=-999.;
 patMuon1Charge_=-999;
 patMuon1Phi_=-999.;
@@ -162,6 +164,8 @@ patMuon1relIso_=-999.;
 patMuon2relIso_=-999.;
 
 patDiMuonMass_ = -999.;
+
+patNElectron_ = 0;
 
 patElectron1Pt_=-999.;
 patElectron1Charge_=-999;
