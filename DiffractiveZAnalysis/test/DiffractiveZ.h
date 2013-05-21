@@ -211,6 +211,25 @@ class DiffractiveZ {
   std::vector<std::vector<TH1F*> > m_hVector_LeadingMuonrelIsoDr05;
   std::vector<std::vector<TH1F*> > m_hVector_SecondMuonrelIsoDr03;
   std::vector<std::vector<TH1F*> > m_hVector_SecondMuonrelIsoDr05;
+
+  std::vector<std::vector<TH1F*> > m_hVector_ratioElectron1Pt;
+  std::vector<std::vector<TH1F*> > m_hVector_ratioElectron1Eta;
+  std::vector<std::vector<TH1F*> > m_hVector_ratioElectron1Phi;
+  std::vector<std::vector<TH1F*> > m_hVector_ratioElectron1Iso;
+  std::vector<std::vector<TH1F*> > m_hVector_ratioMuon1Pt;
+  std::vector<std::vector<TH1F*> > m_hVector_ratioMuon1Eta;
+  std::vector<std::vector<TH1F*> > m_hVector_ratioMuon1Phi;
+  std::vector<std::vector<TH1F*> > m_hVector_ratioMuon1Iso;
+
+  std::vector<std::vector<TH1F*> > m_hVector_ratioElectron2Pt;
+  std::vector<std::vector<TH1F*> > m_hVector_ratioElectron2Eta;
+  std::vector<std::vector<TH1F*> > m_hVector_ratioElectron2Phi;
+  std::vector<std::vector<TH1F*> > m_hVector_ratioElectron2Iso;
+  std::vector<std::vector<TH1F*> > m_hVector_ratioMuon2Pt;
+  std::vector<std::vector<TH1F*> > m_hVector_ratioMuon2Eta;
+  std::vector<std::vector<TH1F*> > m_hVector_ratioMuon2Phi;
+  std::vector<std::vector<TH1F*> > m_hVector_ratioMuon2Iso;
+
   std::vector <std::string> Folders;
 
   public :

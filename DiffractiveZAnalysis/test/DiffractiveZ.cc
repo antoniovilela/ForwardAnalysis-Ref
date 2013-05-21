@@ -93,7 +93,6 @@ void DiffractiveZ::CreateHistos(std::string type){
   std::string step5 = "step4"; 
   std::string step6 = "step5"; 
   std::string step7 = "step6"; 
-  std::string step8 = "step7"; 
 
   Folders.push_back(step0);
   Folders.push_back(step1);
@@ -103,7 +102,6 @@ void DiffractiveZ::CreateHistos(std::string type){
   Folders.push_back(step5);
   Folders.push_back(step6);
   Folders.push_back(step7);
-  Folders.push_back(step8);
 
   int nloop=-999;
 
@@ -244,6 +242,24 @@ void DiffractiveZ::CreateHistos(std::string type){
     m_hVector_LeadingMuonrelIsoDr05.push_back( std::vector<TH1F*>() );
     m_hVector_SecondMuonrelIsoDr03.push_back( std::vector<TH1F*>() );
     m_hVector_SecondMuonrelIsoDr05.push_back( std::vector<TH1F*>() );
+
+    m_hVector_ratioElectron1Pt.push_back( std::vector<TH1F*>() );
+    m_hVector_ratioElectron1Eta.push_back( std::vector<TH1F*>() );
+    m_hVector_ratioElectron1Phi.push_back( std::vector<TH1F*>() );
+    m_hVector_ratioElectron1Iso.push_back( std::vector<TH1F*>() );
+    m_hVector_ratioMuon1Pt.push_back( std::vector<TH1F*>() );
+    m_hVector_ratioMuon1Eta.push_back( std::vector<TH1F*>() );
+    m_hVector_ratioMuon1Phi.push_back( std::vector<TH1F*>() );
+    m_hVector_ratioMuon1Iso.push_back( std::vector<TH1F*>() );
+
+    m_hVector_ratioElectron2Pt.push_back( std::vector<TH1F*>() );
+    m_hVector_ratioElectron2Eta.push_back( std::vector<TH1F*>() );
+    m_hVector_ratioElectron2Phi.push_back( std::vector<TH1F*>() );
+    m_hVector_ratioElectron2Iso.push_back( std::vector<TH1F*>() );
+    m_hVector_ratioMuon2Pt.push_back( std::vector<TH1F*>() );
+    m_hVector_ratioMuon2Eta.push_back( std::vector<TH1F*>() );
+    m_hVector_ratioMuon2Phi.push_back( std::vector<TH1F*>() );
+    m_hVector_ratioMuon2Iso.push_back( std::vector<TH1F*>() );
 
     for (int k=0;k<nloop;k++){
 
@@ -899,6 +915,86 @@ void DiffractiveZ::CreateHistos(std::string type){
       TH1F *histo_SecondMuonrelIsoDr05 = new TH1F(name129,"Second Muon: Isolation DR05; # Isolation; [u]", 100.,  0., 1.);
       m_hVector_SecondMuonrelIsoDr05[j].push_back(histo_SecondMuonrelIsoDr05);
 
+      char name130[300];
+      sprintf(name130,"ratioElectron1Pt_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_ratioElectron1Pt = new TH1F(name130,"Ratio Leading Electron pT; Ratio; [u]", 100.,  0., 100.);
+      m_hVector_ratioElectron1Pt[j].push_back(histo_ratioElectron1Pt);
+
+      char name131[300];
+      sprintf(name131,"ratioElectron1Eta_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_ratioElectron1Eta = new TH1F(name131,"Ratio Leading Electron #eta; Ratio; [u]", 100.,  0., 100.);
+      m_hVector_ratioElectron1Eta[j].push_back(histo_ratioElectron1Eta);
+
+      char name132[300];
+      sprintf(name132,"ratioElectron1Phi_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_ratioElectron1Phi = new TH1F(name132,"Ratio Leading Electron #phi; Ratio; [u]", 100.,  0., 100.);
+      m_hVector_ratioElectron1Phi[j].push_back(histo_ratioElectron1Phi);
+
+      char name133[300];
+      sprintf(name133,"ratioElectron1Iso_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_ratioElectron1Iso = new TH1F(name133,"Ratio Leading Electron Isolation; Ratio; [u]", 100.,  0., 100.);
+      m_hVector_ratioElectron1Iso[j].push_back(histo_ratioElectron1Iso);
+
+      char name134[300];
+      sprintf(name134,"ratioElectron2Pt_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_ratioElectron2Pt = new TH1F(name134,"Ratio Second Electron pT; Ratio; [u]", 100.,  0., 100.);
+      m_hVector_ratioElectron2Pt[j].push_back(histo_ratioElectron2Pt);
+
+      char name135[300];
+      sprintf(name135,"ratioElectron2Eta_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_ratioElectron2Eta = new TH1F(name135,"Ratio Second Electron #eta; Ratio; [u]", 100.,  0., 100.);
+      m_hVector_ratioElectron2Eta[j].push_back(histo_ratioElectron2Eta);
+
+      char name136[300];
+      sprintf(name136,"ratioElectron2Phi_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_ratioElectron2Phi = new TH1F(name136,"Ratio Second Electron #phi; Ratio; [u]", 100.,  0., 100.);
+      m_hVector_ratioElectron2Phi[j].push_back(histo_ratioElectron2Phi);
+
+      char name137[300];
+      sprintf(name137,"ratioElectron2Iso_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_ratioElectron2Iso = new TH1F(name137,"Ratio Second Electron Isolation; Ratio; [u]", 100.,  0., 100.);
+      m_hVector_ratioElectron2Iso[j].push_back(histo_ratioElectron2Iso);
+
+      char name138[300];
+      sprintf(name138,"ratioMuon1Pt_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_ratioMuon1Pt = new TH1F(name138,"Ratio Leading Muon pT; Ratio; [u]", 100.,  0., 100.);
+      m_hVector_ratioMuon1Pt[j].push_back(histo_ratioMuon1Pt);
+
+      char name139[300];
+      sprintf(name139,"ratioMuon1Eta_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_ratioMuon1Eta = new TH1F(name139,"Ratio Leading Muon #eta; Ratio; [u]", 100.,  0., 100.);
+      m_hVector_ratioMuon1Eta[j].push_back(histo_ratioMuon1Eta);
+
+      char name140[300];
+      sprintf(name140,"ratioMuon1Phi_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_ratioMuon1Phi = new TH1F(name140,"Ratio Leading Muon #phi; Ratio; [u]", 100.,  0., 100.);
+      m_hVector_ratioMuon1Phi[j].push_back(histo_ratioMuon1Phi);
+
+      char name141[300];
+      sprintf(name141,"ratioMuon1Iso_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_ratioMuon1Iso = new TH1F(name141,"Ratio Leading Muon Isolation; Ratio; [u]", 100.,  0., 100.);
+      m_hVector_ratioMuon1Iso[j].push_back(histo_ratioMuon1Iso);
+
+      char name142[300];
+      sprintf(name142,"ratioMuon2Pt_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_ratioMuon2Pt = new TH1F(name142,"Ratio Second Muon pT; Ratio; [u]", 100.,  0., 100.);
+      m_hVector_ratioMuon2Pt[j].push_back(histo_ratioMuon2Pt);
+
+      char name143[300];
+      sprintf(name143,"ratioMuon2Eta_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_ratioMuon2Eta = new TH1F(name143,"Ratio Second Muon #eta; Ratio; [u]", 100.,  0., 100.);
+      m_hVector_ratioMuon2Eta[j].push_back(histo_ratioMuon2Eta);
+
+      char name144[300];
+      sprintf(name144,"ratioMuon2Phi_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_ratioMuon2Phi = new TH1F(name144,"Ratio Second Muon #phi; Ratio; [u]", 100.,  0., 100.);
+      m_hVector_ratioMuon2Phi[j].push_back(histo_ratioMuon2Phi);
+
+      char name145[300];
+      sprintf(name145,"ratioMuon2Iso_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_ratioMuon2Iso = new TH1F(name145,"Ratio Second Muon Isolation; Ratio; [u]", 100.,  0., 100.);
+      m_hVector_ratioMuon2Iso[j].push_back(histo_ratioMuon2Iso);
+
     }
   }
 }
@@ -1033,6 +1129,22 @@ void DiffractiveZ::FillHistos(int index, int pileup, double totalweight){
   m_hVector_LeadingMuonrelIsoDr05[index].at(pileup)->Fill(eventdiffZ->GetLeadingMuonrelIsoDr05(),totalweight);
   m_hVector_SecondMuonrelIsoDr03[index].at(pileup)->Fill(eventdiffZ->GetSecondMuonrelIsoDr03(),totalweight);
   m_hVector_SecondMuonrelIsoDr05[index].at(pileup)->Fill(eventdiffZ->GetSecondMuonrelIsoDr05(),totalweight);
+  m_hVector_ratioElectron1Pt[index].at(pileup)->Fill(ratioElectron1Pt);
+  m_hVector_ratioElectron1Eta[index].at(pileup)->Fill(ratioElectron1Eta);
+  m_hVector_ratioElectron1Phi[index].at(pileup)->Fill(ratioElectron1Phi);
+  m_hVector_ratioElectron1Iso[index].at(pileup)->Fill(ratioElectron1Iso);
+  m_hVector_ratioMuon1Pt[index].at(pileup)->Fill(ratioMuon1Pt);
+  m_hVector_ratioMuon1Eta[index].at(pileup)->Fill(ratioMuon1Eta);
+  m_hVector_ratioMuon1Phi[index].at(pileup)->Fill(ratioMuon1Phi);
+  m_hVector_ratioMuon1Iso[index].at(pileup)->Fill(ratioMuon1Iso);
+  m_hVector_ratioElectron2Pt[index].at(pileup)->Fill(ratioElectron2Pt);
+  m_hVector_ratioElectron2Eta[index].at(pileup)->Fill(ratioElectron2Eta);
+  m_hVector_ratioElectron2Phi[index].at(pileup)->Fill(ratioElectron2Phi);
+  m_hVector_ratioElectron2Iso[index].at(pileup)->Fill(ratioElectron2Iso);
+  m_hVector_ratioMuon2Pt[index].at(pileup)->Fill(ratioMuon2Pt);
+  m_hVector_ratioMuon2Eta[index].at(pileup)->Fill(ratioMuon2Eta);
+  m_hVector_ratioMuon2Phi[index].at(pileup)->Fill(ratioMuon2Phi);
+  m_hVector_ratioMuon2Iso[index].at(pileup)->Fill(ratioMuon2Iso);
 }
 
 void DiffractiveZ::SaveHistos(std::string type){
@@ -1174,6 +1286,22 @@ void DiffractiveZ::SaveHistos(std::string type){
       m_hVector_LeadingMuonrelIsoDr05[j].at(i)->Write();
       m_hVector_SecondMuonrelIsoDr03[j].at(i)->Write();
       m_hVector_SecondMuonrelIsoDr05[j].at(i)->Write();
+      m_hVector_ratioElectron1Pt[j].at(i)->Write();
+      m_hVector_ratioElectron1Eta[j].at(i)->Write();
+      m_hVector_ratioElectron1Phi[j].at(i)->Write();
+      m_hVector_ratioElectron1Iso[j].at(i)->Write();
+      m_hVector_ratioMuon1Pt[j].at(i)->Write();
+      m_hVector_ratioMuon1Eta[j].at(i)->Write();
+      m_hVector_ratioMuon1Phi[j].at(i)->Write();
+      m_hVector_ratioMuon1Iso[j].at(i)->Write();
+      m_hVector_ratioElectron2Pt[j].at(i)->Write();
+      m_hVector_ratioElectron2Eta[j].at(i)->Write();
+      m_hVector_ratioElectron2Phi[j].at(i)->Write();
+      m_hVector_ratioElectron2Iso[j].at(i)->Write();
+      m_hVector_ratioMuon2Pt[j].at(i)->Write();
+      m_hVector_ratioMuon2Eta[j].at(i)->Write();
+      m_hVector_ratioMuon2Phi[j].at(i)->Write();
+      m_hVector_ratioMuon2Iso[j].at(i)->Write();
     }
   }
 
@@ -1198,6 +1326,8 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
   lepton1pt = lepton1pt_;
   lepton2pt = lepton2pt_;
   typesel = typesel_;
+
+  std::string selStatus;
 
   TFile check1(filein.c_str());
 
@@ -1239,13 +1369,13 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
   int pileup = -999;
   int triggercounter[20]={0};
 
-  double aSumE = -999.;
-  double deltaphielectrons = -999.;
-  double deltaphimuons = -999.;
-  double deltaetaelectrons = -999;
-  double deltaetamuons = -999;
-  double deltapTelectrons = -999;
-  double deltapTmuons = -999;   
+  aSumE = -999.;
+  deltaphielectrons = -999.;
+  deltaphimuons = -999.;
+  deltaetaelectrons = -999;
+  deltaetamuons = -999;
+  deltapTelectrons = -999;
+  deltapTmuons = -999;   
 
   TH1::SetDefaultSumw2(true);
   TH2::SetDefaultSumw2(true);
@@ -1354,7 +1484,7 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
     bool charge = false;
     bool dimass = false;
     bool nSel = false;
-    std::string selStatus;
+    bool isolation = false;
 
     if (eventdiffZ->GetHLTPath(optTrigger)) trigger = true;
     if (eventdiff->GetNVertex() > 0 && eventdiff->GetNVertex()<= nVertex) vertex = true;
@@ -1365,7 +1495,8 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
       if (eventdiffZ->GetLeadingElectronPt() > lepton1pt && eventdiffZ->GetSecondElectronPt() > lepton2pt) presel = true;
       if (eventdiffZ->GetLeadingElectronCharge()*eventdiffZ->GetSecondElectronCharge()==-1) charge = true;
       if (eventdiffZ->GetDiElectronMass() > 60. && eventdiffZ->GetDiElectronMass() < 110.) dimass = true;
-      if (eventdiffZ->GetElectronsN() == 2) nSel = true; 
+      if (eventdiffZ->GetElectronsN() == 2) nSel = true;
+      if (eventdiffZ->GetLeadingElectronrelIsoDr03() < 0.05 || eventdiffZ->GetSecondElectronrelIsoDr03() < 0.05 ) isolation = true;
     }
 
     else if (typesel == "RecoMuon"){
@@ -1374,6 +1505,7 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
       if (eventdiffZ->GetLeadingMuonCharge()*eventdiffZ->GetSecondMuonCharge()==-1) charge = true;
       if (eventdiffZ->GetDiMuonMass() > 60. && eventdiffZ->GetDiMuonMass() < 110.) dimass = true;
       if (eventdiffZ->GetMuonsN() == 2) nSel = true;
+      if (eventdiffZ->GetLeadingMuonrelIsoDr03() < 0.05 || eventdiffZ->GetSecondMuonrelIsoDr03() < 0.05 ) isolation = true;
     }
 
     else if (typesel == "PatElectron"){
@@ -1382,6 +1514,7 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
       if (eventdiffZ->GetPatElectron1Charge()*eventdiffZ->GetPatElectron2Charge()==-1) charge = true;
       if (eventdiffZ->GetPatDiElectronMass() > 60. && eventdiffZ->GetPatDiElectronMass() < 110.) dimass = true;
       if (eventdiffZ->GetPatNElectron() == 2) nSel = true;
+      if (eventdiffZ->GetPatElectron1relIsoDr03() < 0.05 || eventdiffZ->GetPatElectron2relIsoDr03() < 0.05 ) isolation = true;
     }
 
     else if(typesel == "PatMuon"){
@@ -1390,6 +1523,7 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
       if (eventdiffZ->GetPatMuon1Charge()*eventdiffZ->GetPatMuon2Charge()==-1) charge = true;
       if (eventdiffZ->GetPatDiMuonMass() > 60. && eventdiffZ->GetPatDiMuonMass() < 110.) dimass = true;
       if (eventdiffZ->GetPatNMuon() == 2) nSel = true; 
+      if (eventdiffZ->GetPatMuon1relIsoDr03() < 0.05 || eventdiffZ->GetPatMuon2relIsoDr03() < 0.05 ) isolation = true;
     }
 
     else{
@@ -1402,22 +1536,33 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
 
       if(switchtrigger == "trigger"){ 
 	FillHistos(0,pileup,totalcommon); 
-	if(trigger) {
-	  FillHistos(1,pileup,totalcommon);
+	if(trigger) FillHistos(1,pileup,totalcommon);
+	if(trigger && vertex && presel) FillHistos(2,pileup,totalcommon);
+	if(trigger && vertex && presel && nSel) FillHistos(3,pileup,totalcommon);
+	if(trigger && vertex && presel && nSel && charge) FillHistos(4,pileup,totalcommon);
+	if(trigger && vertex && presel && nSel && charge && dimass) FillHistos(5,pileup,totalcommon);
+	if(trigger && vertex && presel && nSel && charge && dimass && diffsel) FillHistos(6,pileup,totalcommon);
+	if(trigger && vertex && presel && nSel && charge && dimass && diffsel && isolation){
+	  FillHistos(7,pileup,totalcommon);
 	  outstring << eventdiff->GetRunNumber() << ":" << eventdiff->GetLumiSection() << ":" << eventdiff->GetEventNumber() << std::endl;
 	}
       }
 
       else if (switchtrigger =="no_trigger"){
 	FillHistos(0,pileup,totalcommon);
-	if(presel) FillHistos(2,pileup,totalcommon);
+	if(vertex && presel) FillHistos(2,pileup,totalcommon);
+	if(vertex && presel && nSel) FillHistos(3,pileup,totalcommon);
+	if(vertex && presel && nSel && charge) FillHistos(4,pileup,totalcommon);
+	if(vertex && presel && nSel && charge && dimass) FillHistos(5,pileup,totalcommon);
+	if(vertex && presel && nSel && charge && dimass && diffsel) FillHistos(6,pileup,totalcommon);
+	if(vertex && presel && nSel && charge && dimass && diffsel && isolation) FillHistos(7,pileup,totalcommon);
       }
 
       else {
 	exit(EXIT_FAILURE);
       }
     }  
- 
+
   }
 
   outstring << "" << std::endl;
