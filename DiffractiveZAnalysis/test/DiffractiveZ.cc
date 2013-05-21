@@ -158,6 +158,65 @@ void DiffractiveZ::CreateHistos(std::string type){
     m_hVector_deltaetamuons.push_back( std::vector<TH1D*>() );
     m_hVector_vertexvslumi.push_back( std::vector<TH2F*>() );
 
+    m_hVector_patNElectron.push_back( std::vector<TH1F*>() );
+    m_hVector_patElectron1Pt.push_back( std::vector<TH1F*>() );
+    m_hVector_patElectron1Eta.push_back( std::vector<TH1F*>() );
+    m_hVector_patElectron1Phi.push_back( std::vector<TH1F*>() );
+    m_hVector_patElectron1Charge.push_back( std::vector<TH1D*>() );
+    m_hVector_patElectron1Et.push_back( std::vector<TH1F*>() );
+    m_hVector_patNMuon.push_back( std::vector<TH1F*>() );
+    m_hVector_patMuon1Pt.push_back( std::vector<TH1F*>() );
+    m_hVector_patMuon1Eta.push_back( std::vector<TH1F*>() );
+    m_hVector_patMuon1Phi.push_back( std::vector<TH1F*>() );
+    m_hVector_patMuon1Charge.push_back( std::vector<TH1D*>() );
+    m_hVector_patMuon1Et.push_back( std::vector<TH1F*>() );
+    m_hVector_patElectron2Pt.push_back( std::vector<TH1F*>() );
+    m_hVector_patElectron2Eta.push_back( std::vector<TH1F*>() );
+    m_hVector_patElectron2Phi.push_back( std::vector<TH1F*>() );
+    m_hVector_patElectron2Charge.push_back( std::vector<TH1D*>() );
+    m_hVector_patElectron2Et.push_back( std::vector<TH1F*>() );
+    m_hVector_patMuon2Pt.push_back( std::vector<TH1F*>() );
+    m_hVector_patMuon2Eta.push_back( std::vector<TH1F*>() );
+    m_hVector_patMuon2Phi.push_back( std::vector<TH1F*>() );
+    m_hVector_patMuon2Charge.push_back( std::vector<TH1D*>() );
+    m_hVector_patMuon2Et.push_back( std::vector<TH1F*>() );
+    m_hVector_patDiElectronMass.push_back( std::vector<TH1F*>() );
+    m_hVector_patDiMuonMass.push_back( std::vector<TH1F*>() );
+    m_hVector_patElectron1TkDr03.push_back( std::vector<TH1F*>() );
+    m_hVector_patElectron1TkDr04.push_back( std::vector<TH1F*>() );
+    m_hVector_patElectron1EcalDr03.push_back( std::vector<TH1F*>() );
+    m_hVector_patElectron1EcalDr04.push_back( std::vector<TH1F*>() );
+    m_hVector_patElectron1HcalDr03.push_back( std::vector<TH1F*>() );
+    m_hVector_patElectron1HcalDr04.push_back( std::vector<TH1F*>() );
+    m_hVector_patElectron2TkDr03.push_back( std::vector<TH1F*>() );
+    m_hVector_patElectron2TkDr04.push_back( std::vector<TH1F*>() );
+    m_hVector_patElectron2EcalDr03.push_back( std::vector<TH1F*>() );
+    m_hVector_patElectron2EcalDr04.push_back( std::vector<TH1F*>() );
+    m_hVector_patElectron2HcalDr03.push_back( std::vector<TH1F*>() );
+    m_hVector_patElectron2HcalDr04.push_back( std::vector<TH1F*>() );
+    m_hVector_patElectron1relIsoDr03.push_back( std::vector<TH1F*>() );
+    m_hVector_patElectron1relIsoDr04.push_back( std::vector<TH1F*>() );
+    m_hVector_patElectron2relIsoDr03.push_back( std::vector<TH1F*>() );
+    m_hVector_patElectron2relIsoDr04.push_back( std::vector<TH1F*>() );
+    m_hVector_patMuon1SumPtR03.push_back( std::vector<TH1F*>() );
+    m_hVector_patMuon1SumPtR05.push_back( std::vector<TH1F*>() );
+    m_hVector_patMuon1EmEtR03.push_back( std::vector<TH1F*>() );
+    m_hVector_patMuon1EmEtR05.push_back( std::vector<TH1F*>() );
+    m_hVector_patMuon1HadEtR03.push_back( std::vector<TH1F*>() );
+    m_hVector_patMuon1HadEtR05.push_back( std::vector<TH1F*>() );
+    m_hVector_patMuon2SumPtR03.push_back( std::vector<TH1F*>() );
+    m_hVector_patMuon2SumPtR05.push_back( std::vector<TH1F*>() );
+    m_hVector_patMuon2EmEtR03.push_back( std::vector<TH1F*>() );
+    m_hVector_patMuon2EmEtR05.push_back( std::vector<TH1F*>() );
+    m_hVector_patMuon2HadEtR03.push_back( std::vector<TH1F*>() );
+    m_hVector_patMuon2HadEtR05.push_back( std::vector<TH1F*>() );
+    m_hVector_patMuon1relIsoDr03.push_back( std::vector<TH1F*>() );
+    m_hVector_patMuon1relIsoDr05.push_back( std::vector<TH1F*>() );
+    m_hVector_patMuon2relIsoDr03.push_back( std::vector<TH1F*>() );
+    m_hVector_patMuon2relIsoDr05.push_back( std::vector<TH1F*>() );
+    m_hVector_patMuon1relIso.push_back( std::vector<TH1F*>() );
+    m_hVector_patMuon2relIso.push_back( std::vector<TH1F*>() );
+
     for (int k=0;k<nloop;k++){
 
       if (type=="multiple_pileup"){
@@ -562,7 +621,7 @@ void DiffractiveZ::CreateHistos(std::string type){
       TH1F *histo_patElectron2relIsoDr04 = new TH1F(name79,"Second Electron: Isolation DR04; # Isolation; [u]", 100.,  0., 1.);
       m_hVector_patElectron2relIsoDr04[j].push_back(histo_patElectron2relIsoDr04);
 
-     char name80[300];
+      char name80[300];
       sprintf(name80,"patMuon1SumPtR03_%s_%s",tag,Folders.at(j).c_str());
       TH1F *histo_patMuon1SumPtR03 = new TH1F(name80,"Leading Muon: Tracker Isolation DR03; # Isolation; [u]", 100.,  0., 1.);
       m_hVector_patMuon1SumPtR03[j].push_back(histo_patMuon1SumPtR03);
@@ -941,7 +1000,7 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
     if (eventdiffZ->GetPatElectron1Pt() > lepton1pt && eventdiffZ->GetPatElectron2Pt() > lepton2pt) pat_presel_el = true;
     if (eventdiffZ->GetPatElectron1Charge()*eventdiffZ->GetPatElectron2Charge()==-1) pat_charge_el = true;
     if (eventdiffZ->GetPatDiElectronMass() > 60. && eventdiffZ->GetPatDiElectronMass() < 110.) pat_dimass_el = true;
-    if (eventdiffZ->GetPatNElectron() == 2) pat_n_El = true;                                                                             
+    if (eventdiffZ->GetPatNElectron() == 2) pat_n_el = true;                                                                             
     if (eventdiffZ->GetPatMuon1Pt() > lepton1pt && eventdiffZ->GetPatMuon2Pt() > lepton2pt) pat_presel_muon = true;
     if (eventdiffZ->GetPatMuon1Charge()*eventdiffZ->GetPatMuon2Charge()==-1) pat_charge_muon = true;
     if (eventdiffZ->GetPatDiMuonMass() > 60. && eventdiffZ->GetPatDiMuonMass() < 110.) pat_dimass_muon = true;
