@@ -244,8 +244,6 @@ void DiffractiveZ::CreateHistos(std::string type){
     m_hVector_LeadingMuonrelIsoDr05.push_back( std::vector<TH1F*>() );
     m_hVector_SecondMuonrelIsoDr03.push_back( std::vector<TH1F*>() );
     m_hVector_SecondMuonrelIsoDr05.push_back( std::vector<TH1F*>() );
-    m_hVector_LeadingMuonrelIso.push_back( std::vector<TH1F*>() );
-    m_hVector_SecondMuonrelIso.push_back( std::vector<TH1F*>() );
 
     for (int k=0;k<nloop;k++){
 
@@ -901,16 +899,6 @@ void DiffractiveZ::CreateHistos(std::string type){
       TH1F *histo_SecondMuonrelIsoDr05 = new TH1F(name129,"Second Muon: Isolation DR05; # Isolation; [u]", 100.,  0., 1.);
       m_hVector_SecondMuonrelIsoDr05[j].push_back(histo_SecondMuonrelIsoDr05);
 
-      char name130[300];
-      sprintf(name130,"LeadingMuonrelIso_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_LeadingMuonrelIso = new TH1F(name130,"Leading Muon: Isolation; # Isolation; [u]", 100.,  0., 1.);
-      m_hVector_LeadingMuonrelIso[j].push_back(histo_LeadingMuonrelIso);
-
-      char name131[300];
-      sprintf(name131,"SecondMuonrelIso_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_SecondMuonrelIso = new TH1F(name131,"Second Muon: Isolation; # Isolation; [u]", 100.,  0., 1.);
-      m_hVector_SecondMuonrelIso[j].push_back(histo_SecondMuonrelIso);
-
     }
   }
 }
@@ -955,6 +943,96 @@ void DiffractiveZ::FillHistos(int index, int pileup, double totalweight){
   m_hVector_deltapTelectrons[index].at(pileup)->Fill(deltapTelectrons,totalweight);
   m_hVector_deltapTmuons[index].at(pileup)->Fill(deltapTmuons,totalweight);
   m_hVector_vertexvslumi[index].at(pileup)->Fill(eventdiff->GetNVertex(),eventinfo->GetInstLumiBunch(),totalweight);
+  m_hVector_patNElectron[index].at(pileup)->Fill(eventdiffZ->GetPatNElectron(),totalweight);
+  m_hVector_patElectron1Pt[index].at(pileup)->Fill(eventdiffZ->GetPatElectron1Pt(),totalweight);
+  m_hVector_patElectron1Eta[index].at(pileup)->Fill(eventdiffZ->GetPatElectron1Eta(),totalweight);
+  m_hVector_patElectron1Phi[index].at(pileup)->Fill(eventdiffZ->GetPatElectron1Phi(),totalweight);
+  m_hVector_patElectron1Charge[index].at(pileup)->Fill(eventdiffZ->GetPatElectron1Charge(),totalweight);
+  m_hVector_patElectron1Et[index].at(pileup)->Fill(eventdiffZ->GetPatElectron1Et(),totalweight);
+  m_hVector_patNMuon[index].at(pileup)->Fill(eventdiffZ->GetPatNMuon(),totalweight);
+  m_hVector_patMuon1Pt[index].at(pileup)->Fill(eventdiffZ->GetPatMuon1Pt(),totalweight);
+  m_hVector_patMuon1Eta[index].at(pileup)->Fill(eventdiffZ->GetPatMuon1Eta(),totalweight);
+  m_hVector_patMuon1Phi[index].at(pileup)->Fill(eventdiffZ->GetPatMuon1Phi(),totalweight);
+  m_hVector_patMuon1Charge[index].at(pileup)->Fill(eventdiffZ->GetPatMuon1Charge(),totalweight);
+  m_hVector_patMuon1Et[index].at(pileup)->Fill(eventdiffZ->GetPatMuon1Et(),totalweight);
+  m_hVector_patElectron2Pt[index].at(pileup)->Fill(eventdiffZ->GetPatElectron2Pt(),totalweight);
+  m_hVector_patElectron2Eta[index].at(pileup)->Fill(eventdiffZ->GetPatElectron2Eta(),totalweight);
+  m_hVector_patElectron2Phi[index].at(pileup)->Fill(eventdiffZ->GetPatElectron2Phi(),totalweight);
+  m_hVector_patElectron2Charge[index].at(pileup)->Fill(eventdiffZ->GetPatElectron2Charge(),totalweight);
+  m_hVector_patElectron2Et[index].at(pileup)->Fill(eventdiffZ->GetPatElectron2Et(),totalweight);
+  m_hVector_patMuon2Pt[index].at(pileup)->Fill(eventdiffZ->GetPatMuon2Pt(),totalweight);
+  m_hVector_patMuon2Eta[index].at(pileup)->Fill(eventdiffZ->GetPatMuon2Eta(),totalweight);
+  m_hVector_patMuon2Phi[index].at(pileup)->Fill(eventdiffZ->GetPatMuon2Phi(),totalweight);
+  m_hVector_patMuon2Charge[index].at(pileup)->Fill(eventdiffZ->GetPatMuon2Charge(),totalweight);
+  m_hVector_patMuon2Et[index].at(pileup)->Fill(eventdiffZ->GetPatMuon2Et(),totalweight);
+  m_hVector_patDiElectronMass[index].at(pileup)->Fill(eventdiffZ->GetPatDiElectronMass(),totalweight);
+  m_hVector_patDiMuonMass[index].at(pileup)->Fill(eventdiffZ->GetPatDiMuonMass(),totalweight);
+  m_hVector_patElectron1TkDr03[index].at(pileup)->Fill(eventdiffZ->GetPatElectron1TkDr03(),totalweight);
+  m_hVector_patElectron1TkDr04[index].at(pileup)->Fill(eventdiffZ->GetPatElectron1TkDr04(),totalweight);
+  m_hVector_patElectron1EcalDr03[index].at(pileup)->Fill(eventdiffZ->GetPatElectron1EcalDr03(),totalweight);
+  m_hVector_patElectron1EcalDr04[index].at(pileup)->Fill(eventdiffZ->GetPatElectron1EcalDr04(),totalweight);
+  m_hVector_patElectron1HcalDr03[index].at(pileup)->Fill(eventdiffZ->GetPatElectron1HcalDr03(),totalweight);
+  m_hVector_patElectron1HcalDr04[index].at(pileup)->Fill(eventdiffZ->GetPatElectron1HcalDr04(),totalweight);
+  m_hVector_patElectron2TkDr03[index].at(pileup)->Fill(eventdiffZ->GetPatElectron2TkDr03(),totalweight);
+  m_hVector_patElectron2TkDr04[index].at(pileup)->Fill(eventdiffZ->GetPatElectron2TkDr04(),totalweight);
+  m_hVector_patElectron2EcalDr03[index].at(pileup)->Fill(eventdiffZ->GetPatElectron2EcalDr03(),totalweight);
+  m_hVector_patElectron2EcalDr04[index].at(pileup)->Fill(eventdiffZ->GetPatElectron2EcalDr04(),totalweight);
+  m_hVector_patElectron2HcalDr03[index].at(pileup)->Fill(eventdiffZ->GetPatElectron2HcalDr03(),totalweight);
+  m_hVector_patElectron2HcalDr04[index].at(pileup)->Fill(eventdiffZ->GetPatElectron1HcalDr04(),totalweight);
+  m_hVector_patElectron1relIsoDr03[index].at(pileup)->Fill(eventdiffZ->GetPatElectron1relIsoDr03(),totalweight);
+  m_hVector_patElectron1relIsoDr04[index].at(pileup)->Fill(eventdiffZ->GetPatElectron1relIsoDr04(),totalweight);
+  m_hVector_patElectron2relIsoDr03[index].at(pileup)->Fill(eventdiffZ->GetPatElectron2relIsoDr03(),totalweight);
+  m_hVector_patElectron2relIsoDr04[index].at(pileup)->Fill(eventdiffZ->GetPatElectron2relIsoDr04(),totalweight);
+  m_hVector_patMuon1SumPtR03[index].at(pileup)->Fill(eventdiffZ->GetPatMuon1SumPtR03(),totalweight);
+  m_hVector_patMuon1SumPtR05[index].at(pileup)->Fill(eventdiffZ->GetPatMuon1SumPtR05(),totalweight);
+  m_hVector_patMuon1EmEtR03[index].at(pileup)->Fill(eventdiffZ->GetPatMuon1EmEtR03(),totalweight);
+  m_hVector_patMuon1EmEtR05[index].at(pileup)->Fill(eventdiffZ->GetPatMuon1EmEtR05(),totalweight);
+  m_hVector_patMuon1HadEtR03[index].at(pileup)->Fill(eventdiffZ->GetPatMuon1HadEtR03(),totalweight);
+  m_hVector_patMuon1HadEtR05[index].at(pileup)->Fill(eventdiffZ->GetPatMuon1HadEtR05(),totalweight);
+  m_hVector_patMuon2SumPtR03[index].at(pileup)->Fill(eventdiffZ->GetPatMuon2SumPtR03(),totalweight);
+  m_hVector_patMuon2SumPtR05[index].at(pileup)->Fill(eventdiffZ->GetPatMuon2SumPtR05(),totalweight);
+  m_hVector_patMuon2EmEtR03[index].at(pileup)->Fill(eventdiffZ->GetPatMuon2EmEtR03(),totalweight);
+  m_hVector_patMuon2EmEtR05[index].at(pileup)->Fill(eventdiffZ->GetPatMuon2EmEtR05(),totalweight);
+  m_hVector_patMuon2HadEtR03[index].at(pileup)->Fill(eventdiffZ->GetPatMuon2HadEtR03(),totalweight);
+  m_hVector_patMuon2HadEtR05[index].at(pileup)->Fill(eventdiffZ->GetPatMuon2HadEtR05(),totalweight);
+  m_hVector_patMuon1relIsoDr03[index].at(pileup)->Fill(eventdiffZ->GetPatMuon1relIsoDr03(),totalweight);
+  m_hVector_patMuon1relIsoDr05[index].at(pileup)->Fill(eventdiffZ->GetPatMuon1relIsoDr05(),totalweight);
+  m_hVector_patMuon2relIsoDr03[index].at(pileup)->Fill(eventdiffZ->GetPatMuon2relIsoDr03(),totalweight);
+  m_hVector_patMuon2relIsoDr05[index].at(pileup)->Fill(eventdiffZ->GetPatMuon2relIsoDr05(),totalweight);
+  m_hVector_patMuon1relIso[index].at(pileup)->Fill(eventdiffZ->GetPatMuon1relIso(),totalweight);
+  m_hVector_patMuon2relIso[index].at(pileup)->Fill(eventdiffZ->GetPatMuon2relIso(),totalweight);
+  m_hVector_LeadingElectronTkDr03[index].at(pileup)->Fill(eventdiffZ->GetLeadingElectronTkDr03(),totalweight);
+  m_hVector_LeadingElectronTkDr04[index].at(pileup)->Fill(eventdiffZ->GetLeadingElectronTkDr04(),totalweight);
+  m_hVector_LeadingElectronEcalDr03[index].at(pileup)->Fill(eventdiffZ->GetLeadingElectronEcalDr03(),totalweight);
+  m_hVector_LeadingElectronEcalDr04[index].at(pileup)->Fill(eventdiffZ->GetLeadingElectronEcalDr04(),totalweight);
+  m_hVector_LeadingElectronHcalDr03[index].at(pileup)->Fill(eventdiffZ->GetLeadingElectronHcalDr03(),totalweight);
+  m_hVector_LeadingElectronHcalDr04[index].at(pileup)->Fill(eventdiffZ->GetLeadingElectronHcalDr04(),totalweight);
+  m_hVector_SecondElectronTkDr03[index].at(pileup)->Fill(eventdiffZ->GetSecondElectronTkDr03(),totalweight);
+  m_hVector_SecondElectronTkDr04[index].at(pileup)->Fill(eventdiffZ->GetSecondElectronTkDr04(),totalweight);
+  m_hVector_SecondElectronEcalDr03[index].at(pileup)->Fill(eventdiffZ->GetSecondElectronEcalDr03(),totalweight);
+  m_hVector_SecondElectronEcalDr04[index].at(pileup)->Fill(eventdiffZ->GetSecondElectronEcalDr04(),totalweight);
+  m_hVector_SecondElectronHcalDr03[index].at(pileup)->Fill(eventdiffZ->GetSecondElectronHcalDr03(),totalweight);
+  m_hVector_SecondElectronHcalDr04[index].at(pileup)->Fill(eventdiffZ->GetSecondElectronHcalDr04(),totalweight);
+  m_hVector_LeadingElectronrelIsoDr03[index].at(pileup)->Fill(eventdiffZ->GetLeadingElectronrelIsoDr03(),totalweight);
+  m_hVector_LeadingElectronrelIsoDr04[index].at(pileup)->Fill(eventdiffZ->GetLeadingElectronrelIsoDr04(),totalweight);
+  m_hVector_SecondElectronrelIsoDr03[index].at(pileup)->Fill(eventdiffZ->GetSecondElectronrelIsoDr03(),totalweight);
+  m_hVector_SecondElectronrelIsoDr04[index].at(pileup)->Fill(eventdiffZ->GetSecondElectronrelIsoDr04(),totalweight);
+  m_hVector_LeadingMuonSumPtR03[index].at(pileup)->Fill(eventdiffZ->GetLeadingMuonSumPtR03(),totalweight);
+  m_hVector_LeadingMuonSumPtR05[index].at(pileup)->Fill(eventdiffZ->GetLeadingMuonSumPtR05(),totalweight);
+  m_hVector_LeadingMuonEmEtR03[index].at(pileup)->Fill(eventdiffZ->GetLeadingMuonEmEtR03(),totalweight);
+  m_hVector_LeadingMuonEmEtR05[index].at(pileup)->Fill(eventdiffZ->GetLeadingMuonEmEtR05(),totalweight);
+  m_hVector_LeadingMuonHadEtR03[index].at(pileup)->Fill(eventdiffZ->GetLeadingMuonHadEtR03(),totalweight);
+  m_hVector_LeadingMuonHadEtR05[index].at(pileup)->Fill(eventdiffZ->GetLeadingMuonHadEtR05(),totalweight);
+  m_hVector_SecondMuonSumPtR03[index].at(pileup)->Fill(eventdiffZ->GetSecondMuonSumPtR03(),totalweight);
+  m_hVector_SecondMuonSumPtR05[index].at(pileup)->Fill(eventdiffZ->GetSecondMuonSumPtR05(),totalweight);
+  m_hVector_SecondMuonEmEtR03[index].at(pileup)->Fill(eventdiffZ->GetSecondMuonEmEtR03(),totalweight);
+  m_hVector_SecondMuonEmEtR05[index].at(pileup)->Fill(eventdiffZ->GetSecondMuonEmEtR05(),totalweight);
+  m_hVector_SecondMuonHadEtR03[index].at(pileup)->Fill(eventdiffZ->GetSecondMuonHadEtR03(),totalweight);
+  m_hVector_SecondMuonHadEtR05[index].at(pileup)->Fill(eventdiffZ->GetSecondMuonHadEtR05(),totalweight);
+  m_hVector_LeadingMuonrelIsoDr03[index].at(pileup)->Fill(eventdiffZ->GetLeadingMuonrelIsoDr03(),totalweight);
+  m_hVector_LeadingMuonrelIsoDr05[index].at(pileup)->Fill(eventdiffZ->GetLeadingMuonrelIsoDr05(),totalweight);
+  m_hVector_SecondMuonrelIsoDr03[index].at(pileup)->Fill(eventdiffZ->GetSecondMuonrelIsoDr03(),totalweight);
+  m_hVector_SecondMuonrelIsoDr05[index].at(pileup)->Fill(eventdiffZ->GetSecondMuonrelIsoDr05(),totalweight);
 }
 
 void DiffractiveZ::SaveHistos(std::string type){
@@ -1006,13 +1084,102 @@ void DiffractiveZ::SaveHistos(std::string type){
       m_hVector_deltapTelectrons[j].at(i)->Write();
       m_hVector_deltapTmuons[j].at(i)->Write();
       m_hVector_vertexvslumi[j].at(i)->Write();
-
+      m_hVector_patNElectron[j].at(i)->Write();
+      m_hVector_patElectron1Pt[j].at(i)->Write();
+      m_hVector_patElectron1Eta[j].at(i)->Write();
+      m_hVector_patElectron1Phi[j].at(i)->Write();
+      m_hVector_patElectron1Charge[j].at(i)->Write();
+      m_hVector_patElectron1Et[j].at(i)->Write();
+      m_hVector_patNMuon[j].at(i)->Write();
+      m_hVector_patMuon1Pt[j].at(i)->Write();
+      m_hVector_patMuon1Eta[j].at(i)->Write();
+      m_hVector_patMuon1Phi[j].at(i)->Write();
+      m_hVector_patMuon1Charge[j].at(i)->Write();
+      m_hVector_patMuon1Et[j].at(i)->Write();
+      m_hVector_patElectron2Pt[j].at(i)->Write();
+      m_hVector_patElectron2Eta[j].at(i)->Write();
+      m_hVector_patElectron2Phi[j].at(i)->Write();
+      m_hVector_patElectron2Charge[j].at(i)->Write();
+      m_hVector_patElectron2Et[j].at(i)->Write();
+      m_hVector_patMuon2Pt[j].at(i)->Write();
+      m_hVector_patMuon2Eta[j].at(i)->Write();
+      m_hVector_patMuon2Phi[j].at(i)->Write();
+      m_hVector_patMuon2Charge[j].at(i)->Write();
+      m_hVector_patMuon2Et[j].at(i)->Write();
+      m_hVector_patDiElectronMass[j].at(i)->Write();
+      m_hVector_patDiMuonMass[j].at(i)->Write();
+      m_hVector_patElectron1TkDr03[j].at(i)->Write();
+      m_hVector_patElectron1TkDr04[j].at(i)->Write();
+      m_hVector_patElectron1EcalDr03[j].at(i)->Write();
+      m_hVector_patElectron1EcalDr04[j].at(i)->Write();
+      m_hVector_patElectron1HcalDr03[j].at(i)->Write();
+      m_hVector_patElectron1HcalDr04[j].at(i)->Write();
+      m_hVector_patElectron2TkDr03[j].at(i)->Write();
+      m_hVector_patElectron2TkDr04[j].at(i)->Write();
+      m_hVector_patElectron2EcalDr03[j].at(i)->Write();
+      m_hVector_patElectron2EcalDr04[j].at(i)->Write();
+      m_hVector_patElectron2HcalDr03[j].at(i)->Write();
+      m_hVector_patElectron2HcalDr04[j].at(i)->Write();
+      m_hVector_patElectron1relIsoDr03[j].at(i)->Write();
+      m_hVector_patElectron1relIsoDr04[j].at(i)->Write();
+      m_hVector_patElectron2relIsoDr03[j].at(i)->Write();
+      m_hVector_patElectron2relIsoDr04[j].at(i)->Write();
+      m_hVector_patMuon1SumPtR03[j].at(i)->Write();
+      m_hVector_patMuon1SumPtR05[j].at(i)->Write();
+      m_hVector_patMuon1EmEtR03[j].at(i)->Write();
+      m_hVector_patMuon1EmEtR05[j].at(i)->Write();
+      m_hVector_patMuon1HadEtR03[j].at(i)->Write();
+      m_hVector_patMuon1HadEtR05[j].at(i)->Write();
+      m_hVector_patMuon2SumPtR03[j].at(i)->Write();
+      m_hVector_patMuon2SumPtR05[j].at(i)->Write();
+      m_hVector_patMuon2EmEtR03[j].at(i)->Write();
+      m_hVector_patMuon2EmEtR05[j].at(i)->Write();
+      m_hVector_patMuon2HadEtR03[j].at(i)->Write();
+      m_hVector_patMuon2HadEtR05[j].at(i)->Write();
+      m_hVector_patMuon1relIsoDr03[j].at(i)->Write();
+      m_hVector_patMuon1relIsoDr05[j].at(i)->Write();
+      m_hVector_patMuon2relIsoDr03[j].at(i)->Write();
+      m_hVector_patMuon2relIsoDr05[j].at(i)->Write();
+      m_hVector_patMuon1relIso[j].at(i)->Write();
+      m_hVector_patMuon2relIso[j].at(i)->Write();
+      m_hVector_LeadingElectronTkDr03[j].at(i)->Write();
+      m_hVector_LeadingElectronTkDr04[j].at(i)->Write();
+      m_hVector_LeadingElectronEcalDr03[j].at(i)->Write();
+      m_hVector_LeadingElectronEcalDr04[j].at(i)->Write();
+      m_hVector_LeadingElectronHcalDr03[j].at(i)->Write();
+      m_hVector_LeadingElectronHcalDr04[j].at(i)->Write();
+      m_hVector_SecondElectronTkDr03[j].at(i)->Write();
+      m_hVector_SecondElectronTkDr04[j].at(i)->Write();
+      m_hVector_SecondElectronEcalDr03[j].at(i)->Write();
+      m_hVector_SecondElectronEcalDr04[j].at(i)->Write();
+      m_hVector_SecondElectronHcalDr03[j].at(i)->Write();
+      m_hVector_SecondElectronHcalDr04[j].at(i)->Write();
+      m_hVector_LeadingElectronrelIsoDr03[j].at(i)->Write();
+      m_hVector_LeadingElectronrelIsoDr04[j].at(i)->Write();
+      m_hVector_SecondElectronrelIsoDr03[j].at(i)->Write();
+      m_hVector_SecondElectronrelIsoDr04[j].at(i)->Write();
+      m_hVector_LeadingMuonSumPtR03[j].at(i)->Write();
+      m_hVector_LeadingMuonSumPtR05[j].at(i)->Write();
+      m_hVector_LeadingMuonEmEtR03[j].at(i)->Write();
+      m_hVector_LeadingMuonEmEtR05[j].at(i)->Write();
+      m_hVector_LeadingMuonHadEtR03[j].at(i)->Write();
+      m_hVector_LeadingMuonHadEtR05[j].at(i)->Write();
+      m_hVector_SecondMuonSumPtR03[j].at(i)->Write();
+      m_hVector_SecondMuonSumPtR05[j].at(i)->Write();
+      m_hVector_SecondMuonEmEtR03[j].at(i)->Write();
+      m_hVector_SecondMuonEmEtR05[j].at(i)->Write();
+      m_hVector_SecondMuonHadEtR03[j].at(i)->Write();
+      m_hVector_SecondMuonHadEtR05[j].at(i)->Write();
+      m_hVector_LeadingMuonrelIsoDr03[j].at(i)->Write();
+      m_hVector_LeadingMuonrelIsoDr05[j].at(i)->Write();
+      m_hVector_SecondMuonrelIsoDr03[j].at(i)->Write();
+      m_hVector_SecondMuonrelIsoDr05[j].at(i)->Write();
     }
   }
 
 }
 
-void DiffractiveZ::Run(std::string filein_, std::string processname_, std::string savehistofile_, std::string switchtrigger_, int optTrigger_, double lepton1pt_, double lepton2pt_, int nVertex_, std::string type_, std::string switchlumiweight_, float mcweight_){
+void DiffractiveZ::Run(std::string filein_, std::string processname_, std::string savehistofile_, std::string switchtrigger_, int optTrigger_, double lepton1pt_, double lepton2pt_, int nVertex_, std::string type_, std::string switchlumiweight_, float mcweight_, std::string typesel_){
 
   bool debug = false;
 
@@ -1030,6 +1197,7 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
   optTrigger = optTrigger_;
   lepton1pt = lepton1pt_;
   lepton2pt = lepton2pt_;
+  typesel = typesel_;
 
   TFile check1(filein.c_str());
 
@@ -1133,6 +1301,24 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
     deltapTelectrons = eventdiffZ->GetLeadingElectronPt() - eventdiffZ->GetSecondElectronPt();
     deltapTmuons = eventdiffZ->GetLeadingMuonPt() - eventdiffZ->GetSecondMuonPt();
 
+    ratioElectron1Pt = eventdiffZ->GetLeadingElectronPt()/eventdiffZ->GetPatElectron1Pt();
+    ratioElectron1Eta = eventdiffZ->GetLeadingElectronEta()/eventdiffZ->GetPatElectron1Eta();
+    ratioElectron1Phi = eventdiffZ->GetLeadingElectronPhi()/eventdiffZ->GetPatElectron1Phi();
+    ratioElectron1Iso = eventdiffZ->GetLeadingElectronrelIsoDr03()/eventdiffZ->GetPatElectron1relIsoDr03();
+    ratioMuon1Pt = eventdiffZ->GetLeadingMuonPt()/eventdiffZ->GetPatMuon1Pt();
+    ratioMuon1Eta = eventdiffZ->GetLeadingMuonEta()/eventdiffZ->GetPatMuon1Eta();
+    ratioMuon1Phi = eventdiffZ->GetLeadingMuonPhi()/eventdiffZ->GetPatMuon1Phi();
+    ratioMuon1Iso = eventdiffZ->GetLeadingMuonrelIsoDr03()/eventdiffZ->GetPatMuon1relIsoDr03();
+
+    ratioElectron2Pt = eventdiffZ->GetSecondElectronPt()/eventdiffZ->GetPatElectron2Pt();
+    ratioElectron2Eta = eventdiffZ->GetSecondElectronEta()/eventdiffZ->GetPatElectron2Eta();
+    ratioElectron2Phi = eventdiffZ->GetSecondElectronPhi()/eventdiffZ->GetPatElectron2Phi();
+    ratioElectron2Iso = eventdiffZ->GetSecondElectronrelIsoDr03()/eventdiffZ->GetPatElectron2relIsoDr03();
+    ratioMuon2Pt = eventdiffZ->GetSecondMuonPt()/eventdiffZ->GetPatMuon2Pt();
+    ratioMuon2Eta = eventdiffZ->GetSecondMuonEta()/eventdiffZ->GetPatMuon2Eta();
+    ratioMuon2Phi = eventdiffZ->GetSecondMuonPhi()/eventdiffZ->GetPatMuon2Phi();
+    ratioMuon2Iso = eventdiffZ->GetSecondMuonrelIsoDr03()/eventdiffZ->GetPatMuon2relIsoDr03();
+
     float totalcommon = 1.;
     float mclumiweight = 1.;
 
@@ -1164,47 +1350,53 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
     bool vertex = false;
     bool diffsel = false;
 
-    bool presel_el = false;
-    bool charge_el = false;
-    bool dimass_el = false;
-    bool n_el = false;
-
-    bool presel_muon = false;
-    bool charge_muon = false;
-    bool dimass_muon = false;
-    bool n_muon = false;
-
-    bool pat_presel_el = false;
-    bool pat_charge_el = false;
-    bool pat_dimass_el = false;
-    bool pat_n_el = false;
-
-    bool pat_presel_muon = false;
-    bool pat_charge_muon = false;
-    bool pat_dimass_muon = false;
-    bool pat_n_muon = false;
+    bool presel = false;
+    bool charge = false;
+    bool dimass = false;
+    bool nSel = false;
+    std::string selStatus;
 
     if (eventdiffZ->GetHLTPath(optTrigger)) trigger = true;
     if (eventdiff->GetNVertex() > 0 && eventdiff->GetNVertex()<= nVertex) vertex = true;
     if ((eventdiff->GetEtaMaxFromPFCands() < 3.) || (eventdiff->GetEtaMinFromPFCands() > -3.)) diffsel = true;
 
-    if (eventdiffZ->GetLeadingElectronPt() > lepton1pt && eventdiffZ->GetSecondElectronPt() > lepton2pt) presel_el = true;
-    if (eventdiffZ->GetLeadingElectronCharge()*eventdiffZ->GetSecondElectronCharge()==-1) charge_el = true;
-    if (eventdiffZ->GetDiElectronMass() > 60. && eventdiffZ->GetDiElectronMass() < 110.) dimass_el = true;
-    if (eventdiffZ->GetElectronsN() == 2) n_el = true; 
+    if (typesel == "RecoElectron"){
+      selStatus == "Reco::Electron";
+      if (eventdiffZ->GetLeadingElectronPt() > lepton1pt && eventdiffZ->GetSecondElectronPt() > lepton2pt) presel = true;
+      if (eventdiffZ->GetLeadingElectronCharge()*eventdiffZ->GetSecondElectronCharge()==-1) charge = true;
+      if (eventdiffZ->GetDiElectronMass() > 60. && eventdiffZ->GetDiElectronMass() < 110.) dimass = true;
+      if (eventdiffZ->GetElectronsN() == 2) nSel = true; 
+    }
 
-    if (eventdiffZ->GetLeadingMuonPt() > lepton1pt && eventdiffZ->GetSecondMuonPt() > lepton2pt) presel_muon = true;
-    if (eventdiffZ->GetLeadingMuonCharge()*eventdiffZ->GetSecondMuonCharge()==-1) charge_muon = true;
-    if (eventdiffZ->GetDiMuonMass() > 60. && eventdiffZ->GetDiMuonMass() < 110.) dimass_muon = true;
-    if (eventdiffZ->GetMuonsN() == 2) n_muon = true;                                                                             
-    if (eventdiffZ->GetPatElectron1Pt() > lepton1pt && eventdiffZ->GetPatElectron2Pt() > lepton2pt) pat_presel_el = true;
-    if (eventdiffZ->GetPatElectron1Charge()*eventdiffZ->GetPatElectron2Charge()==-1) pat_charge_el = true;
-    if (eventdiffZ->GetPatDiElectronMass() > 60. && eventdiffZ->GetPatDiElectronMass() < 110.) pat_dimass_el = true;
-    if (eventdiffZ->GetPatNElectron() == 2) pat_n_el = true;                                                                             
-    if (eventdiffZ->GetPatMuon1Pt() > lepton1pt && eventdiffZ->GetPatMuon2Pt() > lepton2pt) pat_presel_muon = true;
-    if (eventdiffZ->GetPatMuon1Charge()*eventdiffZ->GetPatMuon2Charge()==-1) pat_charge_muon = true;
-    if (eventdiffZ->GetPatDiMuonMass() > 60. && eventdiffZ->GetPatDiMuonMass() < 110.) pat_dimass_muon = true;
-    if (eventdiffZ->GetPatNMuon() == 2) pat_n_muon = true; 
+    else if (typesel == "RecoMuon"){
+      selStatus == "Reco::Muon";
+      if (eventdiffZ->GetLeadingMuonPt() > lepton1pt && eventdiffZ->GetSecondMuonPt() > lepton2pt) presel = true;
+      if (eventdiffZ->GetLeadingMuonCharge()*eventdiffZ->GetSecondMuonCharge()==-1) charge = true;
+      if (eventdiffZ->GetDiMuonMass() > 60. && eventdiffZ->GetDiMuonMass() < 110.) dimass = true;
+      if (eventdiffZ->GetMuonsN() == 2) nSel = true;
+    }
+
+    else if (typesel == "PatElectron"){
+      selStatus == "Pat::Electron";
+      if (eventdiffZ->GetPatElectron1Pt() > lepton1pt && eventdiffZ->GetPatElectron2Pt() > lepton2pt) presel = true;
+      if (eventdiffZ->GetPatElectron1Charge()*eventdiffZ->GetPatElectron2Charge()==-1) charge = true;
+      if (eventdiffZ->GetPatDiElectronMass() > 60. && eventdiffZ->GetPatDiElectronMass() < 110.) dimass = true;
+      if (eventdiffZ->GetPatNElectron() == 2) nSel = true;
+    }
+
+    else if(typesel == "PatMuon"){
+      selStatus == "Pat::Muon";
+      if (eventdiffZ->GetPatMuon1Pt() > lepton1pt && eventdiffZ->GetPatMuon2Pt() > lepton2pt) presel = true;
+      if (eventdiffZ->GetPatMuon1Charge()*eventdiffZ->GetPatMuon2Charge()==-1) charge = true;
+      if (eventdiffZ->GetPatDiMuonMass() > 60. && eventdiffZ->GetPatDiMuonMass() < 110.) dimass = true;
+      if (eventdiffZ->GetPatNMuon() == 2) nSel = true; 
+    }
+
+    else{
+      exit(EXIT_FAILURE);
+    }
+
+
 
     if(pileup < 21){ // Never comment this line. It is the program defense.
 
@@ -1218,13 +1410,14 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
 
       else if (switchtrigger =="no_trigger"){
 	FillHistos(0,pileup,totalcommon);
-	if(presel_el) FillHistos(2,pileup,totalcommon);
+	if(presel) FillHistos(2,pileup,totalcommon);
       }
 
       else {
 	exit(EXIT_FAILURE);
       }
-    }   
+    }  
+ 
   }
 
   outstring << "" << std::endl;
@@ -1241,6 +1434,7 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
   outstring << ">> Lumi. Weight: " << switchlumiweight << " | Weight: " << mcweight << std::endl;
   outstring << ">> Lepton1(pT) > " << lepton1pt <<std::endl;
   outstring << ">> Lepton2(pT) > " << lepton2pt <<std::endl;
+  outstring << ">> Type of Selection: " << selStatus << std::endl;
   outstring << " " << std::endl;
   outstring << "<< TRIGGER >> " << std::endl;
   outstring << " " << std::endl;
@@ -1275,6 +1469,7 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
 
 #if !defined(__CINT__) || defined(__MAKECINT__)
 #include "FWCore/FWLite/interface/AutoLibraryLoader.h"
+
 int main(int argc, char **argv)
 {
 
@@ -1292,18 +1487,30 @@ int main(int argc, char **argv)
   float mcweight_;
   std::string switchlumiweight_;
   std::string type_;
+  std::string typesel_;
 
-  if (argc > 1 && strcmp(s1,argv[1]) != 0)  filein_ = argv[1];
-  if (argc > 2 && strcmp(s1,argv[2]) != 0)  processname_ = argv[2];
-  if (argc > 3 && strcmp(s1,argv[3]) != 0)  savehistofile_  = argv[3];
-  if (argc > 4 && strcmp(s1,argv[4]) != 0)  switchtrigger_ = argv[4];
-  if (argc > 5 && strcmp(s1,argv[5]) != 0)  optTrigger_   = atoi(argv[5]);
-  if (argc > 6 && strcmp(s1,argv[6]) != 0)  lepton1pt_ = atoi(argv[6]);
-  if (argc > 7 && strcmp(s1,argv[7]) != 0)  lepton2pt_ = atoi(argv[7]);
-  if (argc > 8 && strcmp(s1,argv[8]) != 0)  nVertex_ = atoi(argv[8]);
-  if (argc > 9 && strcmp(s1,argv[9]) != 0)  type_ = argv[9];
+  if (argc > 1 && strcmp(s1,argv[1]) != 0) filein_ = argv[1];
+  if (argc > 2 && strcmp(s1,argv[2]) != 0) processname_ = argv[2];
+  if (argc > 3 && strcmp(s1,argv[3]) != 0) savehistofile_  = argv[3];
+  if (argc > 4 && strcmp(s1,argv[4]) != 0) switchtrigger_ = argv[4];
+  if (argc > 5 && strcmp(s1,argv[5]) != 0) optTrigger_   = atoi(argv[5]);
+  if (argc > 6 && strcmp(s1,argv[6]) != 0) lepton1pt_ = atoi(argv[6]);
+  if (argc > 7 && strcmp(s1,argv[7]) != 0) lepton2pt_ = atoi(argv[7]);
+  if (argc > 8 && strcmp(s1,argv[8]) != 0) nVertex_ = atoi(argv[8]);
+  if (argc > 9 && strcmp(s1,argv[9]) != 0) type_ = argv[9];
   if (argc > 10 && strcmp(s1,argv[10]) != 0) switchlumiweight_ = argv[10];
-  if (argc > 11 && strcmp(s1,argv[11]) != 0)  mcweight_ = atoi(argv[11]);
+  if (argc > 11 && strcmp(s1,argv[11]) != 0) mcweight_ = atoi(argv[11]);
+  if (argc > 12 && strcmp(s1,argv[12]) != 0) typesel_ = argv[12];
+
+  if (typesel_=="RecoMuon" || typesel_=="RecoElectron" || typesel_=="PatElectron" || typesel_=="PatMuon" ) {}
+  else{
+    std::cout << "Please Insert type of Selections: " << std::endl;
+    std::cout << "1) RecoMuon: selections with Reco::Muon." << std::endl;
+    std::cout << "2) RecoElectron: selections with Reco::Electron." << std::endl;
+    std::cout << "3) PatMuon: selections with Pat::Muon." << std::endl;
+    std::cout << "4) PatElectron: selections with Pat::Electron." << std::endl;
+    return 0;
+  }
 
   if (type_=="multiple_pileup" || type_=="no_multiple_pileup") {
 
@@ -1322,7 +1529,7 @@ int main(int argc, char **argv)
 
     DiffractiveZ* diffZRun = new DiffractiveZ();
     diffZRun->CreateHistos(type_);
-    diffZRun->Run(filein_, processname_, savehistofile_, switchtrigger_, optTrigger_, lepton1pt_, lepton2pt_, nVertex_, type_, switchlumiweight_, mcweight_);
+    diffZRun->Run(filein_, processname_, savehistofile_, switchtrigger_, optTrigger_, lepton1pt_, lepton2pt_, nVertex_, type_, switchlumiweight_, mcweight_, typesel_);
     return 0;
   }
 
@@ -1333,4 +1540,5 @@ int main(int argc, char **argv)
     return 0;
   }
 }
+
 #endif

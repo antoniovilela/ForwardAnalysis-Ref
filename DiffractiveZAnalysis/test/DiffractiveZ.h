@@ -44,11 +44,30 @@ class DiffractiveZ {
   double deltapTelectrons;
   double deltapTmuons;
 
+  float ratioElectron1Pt;
+  float ratioElectron1Eta;
+  float ratioElectron1Phi;
+  float ratioElectron1Iso;
+  float ratioMuon1Pt;
+  float ratioMuon1Eta;
+  float ratioMuon1Phi;
+  float ratioMuon1Iso;
+
+  float ratioElectron2Pt;
+  float ratioElectron2Eta;
+  float ratioElectron2Phi;
+  float ratioElectron2Iso;
+  float ratioMuon2Pt;
+  float ratioMuon2Eta;
+  float ratioMuon2Phi;
+  float ratioMuon2Iso;
+
   std::string filein;
   std::string processname;
   std::string savehistofile;
   std::string switchtrigger;
   std::string type;
+  std::string typesel;
   std::string switchlumiweight;
   double mcweight;
   int nVertex;
@@ -192,9 +211,6 @@ class DiffractiveZ {
   std::vector<std::vector<TH1F*> > m_hVector_LeadingMuonrelIsoDr05;
   std::vector<std::vector<TH1F*> > m_hVector_SecondMuonrelIsoDr03;
   std::vector<std::vector<TH1F*> > m_hVector_SecondMuonrelIsoDr05;
-  std::vector<std::vector<TH1F*> > m_hVector_LeadingMuonrelIso;
-  std::vector<std::vector<TH1F*> > m_hVector_SecondMuonrelIso;
-
   std::vector <std::string> Folders;
 
   public :
@@ -203,7 +219,7 @@ class DiffractiveZ {
     inf->Close();
   }
 
-  void Run(std::string, std::string, std::string, std::string, int, double, double, int, std::string, std::string, float);
+  void Run(std::string, std::string, std::string, std::string, int, double, double, int, std::string, std::string, float, std::string);
   void LoadFile(std::string,std::string);
   void CreateHistos(std::string);
   void FillHistos(int, int, double);
