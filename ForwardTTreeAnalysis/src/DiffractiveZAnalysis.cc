@@ -1337,6 +1337,7 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
     DipatMuonSystem += muon1->p4();
     DipatMuonSystem += muon2->p4();
 
+    eventData.SetPatNMuon(muons->size());
     eventData.SetPatMuon1Pt(muon1->pt());
     eventData.SetPatMuon1Charge(muon1->charge());
     eventData.SetPatMuon1Phi(muon1->phi());
@@ -1469,6 +1470,7 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
 
 
     // Fill Electron Variables
+    eventData.SetPatNElectron(electrons->size());
     eventData.SetPatElectron1Pt(electron1->pt());
     eventData.SetPatElectron1Charge(electron1->charge());
     eventData.SetPatElectron1Phi(electron1->phi());
