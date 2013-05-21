@@ -35,6 +35,25 @@ class DiffractiveZEvent {
     void SetSecondElectronCharge(int fSecondElectronCharge)  { SecondElectronCharge_     = fSecondElectronCharge;}
     void SetElectronsN(int fElectronsN)  { ElectronsN_    = fElectronsN;}
 
+    void SetLeadingElectronTkDr03(double fLeadingElectronTkDr03)    {LeadingElectronTkDr03_ = fLeadingElectronTkDr03;}
+    void SetLeadingElectronEcalDr03(double fLeadingElectronEcalDr03)    {LeadingElectronEcalDr03_ = fLeadingElectronEcalDr03;}
+    void SetLeadingElectronHcalDr03(double fLeadingElectronHcalDr03)    {LeadingElectronHcalDr03_ = fLeadingElectronHcalDr03;}
+    void SetSecondElectronTkDr03(double fSecondElectronTkDr03)    {SecondElectronTkDr03_ = fSecondElectronTkDr03;}
+    void SetSecondElectronEcalDr03(double fSecondElectronEcalDr03)    {SecondElectronEcalDr03_ = fSecondElectronEcalDr03;}
+    void SetSecondElectronHcalDr03(double fSecondElectronHcalDr03)    {SecondElectronHcalDr03_ = fSecondElectronHcalDr03;}
+
+    void SetLeadingElectronTkDr04(double fLeadingElectronTkDr04)    {LeadingElectronTkDr04_ = fLeadingElectronTkDr04;}
+    void SetLeadingElectronEcalDr04(double fLeadingElectronEcalDr04)    {LeadingElectronEcalDr04_ = fLeadingElectronEcalDr04;}
+    void SetLeadingElectronHcalDr04(double fLeadingElectronHcalDr04)    {LeadingElectronHcalDr04_ = fLeadingElectronHcalDr04;}
+    void SetSecondElectronTkDr04(double fSecondElectronTkDr04)    {SecondElectronTkDr04_ = fSecondElectronTkDr04;}
+    void SetSecondElectronEcalDr04(double fSecondElectronEcalDr04)    {SecondElectronEcalDr04_ = fSecondElectronEcalDr04;}
+    void SetSecondElectronHcalDr04(double fSecondElectronHcalDr04)    {SecondElectronHcalDr04_ = fSecondElectronHcalDr04;}
+
+    void SetLeadingElectronrelIsoDr03(double fLeadingElectronrelIsoDr03)    {LeadingElectronrelIsoDr03_ = fLeadingElectronrelIsoDr03;}
+    void SetLeadingElectronrelIsoDr04(double fLeadingElectronrelIsoDr04)    {LeadingElectronrelIsoDr04_ = fLeadingElectronrelIsoDr04;}
+    void SetSecondElectronrelIsoDr03(double fSecondElectronrelIsoDr03)    {SecondElectronrelIsoDr03_ = fSecondElectronrelIsoDr03;}
+    void SetSecondElectronrelIsoDr04(double fSecondElectronrelIsoDr04)    {SecondElectronrelIsoDr04_ = fSecondElectronrelIsoDr04;}
+
     void SetLeadingMuonPt(double fLeadingMuonPt)    { LeadingMuonPt_     = fLeadingMuonPt;}
     void SetLeadingMuonEta(double fLeadingMuonEta)  { LeadingMuonEta_     = fLeadingMuonEta;}
     void SetLeadingMuonPhi(double fLeadingMuonPhi)  { LeadingMuonPhi_    = fLeadingMuonPhi;}
@@ -46,6 +65,25 @@ class DiffractiveZEvent {
     void SetSecondMuonP4(LorentzVector fSecondMuonP4)    { SecondMuonP4_     = fSecondMuonP4;}
     void SetSecondMuonCharge(int fSecondMuonCharge)  { SecondMuonCharge_     = fSecondMuonCharge;}
     void SetMuonsN(int fMuonsN)  { MuonsN_    = fMuonsN;}
+
+    void SetLeadingMuonSumPtR03(double fLeadingMuonSumPtR03)    {LeadingMuonSumPtR03_ = fLeadingMuonSumPtR03;}
+    void SetLeadingMuonEmEtR03(double fLeadingMuonEmEtR03)    {LeadingMuonEmEtR03_ = fLeadingMuonEmEtR03;}
+    void SetLeadingMuonHadEtR03(double fLeadingMuonHadEtR03)    {LeadingMuonHadEtR03_ = fLeadingMuonHadEtR03;}
+    void SetLeadingMuonSumPtR05(double fLeadingMuonSumPtR05)    {LeadingMuonSumPtR05_ = fLeadingMuonSumPtR05;}
+    void SetLeadingMuonEmEtR05(double fLeadingMuonEmEtR05)    {LeadingMuonEmEtR05_ = fLeadingMuonEmEtR05;}
+    void SetLeadingMuonHadEtR05(double fLeadingMuonHadEtR05)    {LeadingMuonHadEtR05_ = fLeadingMuonHadEtR05;}
+
+    void SetSecondMuonSumPtR03(double fSecondMuonSumPtR03)    {SecondMuonSumPtR03_ = fSecondMuonSumPtR03;}
+    void SetSecondMuonEmEtR03(double fSecondMuonEmEtR03)    {SecondMuonEmEtR03_ = fSecondMuonEmEtR03;}
+    void SetSecondMuonHadEtR03(double fSecondMuonHadEtR03)    {SecondMuonHadEtR03_ = fSecondMuonHadEtR03;}
+    void SetSecondMuonSumPtR05(double fSecondMuonSumPtR05)    {SecondMuonSumPtR05_ = fSecondMuonSumPtR05;}
+    void SetSecondMuonEmEtR05(double fSecondMuonEmEtR05)    {SecondMuonEmEtR05_ = fSecondMuonEmEtR05;}
+    void SetSecondMuonHadEtR05(double fSecondMuonHadEtR05)    {SecondMuonHadEtR05_ = fSecondMuonHadEtR05;}
+
+    void SetLeadingMuonrelIsoDr03(double fLeadingMuonrelIsoDr03)    {LeadingMuonrelIsoDr03_ = fLeadingMuonrelIsoDr03;}
+    void SetSecondMuonrelIsoDr03(double fSecondMuonrelIsoDr03)    {SecondMuonrelIsoDr03_ = fSecondMuonrelIsoDr03;}
+    void SetLeadingMuonrelIsoDr05(double fLeadingMuonrelIsoDr05)    {LeadingMuonrelIsoDr05_ = fLeadingMuonrelIsoDr05;}
+    void SetSecondMuonrelIsoDr05(double fSecondMuonrelIsoDr05)    {SecondMuonrelIsoDr05_ = fSecondMuonrelIsoDr05;}
 
     void SetVertexMultiplicity(const std::vector<double>& fVertexMultiplicity) { VertexMultiplicity_ = fVertexMultiplicity; }
     void SetVertexChiNorm(const std::vector<double>& fVertexChiNorm) { VertexChiNorm_ = fVertexChiNorm; }
@@ -233,6 +271,24 @@ class DiffractiveZEvent {
     const LorentzVector& GetSecondElectronP4() const {return SecondElectronP4_;}
     int GetSecondElectronCharge() const {return SecondElectronCharge_;}
     int GetElectronsN() const {return ElectronsN_;}
+    double GetLeadingElectronTkDr03() const  {return LeadingElectronTkDr03_;}
+    double GetLeadingElectronEcalDr03() const  {return LeadingElectronEcalDr03_;}
+    double GetLeadingElectronHcalDr03() const  {return LeadingElectronHcalDr03_;}
+    double GetSecondElectronTkDr03() const  {return SecondElectronTkDr03_;}
+    double GetSecondElectronEcalDr03() const  {return SecondElectronEcalDr03_;}
+    double GetSecondElectronHcalDr03() const  {return SecondElectronHcalDr03_;}
+
+    double GetLeadingElectronTkDr04() const  {return LeadingElectronTkDr04_;}
+    double GetLeadingElectronEcalDr04() const  {return LeadingElectronEcalDr04_;}
+    double GetLeadingElectronHcalDr04() const  {return LeadingElectronHcalDr04_;}
+    double GetSecondElectronTkDr04() const  {return SecondElectronTkDr04_;}
+    double GetSecondElectronEcalDr04() const  {return SecondElectronEcalDr04_;}
+    double GetSecondElectronHcalDr04() const  {return SecondElectronHcalDr04_;}
+
+    double GetLeadingElectronrelIsoDr03() const {return LeadingElectronrelIsoDr03_;}
+    double GetLeadingElectronrelIsoDr04() const {return LeadingElectronrelIsoDr04_;}
+    double GetSecondElectronrelIsoDr03() const {return SecondElectronrelIsoDr03_;}
+    double GetSecondElectronrelIsoDr04() const {return SecondElectronrelIsoDr04_;}
 
     double GetLeadingMuonPt() const {return LeadingMuonPt_;}
     double GetLeadingMuonEta() const {return LeadingMuonEta_;}
@@ -245,6 +301,25 @@ class DiffractiveZEvent {
     const LorentzVector& GetSecondMuonP4() const {return SecondMuonP4_;}
     int GetSecondMuonCharge() const {return SecondMuonCharge_;}
     int GetMuonsN() const {return MuonsN_;}
+
+    double GetLeadingMuonSumPtR03() const {return LeadingMuonSumPtR03_;}
+    double GetLeadingMuonEmEtR03() const {return LeadingMuonEmEtR03_;}
+    double GetLeadingMuonHadEtR03() const {return LeadingMuonHadEtR03_;}
+    double GetLeadingMuonSumPtR05() const {return LeadingMuonSumPtR05_;}
+    double GetLeadingMuonEmEtR05() const {return LeadingMuonEmEtR05_;}
+    double GetLeadingMuonHadEtR05() const {return LeadingMuonHadEtR05_;}
+
+    double GetSecondMuonSumPtR03() const {return SecondMuonSumPtR03_;}
+    double GetSecondMuonEmEtR03() const {return SecondMuonEmEtR03_;}
+    double GetSecondMuonHadEtR03() const {return SecondMuonHadEtR03_;}
+    double GetSecondMuonSumPtR05() const {return SecondMuonSumPtR05_;}
+    double GetSecondMuonEmEtR05() const {return SecondMuonEmEtR05_;}
+    double GetSecondMuonHadEtR05() const {return SecondMuonHadEtR05_;}
+
+    double GetLeadingMuonrelIsoDr03() const {return LeadingMuonrelIsoDr03_;}
+    double GetSecondMuonrelIsoDr03() const {return SecondMuonrelIsoDr03_;}
+    double GetLeadingMuonrelIsoDr05() const {return LeadingMuonrelIsoDr05_;}
+    double GetSecondMuonrelIsoDr05() const {return SecondMuonrelIsoDr05_;}
 
     double GetVertexMultiplicity(int i) const { return VertexMultiplicity_[i]; }
     double GetVertexChiNorm(int i) const { return VertexChiNorm_[i]; }
@@ -438,6 +513,25 @@ class DiffractiveZEvent {
     int SecondElectronCharge_;
     int ElectronsN_;
 
+    double LeadingElectronTkDr03_;
+    double LeadingElectronEcalDr03_;
+    double LeadingElectronHcalDr03_;
+    double SecondElectronTkDr03_;
+    double SecondElectronEcalDr03_;
+    double SecondElectronHcalDr03_;
+
+    double LeadingElectronTkDr04_;
+    double LeadingElectronEcalDr04_;
+    double LeadingElectronHcalDr04_;
+    double SecondElectronTkDr04_;
+    double SecondElectronEcalDr04_;
+    double SecondElectronHcalDr04_;
+
+    double LeadingElectronrelIsoDr03_;
+    double LeadingElectronrelIsoDr04_;
+    double SecondElectronrelIsoDr03_;
+    double SecondElectronrelIsoDr04_;
+
     double LeadingMuonPt_;
     double LeadingMuonEta_;
     double LeadingMuonPhi_;
@@ -449,6 +543,25 @@ class DiffractiveZEvent {
     LorentzVector SecondMuonP4_;
     int SecondMuonCharge_;
     int MuonsN_;
+
+    double LeadingMuonSumPtR03_;
+    double LeadingMuonEmEtR03_;
+    double LeadingMuonHadEtR03_;
+    double LeadingMuonSumPtR05_;
+    double LeadingMuonEmEtR05_;
+    double LeadingMuonHadEtR05_;
+
+    double SecondMuonSumPtR03_;
+    double SecondMuonEmEtR03_;
+    double SecondMuonHadEtR03_;
+    double SecondMuonSumPtR05_;
+    double SecondMuonEmEtR05_;
+    double SecondMuonHadEtR05_;
+
+    double LeadingMuonrelIsoDr03_;
+    double SecondMuonrelIsoDr03_;
+    double LeadingMuonrelIsoDr05_;
+    double SecondMuonrelIsoDr05_;
 
     std::vector<double> VertexMultiplicity_;
     std::vector<double> VertexChiNorm_;

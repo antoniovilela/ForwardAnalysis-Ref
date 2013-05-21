@@ -21,7 +21,7 @@ SecondElectronEta_=-999.;
 SecondElectronPhi_=-999.;
 SecondElectronCharge_=-999.;
 DiElectronMass_=-999.;
-ElectronsN_=-999;
+ElectronsN_=0;
 
 LeadingMuonPt_=-999.;
 LeadingMuonEta_=-999.;
@@ -32,7 +32,7 @@ SecondMuonEta_=-999.;
 SecondMuonPhi_=-999.;
 SecondMuonCharge_=-999.;
 DiMuonMass_=-999.;
-MuonsN_=-999;
+MuonsN_=0;
 
 VertexMultiplicity_.clear();
 VertexChiNorm_.clear();
@@ -200,5 +200,42 @@ patElectron2relIsoDr04_=-999.;
 
 patDiElectronMass_ = -999.;
 
+LeadingElectronTkDr03_=-999.;
+LeadingElectronEcalDr03_=-999.;
+LeadingElectronHcalDr03_=-999.;
+SecondElectronTkDr03_=-999.;
+SecondElectronEcalDr03_=-999.;
+SecondElectronHcalDr03_=-999.;
+
+LeadingElectronTkDr04_=-999.;
+LeadingElectronEcalDr04_=-999.;
+LeadingElectronHcalDr04_=-999.;
+SecondElectronTkDr04_=-999.;
+SecondElectronEcalDr04_=-999.;
+SecondElectronHcalDr04_=-999.;
+
+LeadingElectronrelIsoDr03_=-999.;
+SecondElectronrelIsoDr04_=-999.;
+LeadingElectronrelIsoDr03_=-999.;
+SecondElectronrelIsoDr04_=-999.;
+
+LeadingMuonSumPtR03_=-999.;
+LeadingMuonEmEtR03_=-999.;
+LeadingMuonHadEtR03_=-999.;
+LeadingMuonSumPtR05_=-999.;
+LeadingMuonEmEtR05_=-999.;
+LeadingMuonHadEtR05_=-999.;
+
+SecondMuonSumPtR03_=-999.;
+SecondMuonEmEtR03_=-999.;
+SecondMuonHadEtR03_=-999.;
+SecondMuonSumPtR05_=-999.;
+SecondMuonEmEtR05_=-999.;
+SecondMuonHadEtR05_=-999.;
+
+LeadingMuonrelIsoDr03_=-999.;
+SecondMuonrelIsoDr03_=-999.;
+LeadingMuonrelIsoDr05_=-999.;
+SecondMuonrelIsoDr05_=-999.;
 
 }
