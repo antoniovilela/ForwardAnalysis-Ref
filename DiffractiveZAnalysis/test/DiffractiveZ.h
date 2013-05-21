@@ -160,6 +160,41 @@ class DiffractiveZ {
   std::vector<std::vector<TH1F*> > m_hVector_patMuon1relIso;
   std::vector<std::vector<TH1F*> > m_hVector_patMuon2relIso;
 
+  std::vector<std::vector<TH1F*> > m_hVector_LeadingElectronTkDr03;
+  std::vector<std::vector<TH1F*> > m_hVector_LeadingElectronTkDr04;
+  std::vector<std::vector<TH1F*> > m_hVector_LeadingElectronEcalDr03;
+  std::vector<std::vector<TH1F*> > m_hVector_LeadingElectronEcalDr04;
+  std::vector<std::vector<TH1F*> > m_hVector_LeadingElectronHcalDr03;
+  std::vector<std::vector<TH1F*> > m_hVector_LeadingElectronHcalDr04;
+  std::vector<std::vector<TH1F*> > m_hVector_SecondElectronTkDr03;
+  std::vector<std::vector<TH1F*> > m_hVector_SecondElectronTkDr04;
+  std::vector<std::vector<TH1F*> > m_hVector_SecondElectronEcalDr03;
+  std::vector<std::vector<TH1F*> > m_hVector_SecondElectronEcalDr04;
+  std::vector<std::vector<TH1F*> > m_hVector_SecondElectronHcalDr03;
+  std::vector<std::vector<TH1F*> > m_hVector_SecondElectronHcalDr04;
+  std::vector<std::vector<TH1F*> > m_hVector_LeadingElectronrelIsoDr03;
+  std::vector<std::vector<TH1F*> > m_hVector_LeadingElectronrelIsoDr04;
+  std::vector<std::vector<TH1F*> > m_hVector_SecondElectronrelIsoDr03;
+  std::vector<std::vector<TH1F*> > m_hVector_SecondElectronrelIsoDr04;
+  std::vector<std::vector<TH1F*> > m_hVector_LeadingMuonSumPtR03;
+  std::vector<std::vector<TH1F*> > m_hVector_LeadingMuonSumPtR05;
+  std::vector<std::vector<TH1F*> > m_hVector_LeadingMuonEmEtR03;
+  std::vector<std::vector<TH1F*> > m_hVector_LeadingMuonEmEtR05;
+  std::vector<std::vector<TH1F*> > m_hVector_LeadingMuonHadEtR03;
+  std::vector<std::vector<TH1F*> > m_hVector_LeadingMuonHadEtR05;
+  std::vector<std::vector<TH1F*> > m_hVector_SecondMuonSumPtR03;
+  std::vector<std::vector<TH1F*> > m_hVector_SecondMuonSumPtR05;
+  std::vector<std::vector<TH1F*> > m_hVector_SecondMuonEmEtR03;
+  std::vector<std::vector<TH1F*> > m_hVector_SecondMuonEmEtR05;
+  std::vector<std::vector<TH1F*> > m_hVector_SecondMuonHadEtR03;
+  std::vector<std::vector<TH1F*> > m_hVector_SecondMuonHadEtR05;
+  std::vector<std::vector<TH1F*> > m_hVector_LeadingMuonrelIsoDr03;
+  std::vector<std::vector<TH1F*> > m_hVector_LeadingMuonrelIsoDr05;
+  std::vector<std::vector<TH1F*> > m_hVector_SecondMuonrelIsoDr03;
+  std::vector<std::vector<TH1F*> > m_hVector_SecondMuonrelIsoDr05;
+  std::vector<std::vector<TH1F*> > m_hVector_LeadingMuonrelIso;
+  std::vector<std::vector<TH1F*> > m_hVector_SecondMuonrelIso;
+
   std::vector <std::string> Folders;
 
   public :
