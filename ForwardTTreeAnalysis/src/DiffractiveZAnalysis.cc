@@ -111,7 +111,9 @@ void DiffractiveZAnalysis::fill(DiffractiveZEvent& eventData, const edm::Event& 
   fillTriggerInfo(eventData,event,setup);
   fillMuonsInfo(eventData,event,setup);
   fillElectronsInfo(eventData,event,setup);
-  fillTracksInfo(eventData,event,setup); 
+  fillTracksInfo(eventData,event,setup);
+  fillDetectorVariables(eventData,event,setup);
+  fillVariables(eventData,event,setup);
   if (RunMC_) fillGenInfo(eventData,event,setup); 
   if (RunZPat_) fillZPat(eventData,event,setup);
 
@@ -1344,8 +1346,8 @@ void DiffractiveZAnalysis::fillVariables(DiffractiveZEvent& eventData, const edm
     }
   }  // PF loop
 
-  eventData.SetElectronEnergyPF(electronEnergy[0]); // First Electron, Fill Second Electron also. Eta, phi, pT and ISO from PF.
-  eventData.SetMuEnergyPF(muEnergy[0]); // First Muon, Fill Second Muon also. Eta, phi, pT and ISO from PF.
+  eventData.SetElectronEnergyPF(-999.); // First Electron, Fill Second Electron also. Eta, phi, pT and ISO from PF.
+  eventData.SetMuEnergyPF(-999.); // First Muon, Fill Second Muon also. Eta, phi, pT and ISO from PF.
   eventData.SetMultiplicityGapPlusPF(nplus);
   eventData.SetMultiplicityGapMinusPF(nminus);
 
