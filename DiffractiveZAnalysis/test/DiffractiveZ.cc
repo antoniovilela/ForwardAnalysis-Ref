@@ -42,7 +42,7 @@ static inline void loadBar(int x, int n, int r, int w)
   if ( x % (n/r) != 0 ) return;
 
   // Calculuate the correlation of complete-to-incomplete.
-  float correlation = x/(float)n;
+  double correlation = x/(double)n;
   int   c     = correlation * w;
 
   // Show the percentage complete.
@@ -138,8 +138,8 @@ void DiffractiveZ::CreateHistos(std::string type){
     m_hVector_sumEHEminus.push_back( std::vector<TH1D*>() );
     m_hVector_lumi.push_back( std::vector<TH1D*>() );
     m_hVector_asumE.push_back( std::vector<TH1D*>() );
-    m_hVector_multhf.push_back( std::vector<TH2F*>() );
-    m_hVector_etcalos.push_back( std::vector<TH2F*>() );
+    m_hVector_multhf.push_back( std::vector<TH2D*>() );
+    m_hVector_etcalos.push_back( std::vector<TH2D*>() );
     m_hVector_tracks.push_back( std::vector<TH1D*>() );
     m_hVector_pfetamax.push_back( std::vector<TH1D*>() );
     m_hVector_pfetamin.push_back( std::vector<TH1D*>() );
@@ -151,115 +151,115 @@ void DiffractiveZ::CreateHistos(std::string type){
     m_hVector_deltapTmuons.push_back( std::vector<TH1D*>() );
     m_hVector_deltaetaelectrons.push_back( std::vector<TH1D*>() );
     m_hVector_deltaetamuons.push_back( std::vector<TH1D*>() );
-    m_hVector_vertexvslumi.push_back( std::vector<TH2F*>() );
-    m_hVector_patNElectron.push_back( std::vector<TH1F*>() );
-    m_hVector_patElectron1Pt.push_back( std::vector<TH1F*>() );
-    m_hVector_patElectron1Eta.push_back( std::vector<TH1F*>() );
-    m_hVector_patElectron1Phi.push_back( std::vector<TH1F*>() );
+    m_hVector_vertexvslumi.push_back( std::vector<TH2D*>() );
+    m_hVector_patNElectron.push_back( std::vector<TH1D*>() );
+    m_hVector_patElectron1Pt.push_back( std::vector<TH1D*>() );
+    m_hVector_patElectron1Eta.push_back( std::vector<TH1D*>() );
+    m_hVector_patElectron1Phi.push_back( std::vector<TH1D*>() );
     m_hVector_patElectron1Charge.push_back( std::vector<TH1D*>() );
-    m_hVector_patElectron1Et.push_back( std::vector<TH1F*>() );
-    m_hVector_patNMuon.push_back( std::vector<TH1F*>() );
-    m_hVector_patMuon1Pt.push_back( std::vector<TH1F*>() );
-    m_hVector_patMuon1Eta.push_back( std::vector<TH1F*>() );
-    m_hVector_patMuon1Phi.push_back( std::vector<TH1F*>() );
+    m_hVector_patElectron1Et.push_back( std::vector<TH1D*>() );
+    m_hVector_patNMuon.push_back( std::vector<TH1D*>() );
+    m_hVector_patMuon1Pt.push_back( std::vector<TH1D*>() );
+    m_hVector_patMuon1Eta.push_back( std::vector<TH1D*>() );
+    m_hVector_patMuon1Phi.push_back( std::vector<TH1D*>() );
     m_hVector_patMuon1Charge.push_back( std::vector<TH1D*>() );
-    m_hVector_patMuon1Et.push_back( std::vector<TH1F*>() );
-    m_hVector_patElectron2Pt.push_back( std::vector<TH1F*>() );
-    m_hVector_patElectron2Eta.push_back( std::vector<TH1F*>() );
-    m_hVector_patElectron2Phi.push_back( std::vector<TH1F*>() );
+    m_hVector_patMuon1Et.push_back( std::vector<TH1D*>() );
+    m_hVector_patElectron2Pt.push_back( std::vector<TH1D*>() );
+    m_hVector_patElectron2Eta.push_back( std::vector<TH1D*>() );
+    m_hVector_patElectron2Phi.push_back( std::vector<TH1D*>() );
     m_hVector_patElectron2Charge.push_back( std::vector<TH1D*>() );
-    m_hVector_patElectron2Et.push_back( std::vector<TH1F*>() );
-    m_hVector_patMuon2Pt.push_back( std::vector<TH1F*>() );
-    m_hVector_patMuon2Eta.push_back( std::vector<TH1F*>() );
-    m_hVector_patMuon2Phi.push_back( std::vector<TH1F*>() );
+    m_hVector_patElectron2Et.push_back( std::vector<TH1D*>() );
+    m_hVector_patMuon2Pt.push_back( std::vector<TH1D*>() );
+    m_hVector_patMuon2Eta.push_back( std::vector<TH1D*>() );
+    m_hVector_patMuon2Phi.push_back( std::vector<TH1D*>() );
     m_hVector_patMuon2Charge.push_back( std::vector<TH1D*>() );
-    m_hVector_patMuon2Et.push_back( std::vector<TH1F*>() );
-    m_hVector_patDiElectronMass.push_back( std::vector<TH1F*>() );
-    m_hVector_patDiMuonMass.push_back( std::vector<TH1F*>() );
-    m_hVector_patElectron1TkDr03.push_back( std::vector<TH1F*>() );
-    m_hVector_patElectron1TkDr04.push_back( std::vector<TH1F*>() );
-    m_hVector_patElectron1EcalDr03.push_back( std::vector<TH1F*>() );
-    m_hVector_patElectron1EcalDr04.push_back( std::vector<TH1F*>() );
-    m_hVector_patElectron1HcalDr03.push_back( std::vector<TH1F*>() );
-    m_hVector_patElectron1HcalDr04.push_back( std::vector<TH1F*>() );
-    m_hVector_patElectron2TkDr03.push_back( std::vector<TH1F*>() );
-    m_hVector_patElectron2TkDr04.push_back( std::vector<TH1F*>() );
-    m_hVector_patElectron2EcalDr03.push_back( std::vector<TH1F*>() );
-    m_hVector_patElectron2EcalDr04.push_back( std::vector<TH1F*>() );
-    m_hVector_patElectron2HcalDr03.push_back( std::vector<TH1F*>() );
-    m_hVector_patElectron2HcalDr04.push_back( std::vector<TH1F*>() );
-    m_hVector_patElectron1relIsoDr03.push_back( std::vector<TH1F*>() );
-    m_hVector_patElectron1relIsoDr04.push_back( std::vector<TH1F*>() );
-    m_hVector_patElectron2relIsoDr03.push_back( std::vector<TH1F*>() );
-    m_hVector_patElectron2relIsoDr04.push_back( std::vector<TH1F*>() );
-    m_hVector_patMuon1SumPtR03.push_back( std::vector<TH1F*>() );
-    m_hVector_patMuon1SumPtR05.push_back( std::vector<TH1F*>() );
-    m_hVector_patMuon1EmEtR03.push_back( std::vector<TH1F*>() );
-    m_hVector_patMuon1EmEtR05.push_back( std::vector<TH1F*>() );
-    m_hVector_patMuon1HadEtR03.push_back( std::vector<TH1F*>() );
-    m_hVector_patMuon1HadEtR05.push_back( std::vector<TH1F*>() );
-    m_hVector_patMuon2SumPtR03.push_back( std::vector<TH1F*>() );
-    m_hVector_patMuon2SumPtR05.push_back( std::vector<TH1F*>() );
-    m_hVector_patMuon2EmEtR03.push_back( std::vector<TH1F*>() );
-    m_hVector_patMuon2EmEtR05.push_back( std::vector<TH1F*>() );
-    m_hVector_patMuon2HadEtR03.push_back( std::vector<TH1F*>() );
-    m_hVector_patMuon2HadEtR05.push_back( std::vector<TH1F*>() );
-    m_hVector_patMuon1relIsoDr03.push_back( std::vector<TH1F*>() );
-    m_hVector_patMuon1relIsoDr05.push_back( std::vector<TH1F*>() );
-    m_hVector_patMuon2relIsoDr03.push_back( std::vector<TH1F*>() );
-    m_hVector_patMuon2relIsoDr05.push_back( std::vector<TH1F*>() );
-    m_hVector_patMuon1relIso.push_back( std::vector<TH1F*>() );
-    m_hVector_patMuon2relIso.push_back( std::vector<TH1F*>() );
-    m_hVector_LeadingElectronTkDr03.push_back( std::vector<TH1F*>() );
-    m_hVector_LeadingElectronTkDr04.push_back( std::vector<TH1F*>() );
-    m_hVector_LeadingElectronEcalDr03.push_back( std::vector<TH1F*>() );
-    m_hVector_LeadingElectronEcalDr04.push_back( std::vector<TH1F*>() );
-    m_hVector_LeadingElectronHcalDr03.push_back( std::vector<TH1F*>() );
-    m_hVector_LeadingElectronHcalDr04.push_back( std::vector<TH1F*>() );
-    m_hVector_SecondElectronTkDr03.push_back( std::vector<TH1F*>() );
-    m_hVector_SecondElectronTkDr04.push_back( std::vector<TH1F*>() );
-    m_hVector_SecondElectronEcalDr03.push_back( std::vector<TH1F*>() );
-    m_hVector_SecondElectronEcalDr04.push_back( std::vector<TH1F*>() );
-    m_hVector_SecondElectronHcalDr03.push_back( std::vector<TH1F*>() );
-    m_hVector_SecondElectronHcalDr04.push_back( std::vector<TH1F*>() );
-    m_hVector_LeadingElectronrelIsoDr03.push_back( std::vector<TH1F*>() );
-    m_hVector_LeadingElectronrelIsoDr04.push_back( std::vector<TH1F*>() );
-    m_hVector_SecondElectronrelIsoDr03.push_back( std::vector<TH1F*>() );
-    m_hVector_SecondElectronrelIsoDr04.push_back( std::vector<TH1F*>() );
-    m_hVector_LeadingMuonSumPtR03.push_back( std::vector<TH1F*>() );
-    m_hVector_LeadingMuonSumPtR05.push_back( std::vector<TH1F*>() );
-    m_hVector_LeadingMuonEmEtR03.push_back( std::vector<TH1F*>() );
-    m_hVector_LeadingMuonEmEtR05.push_back( std::vector<TH1F*>() );
-    m_hVector_LeadingMuonHadEtR03.push_back( std::vector<TH1F*>() );
-    m_hVector_LeadingMuonHadEtR05.push_back( std::vector<TH1F*>() );
-    m_hVector_SecondMuonSumPtR03.push_back( std::vector<TH1F*>() );
-    m_hVector_SecondMuonSumPtR05.push_back( std::vector<TH1F*>() );
-    m_hVector_SecondMuonEmEtR03.push_back( std::vector<TH1F*>() );
-    m_hVector_SecondMuonEmEtR05.push_back( std::vector<TH1F*>() );
-    m_hVector_SecondMuonHadEtR03.push_back( std::vector<TH1F*>() );
-    m_hVector_SecondMuonHadEtR05.push_back( std::vector<TH1F*>() );
-    m_hVector_LeadingMuonrelIsoDr03.push_back( std::vector<TH1F*>() );
-    m_hVector_LeadingMuonrelIsoDr05.push_back( std::vector<TH1F*>() );
-    m_hVector_SecondMuonrelIsoDr03.push_back( std::vector<TH1F*>() );
-    m_hVector_SecondMuonrelIsoDr05.push_back( std::vector<TH1F*>() );
+    m_hVector_patMuon2Et.push_back( std::vector<TH1D*>() );
+    m_hVector_patDiElectronMass.push_back( std::vector<TH1D*>() );
+    m_hVector_patDiMuonMass.push_back( std::vector<TH1D*>() );
+    m_hVector_patElectron1TkDr03.push_back( std::vector<TH1D*>() );
+    m_hVector_patElectron1TkDr04.push_back( std::vector<TH1D*>() );
+    m_hVector_patElectron1EcalDr03.push_back( std::vector<TH1D*>() );
+    m_hVector_patElectron1EcalDr04.push_back( std::vector<TH1D*>() );
+    m_hVector_patElectron1HcalDr03.push_back( std::vector<TH1D*>() );
+    m_hVector_patElectron1HcalDr04.push_back( std::vector<TH1D*>() );
+    m_hVector_patElectron2TkDr03.push_back( std::vector<TH1D*>() );
+    m_hVector_patElectron2TkDr04.push_back( std::vector<TH1D*>() );
+    m_hVector_patElectron2EcalDr03.push_back( std::vector<TH1D*>() );
+    m_hVector_patElectron2EcalDr04.push_back( std::vector<TH1D*>() );
+    m_hVector_patElectron2HcalDr03.push_back( std::vector<TH1D*>() );
+    m_hVector_patElectron2HcalDr04.push_back( std::vector<TH1D*>() );
+    m_hVector_patElectron1relIsoDr03.push_back( std::vector<TH1D*>() );
+    m_hVector_patElectron1relIsoDr04.push_back( std::vector<TH1D*>() );
+    m_hVector_patElectron2relIsoDr03.push_back( std::vector<TH1D*>() );
+    m_hVector_patElectron2relIsoDr04.push_back( std::vector<TH1D*>() );
+    m_hVector_patMuon1SumPtR03.push_back( std::vector<TH1D*>() );
+    m_hVector_patMuon1SumPtR05.push_back( std::vector<TH1D*>() );
+    m_hVector_patMuon1EmEtR03.push_back( std::vector<TH1D*>() );
+    m_hVector_patMuon1EmEtR05.push_back( std::vector<TH1D*>() );
+    m_hVector_patMuon1HadEtR03.push_back( std::vector<TH1D*>() );
+    m_hVector_patMuon1HadEtR05.push_back( std::vector<TH1D*>() );
+    m_hVector_patMuon2SumPtR03.push_back( std::vector<TH1D*>() );
+    m_hVector_patMuon2SumPtR05.push_back( std::vector<TH1D*>() );
+    m_hVector_patMuon2EmEtR03.push_back( std::vector<TH1D*>() );
+    m_hVector_patMuon2EmEtR05.push_back( std::vector<TH1D*>() );
+    m_hVector_patMuon2HadEtR03.push_back( std::vector<TH1D*>() );
+    m_hVector_patMuon2HadEtR05.push_back( std::vector<TH1D*>() );
+    m_hVector_patMuon1relIsoDr03.push_back( std::vector<TH1D*>() );
+    m_hVector_patMuon1relIsoDr05.push_back( std::vector<TH1D*>() );
+    m_hVector_patMuon2relIsoDr03.push_back( std::vector<TH1D*>() );
+    m_hVector_patMuon2relIsoDr05.push_back( std::vector<TH1D*>() );
+    m_hVector_patMuon1relIso.push_back( std::vector<TH1D*>() );
+    m_hVector_patMuon2relIso.push_back( std::vector<TH1D*>() );
+    m_hVector_LeadingElectronTkDr03.push_back( std::vector<TH1D*>() );
+    m_hVector_LeadingElectronTkDr04.push_back( std::vector<TH1D*>() );
+    m_hVector_LeadingElectronEcalDr03.push_back( std::vector<TH1D*>() );
+    m_hVector_LeadingElectronEcalDr04.push_back( std::vector<TH1D*>() );
+    m_hVector_LeadingElectronHcalDr03.push_back( std::vector<TH1D*>() );
+    m_hVector_LeadingElectronHcalDr04.push_back( std::vector<TH1D*>() );
+    m_hVector_SecondElectronTkDr03.push_back( std::vector<TH1D*>() );
+    m_hVector_SecondElectronTkDr04.push_back( std::vector<TH1D*>() );
+    m_hVector_SecondElectronEcalDr03.push_back( std::vector<TH1D*>() );
+    m_hVector_SecondElectronEcalDr04.push_back( std::vector<TH1D*>() );
+    m_hVector_SecondElectronHcalDr03.push_back( std::vector<TH1D*>() );
+    m_hVector_SecondElectronHcalDr04.push_back( std::vector<TH1D*>() );
+    m_hVector_LeadingElectronrelIsoDr03.push_back( std::vector<TH1D*>() );
+    m_hVector_LeadingElectronrelIsoDr04.push_back( std::vector<TH1D*>() );
+    m_hVector_SecondElectronrelIsoDr03.push_back( std::vector<TH1D*>() );
+    m_hVector_SecondElectronrelIsoDr04.push_back( std::vector<TH1D*>() );
+    m_hVector_LeadingMuonSumPtR03.push_back( std::vector<TH1D*>() );
+    m_hVector_LeadingMuonSumPtR05.push_back( std::vector<TH1D*>() );
+    m_hVector_LeadingMuonEmEtR03.push_back( std::vector<TH1D*>() );
+    m_hVector_LeadingMuonEmEtR05.push_back( std::vector<TH1D*>() );
+    m_hVector_LeadingMuonHadEtR03.push_back( std::vector<TH1D*>() );
+    m_hVector_LeadingMuonHadEtR05.push_back( std::vector<TH1D*>() );
+    m_hVector_SecondMuonSumPtR03.push_back( std::vector<TH1D*>() );
+    m_hVector_SecondMuonSumPtR05.push_back( std::vector<TH1D*>() );
+    m_hVector_SecondMuonEmEtR03.push_back( std::vector<TH1D*>() );
+    m_hVector_SecondMuonEmEtR05.push_back( std::vector<TH1D*>() );
+    m_hVector_SecondMuonHadEtR03.push_back( std::vector<TH1D*>() );
+    m_hVector_SecondMuonHadEtR05.push_back( std::vector<TH1D*>() );
+    m_hVector_LeadingMuonrelIsoDr03.push_back( std::vector<TH1D*>() );
+    m_hVector_LeadingMuonrelIsoDr05.push_back( std::vector<TH1D*>() );
+    m_hVector_SecondMuonrelIsoDr03.push_back( std::vector<TH1D*>() );
+    m_hVector_SecondMuonrelIsoDr05.push_back( std::vector<TH1D*>() );
 
-    m_hVector_correlationElectron1Pt.push_back( std::vector<TH2F*>() );
-    m_hVector_correlationElectron1Eta.push_back( std::vector<TH2F*>() );
-    m_hVector_correlationElectron1Phi.push_back( std::vector<TH2F*>() );
-    m_hVector_correlationElectron1Iso.push_back( std::vector<TH2F*>() );
-    m_hVector_correlationMuon1Pt.push_back( std::vector<TH2F*>() );
-    m_hVector_correlationMuon1Eta.push_back( std::vector<TH2F*>() );
-    m_hVector_correlationMuon1Phi.push_back( std::vector<TH2F*>() );
-    m_hVector_correlationMuon1Iso.push_back( std::vector<TH2F*>() );
+    m_hVector_correlationElectron1Pt.push_back( std::vector<TH2D*>() );
+    m_hVector_correlationElectron1Eta.push_back( std::vector<TH2D*>() );
+    m_hVector_correlationElectron1Phi.push_back( std::vector<TH2D*>() );
+    m_hVector_correlationElectron1Iso.push_back( std::vector<TH2D*>() );
+    m_hVector_correlationMuon1Pt.push_back( std::vector<TH2D*>() );
+    m_hVector_correlationMuon1Eta.push_back( std::vector<TH2D*>() );
+    m_hVector_correlationMuon1Phi.push_back( std::vector<TH2D*>() );
+    m_hVector_correlationMuon1Iso.push_back( std::vector<TH2D*>() );
 
-    m_hVector_correlationElectron2Pt.push_back( std::vector<TH2F*>() );
-    m_hVector_correlationElectron2Eta.push_back( std::vector<TH2F*>() );
-    m_hVector_correlationElectron2Phi.push_back( std::vector<TH2F*>() );
-    m_hVector_correlationElectron2Iso.push_back( std::vector<TH2F*>() );
-    m_hVector_correlationMuon2Pt.push_back( std::vector<TH2F*>() );
-    m_hVector_correlationMuon2Eta.push_back( std::vector<TH2F*>() );
-    m_hVector_correlationMuon2Phi.push_back( std::vector<TH2F*>() );
-    m_hVector_correlationMuon2Iso.push_back( std::vector<TH2F*>() );
+    m_hVector_correlationElectron2Pt.push_back( std::vector<TH2D*>() );
+    m_hVector_correlationElectron2Eta.push_back( std::vector<TH2D*>() );
+    m_hVector_correlationElectron2Phi.push_back( std::vector<TH2D*>() );
+    m_hVector_correlationElectron2Iso.push_back( std::vector<TH2D*>() );
+    m_hVector_correlationMuon2Pt.push_back( std::vector<TH2D*>() );
+    m_hVector_correlationMuon2Eta.push_back( std::vector<TH2D*>() );
+    m_hVector_correlationMuon2Phi.push_back( std::vector<TH2D*>() );
+    m_hVector_correlationMuon2Iso.push_back( std::vector<TH2D*>() );
 
     for (int k=0;k<nloop;k++){
 
@@ -402,12 +402,12 @@ void DiffractiveZ::CreateHistos(std::string type){
 
       char name27[300];
       sprintf(name27,"mHF_%s_%s",tag,Folders.at(j).c_str());
-      TH2F *histo_MultHF = new TH2F(name27,"HF^{+} and HF^{-} Multiplicity; n HF^{+}; n HF^{-}; N events", 10,  0., 10., 10,  0., 10. );
+      TH2D *histo_MultHF = new TH2D(name27,"HF^{+} and HF^{-} Multiplicity; n HF^{+}; n HF^{-}; N events", 10,  0., 10., 10,  0., 10. );
       m_hVector_multhf[j].push_back(histo_MultHF);
 
       char name28[300];
       sprintf(name28,"ETCalos_%s_%s",tag,Folders.at(j).c_str());
-      TH2F *histo_ET_Calos = new TH2F(name28,"HF^{+} and Castor; #sum Energy HF^{+}; log_{10} #sum Castor Signal [fC]; N events", 10,  0., 10., 50,  0., 50. );
+      TH2D *histo_ET_Calos = new TH2D(name28,"HF^{+} and Castor; #sum Energy HF^{+}; log_{10} #sum Castor Signal [fC]; N events", 10,  0., 10., 50,  0., 50. );
       m_hVector_etcalos[j].push_back(histo_ET_Calos);
 
       char name29[300];
@@ -462,27 +462,27 @@ void DiffractiveZ::CreateHistos(std::string type){
 
       char name39[300];
       sprintf(name39,"VertexVsLuminosity_%s_%s",tag,Folders.at(j).c_str());
-      TH2F *histo_vertexvslumi = new TH2F(name39,"Vertex vs Luminosity; # Vertex; Luminosity per Bunch [#mub^{-1}s^{-1}]", 25.,  0., 25., 25,  0., 2.);
+      TH2D *histo_vertexvslumi = new TH2D(name39,"Vertex vs Luminosity; # Vertex; Luminosity per Bunch [#mub^{-1}s^{-1}]", 25.,  0., 25., 25,  0., 2.);
       m_hVector_vertexvslumi[j].push_back(histo_vertexvslumi);
 
       char name40[300];
       sprintf(name40,"patNElectron_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_patNElectron = new TH1F(name40,"Number of Electrons; # Electrons; Multiplicity", 100,  0., 100.);
+      TH1D *histo_patNElectron = new TH1D(name40,"Number of Electrons; # Electrons; Multiplicity", 100,  0., 100.);
       m_hVector_patNElectron[j].push_back(histo_patNElectron);
 
       char name41[300];
       sprintf(name41,"patElectron1Pt_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_patElectron1Pt = new TH1F(name41,"Leading Electron - P_{T} Distribution; P_{T} [GeV.c^{-1}]; N events",200,0,1000);
+      TH1D *histo_patElectron1Pt = new TH1D(name41,"Leading Electron - P_{T} Distribution; P_{T} [GeV.c^{-1}]; N events",200,0,1000);
       m_hVector_patElectron1Pt[j].push_back(histo_patElectron1Pt);
 
       char name42[300];
       sprintf(name42,"patElectron1Eta_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_patElectron1Eta = new TH1F(name42,"Leading Electron - #eta Distribution; #eta; N events",50,-5.2,5.2);
+      TH1D *histo_patElectron1Eta = new TH1D(name42,"Leading Electron - #eta Distribution; #eta; N events",50,-5.2,5.2);
       m_hVector_patElectron1Eta[j].push_back(histo_patElectron1Eta);
 
       char name43[300];
       sprintf(name43,"patElectron1Phi_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_patElectron1Phi = new TH1F(name43,"Leading Electron - #phi Distribution; #phi [rad]; N events",50,-3.3,3.3);
+      TH1D *histo_patElectron1Phi = new TH1D(name43,"Leading Electron - #phi Distribution; #phi [rad]; N events",50,-3.3,3.3);
       m_hVector_patElectron1Phi[j].push_back(histo_patElectron1Phi);
 
       char name44[300];
@@ -492,27 +492,27 @@ void DiffractiveZ::CreateHistos(std::string type){
 
       char name45[300];
       sprintf(name45,"patElectron1Et_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_patElectron1Et = new TH1F(name45,"Leading Electron - E_{T} Distribution; E_{T} [GeV]; N events",200,0,1000);
+      TH1D *histo_patElectron1Et = new TH1D(name45,"Leading Electron - E_{T} Distribution; E_{T} [GeV]; N events",200,0,1000);
       m_hVector_patElectron1Et[j].push_back(histo_patElectron1Et);
 
       char name46[300];
       sprintf(name46,"patNMuon_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_patNMuon = new TH1F(name46,"Number of Muons; # Muons; Multiplicity", 100,  0., 100.);
+      TH1D *histo_patNMuon = new TH1D(name46,"Number of Muons; # Muons; Multiplicity", 100,  0., 100.);
       m_hVector_patNMuon[j].push_back(histo_patNMuon);
 
       char name47[300];
       sprintf(name47,"patMuon1Pt_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_patMuon1Pt = new TH1F(name47,"Leading Muon - P_{T} Distribution; P_{T} [GeV.c^{-1}]; N events",200,0,1000);
+      TH1D *histo_patMuon1Pt = new TH1D(name47,"Leading Muon - P_{T} Distribution; P_{T} [GeV.c^{-1}]; N events",200,0,1000);
       m_hVector_patMuon1Pt[j].push_back(histo_patMuon1Pt);
 
       char name48[300];
       sprintf(name48,"patMuon1Eta_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_patMuon1Eta = new TH1F(name48,"Leading Muon - #eta Distribution; #eta; N events",50,-5.2,5.2);
+      TH1D *histo_patMuon1Eta = new TH1D(name48,"Leading Muon - #eta Distribution; #eta; N events",50,-5.2,5.2);
       m_hVector_patMuon1Eta[j].push_back(histo_patMuon1Eta);
 
       char name49[300];
       sprintf(name49,"patMuon1Phi_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_patMuon1Phi = new TH1F(name49,"Leading Muon - #phi Distribution; #phi [rad]; N events",50,-3.3,3.3);
+      TH1D *histo_patMuon1Phi = new TH1D(name49,"Leading Muon - #phi Distribution; #phi [rad]; N events",50,-3.3,3.3);
       m_hVector_patMuon1Phi[j].push_back(histo_patMuon1Phi);
 
       char name50[300];
@@ -522,22 +522,22 @@ void DiffractiveZ::CreateHistos(std::string type){
 
       char name51[300];
       sprintf(name51,"patMuon1Et_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_patMuon1Et = new TH1F(name51,"Leading Muon - E_{T} Distribution; E_{T} [GeV]; N events",200,0,1000);
+      TH1D *histo_patMuon1Et = new TH1D(name51,"Leading Muon - E_{T} Distribution; E_{T} [GeV]; N events",200,0,1000);
       m_hVector_patMuon1Et[j].push_back(histo_patMuon1Et);
 
       char name52[300];
       sprintf(name52,"patElectron2Pt_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_patElectron2Pt = new TH1F(name52,"Second Electron - P_{T} Distribution; P_{T} [GeV.c^{-1}]; N events",200,0,1000);
+      TH1D *histo_patElectron2Pt = new TH1D(name52,"Second Electron - P_{T} Distribution; P_{T} [GeV.c^{-1}]; N events",200,0,1000);
       m_hVector_patElectron2Pt[j].push_back(histo_patElectron2Pt);
 
       char name53[300];
       sprintf(name53,"patElectron2Eta_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_patElectron2Eta = new TH1F(name53,"Second Electron - #eta Distribution; #eta; N events",60,-5.2,5.2);
+      TH1D *histo_patElectron2Eta = new TH1D(name53,"Second Electron - #eta Distribution; #eta; N events",60,-5.2,5.2);
       m_hVector_patElectron2Eta[j].push_back(histo_patElectron2Eta);
 
       char name54[300];
       sprintf(name54,"patElectron2Phi_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_patElectron2Phi = new TH1F(name54,"Second Electron - #phi Distribution; #phi [rad]; N events",60,-3.3,3.3);
+      TH1D *histo_patElectron2Phi = new TH1D(name54,"Second Electron - #phi Distribution; #phi [rad]; N events",60,-3.3,3.3);
       m_hVector_patElectron2Phi[j].push_back(histo_patElectron2Phi);
 
       char name55[300];
@@ -547,22 +547,22 @@ void DiffractiveZ::CreateHistos(std::string type){
 
       char name56[300];
       sprintf(name56,"patElectron2Et_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_patElectron2Et = new TH1F(name56,"Second Electron - E_{T} Distribution; E_{T} [GeV]; N events",200,0,1000);
+      TH1D *histo_patElectron2Et = new TH1D(name56,"Second Electron - E_{T} Distribution; E_{T} [GeV]; N events",200,0,1000);
       m_hVector_patElectron2Et[j].push_back(histo_patElectron2Et);
 
       char name57[300];
       sprintf(name57,"patMuon2Pt_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_patMuon2Pt = new TH1F(name57,"Second Muon - P_{T} Distribution; P_{T} [GeV.c^{-1}]; N events",200,0,1000);
+      TH1D *histo_patMuon2Pt = new TH1D(name57,"Second Muon - P_{T} Distribution; P_{T} [GeV.c^{-1}]; N events",200,0,1000);
       m_hVector_patMuon2Pt[j].push_back(histo_patMuon2Pt);
 
       char name58[300];
       sprintf(name58,"patMuon2Eta_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_patMuon2Eta = new TH1F(name58,"Second Muon - #eta Distribution; #eta; N events",60,-5.2,5.2);
+      TH1D *histo_patMuon2Eta = new TH1D(name58,"Second Muon - #eta Distribution; #eta; N events",60,-5.2,5.2);
       m_hVector_patMuon2Eta[j].push_back(histo_patMuon2Eta);
 
       char name59[300];
       sprintf(name59,"patMuon2Phi_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_patMuon2Phi = new TH1F(name59,"Second Muon - #phi Distribution; #phi [rad]; N events",60,-3.3,3.3);
+      TH1D *histo_patMuon2Phi = new TH1D(name59,"Second Muon - #phi Distribution; #phi [rad]; N events",60,-3.3,3.3);
       m_hVector_patMuon2Phi[j].push_back(histo_patMuon2Phi);
 
       char name60[300];
@@ -572,427 +572,427 @@ void DiffractiveZ::CreateHistos(std::string type){
 
       char name61[300];
       sprintf(name61,"patMuon2Et_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_patMuon2Et = new TH1F(name61,"Second Muon - E_{T} Distribution; E_{T} [GeV]; N events",200,0,1000);
+      TH1D *histo_patMuon2Et = new TH1D(name61,"Second Muon - E_{T} Distribution; E_{T} [GeV]; N events",200,0,1000);
       m_hVector_patMuon2Et[j].push_back(histo_patMuon2Et);
 
       char name62[300];
       sprintf(name62,"patDiElectronMass_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_patDiElectronMass = new TH1F(name62,"Dielectron Invariant Mass Distribution; M_{ee} [GeV]; N events",500,0,500);
+      TH1D *histo_patDiElectronMass = new TH1D(name62,"Dielectron Invariant Mass Distribution; M_{ee} [GeV]; N events",500,0,500);
       m_hVector_patDiElectronMass[j].push_back(histo_patDiElectronMass);
 
       char name63[300];
       sprintf(name63,"patDiMuonMass_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_patDiMuonMass = new TH1F(name63,"DiMuon Invariant Mass Distribution; M_{#mu#mu} [GeV]; N events",500,0,500);
+      TH1D *histo_patDiMuonMass = new TH1D(name63,"DiMuon Invariant Mass Distribution; M_{#mu#mu} [GeV]; N events",500,0,500);
       m_hVector_patDiMuonMass[j].push_back(histo_patDiMuonMass);
 
       char name64[300];
       sprintf(name64,"patElectron1TkDr03_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_patElectron1TkDr03 = new TH1F(name64,"Leading Electron: Tracker Isolation DR03; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_patElectron1TkDr03 = new TH1D(name64,"Leading Electron: Tracker Isolation DR03; # Isolation; [u]", 100,  0., 1.);
       m_hVector_patElectron1TkDr03[j].push_back(histo_patElectron1TkDr03);
 
       char name65[300];
       sprintf(name65,"patElectron1TkDr04_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_patElectron1TkDr04 = new TH1F(name65,"Leading Electron: Tracker Isolation DR04; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_patElectron1TkDr04 = new TH1D(name65,"Leading Electron: Tracker Isolation DR04; # Isolation; [u]", 100,  0., 1.);
       m_hVector_patElectron1TkDr04[j].push_back(histo_patElectron1TkDr04);
 
       char name66[300];
       sprintf(name66,"patElectron1EcalDr03_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_patElectron1EcalDr03 = new TH1F(name66,"Leading Electron: ECAL Isolation DR03; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_patElectron1EcalDr03 = new TH1D(name66,"Leading Electron: ECAL Isolation DR03; # Isolation; [u]", 100,  0., 1.);
       m_hVector_patElectron1EcalDr03[j].push_back(histo_patElectron1EcalDr03);
 
       char name67[300];
       sprintf(name67,"patElectron1EcalDr04_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_patElectron1EcalDr04 = new TH1F(name67,"Leading Electron: ECAL Isolation DR04; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_patElectron1EcalDr04 = new TH1D(name67,"Leading Electron: ECAL Isolation DR04; # Isolation; [u]", 100,  0., 1.);
       m_hVector_patElectron1EcalDr04[j].push_back(histo_patElectron1EcalDr04);
 
       char name68[300];
       sprintf(name68,"patElectron1HcalDr03_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_patElectron1HcalDr03 = new TH1F(name68,"Leading Electron: HCAL Isolation DR03; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_patElectron1HcalDr03 = new TH1D(name68,"Leading Electron: HCAL Isolation DR03; # Isolation; [u]", 100,  0., 1.);
       m_hVector_patElectron1HcalDr03[j].push_back(histo_patElectron1HcalDr03);
 
       char name69[300];
       sprintf(name69,"patElectron1HcalDr04_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_patElectron1HcalDr04 = new TH1F(name69,"Leading Electron: HCAL Isolation DR04; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_patElectron1HcalDr04 = new TH1D(name69,"Leading Electron: HCAL Isolation DR04; # Isolation; [u]", 100,  0., 1.);
       m_hVector_patElectron1HcalDr04[j].push_back(histo_patElectron1HcalDr04);
 
       char name70[300];
       sprintf(name70,"patElectron2TkDr03_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_patElectron2TkDr03 = new TH1F(name70,"Second Electron: Tracker Isolation DR03; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_patElectron2TkDr03 = new TH1D(name70,"Second Electron: Tracker Isolation DR03; # Isolation; [u]", 100,  0., 1.);
       m_hVector_patElectron2TkDr03[j].push_back(histo_patElectron2TkDr03);
 
       char name71[300];
       sprintf(name71,"patElectron2TkDr04_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_patElectron2TkDr04 = new TH1F(name71,"Second Electron: Tracker Isolation DR04; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_patElectron2TkDr04 = new TH1D(name71,"Second Electron: Tracker Isolation DR04; # Isolation; [u]", 100,  0., 1.);
       m_hVector_patElectron2TkDr04[j].push_back(histo_patElectron2TkDr04);
 
       char name72[300];
       sprintf(name72,"patElectron2EcalDr03_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_patElectron2EcalDr03 = new TH1F(name72,"Second Electron: ECAL Isolation DR03; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_patElectron2EcalDr03 = new TH1D(name72,"Second Electron: ECAL Isolation DR03; # Isolation; [u]", 100,  0., 1.);
       m_hVector_patElectron2EcalDr03[j].push_back(histo_patElectron2EcalDr03);
 
       char name73[300];
       sprintf(name73,"patElectron2EcalDr04_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_patElectron2EcalDr04 = new TH1F(name73,"Second Electron: ECAL Isolation DR04; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_patElectron2EcalDr04 = new TH1D(name73,"Second Electron: ECAL Isolation DR04; # Isolation; [u]", 100,  0., 1.);
       m_hVector_patElectron2EcalDr04[j].push_back(histo_patElectron2EcalDr04);
 
       char name74[300];
       sprintf(name74,"patElectron2HcalDr03_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_patElectron2HcalDr03 = new TH1F(name74,"Second Electron: HCAL Isolation DR03; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_patElectron2HcalDr03 = new TH1D(name74,"Second Electron: HCAL Isolation DR03; # Isolation; [u]", 100,  0., 1.);
       m_hVector_patElectron2HcalDr03[j].push_back(histo_patElectron2HcalDr03);
 
       char name75[300];
       sprintf(name75,"patElectron2HcalDr04_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_patElectron2HcalDr04 = new TH1F(name75,"Second Electron: HCAL Isolation DR04; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_patElectron2HcalDr04 = new TH1D(name75,"Second Electron: HCAL Isolation DR04; # Isolation; [u]", 100,  0., 1.);
       m_hVector_patElectron2HcalDr04[j].push_back(histo_patElectron2HcalDr04);
 
       char name76[300];
       sprintf(name76,"patElectron1relIsoDr03_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_patElectron1relIsoDr03 = new TH1F(name76,"Leading Electron: Isolation DR03; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_patElectron1relIsoDr03 = new TH1D(name76,"Leading Electron: Isolation DR03; # Isolation; [u]", 100,  0., 1.);
       m_hVector_patElectron1relIsoDr03[j].push_back(histo_patElectron1relIsoDr03);
 
       char name77[300];
       sprintf(name77,"patElectron1relIsoDr04_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_patElectron1relIsoDr04 = new TH1F(name77,"Leading Electron: Isolation DR04; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_patElectron1relIsoDr04 = new TH1D(name77,"Leading Electron: Isolation DR04; # Isolation; [u]", 100,  0., 1.);
       m_hVector_patElectron1relIsoDr04[j].push_back(histo_patElectron1relIsoDr04);
 
       char name78[300];
       sprintf(name78,"patElectron2relIsoDr03_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_patElectron2relIsoDr03 = new TH1F(name78,"Second Electron: Isolation DR03; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_patElectron2relIsoDr03 = new TH1D(name78,"Second Electron: Isolation DR03; # Isolation; [u]", 100,  0., 1.);
       m_hVector_patElectron2relIsoDr03[j].push_back(histo_patElectron2relIsoDr03);
 
       char name79[300];
       sprintf(name79,"patElectron2relIsoDr04_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_patElectron2relIsoDr04 = new TH1F(name79,"Second Electron: Isolation DR04; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_patElectron2relIsoDr04 = new TH1D(name79,"Second Electron: Isolation DR04; # Isolation; [u]", 100,  0., 1.);
       m_hVector_patElectron2relIsoDr04[j].push_back(histo_patElectron2relIsoDr04);
 
       char name80[300];
       sprintf(name80,"patMuon1SumPtR03_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_patMuon1SumPtR03 = new TH1F(name80,"Leading Muon: Tracker Isolation DR03; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_patMuon1SumPtR03 = new TH1D(name80,"Leading Muon: Tracker Isolation DR03; # Isolation; [u]", 100,  0., 1.);
       m_hVector_patMuon1SumPtR03[j].push_back(histo_patMuon1SumPtR03);
 
       char name81[300];
       sprintf(name81,"patMuon1SumPtR05_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_patMuon1SumPtR05 = new TH1F(name81,"Leading Muon: Tracker Isolation DR05; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_patMuon1SumPtR05 = new TH1D(name81,"Leading Muon: Tracker Isolation DR05; # Isolation; [u]", 100,  0., 1.);
       m_hVector_patMuon1SumPtR05[j].push_back(histo_patMuon1SumPtR05);
 
       char name82[300];
       sprintf(name82,"patMuon1EmEtR03_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_patMuon1EmEtR03 = new TH1F(name82,"Leading Muon: ECAL Isolation DR03; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_patMuon1EmEtR03 = new TH1D(name82,"Leading Muon: ECAL Isolation DR03; # Isolation; [u]", 100,  0., 1.);
       m_hVector_patMuon1EmEtR03[j].push_back(histo_patMuon1EmEtR03);
 
       char name83[300];
       sprintf(name83,"patMuon1EmEtR05_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_patMuon1EmEtR05 = new TH1F(name83,"Leading Muon: ECAL Isolation DR05; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_patMuon1EmEtR05 = new TH1D(name83,"Leading Muon: ECAL Isolation DR05; # Isolation; [u]", 100,  0., 1.);
       m_hVector_patMuon1EmEtR05[j].push_back(histo_patMuon1EmEtR05);
 
       char name84[300];
       sprintf(name84,"patMuon1HadEtR03_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_patMuon1HadEtR03 = new TH1F(name84,"Leading Muon: HCAL Isolation DR03; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_patMuon1HadEtR03 = new TH1D(name84,"Leading Muon: HCAL Isolation DR03; # Isolation; [u]", 100,  0., 1.);
       m_hVector_patMuon1HadEtR03[j].push_back(histo_patMuon1HadEtR03);
 
       char name85[300];
       sprintf(name85,"patMuon1HadEtR05_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_patMuon1HadEtR05 = new TH1F(name85,"Leading Muon: HCAL Isolation DR05; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_patMuon1HadEtR05 = new TH1D(name85,"Leading Muon: HCAL Isolation DR05; # Isolation; [u]", 100,  0., 1.);
       m_hVector_patMuon1HadEtR05[j].push_back(histo_patMuon1HadEtR05);
 
       char name86[300];
       sprintf(name86,"patMuon2SumPtR03_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_patMuon2SumPtR03 = new TH1F(name86,"Second Muon: Tracker Isolation DR03; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_patMuon2SumPtR03 = new TH1D(name86,"Second Muon: Tracker Isolation DR03; # Isolation; [u]", 100,  0., 1.);
       m_hVector_patMuon2SumPtR03[j].push_back(histo_patMuon2SumPtR03);
 
       char name87[300];
       sprintf(name87,"patMuon2SumPtR05_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_patMuon2SumPtR05 = new TH1F(name87,"Second Muon: Tracker Isolation DR05; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_patMuon2SumPtR05 = new TH1D(name87,"Second Muon: Tracker Isolation DR05; # Isolation; [u]", 100,  0., 1.);
       m_hVector_patMuon2SumPtR05[j].push_back(histo_patMuon2SumPtR05);
 
       char name88[300];
       sprintf(name88,"patMuon2EmEtR03_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_patMuon2EmEtR03 = new TH1F(name88,"Second Muon: ECAL Isolation DR03; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_patMuon2EmEtR03 = new TH1D(name88,"Second Muon: ECAL Isolation DR03; # Isolation; [u]", 100,  0., 1.);
       m_hVector_patMuon2EmEtR03[j].push_back(histo_patMuon2EmEtR03);
 
       char name89[300];
       sprintf(name89,"patMuon2EmEtR05_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_patMuon2EmEtR05 = new TH1F(name89,"Second Muon: ECAL Isolation DR05; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_patMuon2EmEtR05 = new TH1D(name89,"Second Muon: ECAL Isolation DR05; # Isolation; [u]", 100,  0., 1.);
       m_hVector_patMuon2EmEtR05[j].push_back(histo_patMuon2EmEtR05);
 
       char name90[300];
       sprintf(name90,"patMuon2HadEtR03_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_patMuon2HadEtR03 = new TH1F(name90,"Second Muon: HCAL Isolation DR03; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_patMuon2HadEtR03 = new TH1D(name90,"Second Muon: HCAL Isolation DR03; # Isolation; [u]", 100,  0., 1.);
       m_hVector_patMuon2HadEtR03[j].push_back(histo_patMuon2HadEtR03);
 
       char name91[300];
       sprintf(name91,"patMuon2HadEtR05_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_patMuon2HadEtR05 = new TH1F(name91,"Second Muon: HCAL Isolation DR05; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_patMuon2HadEtR05 = new TH1D(name91,"Second Muon: HCAL Isolation DR05; # Isolation; [u]", 100,  0., 1.);
       m_hVector_patMuon2HadEtR05[j].push_back(histo_patMuon2HadEtR05);
 
       char name92[300];
       sprintf(name92,"patMuon1relIsoDr03_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_patMuon1relIsoDr03 = new TH1F(name92,"Leading Muon: Isolation DR03; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_patMuon1relIsoDr03 = new TH1D(name92,"Leading Muon: Isolation DR03; # Isolation; [u]", 100,  0., 1.);
       m_hVector_patMuon1relIsoDr03[j].push_back(histo_patMuon1relIsoDr03);
 
       char name93[300];
       sprintf(name93,"patMuon1relIsoDr05_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_patMuon1relIsoDr05 = new TH1F(name93,"Leading Muon: Isolation DR05; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_patMuon1relIsoDr05 = new TH1D(name93,"Leading Muon: Isolation DR05; # Isolation; [u]", 100,  0., 1.);
       m_hVector_patMuon1relIsoDr05[j].push_back(histo_patMuon1relIsoDr05);
 
       char name94[300];
       sprintf(name94,"patMuon2relIsoDr03_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_patMuon2relIsoDr03 = new TH1F(name94,"Second Muon: Isolation DR03; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_patMuon2relIsoDr03 = new TH1D(name94,"Second Muon: Isolation DR03; # Isolation; [u]", 100,  0., 1.);
       m_hVector_patMuon2relIsoDr03[j].push_back(histo_patMuon2relIsoDr03);
 
       char name95[300];
       sprintf(name95,"patMuon2relIsoDr05_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_patMuon2relIsoDr05 = new TH1F(name95,"Second Muon: Isolation DR05; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_patMuon2relIsoDr05 = new TH1D(name95,"Second Muon: Isolation DR05; # Isolation; [u]", 100,  0., 1.);
       m_hVector_patMuon2relIsoDr05[j].push_back(histo_patMuon2relIsoDr05);
 
       char name96[300];
       sprintf(name96,"patMuon1relIso_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_patMuon1relIso = new TH1F(name96,"Leading Muon: Isolation; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_patMuon1relIso = new TH1D(name96,"Leading Muon: Isolation; # Isolation; [u]", 100,  0., 1.);
       m_hVector_patMuon1relIso[j].push_back(histo_patMuon1relIso);
 
       char name97[300];
       sprintf(name97,"patMuon2relIso_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_patMuon2relIso = new TH1F(name97,"Second Muon: Isolation; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_patMuon2relIso = new TH1D(name97,"Second Muon: Isolation; # Isolation; [u]", 100,  0., 1.);
       m_hVector_patMuon2relIso[j].push_back(histo_patMuon2relIso);
 
       char name98[300];
       sprintf(name98,"LeadingElectronTkDr03_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_LeadingElectronTkDr03 = new TH1F(name98,"Leading Electron: Tracker Isolation DR03; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_LeadingElectronTkDr03 = new TH1D(name98,"Leading Electron: Tracker Isolation DR03; # Isolation; [u]", 100,  0., 1.);
       m_hVector_LeadingElectronTkDr03[j].push_back(histo_LeadingElectronTkDr03);
 
       char name99[300];
       sprintf(name99,"LeadingElectronTkDr04_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_LeadingElectronTkDr04 = new TH1F(name99,"Leading Electron: Tracker Isolation DR04; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_LeadingElectronTkDr04 = new TH1D(name99,"Leading Electron: Tracker Isolation DR04; # Isolation; [u]", 100,  0., 1.);
       m_hVector_LeadingElectronTkDr04[j].push_back(histo_LeadingElectronTkDr04);
 
       char name100[300];
       sprintf(name100,"LeadingElectronEcalDr03_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_LeadingElectronEcalDr03 = new TH1F(name100,"Leading Electron: ECAL Isolation DR03; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_LeadingElectronEcalDr03 = new TH1D(name100,"Leading Electron: ECAL Isolation DR03; # Isolation; [u]", 100,  0., 1.);
       m_hVector_LeadingElectronEcalDr03[j].push_back(histo_LeadingElectronEcalDr03);
 
       char name101[300];
       sprintf(name101,"LeadingElectronEcalDr04_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_LeadingElectronEcalDr04 = new TH1F(name101,"Leading Electron: ECAL Isolation DR04; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_LeadingElectronEcalDr04 = new TH1D(name101,"Leading Electron: ECAL Isolation DR04; # Isolation; [u]", 100,  0., 1.);
       m_hVector_LeadingElectronEcalDr04[j].push_back(histo_LeadingElectronEcalDr04);
 
       char name102[300];
       sprintf(name102,"LeadingElectronHcalDr03_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_LeadingElectronHcalDr03 = new TH1F(name102,"Leading Electron: HCAL Isolation DR03; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_LeadingElectronHcalDr03 = new TH1D(name102,"Leading Electron: HCAL Isolation DR03; # Isolation; [u]", 100,  0., 1.);
       m_hVector_LeadingElectronHcalDr03[j].push_back(histo_LeadingElectronHcalDr03);
 
       char name103[300];
       sprintf(name103,"LeadingElectronHcalDr04_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_LeadingElectronHcalDr04 = new TH1F(name103,"Leading Electron: HCAL Isolation DR04; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_LeadingElectronHcalDr04 = new TH1D(name103,"Leading Electron: HCAL Isolation DR04; # Isolation; [u]", 100,  0., 1.);
       m_hVector_LeadingElectronHcalDr04[j].push_back(histo_LeadingElectronHcalDr04);
 
       char name104[300];
       sprintf(name104,"SecondElectronTkDr03_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_SecondElectronTkDr03 = new TH1F(name104,"Second Electron: Tracker Isolation DR03; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_SecondElectronTkDr03 = new TH1D(name104,"Second Electron: Tracker Isolation DR03; # Isolation; [u]", 100,  0., 1.);
       m_hVector_SecondElectronTkDr03[j].push_back(histo_SecondElectronTkDr03);
 
       char name105[300];
       sprintf(name105,"SecondElectronTkDr04_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_SecondElectronTkDr04 = new TH1F(name105,"Second Electron: Tracker Isolation DR04; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_SecondElectronTkDr04 = new TH1D(name105,"Second Electron: Tracker Isolation DR04; # Isolation; [u]", 100,  0., 1.);
       m_hVector_SecondElectronTkDr04[j].push_back(histo_SecondElectronTkDr04);
 
       char name106[300];
       sprintf(name106,"SecondElectronEcalDr03_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_SecondElectronEcalDr03 = new TH1F(name106,"Second Electron: ECAL Isolation DR03; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_SecondElectronEcalDr03 = new TH1D(name106,"Second Electron: ECAL Isolation DR03; # Isolation; [u]", 100,  0., 1.);
       m_hVector_SecondElectronEcalDr03[j].push_back(histo_SecondElectronEcalDr03);
 
       char name107[300];
       sprintf(name107,"SecondElectronEcalDr04_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_SecondElectronEcalDr04 = new TH1F(name107,"Second Electron: ECAL Isolation DR04; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_SecondElectronEcalDr04 = new TH1D(name107,"Second Electron: ECAL Isolation DR04; # Isolation; [u]", 100,  0., 1.);
       m_hVector_SecondElectronEcalDr04[j].push_back(histo_SecondElectronEcalDr04);
 
       char name108[300];
       sprintf(name108,"SecondElectronHcalDr03_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_SecondElectronHcalDr03 = new TH1F(name108,"Second Electron: HCAL Isolation DR03; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_SecondElectronHcalDr03 = new TH1D(name108,"Second Electron: HCAL Isolation DR03; # Isolation; [u]", 100,  0., 1.);
       m_hVector_SecondElectronHcalDr03[j].push_back(histo_SecondElectronHcalDr03);
 
       char name109[300];
       sprintf(name109,"SecondElectronHcalDr04_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_SecondElectronHcalDr04 = new TH1F(name109,"Second Electron: HCAL Isolation DR04; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_SecondElectronHcalDr04 = new TH1D(name109,"Second Electron: HCAL Isolation DR04; # Isolation; [u]", 100,  0., 1.);
       m_hVector_SecondElectronHcalDr04[j].push_back(histo_SecondElectronHcalDr04);
 
       char name110[300];
       sprintf(name110,"LeadingElectronrelIsoDr03_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_LeadingElectronrelIsoDr03 = new TH1F(name110,"Leading Electron: Isolation DR03; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_LeadingElectronrelIsoDr03 = new TH1D(name110,"Leading Electron: Isolation DR03; # Isolation; [u]", 100,  0., 1.);
       m_hVector_LeadingElectronrelIsoDr03[j].push_back(histo_LeadingElectronrelIsoDr03);
 
       char name111[300];
       sprintf(name111,"LeadingElectronrelIsoDr04_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_LeadingElectronrelIsoDr04 = new TH1F(name111,"Leading Electron: Isolation DR04; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_LeadingElectronrelIsoDr04 = new TH1D(name111,"Leading Electron: Isolation DR04; # Isolation; [u]", 100,  0., 1.);
       m_hVector_LeadingElectronrelIsoDr04[j].push_back(histo_LeadingElectronrelIsoDr04);
 
       char name112[300];
       sprintf(name112,"SecondElectronrelIsoDr03_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_SecondElectronrelIsoDr03 = new TH1F(name112,"Second Electron: Isolation DR03; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_SecondElectronrelIsoDr03 = new TH1D(name112,"Second Electron: Isolation DR03; # Isolation; [u]", 100,  0., 1.);
       m_hVector_SecondElectronrelIsoDr03[j].push_back(histo_SecondElectronrelIsoDr03);
 
       char name113[300];
       sprintf(name113,"SecondElectronrelIsoDr04_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_SecondElectronrelIsoDr04 = new TH1F(name113,"Second Electron: Isolation DR04; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_SecondElectronrelIsoDr04 = new TH1D(name113,"Second Electron: Isolation DR04; # Isolation; [u]", 100,  0., 1.);
       m_hVector_SecondElectronrelIsoDr04[j].push_back(histo_SecondElectronrelIsoDr04);
 
       char name114[300];
       sprintf(name114,"LeadingMuonSumPtR03_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_LeadingMuonSumPtR03 = new TH1F(name114,"Leading Muon: Tracker Isolation DR03; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_LeadingMuonSumPtR03 = new TH1D(name114,"Leading Muon: Tracker Isolation DR03; # Isolation; [u]", 100,  0., 1.);
       m_hVector_LeadingMuonSumPtR03[j].push_back(histo_LeadingMuonSumPtR03);
 
       char name115[300];
       sprintf(name115,"LeadingMuonSumPtR05_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_LeadingMuonSumPtR05 = new TH1F(name115,"Leading Muon: Tracker Isolation DR05; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_LeadingMuonSumPtR05 = new TH1D(name115,"Leading Muon: Tracker Isolation DR05; # Isolation; [u]", 100,  0., 1.);
       m_hVector_LeadingMuonSumPtR05[j].push_back(histo_LeadingMuonSumPtR05);
 
       char name116[300];
       sprintf(name116,"LeadingMuonEmEtR03_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_LeadingMuonEmEtR03 = new TH1F(name116,"Leading Muon: ECAL Isolation DR03; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_LeadingMuonEmEtR03 = new TH1D(name116,"Leading Muon: ECAL Isolation DR03; # Isolation; [u]", 100,  0., 1.);
       m_hVector_LeadingMuonEmEtR03[j].push_back(histo_LeadingMuonEmEtR03);
 
       char name117[300];
       sprintf(name117,"LeadingMuonEmEtR05_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_LeadingMuonEmEtR05 = new TH1F(name117,"Leading Muon: ECAL Isolation DR05; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_LeadingMuonEmEtR05 = new TH1D(name117,"Leading Muon: ECAL Isolation DR05; # Isolation; [u]", 100,  0., 1.);
       m_hVector_LeadingMuonEmEtR05[j].push_back(histo_LeadingMuonEmEtR05);
 
       char name118[300];
       sprintf(name118,"LeadingMuonHadEtR03_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_LeadingMuonHadEtR03 = new TH1F(name118,"Leading Muon: HCAL Isolation DR03; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_LeadingMuonHadEtR03 = new TH1D(name118,"Leading Muon: HCAL Isolation DR03; # Isolation; [u]", 100,  0., 1.);
       m_hVector_LeadingMuonHadEtR03[j].push_back(histo_LeadingMuonHadEtR03);
 
       char name119[300];
       sprintf(name119,"LeadingMuonHadEtR05_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_LeadingMuonHadEtR05 = new TH1F(name119,"Leading Muon: HCAL Isolation DR05; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_LeadingMuonHadEtR05 = new TH1D(name119,"Leading Muon: HCAL Isolation DR05; # Isolation; [u]", 100,  0., 1.);
       m_hVector_LeadingMuonHadEtR05[j].push_back(histo_LeadingMuonHadEtR05);
 
       char name120[300];
       sprintf(name120,"SecondMuonSumPtR03_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_SecondMuonSumPtR03 = new TH1F(name120,"Second Muon: Tracker Isolation DR03; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_SecondMuonSumPtR03 = new TH1D(name120,"Second Muon: Tracker Isolation DR03; # Isolation; [u]", 100,  0., 1.);
       m_hVector_SecondMuonSumPtR03[j].push_back(histo_SecondMuonSumPtR03);
 
       char name121[300];
       sprintf(name121,"SecondMuonSumPtR05_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_SecondMuonSumPtR05 = new TH1F(name121,"Second Muon: Tracker Isolation DR05; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_SecondMuonSumPtR05 = new TH1D(name121,"Second Muon: Tracker Isolation DR05; # Isolation; [u]", 100,  0., 1.);
       m_hVector_SecondMuonSumPtR05[j].push_back(histo_SecondMuonSumPtR05);
 
       char name122[300];
       sprintf(name122,"SecondMuonEmEtR03_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_SecondMuonEmEtR03 = new TH1F(name122,"Second Muon: ECAL Isolation DR03; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_SecondMuonEmEtR03 = new TH1D(name122,"Second Muon: ECAL Isolation DR03; # Isolation; [u]", 100,  0., 1.);
       m_hVector_SecondMuonEmEtR03[j].push_back(histo_SecondMuonEmEtR03);
 
       char name123[300];
       sprintf(name123,"SecondMuonEmEtR05_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_SecondMuonEmEtR05 = new TH1F(name123,"Second Muon: ECAL Isolation DR05; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_SecondMuonEmEtR05 = new TH1D(name123,"Second Muon: ECAL Isolation DR05; # Isolation; [u]", 100,  0., 1.);
       m_hVector_SecondMuonEmEtR05[j].push_back(histo_SecondMuonEmEtR05);
 
       char name124[300];
       sprintf(name124,"SecondMuonHadEtR03_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_SecondMuonHadEtR03 = new TH1F(name124,"Second Muon: HCAL Isolation DR03; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_SecondMuonHadEtR03 = new TH1D(name124,"Second Muon: HCAL Isolation DR03; # Isolation; [u]", 100,  0., 1.);
       m_hVector_SecondMuonHadEtR03[j].push_back(histo_SecondMuonHadEtR03);
 
       char name125[300];
       sprintf(name125,"SecondMuonHadEtR05_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_SecondMuonHadEtR05 = new TH1F(name125,"Second Muon: HCAL Isolation DR05; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_SecondMuonHadEtR05 = new TH1D(name125,"Second Muon: HCAL Isolation DR05; # Isolation; [u]", 100,  0., 1.);
       m_hVector_SecondMuonHadEtR05[j].push_back(histo_SecondMuonHadEtR05);
 
       char name126[300];
       sprintf(name126,"LeadingMuonrelIsoDr03_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_LeadingMuonrelIsoDr03 = new TH1F(name126,"Leading Muon: Isolation DR03; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_LeadingMuonrelIsoDr03 = new TH1D(name126,"Leading Muon: Isolation DR03; # Isolation; [u]", 100,  0., 1.);
       m_hVector_LeadingMuonrelIsoDr03[j].push_back(histo_LeadingMuonrelIsoDr03);
 
       char name127[300];
       sprintf(name127,"LeadingMuonrelIsoDr05_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_LeadingMuonrelIsoDr05 = new TH1F(name127,"Leading Muon: Isolation DR05; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_LeadingMuonrelIsoDr05 = new TH1D(name127,"Leading Muon: Isolation DR05; # Isolation; [u]", 100,  0., 1.);
       m_hVector_LeadingMuonrelIsoDr05[j].push_back(histo_LeadingMuonrelIsoDr05);
 
       char name128[300];
       sprintf(name128,"SecondMuonrelIsoDr03_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_SecondMuonrelIsoDr03 = new TH1F(name128,"Second Muon: Isolation DR03; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_SecondMuonrelIsoDr03 = new TH1D(name128,"Second Muon: Isolation DR03; # Isolation; [u]", 100,  0., 1.);
       m_hVector_SecondMuonrelIsoDr03[j].push_back(histo_SecondMuonrelIsoDr03);
 
       char name129[300];
       sprintf(name129,"SecondMuonrelIsoDr05_%s_%s",tag,Folders.at(j).c_str());
-      TH1F *histo_SecondMuonrelIsoDr05 = new TH1F(name129,"Second Muon: Isolation DR05; # Isolation; [u]", 100,  0., 1.);
+      TH1D *histo_SecondMuonrelIsoDr05 = new TH1D(name129,"Second Muon: Isolation DR05; # Isolation; [u]", 100,  0., 1.);
       m_hVector_SecondMuonrelIsoDr05[j].push_back(histo_SecondMuonrelIsoDr05);
 
       char name130[300];
       sprintf(name130,"correlationElectron1Pt_%s_%s",tag,Folders.at(j).c_str());
-      TH2F *histo_correlationElectron1Pt = new TH2F(name130,"Correlation Leading Electron pT; Reco::Electron P_{T} [GeV.c^{-1}] ; Pat::Electron P_{T} [GeV.c^{-1}] ", 100,  0., 800., 100, 0., 800.);
+      TH2D *histo_correlationElectron1Pt = new TH2D(name130,"Correlation Leading Electron pT; Reco::Electron P_{T} [GeV.c^{-1}] ; Pat::Electron P_{T} [GeV.c^{-1}] ", 100,  0., 800., 100, 0., 800.);
       m_hVector_correlationElectron1Pt[j].push_back(histo_correlationElectron1Pt);
 
       char name131[300];
       sprintf(name131,"correlationElectron1Eta_%s_%s",tag,Folders.at(j).c_str());
-      TH2F *histo_correlationElectron1Eta = new TH2F(name131,"Correlation Leading Electron #eta; Reco::Electron #eta; Pat::Electron #eta", 50,  -5.5, 5.5, 50, -5.5, 5.5);
+      TH2D *histo_correlationElectron1Eta = new TH2D(name131,"Correlation Leading Electron #eta; Reco::Electron #eta; Pat::Electron #eta", 50,  -5.5, 5.5, 50, -5.5, 5.5);
       m_hVector_correlationElectron1Eta[j].push_back(histo_correlationElectron1Eta);
 
       char name132[300];
       sprintf(name132,"correlationElectron1Phi_%s_%s",tag,Folders.at(j).c_str());
-      TH2F *histo_correlationElectron1Phi = new TH2F(name132,"Correlation Leading Electron #phi; Reco::Electron #phi; Pat::Electron #phi", 50,  -3.3, 3.3, 50, -3.3, 3.3);
+      TH2D *histo_correlationElectron1Phi = new TH2D(name132,"Correlation Leading Electron #phi; Reco::Electron #phi; Pat::Electron #phi", 50,  -3.3, 3.3, 50, -3.3, 3.3);
       m_hVector_correlationElectron1Phi[j].push_back(histo_correlationElectron1Phi);
 
       char name133[300];
       sprintf(name133,"correlationElectron1Iso_%s_%s",tag,Folders.at(j).c_str());
-      TH2F *histo_correlationElectron1Iso = new TH2F(name133,"Correlation Leading Electron Isolation; Reco::Electron Iso; Pat::Electron Iso", 100,  0., 1., 100, 0., 1.);
+      TH2D *histo_correlationElectron1Iso = new TH2D(name133,"Correlation Leading Electron Isolation; Reco::Electron Iso; Pat::Electron Iso", 100,  0., 1., 100, 0., 1.);
       m_hVector_correlationElectron1Iso[j].push_back(histo_correlationElectron1Iso);
 
       char name134[300];
       sprintf(name134,"correlationElectron2Pt_%s_%s",tag,Folders.at(j).c_str());
-      TH2F *histo_correlationElectron2Pt = new TH2F(name134,"Correlation Second Electron pT; Reco::Electron P_{T} [GeV.c^{-1}]; Pat::Electron P_{T} [GeV.c^{-1}]", 100,  0., 800., 100, 0., 800.);
+      TH2D *histo_correlationElectron2Pt = new TH2D(name134,"Correlation Second Electron pT; Reco::Electron P_{T} [GeV.c^{-1}]; Pat::Electron P_{T} [GeV.c^{-1}]", 100,  0., 800., 100, 0., 800.);
       m_hVector_correlationElectron2Pt[j].push_back(histo_correlationElectron2Pt);
 
       char name135[300];
       sprintf(name135,"correlationElectron2Eta_%s_%s",tag,Folders.at(j).c_str());
-      TH2F *histo_correlationElectron2Eta = new TH2F(name135,"Correlation Second Electron #eta; Reco::Electron #eta; Pat::Electron #eta", 50,  -5.5, 5.5, 50, -5.5, 5.5);
+      TH2D *histo_correlationElectron2Eta = new TH2D(name135,"Correlation Second Electron #eta; Reco::Electron #eta; Pat::Electron #eta", 50,  -5.5, 5.5, 50, -5.5, 5.5);
       m_hVector_correlationElectron2Eta[j].push_back(histo_correlationElectron2Eta);
 
       char name136[300];
       sprintf(name136,"correlationElectron2Phi_%s_%s",tag,Folders.at(j).c_str());
-      TH2F *histo_correlationElectron2Phi = new TH2F(name136,"Correlation Second Electron #phi; Reco::Electron #phi; Pat::Electron #phi", 50,  -3.3, 3.3, 50, -3.3, 3.3);
+      TH2D *histo_correlationElectron2Phi = new TH2D(name136,"Correlation Second Electron #phi; Reco::Electron #phi; Pat::Electron #phi", 50,  -3.3, 3.3, 50, -3.3, 3.3);
       m_hVector_correlationElectron2Phi[j].push_back(histo_correlationElectron2Phi);
 
       char name137[300];
       sprintf(name137,"correlationElectron2Iso_%s_%s",tag,Folders.at(j).c_str());
-      TH2F *histo_correlationElectron2Iso = new TH2F(name137,"Correlation Second Electron Isolation; Reco::Electron Iso; Pat::Electron Iso", 100,  0., 1., 100, 0., 1.);
+      TH2D *histo_correlationElectron2Iso = new TH2D(name137,"Correlation Second Electron Isolation; Reco::Electron Iso; Pat::Electron Iso", 100,  0., 1., 100, 0., 1.);
       m_hVector_correlationElectron2Iso[j].push_back(histo_correlationElectron2Iso);
 
       char name138[300];
       sprintf(name138,"correlationMuon1Pt_%s_%s",tag,Folders.at(j).c_str());
-      TH2F *histo_correlationMuon1Pt = new TH2F(name138,"Correlation Leading Muon pT; Reco::Muon P_{T} [GeV.c^{-1}] ; Pat::Muon P_{T} [GeV.c^{-1}]", 100,  0., 800., 100, 0., 800.);
+      TH2D *histo_correlationMuon1Pt = new TH2D(name138,"Correlation Leading Muon pT; Reco::Muon P_{T} [GeV.c^{-1}] ; Pat::Muon P_{T} [GeV.c^{-1}]", 100,  0., 800., 100, 0., 800.);
       m_hVector_correlationMuon1Pt[j].push_back(histo_correlationMuon1Pt);
 
       char name139[300];
       sprintf(name139,"correlationMuon1Eta_%s_%s",tag,Folders.at(j).c_str());
-      TH2F *histo_correlationMuon1Eta = new TH2F(name139,"Correlation Leading Muon #eta; Reco::Muon #eta; Pat::Muon #eta", 50,  -5.5, 5.5, 50, -5.5, 5.5);
+      TH2D *histo_correlationMuon1Eta = new TH2D(name139,"Correlation Leading Muon #eta; Reco::Muon #eta; Pat::Muon #eta", 50,  -5.5, 5.5, 50, -5.5, 5.5);
       m_hVector_correlationMuon1Eta[j].push_back(histo_correlationMuon1Eta);
 
       char name140[300];
       sprintf(name140,"correlationMuon1Phi_%s_%s",tag,Folders.at(j).c_str());
-      TH2F *histo_correlationMuon1Phi = new TH2F(name140,"Correlation Leading Muon #phi; Reco::Muon #phi; Pat::Muon #phi", 50,  -3.3, 3.3, 50, -3.3, 3.3);
+      TH2D *histo_correlationMuon1Phi = new TH2D(name140,"Correlation Leading Muon #phi; Reco::Muon #phi; Pat::Muon #phi", 50,  -3.3, 3.3, 50, -3.3, 3.3);
       m_hVector_correlationMuon1Phi[j].push_back(histo_correlationMuon1Phi);
 
       char name141[300];
       sprintf(name141,"correlationMuon1Iso_%s_%s",tag,Folders.at(j).c_str());
-      TH2F *histo_correlationMuon1Iso = new TH2F(name141,"Correlation Leading Muon Isolation; Reco::Muon Iso; Pat::Muon Iso", 100,  0., 1., 100, 0., 1.);
+      TH2D *histo_correlationMuon1Iso = new TH2D(name141,"Correlation Leading Muon Isolation; Reco::Muon Iso; Pat::Muon Iso", 100,  0., 1., 100, 0., 1.);
       m_hVector_correlationMuon1Iso[j].push_back(histo_correlationMuon1Iso);
 
       char name142[300];
       sprintf(name142,"correlationMuon2Pt_%s_%s",tag,Folders.at(j).c_str());
-      TH2F *histo_correlationMuon2Pt = new TH2F(name142,"Correlation Second Muon pT; Reco::Muon P_{T} [GeV.c^{-1}] ; Pat::Muon P_{T} [GeV.c^{-1}]", 100,  0., 800., 100, 0., 800.);
+      TH2D *histo_correlationMuon2Pt = new TH2D(name142,"Correlation Second Muon pT; Reco::Muon P_{T} [GeV.c^{-1}] ; Pat::Muon P_{T} [GeV.c^{-1}]", 100,  0., 800., 100, 0., 800.);
       m_hVector_correlationMuon2Pt[j].push_back(histo_correlationMuon2Pt);
 
       char name143[300];
       sprintf(name143,"correlationMuon2Eta_%s_%s",tag,Folders.at(j).c_str());
-      TH2F *histo_correlationMuon2Eta = new TH2F(name143,"Correlation Second Muon #eta; Reco::Muon #eta; Pat::Muon #eta", 50,  -5.5, 5.5, 50, -5.5, 5.5);
+      TH2D *histo_correlationMuon2Eta = new TH2D(name143,"Correlation Second Muon #eta; Reco::Muon #eta; Pat::Muon #eta", 50,  -5.5, 5.5, 50, -5.5, 5.5);
       m_hVector_correlationMuon2Eta[j].push_back(histo_correlationMuon2Eta);
 
       char name144[300];
       sprintf(name144,"correlationMuon2Phi_%s_%s",tag,Folders.at(j).c_str());
-      TH2F *histo_correlationMuon2Phi = new TH2F(name144,"Correlation Second Muon #phi; Reco::Muon #phi; Pat::Muon #phi", 50,  -3.3, 3.3, 50, -3.3, 3.3);
+      TH2D *histo_correlationMuon2Phi = new TH2D(name144,"Correlation Second Muon #phi; Reco::Muon #phi; Pat::Muon #phi", 50,  -3.3, 3.3, 50, -3.3, 3.3);
       m_hVector_correlationMuon2Phi[j].push_back(histo_correlationMuon2Phi);
 
       char name145[300];
       sprintf(name145,"correlationMuon2Iso_%s_%s",tag,Folders.at(j).c_str());
-      TH2F *histo_correlationMuon2Iso = new TH2F(name145,"Correlation Second Muon Isolation; Reco::Muon Iso; Pat::Muon Iso", 100,  0., 1., 100, 0., 1.);
+      TH2D *histo_correlationMuon2Iso = new TH2D(name145,"Correlation Second Muon Isolation; Reco::Muon Iso; Pat::Muon Iso", 100,  0., 1., 100, 0., 1.);
       m_hVector_correlationMuon2Iso[j].push_back(histo_correlationMuon2Iso);
 
     }
@@ -1308,7 +1308,7 @@ void DiffractiveZ::SaveHistos(std::string type){
 
 }
 
-void DiffractiveZ::Run(std::string filein_, std::string processname_, std::string savehistofile_, std::string switchtrigger_, int optTrigger_, double lepton1pt_, double lepton2pt_, int nVertex_, std::string type_, std::string switchlumiweight_, float mcweight_, std::string typesel_){
+void DiffractiveZ::Run(std::string filein_, std::string processname_, std::string savehistofile_, std::string switchtrigger_, int optTrigger_, double lepton1pt_, double lepton2pt_, int nVertex_, std::string type_, std::string switchlumiweight_, double mcweight_, std::string typesel_){
 
   bool debug = false;
 
@@ -1432,8 +1432,8 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
     deltapTelectrons = eventdiffZ->GetLeadingElectronPt() - eventdiffZ->GetSecondElectronPt();
     deltapTmuons = eventdiffZ->GetLeadingMuonPt() - eventdiffZ->GetSecondMuonPt();
 
-    float totalcommon = 1.;
-    float mclumiweight = 1.;
+    double totalcommon = 1.;
+    double mclumiweight = 1.;
 
     if (switchlumiweight == "mc_lumi_weight"){
       mclumiweight = mcweight;
@@ -1478,7 +1478,7 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
       if (eventdiffZ->GetLeadingElectronPt() > lepton1pt && eventdiffZ->GetSecondElectronPt() > lepton2pt) presel = true;
       if (eventdiffZ->GetLeadingElectronCharge()*eventdiffZ->GetSecondElectronCharge()==-1) charge = true;
       if (eventdiffZ->GetDiElectronMass() > 60. && eventdiffZ->GetDiElectronMass() < 110.) dimass = true;
-      if (eventdiffZ->GetElectronsN() == 2) nSel = true;
+      if (eventdiffZ->GetElectronsN() > 1) nSel = true;
       if (eventdiffZ->GetLeadingElectronrelIsoDr03() < 0.05 || eventdiffZ->GetSecondElectronrelIsoDr03() < 0.05 ) isolation = true;
     }
 
@@ -1487,7 +1487,7 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
       if (eventdiffZ->GetLeadingMuonPt() > lepton1pt && eventdiffZ->GetSecondMuonPt() > lepton2pt) presel = true;
       if (eventdiffZ->GetLeadingMuonCharge()*eventdiffZ->GetSecondMuonCharge()==-1) charge = true;
       if (eventdiffZ->GetDiMuonMass() > 60. && eventdiffZ->GetDiMuonMass() < 110.) dimass = true;
-      if (eventdiffZ->GetMuonsN() == 2) nSel = true;
+      if (eventdiffZ->GetMuonsN() > 1) nSel = true;
       if (eventdiffZ->GetLeadingMuonrelIsoDr03() < 0.05 || eventdiffZ->GetSecondMuonrelIsoDr03() < 0.05 ) isolation = true;
     }
 
@@ -1496,7 +1496,7 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
       if (eventdiffZ->GetPatElectron1Pt() > lepton1pt && eventdiffZ->GetPatElectron2Pt() > lepton2pt) presel = true;
       if (eventdiffZ->GetPatElectron1Charge()*eventdiffZ->GetPatElectron2Charge()==-1) charge = true;
       if (eventdiffZ->GetPatDiElectronMass() > 60. && eventdiffZ->GetPatDiElectronMass() < 110.) dimass = true;
-      if (eventdiffZ->GetPatNElectron() == 2) nSel = true;
+      if (eventdiffZ->GetPatNElectron() > 1) nSel = true;
       if (eventdiffZ->GetPatElectron1relIsoDr03() < 0.05 || eventdiffZ->GetPatElectron2relIsoDr03() < 0.05 ) isolation = true;
     }
 
@@ -1505,7 +1505,7 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
       if (eventdiffZ->GetPatMuon1Pt() > lepton1pt && eventdiffZ->GetPatMuon2Pt() > lepton2pt) presel = true;
       if (eventdiffZ->GetPatMuon1Charge()*eventdiffZ->GetPatMuon2Charge()==-1) charge = true;
       if (eventdiffZ->GetPatDiMuonMass() > 60. && eventdiffZ->GetPatDiMuonMass() < 110.) dimass = true;
-      if (eventdiffZ->GetPatNMuon() == 2) nSel = true; 
+      if (eventdiffZ->GetPatNMuon() > 1) nSel = true; 
       if (eventdiffZ->GetPatMuon1relIsoDr03() < 0.05 || eventdiffZ->GetPatMuon2relIsoDr03() < 0.05 ) isolation = true;
     }
 
@@ -1612,7 +1612,7 @@ int main(int argc, char **argv)
   int nVertex_;
   int optTrigger_;
   std::string switchtrigger_;
-  float mcweight_;
+  double mcweight_;
   std::string switchlumiweight_;
   std::string type_;
   std::string typesel_;
@@ -1622,13 +1622,29 @@ int main(int argc, char **argv)
   if (argc > 3 && strcmp(s1,argv[3]) != 0) savehistofile_  = argv[3];
   if (argc > 4 && strcmp(s1,argv[4]) != 0) switchtrigger_ = argv[4];
   if (argc > 5 && strcmp(s1,argv[5]) != 0) optTrigger_   = atoi(argv[5]);
-  if (argc > 6 && strcmp(s1,argv[6]) != 0) lepton1pt_ = atoi(argv[6]);
-  if (argc > 7 && strcmp(s1,argv[7]) != 0) lepton2pt_ = atoi(argv[7]);
+  if (argc > 6 && strcmp(s1,argv[6]) != 0) lepton1pt_ = atof(argv[6]);
+  if (argc > 7 && strcmp(s1,argv[7]) != 0) lepton2pt_ = atof(argv[7]);
   if (argc > 8 && strcmp(s1,argv[8]) != 0) nVertex_ = atoi(argv[8]);
   if (argc > 9 && strcmp(s1,argv[9]) != 0) type_ = argv[9];
   if (argc > 10 && strcmp(s1,argv[10]) != 0) switchlumiweight_ = argv[10];
-  if (argc > 11 && strcmp(s1,argv[11]) != 0) mcweight_ = atoi(argv[11]);
+  if (argc > 11 && strcmp(s1,argv[11]) != 0) mcweight_ = atof(argv[11]);
   if (argc > 12 && strcmp(s1,argv[12]) != 0) typesel_ = argv[12];
+
+  std::cout << " " << std::endl;
+  std::cout << ">>>>> Run with the Options <<<<< " << std::endl;
+  std::cout << "Filename, PATTuple: " << filein_ << std::endl;
+  std::cout << "ProcessName, PATTuple: " << processname_ << std::endl;
+  std::cout << "Output name, histograms: " << savehistofile_ << std::endl;
+  std::cout << "Trigger Switch: " << switchtrigger_ << std::endl;
+  std::cout << "Trigger Path Option: " << optTrigger_ << std::endl;
+  std::cout << "Lepton 1, pT [GeV]: " << lepton1pt_ << std::endl;
+  std::cout << "Lepton 2, pT [GeV]: " << lepton2pt_ << std::endl;
+  std::cout << "# Vertex: " << nVertex_ << std::endl;
+  std::cout << "Multiple Pile-Up Option: " << type_ << std::endl;
+  std::cout << "Luminosity Weight Option: " << switchlumiweight_ << std::endl;
+  std::cout << "MC Weight: " << mcweight_ << std::endl;
+  std::cout << "Type of Selection: " << typesel_ << std::endl;
+  std::cout << "" << std::endl;
 
   if (typesel_=="RecoMuon" || typesel_=="RecoElectron" || typesel_=="PatElectron" || typesel_=="PatMuon" ) {}
   else{
