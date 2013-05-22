@@ -18,7 +18,7 @@ config.globalTagNameMC = 'START42_V17D::All'
 config.comEnergy = 7000.0
 config.trackAnalyzerName = 'trackHistoAnalyzer'
 config.trackTagName = 'analysisTracks'
-config.NumberOfEvents = -1
+config.NumberOfEvents = 200
 config.TriggerOn = False
 triggerlist = 'HLT_Mu0_L1MuOpen','HLT_Mu3','HLT_Mu5','HLT_DoubleMu0'
 l1list = 'L1_ZeroBias','L1_BptxMinus_NotBptxPlus'
@@ -31,8 +31,8 @@ l1list = 'L1_ZeroBias','L1_BptxMinus_NotBptxPlus'
 if config.runOnMC:
     config.l1Paths = (l1list)
     config.hltPaths =(triggerlist)
-    config.inputFileName = '/storage1/dmf/TestSamples/PYTHIA6_QCD_15to3000_private_SL_RECO/QCD_Pt_15to3000_TuneZ2_Flat_7TeV_pythia6_cff_py_RAW2DIGI_L1Reco_RECO_233_3_nsm.root'
-    config.runPUMC = True  # MC With PU
+    config.inputFileName = '/storage1/dmf/TestSamples/DyToMuMuPU2010/DyToMuMu.root'
+    config.runPUMC = True    # MC With PU
     config.runGen = False    # MC With Weight
 
 else:
@@ -209,7 +209,7 @@ process.diffractiveZAnalysisTTree = cms.EDAnalyzer("EventInfoDiffractiveDiffract
         EventInfo = cms.PSet(
                     RunOnData = cms.untracked.bool(not config.runOnMC),
                     RunWithMCPU = cms.untracked.bool(config.runPUMC),
-                    RunWithGen = cms.untracked.bool(config.runGen)
+                    RunWithWeightGen = cms.untracked.bool(config.runGen)
         ),
         DiffractiveAnalysis = DiffractiveAnalysis,
         DiffractiveZAnalysis = DiffractiveZAnalysis

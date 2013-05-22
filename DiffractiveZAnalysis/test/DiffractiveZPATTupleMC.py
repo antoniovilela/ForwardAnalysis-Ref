@@ -209,7 +209,7 @@ process.diffractiveZAnalysisTTree = cms.EDAnalyzer("EventInfoDiffractiveDiffract
         EventInfo = cms.PSet(
                     RunOnData = cms.untracked.bool(not config.runOnMC),
                     RunWithMCPU = cms.untracked.bool(config.runPUMC),
-                    RunWithGen = cms.untracked.bool(config.runGen)
+                    RunWithWeightGen = cms.untracked.bool(config.runGen)
         ),
         DiffractiveAnalysis = DiffractiveAnalysis,
         DiffractiveZAnalysis = DiffractiveZAnalysis

@@ -23,7 +23,7 @@ EventInfo::EventInfo(const edm::ParameterSet& pset):
   //runOnData_(pset.getUntrackedParameter<bool>("RunOnData")),
   runOnData_(false),
   runWithMCPU_(pset.getUntrackedParameter<bool>("RunWithMCPU")),
-  runWithGen_(pset.getUntrackedParameter<bool>("RunWithGen")) {} 
+  runWithWeightGen_(pset.getUntrackedParameter<bool>("RunWithWeightGen")) {} 
 
 EventInfo::~EventInfo() {}
 
@@ -40,14 +40,13 @@ void EventInfo::fill(EventInfoEvent& eventData, const edm::Event& event, const e
    runOnData_ = event.isRealData();
 
    fillEventInfo(eventData,event,setup);
-
-   if( runWithGen_ ){
+   fillPileUpInfo(eventData,event,setup);
+ 
+   if( runWithWeightGen_ ){
       edm::Handle<GenEventInfoProduct> genEventInfoH;
       event.getByLabel("generator", genEventInfoH);
       eventData.SetPthat( genEventInfoH->binningValues()[0] );
       eventData.SetGeneratorWeight( genEventInfoH->weight() );
-
-      fillPileUpInfo(eventData,event,setup);
    } else {
       eventData.SetPthat( -1. );
       eventData.SetGeneratorWeight( -1. );
