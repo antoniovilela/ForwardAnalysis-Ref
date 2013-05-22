@@ -44,24 +44,6 @@ class DiffractiveZ {
   double deltapTelectrons;
   double deltapTmuons;
 
-  float ratioElectron1Pt;
-  float ratioElectron1Eta;
-  float ratioElectron1Phi;
-  float ratioElectron1Iso;
-  float ratioMuon1Pt;
-  float ratioMuon1Eta;
-  float ratioMuon1Phi;
-  float ratioMuon1Iso;
-
-  float ratioElectron2Pt;
-  float ratioElectron2Eta;
-  float ratioElectron2Phi;
-  float ratioElectron2Iso;
-  float ratioMuon2Pt;
-  float ratioMuon2Eta;
-  float ratioMuon2Phi;
-  float ratioMuon2Iso;
-
   std::string filein;
   std::string processname;
   std::string savehistofile;
@@ -212,23 +194,23 @@ class DiffractiveZ {
   std::vector<std::vector<TH1F*> > m_hVector_SecondMuonrelIsoDr03;
   std::vector<std::vector<TH1F*> > m_hVector_SecondMuonrelIsoDr05;
 
-  std::vector<std::vector<TH1F*> > m_hVector_ratioElectron1Pt;
-  std::vector<std::vector<TH1F*> > m_hVector_ratioElectron1Eta;
-  std::vector<std::vector<TH1F*> > m_hVector_ratioElectron1Phi;
-  std::vector<std::vector<TH1F*> > m_hVector_ratioElectron1Iso;
-  std::vector<std::vector<TH1F*> > m_hVector_ratioMuon1Pt;
-  std::vector<std::vector<TH1F*> > m_hVector_ratioMuon1Eta;
-  std::vector<std::vector<TH1F*> > m_hVector_ratioMuon1Phi;
-  std::vector<std::vector<TH1F*> > m_hVector_ratioMuon1Iso;
+  std::vector<std::vector<TH2F*> > m_hVector_correlationElectron1Pt;
+  std::vector<std::vector<TH2F*> > m_hVector_correlationElectron1Eta;
+  std::vector<std::vector<TH2F*> > m_hVector_correlationElectron1Phi;
+  std::vector<std::vector<TH2F*> > m_hVector_correlationElectron1Iso;
+  std::vector<std::vector<TH2F*> > m_hVector_correlationMuon1Pt;
+  std::vector<std::vector<TH2F*> > m_hVector_correlationMuon1Eta;
+  std::vector<std::vector<TH2F*> > m_hVector_correlationMuon1Phi;
+  std::vector<std::vector<TH2F*> > m_hVector_correlationMuon1Iso;
 
-  std::vector<std::vector<TH1F*> > m_hVector_ratioElectron2Pt;
-  std::vector<std::vector<TH1F*> > m_hVector_ratioElectron2Eta;
-  std::vector<std::vector<TH1F*> > m_hVector_ratioElectron2Phi;
-  std::vector<std::vector<TH1F*> > m_hVector_ratioElectron2Iso;
-  std::vector<std::vector<TH1F*> > m_hVector_ratioMuon2Pt;
-  std::vector<std::vector<TH1F*> > m_hVector_ratioMuon2Eta;
-  std::vector<std::vector<TH1F*> > m_hVector_ratioMuon2Phi;
-  std::vector<std::vector<TH1F*> > m_hVector_ratioMuon2Iso;
+  std::vector<std::vector<TH2F*> > m_hVector_correlationElectron2Pt;
+  std::vector<std::vector<TH2F*> > m_hVector_correlationElectron2Eta;
+  std::vector<std::vector<TH2F*> > m_hVector_correlationElectron2Phi;
+  std::vector<std::vector<TH2F*> > m_hVector_correlationElectron2Iso;
+  std::vector<std::vector<TH2F*> > m_hVector_correlationMuon2Pt;
+  std::vector<std::vector<TH2F*> > m_hVector_correlationMuon2Eta;
+  std::vector<std::vector<TH2F*> > m_hVector_correlationMuon2Phi;
+  std::vector<std::vector<TH2F*> > m_hVector_correlationMuon2Iso;
 
   std::vector <std::string> Folders;
 
