@@ -19,9 +19,9 @@
 void Systematics(){
   //PurityTriggerService("histo_purity_nopresel_jet2_pT10.root",0);
   //TriggerEfficiency("histo_effTriggerMultijetsRunB_RefDijetAve50U_And30U_270313pT5030.root","effTriggerMultijetsRunB_RefDijetAve50U_And30U_pT50_30.root");
-  //EachCutEfficiency("histo_effCutsMinBias2010RunB_castor.root",0);
+  EachCutEfficiency("histo_effCutsMinBias2010RunB_inclusive.root",0);
   //TriggerEfficiencyMerge("histo_effTriggerMultijetsRunB_RefDijetAve50U_Or30U_castor.root","histo_effTriggerMultijetsRunB_RefOr30U_And30U_castor.root","histo_effTriggerMultijetsRunB_RefDijetAve50U_And30U_castor.root");
-  Systematic("histo_effTriggerMultijetsRunB_RefDijetAve50U_And30U_castor.root", "sigmaPlusHLTDijet50_And30U_pT60_castor.root","sigmaMinusHLTDijet50_And30U_pT60_castor.root");
+  //Systematic("histo_effTriggerMultijetsRunB_RefDijetAve50U_And30U_castor.root", "sigmaPlusHLTDijet50_And30U_pT60_castor.root","sigmaMinusHLTDijet50_And30U_pT60_castor.root");
 }
 
 
@@ -590,14 +590,20 @@ void setHBins(TH1F* h)
 
   else{
 
+
+    // Increase Bin Limits on Data Driven. Repeat last bin value 10 times. 
+    int highBin = h->GetNbinsX() + 50;
+
     for (Int_t i=minBin;i>=1;i--) {
       h->SetBinContent(i,h->GetBinContent(i+1)); 
       h->SetBinError(i,0.05*h->GetBinContent(i+1)); 
     }
 
-    for (Int_t i=maxBin;i<=h->GetNbinsX();i++){
-      h->SetBinContent(i,h->GetBinContent(i-1)); 
-      h->SetBinError(i,0.05*h->GetBinContent(i-1)); 
+    for (Int_t i=maxBin;i<=highBin;i++){
+      //h->SetBinContent(i,h->GetBinContent(i-1)); 
+      //h->SetBinError(i,0.05*h->GetBinContent(i-1)); 
+      h->SetBinContent(i,1); 
+      h->SetBinError(i,0.05); 
     }
 
     for (Int_t i=minBin;i<=maxBin;i++) {
