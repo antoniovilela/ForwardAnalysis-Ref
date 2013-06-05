@@ -510,7 +510,7 @@ double* ExclusiveDijet::triggerCorrection(){
 
 void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::string processname_, std::string switchtrigger_, std::string type_, std::string jetunc_, std::string switchpucorr_, std::string pudatafile_, std::string pumcfile_, std::string switchcutcorr_, std::string switchtriggercorr_, std::string cutcorrfile_, std::string triggercorrfile_, std::string switchlumiweight_, double lumiweight_, std::string switchmceventweight_, int optnVertex_, int optTrigger_, double jet1pT_, double jet2pT_, std::string switchcastor_){
 
-  bool debug = false;
+  bool debug = true;
 
   TH1::SetDefaultSumw2(true);
   TH2::SetDefaultSumw2(true);
@@ -597,6 +597,7 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
   if (switchtriggercorr == "trigger_correction") efftrigger = TFile::Open(triggercorrfile_.c_str());
   if (switchcutcorr == "cut_correction") effcut = TFile::Open(cutcorrfile_.c_str());
 
+
   for(int i=0;i<NEVENTS;i++){
 
     deltaphi = -999.;
@@ -662,6 +663,7 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
       ptJet1 = eventexcl->GetLeadingJetPt();
       ptJet2 = eventexcl->GetSecondJetPt();
       jetstatus = "\nUnrecognized jet energy scale correction. Jets without uncertainty.";
+      exit(EXIT_FAILURE);
     }
 
     double totalcommon = 1.;
@@ -694,24 +696,6 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
 	exit(EXIT_FAILURE);
       }
       mcweight = eventinfo->GetGeneratorWeight();
-    }
-
-    if(switchtrigger == "trigger" || switchtrigger == "no_trigger") {}
-    else{
-      std::cout << " " << std::endl;
-      std::cout << "\nPlease Insert type of selection: " << std::endl;
-      std::cout << "1) trigger: with trigger. If PATTuple has trigger." << std::endl;
-      std::cout << "2) no_trigger: without trigger. If PATTuple has not trigger." << std::endl;
-      exit(EXIT_FAILURE);
-    }
-
-    if(switchcastor == "castor" || switchcastor == "no_castor") {}
-    else{
-      std::cout << " " << std::endl;
-      std::cout << "\nPlease Insert Castor Option: " << std::endl;
-      std::cout << "1) castor: calorimeter castor is included with threshold of 400 GeV." << std::endl;
-      std::cout << "2) no_castor: without castor requirements." << std::endl;
-      exit(EXIT_FAILURE);
     }
 
     if (switchpucorr=="pileup_correction") mcweightpu = LumiWeights_.weight(eventexcl->GetNPileUpBx0());
@@ -927,6 +911,79 @@ int main(int argc, char **argv)
   if (argc > 19 && strcmp(s1,argv[19]) != 0) jet1pT_ = atof(argv[19]);
   if (argc > 20 && strcmp(s1,argv[20]) != 0) jet2pT_ = atof(argv[20]);
   if (argc > 21 && strcmp(s1,argv[21]) != 0) switchcastor_ = argv[21];
+
+  if(switchcutcorr_ == "cut_correction" || switchcutcorr_ == "no_cut_correction") {}
+  else{
+    std::cout << " " << std::endl;
+    std::cout << "\nPlease Insert Cut Correction Option: " << std::endl;
+    std::cout << "1) cut_correction: apply efficiency cut correction." << std::endl;
+    std::cout << "2) no_cut_correction: do not apply efficiency cut correction." << std::endl;
+    exit(EXIT_FAILURE);
+  }
+
+  if(switchtrigger_ == "trigger" || switchtrigger_ == "no_trigger") {}
+  else{
+    std::cout << " " << std::endl;
+    std::cout << "\nPlease Insert type of selection: " << std::endl;
+    std::cout << "1) trigger: with trigger. If PATTuple has trigger." << std::endl;
+    std::cout << "2) no_trigger: without trigger. If PATTuple has not trigger." << std::endl;
+    exit(EXIT_FAILURE);
+  }
+
+  if(switchcastor_ == "castor" || switchcastor_ == "no_castor") {}
+  else{
+    std::cout << " " << std::endl;
+    std::cout << "\nPlease Insert Castor Option: " << std::endl;
+    std::cout << "1) castor: calorimeter castor is included with threshold of 400 GeV." << std::endl;
+    std::cout << "2) no_castor: without castor requirements." << std::endl;
+    exit(EXIT_FAILURE);
+  }
+
+  if(switchpucorr_ == "pileup_correction" || switchpucorr_ == "no_pileup_correction") {}
+  else{
+    std::cout << " " << std::endl;
+    std::cout << "\nPlease Insert Pile Up Reweight Option: " << std::endl;
+    std::cout << "1) pileup_correction: apply pileup reweight in the data. It works only for MC with PU." << std::endl;
+    std::cout << "2) no_pileup_correction: do not apply pileup reweight in the data. It works only for MC with PU." << std::endl;
+    exit(EXIT_FAILURE);
+  }
+
+  if(switchtriggercorr_ == "trigger_correction" || switchtriggercorr_ == "no_trigger_correction") {}
+  else{
+    std::cout << " " << std::endl;
+    std::cout << "\nPlease Insert Trigger Correction Option: " << std::endl;
+    std::cout << "1) trigger_correction: apply trigger correction in the data." << std::endl;
+    std::cout << "2) no_trigger_correction: do not apply trigger correction in the data." << std::endl;
+    exit(EXIT_FAILURE);
+  }
+
+  if(switchmceventweight_ == "mc_event_weight" || switchmceventweight_ == "no_mc_event_weight") {}
+  else{
+    std::cout << " " << std::endl;
+    std::cout << "\nPlease Insert MC Flat Weight Option" << std::endl;
+    std::cout << "1) mc_event_weight: apply event by event weight in the flat MC. It works only for MC with flat pT distribution." << std::endl;
+    std::cout << "2) no_mc_event_weight: do not apply event by event reweight in the MC." << std::endl;
+    exit(EXIT_FAILURE);
+  }
+
+  if(switchlumiweight_ == "mc_lumi_weight" || switchlumiweight_  == "no_mc_lumi_weight") {}
+  else{
+    std::cout << " " << std::endl;
+    std::cout << "\nPlease Insert MC Cross Section Weight: " << std::endl;
+    std::cout << "1) mc_lumi_weight: apply normalization factor in the MC." << std::endl;
+    std::cout << "2) no_mc_lumi_weight: do not apply normalization factor in the MC." << std::endl;
+    exit(EXIT_FAILURE);
+  }
+
+  if(jetunc_ == "none" || jetunc_ == "minus" || jetunc_ == "plus") {}
+  else{
+    std::cout << " " << std::endl;
+    std::cout << "\nPlease Insert Jet Uncertainty for systematic studies: " << std::endl;
+    std::cout << "1) plus: pT + sigma." << std::endl;
+    std::cout << "2) minus: pT - sigma." << std::endl;
+    std::cout << "3) none: pT." << std::endl;
+    exit(EXIT_FAILURE);
+  }
 
   if (type_=="multiple_pileup" || type_=="no_multiple_pileup") {
 
