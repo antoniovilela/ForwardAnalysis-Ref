@@ -508,7 +508,7 @@ double* ExclusiveDijet::triggerCorrection(){
 
 }
 
-void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::string processname_, std::string switchtrigger_, std::string type_, std::string jetunc_, std::string switchpucorr_, std::string pudatafile_, std::string pumcfile_, std::string switchcutcorr_, std::string switchtriggercorr_, std::string cutcorrfile_, std::string triggercorrfile_, std::string switchlumiweight_, double lumiweight_, std::string switchmceventweight_, int optnVertex_, int optTrigger_, double jet1pT_, double jet2pT_, std::string switchcastor_){
+void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::string processname_, std::string switchtrigger_, std::string type_, std::string jetunc_, std::string switchpucorr_, std::string pudatafile_, std::string pumcfile_, std::string switchcutcorr_, std::string switchtriggercorr_, std::string cutcorrfile_, std::string triggercorrfile_, std::string switchlumiweight_, double lumiweight_, std::string switchmceventweight_, int optnVertex_, int optTrigger_, double jet1pT_, double jet2pT_, std::string switchcastor_, std::string switchpresel_){
 
   bool debug = true;
 
@@ -536,6 +536,7 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
   jet1pT = jet1pT_;
   jet2pT = jet2pT_;
   switchcastor = switchcastor_;
+  switchpresel = switchpresel_;
 
   TFile check1(filein.c_str());
 
@@ -762,7 +763,10 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
       if (eventdiff->GetSumETotCastor() < 400) castor = true;
     }
     if (switchcastor == "no_castor") castor = true;
-    if ( (eventdiff->GetSumEnergyHFPlus() < 30 && eventdiff->GetSumEnergyHFMinus() < 30) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990) ) presel = true;
+    if (switchpresel == "preselection") {
+      if ( (eventdiff->GetSumEnergyHFPlus() < 30 && eventdiff->GetSumEnergyHFMinus() < 30) || (eventdiff->GetEtaMinFromPFCands() < -990 && eventdiff->GetEtaMaxFromPFCands() < -990) ) presel = true;
+    }
+    if (switchpresel == "no_preselection") presel = true;
     if (eventexcl->GetNVertex() > 0 && eventexcl->GetNVertex()<= optnVertex) vertex = true;
     if (ptJet1 > jet1pT && ptJet2 > jet2pT) dijetpt = true;
     if (eventexcl->GetLeadingJetEta() < 2.9 && eventexcl->GetSecondJetEta() < 2.9 && eventexcl->GetLeadingJetEta() > -2.9 && eventexcl->GetSecondJetEta() > -2.9) dijeteta = true; 
@@ -829,6 +833,7 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
   outstring << ">> Jet1(pT) > " << jet1pT <<std::endl;
   outstring << ">> Jet2(pT) > " << jet2pT <<std::endl;
   outstring << ">> Castor: " << switchcastor << std::endl;
+  outstring << ">> Preselection: " << switchpresel <<std::endl;
   outstring << " " << std::endl;
   outstring << "<< TRIGGER >> " << std::endl;
   outstring << " " << std::endl;
@@ -883,6 +888,7 @@ int main(int argc, char **argv)
   std::string switchtriggercorr_;
   std::string switchlumiweight_;
   std::string switchcastor_; 
+  std::string switchpresel_;
   double lumiweight_;
   std::string switchmceventweight_;
   int optnVertex_;
@@ -911,6 +917,7 @@ int main(int argc, char **argv)
   if (argc > 19 && strcmp(s1,argv[19]) != 0) jet1pT_ = atof(argv[19]);
   if (argc > 20 && strcmp(s1,argv[20]) != 0) jet2pT_ = atof(argv[20]);
   if (argc > 21 && strcmp(s1,argv[21]) != 0) switchcastor_ = argv[21];
+  if (argc > 22 && strcmp(s1,argv[22]) != 0) switchpresel_ = argv[22];
 
   if(switchcutcorr_ == "cut_correction" || switchcutcorr_ == "no_cut_correction") {}
   else{
@@ -985,6 +992,15 @@ int main(int argc, char **argv)
     exit(EXIT_FAILURE);
   }
 
+  if(switchpresel_ == "preselection" || switchpresel_ == "no_preselection") {}
+  else{
+    std::cout << " " << std::endl;
+    std::cout << "\nPlease Insert Pre Selection Option: " << std::endl;
+    std::cout << "1) preselection: apply preselection cut." << std::endl;
+    std::cout << "2) no_preselection: do not apply preselection cut." << std::endl;
+    exit(EXIT_FAILURE);
+  }
+
   if (type_=="multiple_pileup" || type_=="no_multiple_pileup") {
 
     if (optnVertex_ <= 0 || optTrigger_ < 0 || lumiweight_ <= 0 || jet1pT_ < 0 || jet2pT_ < 0 ){
@@ -1053,7 +1069,7 @@ int main(int argc, char **argv)
 	return 0;
       }
     }
-    exclusive->Run(filein_, savehistofile_, processname_, switchtrigger_, type_, jetunc_, switchpucorr_, pudatafile_, pumcfile_, switchcutcorr_, switchtriggercorr_, cutcorrfile_, triggercorrfile_, switchlumiweight_, lumiweight_, switchmceventweight_, optnVertex_, optTrigger_, jet1pT_, jet2pT_, switchcastor_);
+    exclusive->Run(filein_, savehistofile_, processname_, switchtrigger_, type_, jetunc_, switchpucorr_, pudatafile_, pumcfile_, switchcutcorr_, switchtriggercorr_, cutcorrfile_, triggercorrfile_, switchlumiweight_, lumiweight_, switchmceventweight_, optnVertex_, optTrigger_, jet1pT_, jet2pT_, switchcastor_, switchpresel_);
     return 0;
   }
 
