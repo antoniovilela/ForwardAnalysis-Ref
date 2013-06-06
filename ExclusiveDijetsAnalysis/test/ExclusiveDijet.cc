@@ -20,6 +20,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <math.h>
 
 #include "ExclusiveDijet.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/EventInfoEvent.h"
@@ -27,11 +28,12 @@
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/DiffractiveEvent.h"
 #include "PhysicsTools/Utilities/interface/LumiReWeighting.h"
 
+#define isfinite(x) !std::isinf(x)
+
 using namespace diffractiveAnalysis;
 using namespace exclusiveDijetsAnalysis;
 using namespace eventInfo;
 using namespace reweight;
-
 
 static inline void loadBar(int x, int n, int r, int w)
 {
@@ -450,6 +452,8 @@ void ExclusiveDijet::SaveHistos(std::string type){
 
 double* ExclusiveDijet::cutCorrection(){
 
+  bool debug = false;
+
   if (eventinfo->GetInstLumiBunch() < -999){
     std::cout << "\n--------------------------------------------------------------" << std::endl;
     std::cout << " Only apply cut correction in data, not in MC."   << std::endl;
@@ -476,11 +480,24 @@ double* ExclusiveDijet::cutCorrection(){
   cutCorrection[4] = 1./h_eff_step_4_2->GetBinContent(h_eff_step_4_2->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
   cutCorrection[5] = 1./h_eff_step_4_1->GetBinContent(h_eff_step_4_1->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
 
+  for (int i=0; i<6; i++){
+    if (!isfinite(cutCorrection[i])) {
+      cutCorrection[i] = 1.;
+      ++counterinfcut;
+      if (debug) {
+	std::cout << "\n <DIVISION PER ZERO>" << std::endl;
+	exit(EXIT_FAILURE);
+      }
+    }
+  }
+
   return cutfactor;
 
 }
 
 double* ExclusiveDijet::triggerCorrection(){
+
+  bool debug = false;
 
   if (eventinfo->GetInstLumiBunch() < -999){
     std::cout << "\n--------------------------------------------------------------" << std::endl;
@@ -504,6 +521,17 @@ double* ExclusiveDijet::triggerCorrection(){
   triggerCorrection[2] = 1./h_eff_trigger_eta2->GetBinContent(h_eff_trigger_eta2->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
   triggerCorrection[3] = 1./h_eff_trigger_eta1->GetBinContent(h_eff_trigger_eta1->GetXaxis()->FindBin(eventinfo->GetInstLumiBunch()));
 
+  for (int i=0; i<4; i++){
+    if (!isfinite(triggerCorrection[i])) {
+      triggerCorrection[i] = 1.;
+      ++counterinftrigger;
+      if (debug) {
+        std::cout << "\n <DIVISION PER ZERO>" << std::endl;
+	exit(EXIT_FAILURE);
+      }
+    }
+  }
+
   return triggerfactor;
 
 }
@@ -511,6 +539,9 @@ double* ExclusiveDijet::triggerCorrection(){
 void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::string processname_, std::string switchtrigger_, std::string type_, std::string jetunc_, std::string switchpucorr_, std::string pudatafile_, std::string pumcfile_, std::string switchcutcorr_, std::string switchtriggercorr_, std::string cutcorrfile_, std::string triggercorrfile_, std::string switchlumiweight_, double lumiweight_, std::string switchmceventweight_, int optnVertex_, int optTrigger_, double jet1pT_, double jet2pT_, std::string switchcastor_, std::string switchpresel_){
 
   bool debug = true;
+
+  counterinfcut = 0.;
+  counterinftrigger = 0.;
 
   TH1::SetDefaultSumw2(true);
   TH2::SetDefaultSumw2(true);
@@ -859,6 +890,12 @@ void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::s
   outstring << "Trigger 18: " << triggercounter[18] << std::endl;
   outstring << "Trigger 19: " << triggercounter[19] << std::endl;
   outstring << "" << std::endl;
+  outstring << "<< TRIGGER >> " << std::endl;
+  outstring << " " << std::endl;
+  outstring << "# of correction trigger efficiencies factors with NAN: " << counterinftrigger << std::endl;
+  outstring << "# of correction cut efficiencies factors with NAN: " << counterinfcut << std::endl;
+  outstring << "These weights were treated as 1. TH1* root defense." << std::endl; 
+  outstring << " " << std::endl;
 
   outf->cd();
   SaveHistos(type);

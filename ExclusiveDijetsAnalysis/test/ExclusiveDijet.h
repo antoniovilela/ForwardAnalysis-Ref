@@ -37,6 +37,9 @@ class ExclusiveDijet {
   int totalweight;
   double deltaphi, aSumE, absdeltaetapf, deltaetapf, ptJet1, ptJet2;
 
+  int counterinfcut;
+  int counterinftrigger;
+
   std::string filein;
   std::string processname;
   std::string savehistofile;
