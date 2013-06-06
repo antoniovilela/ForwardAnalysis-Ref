@@ -41,6 +41,9 @@ class DiffractiveZAnalysis {
       void fillZPat(DiffractiveZEvent&, const edm::Event&, const edm::EventSetup&);
       void fillDetectorVariables(DiffractiveZEvent&, const edm::Event&, const edm::EventSetup&);
       void fillVariables(DiffractiveZEvent&, const edm::Event&, const edm::EventSetup&);
+      void fillCastor(DiffractiveZEvent&, const edm::Event&, const edm::EventSetup&);
+      void fillZDC(DiffractiveZEvent&, const edm::Event&, const edm::EventSetup&);
+      void fillDetectorEnergyEtaInfo(DiffractiveZEvent&, const edm::Event&, const edm::EventSetup&);
 
       edm::InputTag triggerResultsTag_;
       std::vector<std::string> hltPathNames_;
@@ -49,8 +52,13 @@ class DiffractiveZAnalysis {
       edm::InputTag pfTag_;
       edm::InputTag genTag_;
       edm::InputTag PVtxCollectionTag_;
+      edm::InputTag castorHitsTag_;
+      edm::InputTag zdcHitsTag_;
+      bool RunCastor_;
+      bool RunZDC_;
       bool RunMC_;
       bool RunZPat_;
+      bool EachTower_;
       double pTPFThresholdCharged_;
       double energyPFThresholdBar_;
       double energyPFThresholdEnd_;
@@ -60,6 +68,8 @@ class DiffractiveZAnalysis {
       double energyThresholdHF_;
       double energyThresholdEB_;
       double energyThresholdEE_;
+      double castorThreshold_;
+      double fCGeVCastor_;
       edm::InputTag caloTowerTag_; 
 
       std::string selectionPathName_;

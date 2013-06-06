@@ -43,6 +43,7 @@
 
 #include "DataFormats/HcalDetId/interface/HcalZDCDetId.h"
 #include "DataFormats/HcalRecHit/interface/HcalRecHitCollections.h"
+#include "ForwardAnalysis/Utilities/interface/CastorEnergy.h"
 
 #include "DataFormats/HcalDetId/interface/HcalGenericDetId.h"
 #include "DataFormats/HcalDetId/interface/HcalElectronicsId.h"
@@ -64,8 +65,13 @@ DiffractiveZAnalysis::DiffractiveZAnalysis(const edm::ParameterSet& pset):
   pfTag_(pset.getParameter<edm::InputTag>("pfTag")),
   genTag_(pset.getParameter<edm::InputTag>("genTag")),
   PVtxCollectionTag_(pset.getParameter<edm::InputTag>("PVtxCollectionTag")),
+  castorHitsTag_(pset.getParameter<edm::InputTag>("castorHitsTag")),
+  zdcHitsTag_(pset.getParameter<edm::InputTag>("zdcHitsTag")),
+  RunCastor_(pset.getUntrackedParameter<Bool_t>("RunCastor", false)),
+  RunZDC_(pset.getUntrackedParameter<Bool_t>("RunZDC", false)),
   RunMC_(pset.getUntrackedParameter<Bool_t>("RunMC", false)),
   RunZPat_(pset.getUntrackedParameter<Bool_t>("RunZPat", false)),
+  EachTower_(pset.getUntrackedParameter<Bool_t>("EachTower", false)),
   pTPFThresholdCharged_(pset.getParameter<double>("pTPFThresholdCharged")),
   energyPFThresholdBar_(pset.getParameter<double>("energyPFThresholdBar")),
   energyPFThresholdEnd_(pset.getParameter<double>("energyPFThresholdEnd")),
@@ -75,6 +81,8 @@ DiffractiveZAnalysis::DiffractiveZAnalysis(const edm::ParameterSet& pset):
   energyThresholdHF_(pset.getParameter<double>("energyThresholdHF")),
   energyThresholdEB_(pset.getParameter<double>("energyThresholdEB")),
   energyThresholdEE_(pset.getParameter<double>("energyThresholdEE")),
+  castorThreshold_(pset.getParameter<double>("castorThreshold")),
+  fCGeVCastor_(pset.getParameter<double>("fCGeVCastor")),
   caloTowerTag_(pset.getParameter<edm::InputTag>("CaloTowerTag"))
 {
 }
@@ -116,6 +124,9 @@ void DiffractiveZAnalysis::fill(DiffractiveZEvent& eventData, const edm::Event& 
   fillVariables(eventData,event,setup);
   if (RunMC_) fillGenInfo(eventData,event,setup); 
   if (RunZPat_) fillZPat(eventData,event,setup);
+  if (RunCastor_) fillCastor(eventData,event,setup);
+  if (RunZDC_) fillZDC(eventData,event,setup);
+  if (EachTower_) fillDetectorEnergyEtaInfo(eventData,event,setup);
 
 }
 
@@ -1578,7 +1589,7 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
     math::XYZTLorentzVector DipatElectronSystem(0.,0.,0.,0.);
     DipatElectronSystem += electron1->p4();
     DipatElectronSystem += electron2->p4();
- 
+
     eventData.SetPatDiElectronMass(DipatElectronSystem.M());
 
     // Fill Electron Variables
@@ -1671,3 +1682,263 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
 
 
 }
+
+//
+// Fill Castor 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void DiffractiveZAnalysis::fillCastor(DiffractiveZEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
+
+  bool debug = true;
+
+  double CASTORtotalrechitenergy = 0;
+  edm::Handle<CastorRecHitCollection> CastorRecHits;
+
+  event.getByLabel(castorHitsTag_,CastorRecHits); 
+  for (size_t i = 0; i < CastorRecHits->size(); ++i) { 
+    const CastorRecHit & rh = (*CastorRecHits)[i]; 
+
+    double RecHitE = rh.energy()*fCGeVCastor_;   // Zlatka  fC/GeV  conversion absolute scale.
+
+    // castorThreshold_ = 0.3 -> 300 Zlatka's noise.
+    if (RecHitE < castorThreshold_ ) continue ; 
+
+    //HistoCastorModule->Fill(RecHitMod, RecHitE);
+    // First 5 modules we use or not? 
+    if (rh.id().module()>5 ) continue ; 
+    CASTORtotalrechitenergy += RecHitE; 
+    if (debug) std::cout << " CASTOR ENERGY c = " << i << " " << rh.id() << " " << RecHitE << std::endl;
+  } 
+
+  if (debug) std::cout << " CASTOR Total = " << CASTORtotalrechitenergy  << std::endl;
+
+  //  Rootuple->sumECASTOR_minus = CASTORtotalrechitenergy; 
+  //  for (int i=1;i<=HistoCastorModule->GetNbinsX();i++) {
+  //    Rootuple->EnergyCastorModule.push_back(HistoCastorModule->GetBinContent(i)) ;
+  //  }
+  //HistoCastorModule->Reset();
+
+}
+
+//
+// Fill ZDC
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void DiffractiveZAnalysis::fillZDC(DiffractiveZEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
+
+  // ZDC have two sections: section 1 = EM, section 2 = HAD. EM has 5 modules. Had has 4 modules. 
+
+  bool debug = true; 
+
+  double ZDCNSumEMEnergy = 0.;
+  double ZDCNSumHADEnergy = 0.;
+  double ZDCPSumEMEnergy = 0.;
+  double ZDCPSumHADEnergy = 0.;
+
+  double ZDCNSumEMTime = 0.;
+  double ZDCNSumHADTime = 0.;
+  double ZDCPSumEMTime = 0.;
+  double ZDCPSumHADTime = 0.;
+
+  edm::Handle <ZDCRecHitCollection> zdc_recHits_h;
+  event.getByLabel(zdcHitsTag_, zdc_recHits_h);
+  const ZDCRecHitCollection *zdc_recHits = zdc_recHits_h.failedToGet()? 0 : &*zdc_recHits_h;
+
+  if (zdc_recHits) { // object is available
+    for (ZDCRecHitCollection::const_iterator zhit = zdc_recHits->begin(); zhit != zdc_recHits->end(); zhit++){		
+      int ZDCSide      = (zhit->id()).zside();
+      //Float_t ZDCEnergy = zhit->energy();
+      //Float_t ZDCRecHitTime = zhit->time();
+      int ZDCSection   = (zhit->id()).section();
+      int ZDCChannel   = (zhit->id()).channel();
+
+      if (zhit->energy() >= 0.){
+
+	if (ZDCSide == -1){
+
+	  if (ZDCSection == 1 ){
+	    ZDCNSumEMEnergy += zhit->energy();
+            ZDCNSumEMTime += zhit->time();
+	  }
+
+	  if (ZDCSection == 2 ){
+	    ZDCNSumHADEnergy += zhit->energy();
+            ZDCNSumHADTime += zhit->time();
+	  }
+
+	}
+
+	if (ZDCSide == 1){
+
+	  if (ZDCSection == 1 ){
+	    ZDCPSumEMEnergy += zhit->energy();
+            ZDCPSumEMTime += zhit->time();
+	  }
+
+	  if (ZDCSection == 2 ){
+	    ZDCPSumHADEnergy += zhit->energy();
+            ZDCPSumHADTime += zhit->time();
+	  }
+
+	}
+
+      }
+
+    }
+
+    if (debug){
+      std::cout << "ZDC + | Total EM Energy: " << ZDCPSumEMEnergy << std::endl;
+      std::cout << "ZDC + | Total HAD Energy: " << ZDCPSumHADEnergy << std::endl;
+      std::cout << "ZDC + | EM <Time>: " << ZDCPSumEMTime/5. << std::endl;
+      std::cout << "ZDC + | HAD <Time>: " << ZDCPSumHADTime/4. << std::endl;
+      std::cout << "ZDC - | Total EM Energy: " << ZDCNSumEMEnergy << std::endl;
+      std::cout << "ZDC - | Total HAD Energy: " << ZDCNSumHADEnergy << std::endl;
+      std::cout << "ZDC - | EM <Time>: " << ZDCNSumEMTime/5. << std::endl;
+      std::cout << "ZDC - | HAD <Time>: " << ZDCNSumHADTime/4. << std::endl;
+    }
+
+  }
+
+}
+
+//
+// Fill Tower Information Enegy x Eta
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+void DiffractiveZAnalysis::fillDetectorEnergyEtaInfo(DiffractiveZEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
+
+  bool debug = false;
+
+  std::vector<double> energy_tower;
+  std::vector<double> eta_tower; 
+
+  edm::Handle<CaloTowerCollection> towerCollectionH;
+  event.getByLabel(caloTowerTag_,towerCollectionH);
+  const CaloTowerCollection& towerCollection = *towerCollectionH;
+
+  CaloTowerCollection::const_iterator calotower;
+  calotower = towerCollection.begin();
+  CaloTowerCollection::const_iterator calotowers_end = towerCollection.end();
+
+  for(; calotower != calotowers_end; ++calotower) {
+
+    if (fabs(calotower->eta())> 4.7) continue;   /// excluding ring12 and ring13 of HF
+
+    bool hasHCAL = false;
+    bool hasHF = false;
+    bool hasHE = false;
+    bool hasHB = false;
+    bool hasHO = false;
+    bool hasECAL = false;
+    bool hasEE = false;
+    bool hasEB = false;  
+
+    for(size_t iconst = 0; iconst < calotower->constituentsSize(); iconst++){
+
+      DetId adetId = calotower->constituent(iconst);
+      if(adetId.det()==DetId::Hcal){
+	hasHCAL = true;
+	HcalDetId hcalDetId(adetId);
+	if(hcalDetId.subdet()==HcalForward) hasHF = true;
+	else if(hcalDetId.subdet()==HcalEndcap) hasHE = true;
+	else if(hcalDetId.subdet()==HcalBarrel) hasHB = true;
+	else if(hcalDetId.subdet()==HcalOuter) hasHO = true;  
+      } 
+      else if(adetId.det()==DetId::Ecal){
+	hasECAL = true;
+	EcalSubdetector ecalSubDet = (EcalSubdetector)adetId.subdetId();
+	if(ecalSubDet == EcalEndcap) hasEE = true;
+	else if(ecalSubDet == EcalBarrel) hasEB = true;
+      }
+    }
+
+    bool CalAboveTh = false;
+    double caloTowerEnergy = -999.;
+    double caloTowerEta = -999;
+    double caloTowerEmEnergy = calotower->emEnergy();
+    double caloTowerHadEnergy = calotower->hadEnergy();
+
+    if( hasHF && !hasHE )
+    {
+      if( caloTowerEnergy > energyThresholdHF_ && fabs(calotower->eta())> 2.98 )   //// excluding HF ring1
+      {
+	CalAboveTh = true;
+	caloTowerEnergy = calotower->energy();
+	caloTowerEta = calotower->eta();
+	if (debug) {
+	  std::cout << "HF Energy for each CaloTower (GeV): " << caloTowerEnergy << " | Eta for each CaloTower: " << caloTowerEta << std::endl;
+	  energy_tower.push_back(caloTowerEnergy);
+	  eta_tower.push_back(caloTowerEta);
+	}
+
+      }
+    }
+    else if( hasHE && !hasHF && !hasHB )
+    {
+      if( caloTowerHadEnergy > energyThresholdHE_)
+      {
+	CalAboveTh = true;
+	caloTowerEnergy = calotower->energy();
+	caloTowerEta = calotower->eta();
+	if (debug) {
+	  std::cout << "HE Energy for each CaloTower (GeV): " << caloTowerEnergy << " | Eta for each CaloTower: " << caloTowerEta << std::endl;
+	  energy_tower.push_back(caloTowerEnergy);
+	  eta_tower.push_back(caloTowerEta);
+	}
+
+      }
+    }
+    else if( hasHB && !hasHE )
+    {
+      if( caloTowerHadEnergy > energyThresholdHB_)
+      {
+	CalAboveTh = true;
+	caloTowerEnergy = calotower->energy();
+	caloTowerEta = calotower->eta();
+	if (debug) {
+	  std::cout << "HB Energy for each CaloTower (GeV): " << caloTowerEnergy << " | Eta for each CaloTower: " << caloTowerEta << std::endl;
+	  energy_tower.push_back(caloTowerEnergy);
+	  eta_tower.push_back(caloTowerEta);
+	}
+
+      }
+    }
+
+    if( hasEE && !hasEB )
+    {
+      if( caloTowerEmEnergy >= energyThresholdEE_)
+      {
+	CalAboveTh = true;    
+	caloTowerEnergy = calotower->energy();
+	caloTowerEta = calotower->eta();
+	if (debug) {
+	  std::cout << "EB Energy for each CaloTower (GeV): " << caloTowerEnergy << " | Eta for each CaloTower: " << caloTowerEta << std::endl;
+	  energy_tower.push_back(caloTowerEnergy);
+	  eta_tower.push_back(caloTowerEta);
+	}
+
+      }
+    }
+    else if( hasEB && !hasEE )
+    {
+      if( caloTowerEmEnergy >= energyThresholdEB_)
+      {
+	CalAboveTh = true;
+	caloTowerEnergy = calotower->energy();
+	caloTowerEta = calotower->eta();
+	if (debug) {
+	  std::cout << "EB Energy for each CaloTower (GeV): " << caloTowerEnergy << " | Eta for each CaloTower: " << caloTowerEta << std::endl;
+	  energy_tower.push_back(caloTowerEnergy);
+	  eta_tower.push_back(caloTowerEta);
+	}
+
+      }
+    }
+
+  }  ////has to close calotower loop
+
+  //eventData.SetMTowerEnergy(energy_tower);
+  //eventData.SetMTowerEnergy(energy_eta);
+
+}
+
