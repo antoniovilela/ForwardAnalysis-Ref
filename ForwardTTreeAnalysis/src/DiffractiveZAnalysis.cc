@@ -1,6 +1,8 @@
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/DiffractiveZAnalysis.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/DiffractiveZEvent.h"
 
+#include "FWCore/Framework/interface/ESHandle.h"
+#include "FWCore/Framework/interface/EventSetup.h"
 #include "FWCore/Framework/interface/Event.h"
 #include "FWCore/ParameterSet/interface/ParameterSet.h"
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
@@ -52,6 +54,17 @@
 
 #include "DataFormats/EcalDetId/interface/EcalTrigTowerDetId.h"
 #include "DataFormats/EcalDetId/interface/EBDetId.h"
+
+#include "FWCore/Framework/interface/ESHandle.h"
+#include "CalibFormats/HcalObjects/interface/HcalCoderDb.h"
+#include "CalibFormats/HcalObjects/interface/HcalDbService.h"
+#include "CalibFormats/HcalObjects/interface/HcalDbRecord.h"
+
+// UPDATE
+// - ZDC and Castor Objects, thresholds and conversions.
+// - Eta and Phi for Z, pat and reco.
+// - Get for ZDC, Castor and Z(eta and phi) objects. 
+// - Get for Energy and Eta (towers). 
 
 using diffractiveZAnalysis::DiffractiveZAnalysis;
 
@@ -263,6 +276,9 @@ void DiffractiveZAnalysis::fillElectronsInfo(DiffractiveZEvent& eventData, const
       std::cout << "NSize: " << electrons->size() << std::endl;
       std::cout << "Electron1: " << electron1->pt() << std::endl;
       std::cout << "Electron2: " << electron2->pt() << std::endl;
+      std::cout << "Eta Z: " << DielectronSystem.eta() << std::endl;
+      std::cout << "Phi Z: " << DielectronSystem.phi() << std::endl;
+      std::cout << "pT Z: " << DielectronSystem.pt() << std::endl;
     }
 
   }
@@ -412,6 +428,9 @@ void DiffractiveZAnalysis::fillMuonsInfo(DiffractiveZEvent& eventData, const edm
       std::cout << "NSize: " << muons->size() << std::endl;
       std::cout << "Muon1: " << muon1->pt() << std::endl;
       std::cout << "Muon2: " << muon2->pt() << std::endl;
+      std::cout << "Eta Z: " << DimuonSystem.eta() << std::endl;
+      std::cout << "Phi Z: " << DimuonSystem.phi() << std::endl;
+      std::cout << "pT Z: " << DimuonSystem.pt() << std::endl;
     }
 
   }
@@ -1372,7 +1391,7 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
 
   // Declaring Variables
 
-  bool debug = false;
+  bool debug = true;
   int ElectronsN=0;
   int MuonsN=0;
 
@@ -1507,6 +1526,9 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
       std::cout << "Muon1, p4(): " << muon1->p4() << std::endl;
       std::cout << "Muon2, p4(): " << muon2->p4() << std::endl;
       std::cout << "DiMuon, M(): " << DipatMuonSystem.M() << std::endl;
+      std::cout << "Eta Z: " << DipatMuonSystem.eta() << std::endl;
+      std::cout << "Phi Z: " << DipatMuonSystem.phi() << std::endl;
+      std::cout << "pT Z: " << DipatMuonSystem.pt() << std::endl;
     }
 
   }
@@ -1639,6 +1661,9 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
       std::cout << "Electron1, p4(): " << electron1->p4() << std::endl;
       std::cout << "Electron2, p4(): " << electron2->p4() << std::endl;
       std::cout << "DiElectron, M(): " << DipatElectronSystem.M() << std::endl;
+      std::cout << "Eta Z: " << DipatElectronSystem.eta() << std::endl;
+      std::cout << "Phi Z: " << DipatElectronSystem.phi() << std::endl;
+      std::cout << "pT Z: " << DipatElectronSystem.pt() << std::endl;
     }
 
   }
@@ -1689,7 +1714,7 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
 
 void DiffractiveZAnalysis::fillCastor(DiffractiveZEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
 
-  bool debug = true;
+  bool debug = false;
 
   double CASTORtotalrechitenergy = 0;
   edm::Handle<CastorRecHitCollection> CastorRecHits;
@@ -1728,7 +1753,7 @@ void DiffractiveZAnalysis::fillZDC(DiffractiveZEvent& eventData, const edm::Even
 
   // ZDC have two sections: section 1 = EM, section 2 = HAD. EM has 5 modules. Had has 4 modules. 
 
-  bool debug = true; 
+  bool debug = true;
 
   double ZDCNSumEMEnergy = 0.;
   double ZDCNSumHADEnergy = 0.;
@@ -1740,9 +1765,19 @@ void DiffractiveZAnalysis::fillZDC(DiffractiveZEvent& eventData, const edm::Even
   double ZDCPSumEMTime = 0.;
   double ZDCPSumHADTime = 0.;
 
+  int DigiDataADC[180];
+  float DigiDatafC[180];
+
+  edm::Handle <ZDCDigiCollection> zdc_digi_h;
+  event.getByType(zdc_digi_h);
+  edm::ESHandle<HcalDbService> conditions;
+  const ZDCDigiCollection *zdc_digi = zdc_digi_h.failedToGet()? 0 : &*zdc_digi_h;
+
   edm::Handle <ZDCRecHitCollection> zdc_recHits_h;
   event.getByLabel(zdcHitsTag_, zdc_recHits_h);
   const ZDCRecHitCollection *zdc_recHits = zdc_recHits_h.failedToGet()? 0 : &*zdc_recHits_h;
+
+  setup.get<HcalDbRecord>().get(conditions);
 
   if (zdc_recHits) { // object is available
     for (ZDCRecHitCollection::const_iterator zhit = zdc_recHits->begin(); zhit != zdc_recHits->end(); zhit++){		
@@ -1758,12 +1793,12 @@ void DiffractiveZAnalysis::fillZDC(DiffractiveZEvent& eventData, const edm::Even
 
 	  if (ZDCSection == 1 ){
 	    ZDCNSumEMEnergy += zhit->energy();
-            ZDCNSumEMTime += zhit->time();
+	    ZDCNSumEMTime += zhit->time();
 	  }
 
 	  if (ZDCSection == 2 ){
 	    ZDCNSumHADEnergy += zhit->energy();
-            ZDCNSumHADTime += zhit->time();
+	    ZDCNSumHADTime += zhit->time();
 	  }
 
 	}
@@ -1772,12 +1807,12 @@ void DiffractiveZAnalysis::fillZDC(DiffractiveZEvent& eventData, const edm::Even
 
 	  if (ZDCSection == 1 ){
 	    ZDCPSumEMEnergy += zhit->energy();
-            ZDCPSumEMTime += zhit->time();
+	    ZDCPSumEMTime += zhit->time();
 	  }
 
 	  if (ZDCSection == 2 ){
 	    ZDCPSumHADEnergy += zhit->energy();
-            ZDCPSumHADTime += zhit->time();
+	    ZDCPSumHADTime += zhit->time();
 	  }
 
 	}
@@ -1795,6 +1830,40 @@ void DiffractiveZAnalysis::fillZDC(DiffractiveZEvent& eventData, const edm::Even
       std::cout << "ZDC - | Total HAD Energy: " << ZDCNSumHADEnergy << std::endl;
       std::cout << "ZDC - | EM <Time>: " << ZDCNSumEMTime/5. << std::endl;
       std::cout << "ZDC - | HAD <Time>: " << ZDCNSumHADTime/4. << std::endl;
+    }
+
+  }
+
+  if (zdc_digi){
+    for(int i=0; i<180; i++){DigiDatafC[i]=0;DigiDataADC[i]=0;}
+    for (ZDCDigiCollection::const_iterator j=zdc_digi->begin();j!=zdc_digi->end();j++){
+      const ZDCDataFrame digi = (const ZDCDataFrame)(*j);		
+      int iSide      = digi.id().zside();
+      int iSection   = digi.id().section();
+      int iChannel   = digi.id().channel();
+      int chid = (iSection-1)*5+(iSide+1)/2*9+(iChannel-1);
+
+      const HcalQIEShape* qieshape=conditions->getHcalShape();
+      const HcalQIECoder* qiecoder=conditions->getHcalCoder(digi.id());
+      CaloSamples caldigi;
+      HcalCoderDb coder(*qiecoder,*qieshape);
+
+      coder.adc2fC(digi,caldigi);
+
+      int fTS = digi.size();
+
+      for (int i = 0; i < fTS; ++i) {
+	DigiDatafC[i+chid*10] = caldigi[i];
+	DigiDataADC[i+chid*10] = digi[i].adc();
+      }
+
+      if (debug){
+	std::cout << "iSide: " << iSide << std::endl;
+	std::cout << "iSection: " << iSection << std::endl;
+	std::cout << "iChannel: " << iChannel << std::endl;
+	std::cout << "chid: " << chid << std::endl;
+      }
+
     }
 
   }
