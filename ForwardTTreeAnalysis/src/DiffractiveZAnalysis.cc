@@ -60,12 +60,6 @@
 #include "CalibFormats/HcalObjects/interface/HcalDbService.h"
 #include "CalibFormats/HcalObjects/interface/HcalDbRecord.h"
 
-// UPDATE
-// - ZDC and Castor Objects, thresholds and conversions.
-// - Eta and Phi for Z, pat and reco.
-// - Get for ZDC, Castor and Z(eta and phi) objects. 
-// - Get for Energy and Eta (towers). 
-
 using diffractiveZAnalysis::DiffractiveZAnalysis;
 
 const char* DiffractiveZAnalysis::name = "DiffractiveZAnalysis";
@@ -1738,141 +1732,54 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
 
 void DiffractiveZAnalysis::fillCastor(DiffractiveZEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
 
-  // Phi: 16 modules, rechit.id().sector(); 
-  // Z: 14 modules, rechit.id().module(); 
+  // Phi: 16 modules, rh.id().sector(); 
+  // Z: 14 modules, rh.id().module(); 
+  // Channel definition: 16*(rh.id().module()-1) + rh.id().sector(); 
   // For 2010, Castor uses only first five modules. 
 
   bool debug = true;
-  std::vector<double> castor_tower;
+  bool debug_deep = true;
 
-  double CASTORtotalrechitenergy = 0;
   edm::Handle<CastorRecHitCollection> CastorRecHits;
   event.getByLabel(castorHitsTag_,CastorRecHits); 
 
-  double sumCastorTower1=0.;
-  double sumCastorTower2=0.;
-  double sumCastorTower3=0.;
-  double sumCastorTower4=0.;
-  double sumCastorTower5=0.;
-  double sumCastorTower6=0.;
-  double sumCastorTower7=0.;
-  double sumCastorTower8=0.;
-  double sumCastorTower9=0.;
-  double sumCastorTower10=0.;
-  double sumCastorTower11=0.;
-  double sumCastorTower12=0.;
-  double sumCastorTower13=0.;
-  double sumCastorTower14=0.;
-  double sumCastorTower15=0.;
-  double sumCastorTower16=0.;
+  double sumCastorTower[16];
+  bool accept[16];
 
-  for (size_t i = 0; i < CastorRecHits->size(); ++i) { 
-    const CastorRecHit & rh = (*CastorRecHits)[i]; 
+  for(int isec = 0; isec < 16; isec++) {
+    accept[isec] = false;
+    sumCastorTower[isec] = 0; 
+  }
 
-    if (rh.energy()*fCGeVCastor_ > castorThreshold_){ 
+  for (size_t i = 0; i < CastorRecHits->size(); ++i) {
+    
+    bool used_cha = false;
+    const CastorRecHit & rh = (*CastorRecHits)[i];
+    int cha = 16*(rh.id().module()-1) + rh.id().sector();    
 
-      if (rh.id().module() < 6){
+    if(cha != 5 && cha != 6) used_cha = true;  
+    if(used_cha == false) continue; 
 
-	if (rh.id().sector()==1){
-	  if (debug) std::cout << "Sector 1, Energy [GeV]: " << rh.energy()*fCGeVCastor_ << std::endl;
-	  sumCastorTower1 += rh.energy()*fCGeVCastor_; 
-	} 
+    // Only 5th modules
+    if (rh.id().module() > 5 ) continue;
 
-	if (rh.id().sector()==2){
-	  if (debug) std::cout << "Sector 2, Energy [GeV]: " << rh.energy()*fCGeVCastor_ << std::endl;
-	  sumCastorTower2 += rh.energy()*fCGeVCastor_;
-	}
+    if (debug_deep) std::cout << "Energy: " << rh.energy()*fCGeVCastor_ << " | Sector: " << rh.id().sector() << " | Module: " << rh.id().module() << " | Channel: " << cha << std::endl;
 
-	if (rh.id().sector()==3){
-	  if (debug) std::cout << "Sector 3, Energy [GeV]: " << rh.energy()*fCGeVCastor_ << std::endl;
-	  sumCastorTower3 += rh.energy()*fCGeVCastor_;
-	}
-
-	if (rh.id().sector()==4){
-	  if (debug) std::cout << "Sector 4, Energy [GeV]: " << rh.energy()*fCGeVCastor_ << std::endl;
-	  sumCastorTower4 += rh.energy()*fCGeVCastor_;
-	}
-
-	if (rh.id().sector()==5){
-	  if (debug) std::cout << "Sector 5, Energy [GeV]: " << rh.energy()*fCGeVCastor_ << std::endl;
-	  sumCastorTower5 += rh.energy()*fCGeVCastor_;
-	}
-
-	if (rh.id().sector()==6){
-	  if (debug) std::cout << "Sector 6, Energy [GeV]: " << rh.energy()*fCGeVCastor_ << std::endl;
-	  sumCastorTower6 += rh.energy()*fCGeVCastor_;
-	}
-
-	if (rh.id().sector()==7){
-	  if (debug) std::cout << "Sector 7, Energy [GeV]: " << rh.energy()*fCGeVCastor_ << std::endl;
-	  sumCastorTower7 += rh.energy()*fCGeVCastor_;
-	}
-
-	if (rh.id().sector()==8){
-	  if (debug) std::cout << "Sector 8, Energy [GeV]: " << rh.energy()*fCGeVCastor_ << std::endl;
-	  sumCastorTower8 += rh.energy()*fCGeVCastor_;
-	}
-
-	if (rh.id().sector()==9){
-	  if (debug) std::cout << "Sector 9, Energy [GeV]: " << rh.energy()*fCGeVCastor_ << std::endl;
-	  sumCastorTower9 += rh.energy()*fCGeVCastor_;
-	}
-
-	if (rh.id().sector()==10){
-	  if (debug) std::cout << "Sector 10, Energy [GeV]: " << rh.energy()*fCGeVCastor_ << std::endl;
-	  sumCastorTower10 += rh.energy()*fCGeVCastor_;
-	}
-
-	if (rh.id().sector()==11){
-	  if (debug) std::cout << "Sector 11, Energy [GeV]: " << rh.energy()*fCGeVCastor_ << std::endl;
-	  sumCastorTower11 += rh.energy()*fCGeVCastor_;
-	}
-
-	if (rh.id().sector()==12){
-	  if (debug) std::cout << "Sector 12, Energy [GeV]: " << rh.energy()*fCGeVCastor_ << std::endl;
-	  sumCastorTower12 += rh.energy()*fCGeVCastor_;
-	}
-
-	if (rh.id().sector()==13){
-	  if (debug) std::cout << "Sector 13, Energy [GeV]: " << rh.energy()*fCGeVCastor_ << std::endl;
-	  sumCastorTower13 += rh.energy()*fCGeVCastor_;
-	}
-
-	if (rh.id().sector()==14){
-	  if (debug) std::cout << "Sector 14, Energy [GeV]: " << rh.energy()*fCGeVCastor_ << std::endl;
-	  sumCastorTower14 += rh.energy()*fCGeVCastor_;
-	}
-
-	if (rh.id().sector()==15){
-	  if (debug) std::cout << "Sector 15, Energy [GeV]: " << rh.energy()*fCGeVCastor_ << std::endl;
-	  sumCastorTower15 += rh.energy()*fCGeVCastor_;
-	}
-
-	if (rh.id().sector()==16){
-	  if (debug) std::cout << "Sector 16, Energy [GeV]: " << rh.energy()*fCGeVCastor_ << std::endl;
-	  sumCastorTower16 += rh.energy()*fCGeVCastor_;
-	}
-      }
+    for(int isec = 0; isec < 16; isec++) {
+      if (rh.id().sector()== isec+1) sumCastorTower[isec]+=rh.energy()*fCGeVCastor_;
     }
-  } 
+
+  }
+
+  for (int isec = 0; isec < 16;isec++) {
+    // 4 sigma for threshold.
+    if (sumCastorTower[isec] > 4.*castorThreshold_) accept[isec]=true;
+  }
 
   if (debug){
-    std::cout << "Sector 1, Total Energy [GeV]: " << sumCastorTower1 << std::endl;
-    std::cout << "Sector 2, Total Energy [GeV]: " << sumCastorTower2 << std::endl;
-    std::cout << "Sector 3, Total Energy [GeV]: " << sumCastorTower3 << std::endl;
-    std::cout << "Sector 4, Total Energy [GeV]: " << sumCastorTower4 << std::endl;
-    std::cout << "Sector 5, Total Energy [GeV]: " << sumCastorTower5 << std::endl;
-    std::cout << "Sector 6, Total Energy [GeV]: " << sumCastorTower6 << std::endl;
-    std::cout << "Sector 7, Total Energy [GeV]: " << sumCastorTower7 << std::endl;
-    std::cout << "Sector 8, Total Energy [GeV]: " << sumCastorTower8 << std::endl;
-    std::cout << "Sector 9, Total Energy [GeV]: " << sumCastorTower9 << std::endl;
-    std::cout << "Sector 10, Total Energy [GeV]: " << sumCastorTower10 << std::endl;
-    std::cout << "Sector 11, Total Energy [GeV]: " << sumCastorTower11 << std::endl;
-    std::cout << "Sector 12, Total Energy [GeV]: " << sumCastorTower12 << std::endl;
-    std::cout << "Sector 13, Total Energy [GeV]: " << sumCastorTower13 << std::endl;
-    std::cout << "Sector 14, Total Energy [GeV]: " << sumCastorTower14 << std::endl;
-    std::cout << "Sector 15, Total Energy [GeV]: " << sumCastorTower15 << std::endl;
-    std::cout << "Sector 16, Total Energy [GeV]: " << sumCastorTower16 << std::endl;
+    for (int isec=0;isec<16;isec++){
+      if(accept[isec]) std::cout << "Sector "<< isec+1 << ", Total Energy [GeV]: " << sumCastorTower[isec] << std::endl;
+    }
   }
 
 }
@@ -1917,10 +1824,10 @@ void DiffractiveZAnalysis::fillZDC(DiffractiveZEvent& eventData, const edm::Even
 
       // Some Variables
       int ZDCSide      = (zhit->id()).zside();
+      int ZDCSection   = (zhit->id()).section();
       //Float_t ZDCEnergy = zhit->energy();
       //Float_t ZDCRecHitTime = zhit->time();
-      int ZDCSection   = (zhit->id()).section();
-      int ZDCChannel   = (zhit->id()).channel();
+      //int ZDCChannel   = (zhit->id()).channel();
 
       if (zhit->energy() >= 0.){
 
