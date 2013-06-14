@@ -21,7 +21,13 @@ class DiffractiveZEvent {
 
     void SetHLTPath(int idx, int fHLTBit)         { hltTrigResults_[idx] = fHLTBit;}
     void SetDiElectronMass(double fDiElectronMass) { DiElectronMass_ = fDiElectronMass;}
+    void SetDiElectronPt(double fDiElectronPt) { DiElectronPt_ = fDiElectronPt;}
+    void SetDiElectronEta(double fDiElectronEta) { DiElectronEta_ = fDiElectronEta;}
+    void SetDiElectronPhi(double fDiElectronPhi) { DiElectronPhi_ = fDiElectronPhi;}
     void SetDiMuonMass(double fDiMuonMass) { DiMuonMass_ = fDiMuonMass;}
+    void SetDiMuonPt(double fDiMuonPt) { DiMuonPt_ = fDiMuonPt;}
+    void SetDiMuonEta(double fDiMuonEta) { DiMuonEta_ = fDiMuonEta;}
+    void SetDiMuonPhi(double fDiMuonPhi) { DiMuonPhi_ = fDiMuonPhi;}
 
     void SetLeadingElectronPt(double fLeadingElectronPt)    { LeadingElectronPt_     = fLeadingElectronPt;}
     void SetLeadingElectronEta(double fLeadingElectronEta)  { LeadingElectronEta_     = fLeadingElectronEta;}
@@ -162,6 +168,13 @@ class DiffractiveZEvent {
     void SetEtaCaloMax(double fEtaCaloMax)    { EtaCaloMax_ = fEtaCaloMax;}
     void SetEtaCaloMin(double fEtaCaloMin)    { EtaCaloMin_ = fEtaCaloMin;}
 
+    void SetMultiplicityHFPlus(int fMultiplicityHFPlus)    { MultiplicityHFPlus_ = fMultiplicityHFPlus;}
+    void SetMultiplicityHEPlus(int fMultiplicityHEPlus)    { MultiplicityHEPlus_ = fMultiplicityHEPlus;}
+    void SetMultiplicityEEPlus(int fMultiplicityEEPlus)    { MultiplicityEEPlus_ = fMultiplicityEEPlus;}
+    void SetMultiplicityHFMinus(int fMultiplicityHFMinus)    { MultiplicityHFMinus_ = fMultiplicityHFMinus;}
+    void SetMultiplicityHEMinus(int fMultiplicityHEMinus)    { MultiplicityHEMinus_ = fMultiplicityHEMinus;}
+    void SetMultiplicityEEMinus(int fMultiplicityEEMinus)    { MultiplicityEEMinus_ = fMultiplicityEEMinus;}
+
     void SetVertex(int fVertex)    { Vertex_ = fVertex;}
     void SetXi_PF_minus(double fXi_PF_minus)    { Xi_PF_minus_ = fXi_PF_minus;}
     void SetXi_PF_plus(double fXi_PF_plus)    { Xi_PF_plus_ = fXi_PF_plus;}
@@ -221,6 +234,9 @@ class DiffractiveZEvent {
     void SetPatMuon2relIso(double fpatMuon2relIso)    {patMuon2relIso_ = fpatMuon2relIso;}
 
     void SetPatDiMuonMass(double fpatDiMuonMass) { patDiMuonMass_ = fpatDiMuonMass;}
+    void SetPatDiMuonPt(double fpatDiMuonPt) { patDiMuonPt_ = fpatDiMuonPt;}
+    void SetPatDiMuonEta(double fpatDiMuonEta) { patDiMuonEta_ = fpatDiMuonEta;}
+    void SetPatDiMuonPhi(double fpatDiMuonPhi) { patDiMuonPhi_ = fpatDiMuonPhi;}
 
     void SetPatNElectron(int fpatNElectron)    {patNElectron_ = fpatNElectron;}
     void SetPatElectron1Pt(double fpatElectron1Pt)    {patElectron1Pt_ = fpatElectron1Pt;}
@@ -255,10 +271,24 @@ class DiffractiveZEvent {
     void SetPatElectron2relIsoDr04(double fpatElectron2relIsoDr04)    {patElectron2relIsoDr04_ = fpatElectron2relIsoDr04;}
 
     void SetPatDiElectronMass(double fpatDiElectronMass) { patDiElectronMass_ = fpatDiElectronMass;}
+    void SetPatDiElectronPt(double fpatDiElectronPt) { patDiElectronPt_ = fpatDiElectronPt;}
+    void SetPatDiElectronEta(double fpatDiElectronEta) { patDiElectronEta_ = fpatDiElectronEta;}
+    void SetPatDiElectronPhi(double fpatDiElectronPhi) { patDiElectronPhi_ = fpatDiElectronPhi;}
+
+    void SetCastorTowerEnergy(const std::vector<double>& fCastorTowerEnergy) { CastorTowerEnergy_ = fCastorTowerEnergy; }
+
+    void SetEachTowerEta(const std::vector<double>& fEachTowerEta) { EachTowerEta_ = fEachTowerEta; }
+    void SetEachTowerEnergy(const std::vector<double>& fEachTowerEnergy) { EachTowerEnergy_ = fEachTowerEnergy; }
 
     int GetHLTPath(int idx)                    const { return hltTrigResults_[idx]; }
     double GetDiElectronMass() const {return DiElectronMass_;}
+    double GetDiElectronPt() const {return DiElectronPt_;}
+    double GetDiElectronEta() const {return DiElectronEta_;}
+    double GetDiElectronPhi() const {return DiElectronPhi_;}
     double GetDiMuonMass() const {return DiMuonMass_;}
+    double GetDiMuonPt() const {return DiMuonPt_;}
+    double GetDiMuonEta() const {return DiMuonEta_;}
+    double GetDiMuonPhi() const {return DiMuonPhi_;}
 
     double GetLeadingElectronPt() const {return LeadingElectronPt_;}
     double GetLeadingElectronEta() const {return LeadingElectronEta_;}
@@ -398,6 +428,13 @@ class DiffractiveZEvent {
     double GetEtaCaloMax()    const {return EtaCaloMax_;}
     double GetEtaCaloMin()    const {return EtaCaloMin_;}
 
+    int GetMultiplicityHFPlus()    const {return MultiplicityHFPlus_;}
+    int GetMultiplicityHEPlus()    const {return MultiplicityHEPlus_;}
+    int GetMultiplicityEEPlus()    const {return MultiplicityEEPlus_;}
+    int GetMultiplicityHFMinus()    const {return MultiplicityHFMinus_;}
+    int GetMultiplicityHEMinus()    const {return MultiplicityHEMinus_;}
+    int GetMultiplicityEEMinus()    const {return MultiplicityEEMinus_;}
+
     int GetVertex()    const {return Vertex_;}
     double GetXi_PF_minus()    const {return Xi_PF_minus_;}
     double GetXi_PF_plus()    const {return Xi_PF_plus_;}
@@ -457,6 +494,9 @@ class DiffractiveZEvent {
     double GetPatMuon2relIso() const {return patMuon2relIso_;}
 
     double GetPatDiMuonMass() const {return patDiMuonMass_;}
+    double GetPatDiMuonPt() const {return patDiMuonPt_;}
+    double GetPatDiMuonEta() const {return patDiMuonEta_;}
+    double GetPatDiMuonPhi() const {return patDiMuonPhi_;}
 
     int GetPatNElectron() const {return patNElectron_;}
     double GetPatElectron1Pt() const {return patElectron1Pt_;}
@@ -491,7 +531,15 @@ class DiffractiveZEvent {
     double GetPatElectron2relIsoDr04() const {return patElectron2relIsoDr04_;}
 
     double GetPatDiElectronMass() const {return patDiElectronMass_;}
+    double GetPatDiElectronPt() const {return patDiElectronPt_;}
+    double GetPatDiElectronEta() const {return patDiElectronEta_;}
+    double GetPatDiElectronPhi() const {return patDiElectronPhi_;}
 
+    double GetEachTowerEta(int i) const { return EachTowerEta_[i]; }
+    double GetEachTowerEnergy(int i) const { return EachTowerEnergy_[i]; }
+
+    double GetCastorTowerEnergy(int i) const { return CastorTowerEnergy_[i]; }
+    
   private:
     friend class diffractiveZAnalysis::DiffractiveZAnalysis;
 
@@ -499,7 +547,14 @@ class DiffractiveZEvent {
 
     int hltTrigResults_[20];
     double DiElectronMass_;
+    double DiElectronPt_;
+    double DiElectronEta_;
+    double DiElectronPhi_;
+
     double DiMuonMass_;
+    double DiMuonPt_;
+    double DiMuonEta_;
+    double DiMuonPhi_;
 
     double LeadingElectronPt_;
     double LeadingElectronEta_;
@@ -570,6 +625,9 @@ class DiffractiveZEvent {
     std::vector<double> Vx_;
     std::vector<double> Vy_;
     std::vector<std::vector<double> > TracksPt_;
+    std::vector<double> EachTowerEta_;
+    std::vector<double> EachTowerEnergy_;
+    std::vector<double> CastorTowerEnergy_;
 
     double PrimaryGapMaxGen_;
     double SecondGapMaxGen_;
@@ -632,6 +690,12 @@ class DiffractiveZEvent {
     double XiCaloMinus_;
     double EtaCaloMax_;
     double EtaCaloMin_;
+    int MultiplicityHFPlus_;
+    int MultiplicityHEPlus_;
+    int MultiplicityEEPlus_;
+    int MultiplicityHFMinus_;
+    int MultiplicityHEMinus_;
+    int MultiplicityEEMinus_;
 
     int Vertex_;
     double Xi_PF_minus_;
@@ -693,6 +757,9 @@ class DiffractiveZEvent {
     double patMuon2relIso_;
 
     double patDiMuonMass_;
+    double patDiMuonPt_;
+    double patDiMuonEta_;
+    double patDiMuonPhi_;
 
     int patNElectron_; 
 
@@ -728,6 +795,9 @@ class DiffractiveZEvent {
     double patElectron2relIsoDr04_;
 
     double patDiElectronMass_;
+    double patDiElectronPt_;
+    double patDiElectronEta_;
+    double patDiElectronPhi_;
 
 };
 

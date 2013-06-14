@@ -224,11 +224,11 @@ void DiffractiveZAnalysis::fillElectronsInfo(DiffractiveZEvent& eventData, const
     math::XYZTLorentzVector DielectronSystem(0.,0.,0.,0.);
     DielectronSystem += electron1->p4();
     DielectronSystem += electron2->p4();
-
     eventData.SetDiElectronMass(DielectronSystem.M());
     eventData.SetDiElectronPt(DielectronSystem.pt());
     eventData.SetDiElectronEta(DielectronSystem.eta());
     eventData.SetDiElectronPhi(DielectronSystem.phi());
+
     eventData.SetElectronsN(ElectronN);
     eventData.SetLeadingElectronPt(electron1->pt());
     eventData.SetLeadingElectronEta(electron1->eta());
@@ -390,7 +390,6 @@ void DiffractiveZAnalysis::fillMuonsInfo(DiffractiveZEvent& eventData, const edm
     math::XYZTLorentzVector DimuonSystem(0.,0.,0.,0.);
     DimuonSystem += muon1->p4();
     DimuonSystem += muon2->p4();
-
     eventData.SetDiMuonMass(DimuonSystem.M());
     eventData.SetDiMuonPt(DimuonSystem.pt());
     eventData.SetDiMuonEta(DimuonSystem.eta());
@@ -1397,16 +1396,11 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
 
   // Declaring Variables
 
-  bool debug = true;
+  bool debug = false;
   int ElectronsN=0;
   int MuonsN=0;
 
   // Detector Objects and Candidates
-
-  edm::Handle <reco::PFCandidateCollection> PFCandidates;
-  event.getByLabel(pfTag_,PFCandidates); 
-  reco::PFCandidateCollection::const_iterator iter;
-
   edm::Handle<std::vector<pat::Muon> > muons;
   event.getByLabel("patMuons", muons);
 
@@ -1483,9 +1477,9 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
     DipatMuonSystem += muon2->p4();
 
     eventData.SetPatDiMuonMass(DipatMuonSystem.M());
-    eventData.SetPatDiMuonEta(DipatMuonSystem.Eta());
-    eventData.SetPatDiMuonPhi(DipatMuonSystem.Phi());
-    eventData.SetPatDiMuonPt(DipatMuonSystem.Pt());
+    eventData.SetPatDiMuonEta(DipatMuonSystem.eta());
+    eventData.SetPatDiMuonPhi(DipatMuonSystem.phi());
+    eventData.SetPatDiMuonPt(DipatMuonSystem.pt());
 
     eventData.SetPatNMuon(muons->size());
     eventData.SetPatMuon1Pt(muon1->pt());
@@ -1732,13 +1726,16 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
 
 void DiffractiveZAnalysis::fillCastor(DiffractiveZEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
 
+
+
   // Phi: 16 modules, rh.id().sector(); 
   // Z: 14 modules, rh.id().module(); 
   // Channel definition: 16*(rh.id().module()-1) + rh.id().sector(); 
   // For 2010, Castor uses only first five modules. 
 
-  bool debug = true;
-  bool debug_deep = true;
+  bool debug = false;
+  bool debug_deep = false;
+  std::vector<double> castor_tower;
 
   edm::Handle<CastorRecHitCollection> CastorRecHits;
   event.getByLabel(castorHitsTag_,CastorRecHits); 
@@ -1752,7 +1749,7 @@ void DiffractiveZAnalysis::fillCastor(DiffractiveZEvent& eventData, const edm::E
   }
 
   for (size_t i = 0; i < CastorRecHits->size(); ++i) {
-    
+
     bool used_cha = false;
     const CastorRecHit & rh = (*CastorRecHits)[i];
     int cha = 16*(rh.id().module()-1) + rh.id().sector();    
@@ -1774,6 +1771,10 @@ void DiffractiveZAnalysis::fillCastor(DiffractiveZEvent& eventData, const edm::E
   for (int isec = 0; isec < 16;isec++) {
     // 4 sigma for threshold.
     if (sumCastorTower[isec] > 4.*castorThreshold_) accept[isec]=true;
+    if (accept[isec]==true) {
+      castor_tower.push_back(sumCastorTower[isec]);
+    }
+    else castor_tower.push_back(-999.);
   }
 
   if (debug){
@@ -1781,6 +1782,8 @@ void DiffractiveZAnalysis::fillCastor(DiffractiveZEvent& eventData, const edm::E
       if(accept[isec]) std::cout << "Sector "<< isec+1 << ", Total Energy [GeV]: " << sumCastorTower[isec] << std::endl;
     }
   }
+
+  eventData.SetCastorTowerEnergy(castor_tower);
 
 }
 
@@ -1793,7 +1796,7 @@ void DiffractiveZAnalysis::fillZDC(DiffractiveZEvent& eventData, const edm::Even
   // ZDC have two sections: section 1 = EM, section 2 = HAD. EM has 5 modules. Had has 4 modules. 
 
   bool debug = false;
-  bool debug_deep = true;
+  bool debug_deep = false;
 
   double ZDCNSumEMEnergy = 0.;
   double ZDCNSumHADEnergy = 0.;
