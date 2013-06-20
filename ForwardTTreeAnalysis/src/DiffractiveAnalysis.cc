@@ -69,6 +69,8 @@ DiffractiveAnalysis::DiffractiveAnalysis(const edm::ParameterSet& pset):
   energyThresholdHE_(pset.getParameter<double>("energyThresholdHE")),
   energyThresholdHF_(pset.getParameter<double>("energyThresholdHF")),
   comEnergy_(pset.getParameter<double>("comEnergy")),
+  edmNtupleEtaMaxTag_(pset.getParameter<edm::InputTag>("edmNtupleEtaMaxTag")),
+  edmNtupleEtaMinTag_(pset.getParameter<edm::InputTag>("edmNtupleEtaMinTag")),
   applyEnergyScaleHCAL_(pset.getParameter<bool>("applyEnergyScaleHCAL")),
   energyScaleHCAL_(-1.),
   accessMCInfo_(pset.getUntrackedParameter<bool>("accessMCInfo",false)),
@@ -578,10 +580,10 @@ void DiffractiveAnalysis::fillDiffVariables(DiffractiveEvent& eventData, const e
   eventData.EMinusPzFromPFCands_ = EPlusPzFromPFCands.second;
 
   edm::Handle<std::vector<float> > edmNtupleEtaMax;
-  event.getByLabel(edm::InputTag("edmNtupleEtaMax","etaMax"),edmNtupleEtaMax);
+  event.getByLabel(edm::InputTag(edmNtupleEtaMaxTag_.label(),"etaMax"),edmNtupleEtaMax);
 
   edm::Handle<std::vector<float> > edmNtupleEtaMin;
-  event.getByLabel(edm::InputTag("edmNtupleEtaMin","etaMin"),edmNtupleEtaMin);
+  event.getByLabel(edm::InputTag(edmNtupleEtaMinTag_.label(),"etaMin"),edmNtupleEtaMin);
 
   float etaMax_pfCands = edmNtupleEtaMax->size() ? (*edmNtupleEtaMax)[0] : -999.;
   float etaMin_pfCands = edmNtupleEtaMin->size() ? (*edmNtupleEtaMin)[0] : -999.; 
