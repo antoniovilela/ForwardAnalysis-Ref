@@ -99,6 +99,8 @@ class DiffractiveAnalysis {
       double energyThresholdHE_;
       double energyThresholdHF_;
       double comEnergy_,Ebeam_;
+      edm::InputTag edmNtupleEtaMaxTag_;
+      edm::InputTag edmNtupleEtaMinTag_;
       bool applyEnergyScaleHCAL_;
       double energyScaleHCAL_;
       bool accessMCInfo_;
