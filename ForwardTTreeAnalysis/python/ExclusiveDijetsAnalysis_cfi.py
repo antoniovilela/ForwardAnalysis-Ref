@@ -15,7 +15,7 @@ ExclusiveDijetsAnalysis = cms.PSet(
     # Misc
     EnergyThresholdHB = cms.double(1.5),
     EnergyThresholdHE = cms.double(2.0),
-    EnergyThresholdHF = cms.double(4.0),
+    EnergyThresholdHF = cms.double(7.0),
     # PF thresholds
     PFlowThresholds = pfThresholds,
     # Options
@@ -40,7 +40,7 @@ ExclusiveDijetsAnalysis = cms.PSet(
     ReadJetUncertainty = cms.bool(True),
     JetNonCorrTag = cms.InputTag("ak5PFJets"),
     TrackMultiplicityTag = cms.InputTag("trackMultiplicityTransverseRegion","trackMultiplicity"),
-    TrackTag = cms.InputTag(""),
+    TrackTag = cms.InputTag("analysisTracks"),
     # PF thresholds
     #PFlowThresholds = pfThresholds,
     # Misc
