@@ -297,6 +297,12 @@ void ExclusiveDijetsAnalysis::fillJetInfo(ExclusiveDijetsEvent& eventData, const
   edm::Handle<edm::View<reco::PFCandidate> > particleFlowCollectionH;
   event.getByLabel(particleFlowTag_,particleFlowCollectionH);
 
+  edm::Handle<edm::View<reco::Track> > trackHandle;
+  event.getByLabel(trackTag_,trackHandle);
+  const edm::View<reco::Track>& trackColl = *(trackHandle.product());
+
+  int goodTracksCount = 0;
+
   //JES
   JetCorrectionUncertainty *jecUnc1 = 0;
   JetCorrectionUncertainty *jecUnc2 = 0;
@@ -325,6 +331,21 @@ void ExclusiveDijetsAnalysis::fillJetInfo(ExclusiveDijetsEvent& eventData, const
     eventData.SetSecondJetPt(jet2.pt());
     eventData.SetSecondJetEta(jet2.eta());
     eventData.SetSecondJetPhi(jet2.phi());
+
+    // Tracks Outside Cone Jet
+
+    edm::View<reco::Track>::const_iterator track = trackColl.begin();
+    edm::View<reco::Track>::const_iterator tracks_end = trackColl.end();
+    for (; track != tracks_end; ++track)
+    {
+      if ((deltaR(track->eta(),track->phi(),jet1.eta(),jet1.phi()) > 0.5) && (deltaR(track->eta(),track->phi(),jet2.eta(),jet2.phi()) > 0.5))
+      {
+	goodTracksCount++;
+      }
+
+    }
+
+    eventData.SetTracksNonCone(goodTracksCount);
 
     //JES
     double unc1 = 0.0;
@@ -474,6 +495,7 @@ void ExclusiveDijetsAnalysis::fillJetInfo(ExclusiveDijetsEvent& eventData, const
     eventData.SetJetsDeltaEta(-999.);
     eventData.SetJetsDeltaPhi(-999.);
     eventData.SetJetsDeltaPt(-999.);
+    eventData.SetTracksNonCone(-999);
   }
 
 

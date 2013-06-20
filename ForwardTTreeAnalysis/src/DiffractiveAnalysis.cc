@@ -33,6 +33,14 @@
 
 #include "FWCore/MessageLogger/interface/MessageLogger.h"
 
+#include "DataFormats/HcalDetId/interface/HcalZDCDetId.h"
+#include "FWCore/Framework/interface/ESHandle.h"
+#include "CalibFormats/HcalObjects/interface/HcalCoderDb.h"
+#include "CalibFormats/HcalObjects/interface/HcalDbService.h"
+#include "CalibFormats/HcalObjects/interface/HcalDbRecord.h"
+#include "DataFormats/HcalDetId/interface/HcalDetId.h"
+#include "DataFormats/HcalDigi/interface/HcalDigiCollections.h"
+
 //#include "Utilities/AnalysisTools/interface/FWLiteTools.h"
 //#include "MinimumBiasAnalysis/MinimumBiasAnalysis/interface/FWLiteTools.h"
 
@@ -42,12 +50,17 @@ using diffractiveAnalysis::DiffractiveAnalysis;
 const char* DiffractiveAnalysis::name = "DiffractiveAnalysis";
 
 DiffractiveAnalysis::DiffractiveAnalysis(const edm::ParameterSet& pset):
+  accessCastorInfo_(pset.getParameter<bool>("accessCastorInfo")),
+  accessZDCInfo_(pset.getParameter<bool>("accessZDCInfo")), 
   vertexTag_(pset.getParameter<edm::InputTag>("vertexTag")),
   trackTag_(pset.getParameter<edm::InputTag>("trackTag")),
   metTag_(pset.getParameter<edm::InputTag>("metTag")),
   jetTag_(pset.getParameter<edm::InputTag>("jetTag")),
   caloTowerTag_(pset.getParameter<edm::InputTag>("caloTowerTag")),
   castorRecHitTag_(pset.getParameter<edm::InputTag>("castorRecHitTag")),
+  zdcHitsTag_(pset.getParameter<edm::InputTag>("zdcHitsTag")),
+  castorThreshold_(pset.getParameter<double>("castorThreshold")),
+  fCGeVCastor_(pset.getParameter<double>("fCGeVCastor")),
   particleFlowTag_(pset.getParameter<edm::InputTag>("particleFlowTag")),
   genChargedTag_(pset.getParameter<edm::InputTag>("genChargedParticlesTag")),
   triggerResultsTag_(pset.getParameter<edm::InputTag>("triggerResultsTag")),
@@ -94,27 +107,28 @@ void DiffractiveAnalysis::fill(DiffractiveEvent& eventData, const edm::Event& ev
   fillJetInfo(eventData,event,setup);
   fillMETInfo(eventData,event,setup);
   fillCaloTowerInfo(eventData,event,setup);
-  fillCastorInfo(eventData,event,setup);
+  if (accessCastorInfo_) fillCastorInfo(eventData,event,setup);
+  if (accessZDCInfo_) fillZDCInfo(eventData,event,setup); 
   fillDiffVariables(eventData,event,setup);
   fillGenInfo(eventData,event,setup);
 }
 
 void DiffractiveAnalysis::fillEventInfo(DiffractiveEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
   if(accessMCInfo_){
-     edm::Handle<GenEventInfoProduct> genEventInfo;
-     event.getByLabel("generator",genEventInfo);
+    edm::Handle<GenEventInfoProduct> genEventInfo;
+    event.getByLabel("generator",genEventInfo);
 
-     int processId = -1;
-     if(genEventInfo.isValid()){
-        processId = genEventInfo->signalProcessID();
-     } else {
-        edm::Handle<edm::HepMCProduct> hepMCProduct;
-        event.getByLabel("source",hepMCProduct);
-        processId = hepMCProduct->getHepMCData().signal_process_id();
-     }
-     eventData.processId_ = processId;
+    int processId = -1;
+    if(genEventInfo.isValid()){
+      processId = genEventInfo->signalProcessID();
+    } else {
+      edm::Handle<edm::HepMCProduct> hepMCProduct;
+      event.getByLabel("source",hepMCProduct);
+      processId = hepMCProduct->getHepMCData().signal_process_id();
+    }
+    eventData.processId_ = processId;
   } else{
-     eventData.processId_ = -1;
+    eventData.processId_ = -1;
   } 
 
   unsigned int eventNumber = event.id().event();
@@ -125,10 +139,10 @@ void DiffractiveAnalysis::fillEventInfo(DiffractiveEvent& eventData, const edm::
   edm::Handle<double> lumiWeight;
   event.getByLabel("lumiWeight",lumiWeight);
   if(lumiWeight.isValid()){
-     double lumi = *lumiWeight;
-     eventData.lumiWeight_ = lumi;
+    double lumi = *lumiWeight;
+    eventData.lumiWeight_ = lumi;
   } else{
-     eventData.lumiWeight_ = -1.; 
+    eventData.lumiWeight_ = -1.; 
   }
 
   eventData.eventNumber_ = eventNumber;
@@ -162,47 +176,47 @@ void DiffractiveAnalysis::fillTriggerInfo(DiffractiveEvent& eventData, const edm
   event.getByLabel(triggerResultsTag_, triggerResults);
 
   if(triggerResults.isValid() && hltPathName_ != ""){
-     const edm::TriggerNames& triggerNames = event.triggerNames(*triggerResults);
-     // In case hltPathName_ is a pattern (e.g. HLT_Jet30U*)
-     std::string hltPath;
-     if( edm::is_glob(hltPathName_) ){
-	std::vector< std::vector<std::string>::const_iterator > matches = edm::regexMatch(triggerNames.triggerNames(), hltPathName_);  
+    const edm::TriggerNames& triggerNames = event.triggerNames(*triggerResults);
+    // In case hltPathName_ is a pattern (e.g. HLT_Jet30U*)
+    std::string hltPath;
+    if( edm::is_glob(hltPathName_) ){
+      std::vector< std::vector<std::string>::const_iterator > matches = edm::regexMatch(triggerNames.triggerNames(), hltPathName_);  
 
-	if( matches.empty() ) throw cms::Exception("Configuration") << "Could not find any HLT path of type " << hltPathName_ << "\n";
-	else if( matches.size() > 1) throw cms::Exception("Configuration") << "HLT path type " << hltPathName_ << " not unique\n";
-	else hltPath = *(matches[0]);
-     } else{
-	hltPath = hltPathName_; 
-     } 
+      if( matches.empty() ) throw cms::Exception("Configuration") << "Could not find any HLT path of type " << hltPathName_ << "\n";
+      else if( matches.size() > 1) throw cms::Exception("Configuration") << "HLT path type " << hltPathName_ << " not unique\n";
+      else hltPath = *(matches[0]);
+    } else{
+      hltPath = hltPathName_; 
+    } 
 
-     unsigned int idxHLT = triggerNames.triggerIndex(hltPath);
-   //idxHLT must be less than the size of HLTR or you get a CMSException: _M_range_check(SFonseca 10/04/2011)
-   //Ref: https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideEgammaHLT#Retrieving_offline_the_HLT_infor
+    unsigned int idxHLT = triggerNames.triggerIndex(hltPath);
+    //idxHLT must be less than the size of HLTR or you get a CMSException: _M_range_check(SFonseca 10/04/2011)
+    //Ref: https://twiki.cern.ch/twiki/bin/view/CMSPublic/SWGuideEgammaHLT#Retrieving_offline_the_HLT_infor
 
-     if (idxHLT < triggerResults->size()) eventData.HLTPath_ = (triggerResults->wasrun(idxHLT) && triggerResults->accept(idxHLT)) ? 1 : 0; 
-     else {
-   
+    if (idxHLT < triggerResults->size()) eventData.HLTPath_ = (triggerResults->wasrun(idxHLT) && triggerResults->accept(idxHLT)) ? 1 : 0; 
+    else {
+
       edm::LogWarning("Analysis")<<" Trigger index: "<< idxHLT <<" Trigger Results Size: "<< triggerResults->size()  
-     <<"  Trigger index  must be equal/more that the Trigger Results !! ";
+	<<"  Trigger index  must be equal/more that the Trigger Results !! ";
       eventData.HLTPath_ = -1;
-    
-       }
+
+    }
   } else{
-     eventData.HLTPath_ = -1;
+    eventData.HLTPath_ = -1;
   }
 
   edm::Handle<L1GlobalTriggerReadoutRecord> gtReadoutRecordH;
   event.getByLabel("gtDigis", gtReadoutRecordH);
-  
+
   if( gtReadoutRecordH.isValid() ){
-     const L1GlobalTriggerReadoutRecord* gtReadoutRecord = gtReadoutRecordH.product();
-     const TechnicalTriggerWord&  technicalTriggerWordBeforeMask = gtReadoutRecord->technicalTriggerWord();
-     //const unsigned int numberTechnicalTriggerBits( technicalTriggerWordBeforeMask.size() );
-     
-     bool passL1TT = technicalTriggerWordBeforeMask.at(ttBit_);
-     eventData.TTBit_ = (int)passL1TT;
+    const L1GlobalTriggerReadoutRecord* gtReadoutRecord = gtReadoutRecordH.product();
+    const TechnicalTriggerWord&  technicalTriggerWordBeforeMask = gtReadoutRecord->technicalTriggerWord();
+    //const unsigned int numberTechnicalTriggerBits( technicalTriggerWordBeforeMask.size() );
+
+    bool passL1TT = technicalTriggerWordBeforeMask.at(ttBit_);
+    eventData.TTBit_ = (int)passL1TT;
   } else{
-     eventData.TTBit_ = -1;
+    eventData.TTBit_ = -1;
   }
 
 }
@@ -216,21 +230,21 @@ void DiffractiveAnalysis::fillVertexInfo(DiffractiveEvent& eventData, const edm:
   // Find number of good vertices
   int nGoodVertices = 0;
   for(edm::View<reco::Vertex>::const_iterator vtx = vtxColl.begin(); vtx != vtxColl.end(); ++vtx){
-     if(!vtx->isValid()) continue; // skip non-valid vertices
-     if(vtx->isFake()) continue; // skip vertex from beam spot
-     ++nGoodVertices;
+    if(!vtx->isValid()) continue; // skip non-valid vertices
+    if(vtx->isFake()) continue; // skip vertex from beam spot
+    ++nGoodVertices;
   } 
   eventData.nVertex_ = nGoodVertices;
 
   if( nGoodVertices ){
-     const reco::Vertex& primVertex = vtxColl[0];
-     eventData.posXPrimVtx_ = primVertex.x();
-     eventData.posYPrimVtx_ = primVertex.y();
-     eventData.posZPrimVtx_ = primVertex.z();
+    const reco::Vertex& primVertex = vtxColl[0];
+    eventData.posXPrimVtx_ = primVertex.x();
+    eventData.posYPrimVtx_ = primVertex.y();
+    eventData.posZPrimVtx_ = primVertex.z();
   } else{
-     eventData.posXPrimVtx_ = -999.;
-     eventData.posYPrimVtx_ = -999.;
-     eventData.posZPrimVtx_ = -999.;
+    eventData.posXPrimVtx_ = -999.;
+    eventData.posYPrimVtx_ = -999.;
+    eventData.posZPrimVtx_ = -999.;
   }
 
 }
@@ -246,33 +260,33 @@ void DiffractiveAnalysis::fillTrackInfo(DiffractiveEvent& eventData, const edm::
   edm::View<reco::Track>::const_iterator track = trackColl.begin();
   edm::View<reco::Track>::const_iterator tracks_end = trackColl.end();
   for(; track != tracks_end; ++track){
-     ptSum += track->pt();
-     ++nTracks;
-     // Other variables..
+    ptSum += track->pt();
+    ++nTracks;
+    // Other variables..
   }
 
   eventData.multiplicityTracks_ = nTracks;
   eventData.sumPtTracks_ = ptSum;
 
   if(accessMCInfo_){
-     edm::Handle<reco::GenParticleCollection> genChargedParticlesH;
-     event.getByLabel(genChargedTag_,genChargedParticlesH);
-     const reco::GenParticleCollection& genChargedParticles = *genChargedParticlesH;
-     reco::GenParticleCollection::const_iterator genpart = genChargedParticles.begin();
-     reco::GenParticleCollection::const_iterator genparts_end = genChargedParticles.end();
+    edm::Handle<reco::GenParticleCollection> genChargedParticlesH;
+    event.getByLabel(genChargedTag_,genChargedParticlesH);
+    const reco::GenParticleCollection& genChargedParticles = *genChargedParticlesH;
+    reco::GenParticleCollection::const_iterator genpart = genChargedParticles.begin();
+    reco::GenParticleCollection::const_iterator genparts_end = genChargedParticles.end();
 
-     double ptSumGen = 0.;
-     int nTracksGen = 0;
-     for(; genpart != genparts_end; ++genpart){
-        ptSumGen += genpart->pt();
-        ++nTracksGen; 
-        //...
-     }
-     eventData.multiplicityTracksGen_ = nTracksGen;
-     eventData.sumPtTracksGen_ = ptSumGen;
+    double ptSumGen = 0.;
+    int nTracksGen = 0;
+    for(; genpart != genparts_end; ++genpart){
+      ptSumGen += genpart->pt();
+      ++nTracksGen; 
+      //...
+    }
+    eventData.multiplicityTracksGen_ = nTracksGen;
+    eventData.sumPtTracksGen_ = ptSumGen;
   } else{
-     eventData.multiplicityTracksGen_ = -1;
-     eventData.sumPtTracksGen_ = -1.;
+    eventData.multiplicityTracksGen_ = -1;
+    eventData.sumPtTracksGen_ = -1.;
   }
 }
 
@@ -296,15 +310,15 @@ void DiffractiveAnalysis::fillJetInfo(DiffractiveEvent& eventData, const edm::Ev
   event.getByLabel(jetTag_,jetCollectionH);
 
   if(jetCollectionH->size() > 0){
-     const reco::Jet& leadingJet = (*jetCollectionH)[0];
+    const reco::Jet& leadingJet = (*jetCollectionH)[0];
 
-     eventData.leadingJetPt_ = leadingJet.pt();
-     eventData.leadingJetEta_ = leadingJet.eta();
-     eventData.leadingJetPhi_ = leadingJet.phi();
+    eventData.leadingJetPt_ = leadingJet.pt();
+    eventData.leadingJetEta_ = leadingJet.eta();
+    eventData.leadingJetPhi_ = leadingJet.phi();
   } else{
-     eventData.leadingJetPt_ = -999.;
-     eventData.leadingJetEta_ = -999.;
-     eventData.leadingJetPhi_ = -999.;
+    eventData.leadingJetPt_ = -999.;
+    eventData.leadingJetEta_ = -999.;
+    eventData.leadingJetPhi_ = -999.;
   }  
 }
 
@@ -312,13 +326,13 @@ void DiffractiveAnalysis::fillCaloTowerInfo(DiffractiveEvent& eventData, const e
   // Access multiplicities
   edm::Handle<std::vector<unsigned int> > nHEPlus;
   event.getByLabel(edm::InputTag(hcalTowerSummaryTag_.label(),"nHEplus"),nHEPlus);
-  
+
   edm::Handle<std::vector<unsigned int> > nHEMinus;
   event.getByLabel(edm::InputTag(hcalTowerSummaryTag_.label(),"nHEminus"),nHEMinus);
 
   edm::Handle<std::vector<unsigned int> > nHFPlus;
   event.getByLabel(edm::InputTag(hcalTowerSummaryTag_.label(),"nHFplus"),nHFPlus);
-  
+
   edm::Handle<std::vector<unsigned int> > nHFMinus;
   event.getByLabel(edm::InputTag(hcalTowerSummaryTag_.label(),"nHFminus"),nHFMinus);
 
@@ -327,7 +341,7 @@ void DiffractiveAnalysis::fillCaloTowerInfo(DiffractiveEvent& eventData, const e
 
   edm::Handle<std::map<unsigned int, std::vector<unsigned int> > > iEtaHFMultiplicityMinus;
   event.getByLabel(edm::InputTag(hcalTowerSummaryTag_.label(),"iEtaHFMultiplicityMinus"),iEtaHFMultiplicityMinus);
-  
+
   edm::Handle<std::vector<double> > sumEHEplus;
   event.getByLabel(edm::InputTag(hcalTowerSummaryTag_.label(),"sumEHEplus"),sumEHEplus);
 
@@ -336,7 +350,7 @@ void DiffractiveAnalysis::fillCaloTowerInfo(DiffractiveEvent& eventData, const e
 
   edm::Handle<std::vector<double> > sumETHEplus;
   event.getByLabel(edm::InputTag(hcalTowerSummaryTag_.label(),"sumETHEplus"),sumETHEplus);
- 
+
   edm::Handle<std::vector<double> > sumETHEminus;
   event.getByLabel(edm::InputTag(hcalTowerSummaryTag_.label(),"sumETHEminus"),sumETHEminus);
 
@@ -354,10 +368,10 @@ void DiffractiveAnalysis::fillCaloTowerInfo(DiffractiveEvent& eventData, const e
 
   edm::Handle<std::vector<double> > sumETHFplus;
   event.getByLabel(edm::InputTag(hcalTowerSummaryTag_.label(),"sumETHFplus"),sumETHFplus);
-  
+
   edm::Handle<std::vector<double> > sumETHFminus;
   event.getByLabel(edm::InputTag(hcalTowerSummaryTag_.label(),"sumETHFminus"),sumETHFminus);
- 
+
   edm::Handle<std::map<unsigned int, std::vector<double> > > iEtaHFETSumPlus;
   event.getByLabel(edm::InputTag(hcalTowerSummaryTag_.label(),"iEtaHFETSumPlus"),iEtaHFETSumPlus);
 
@@ -365,61 +379,61 @@ void DiffractiveAnalysis::fillCaloTowerInfo(DiffractiveEvent& eventData, const e
   event.getByLabel(edm::InputTag(hcalTowerSummaryTag_.label(),"iEtaHFETSumMinus"),iEtaHFETSumMinus);
 
   if( iEtaHFMultiplicityPlus.isValid() ){
-     // FIXME
-     edm::Handle<std::vector<double> > thresholdsHE;
-     event.getByLabel(edm::InputTag(hcalTowerSummaryTag_.label(),"thresholdsHE"),thresholdsHE);
-     size_t indexThresholdHE = std::lower_bound((*thresholdsHE).begin(),(*thresholdsHE).end(),energyThresholdHE_) - (*thresholdsHE).begin();
+    // FIXME
+    edm::Handle<std::vector<double> > thresholdsHE;
+    event.getByLabel(edm::InputTag(hcalTowerSummaryTag_.label(),"thresholdsHE"),thresholdsHE);
+    size_t indexThresholdHE = std::lower_bound((*thresholdsHE).begin(),(*thresholdsHE).end(),energyThresholdHE_) - (*thresholdsHE).begin();
 
-     edm::Handle<std::vector<double> > thresholdsHF;
-     event.getByLabel(edm::InputTag(hcalTowerSummaryTag_.label(),"thresholdsHF"),thresholdsHF);
-     size_t indexThresholdHF = std::lower_bound((*thresholdsHF).begin(),(*thresholdsHF).end(),energyThresholdHF_) - (*thresholdsHF).begin();
-     
-     unsigned int nHE_plus = (*nHEPlus)[indexThresholdHE];
-     unsigned int nHE_minus = (*nHEMinus)[indexThresholdHE];
+    edm::Handle<std::vector<double> > thresholdsHF;
+    event.getByLabel(edm::InputTag(hcalTowerSummaryTag_.label(),"thresholdsHF"),thresholdsHF);
+    size_t indexThresholdHF = std::lower_bound((*thresholdsHF).begin(),(*thresholdsHF).end(),energyThresholdHF_) - (*thresholdsHF).begin();
 
-     unsigned int nHF_plus = (*nHFPlus)[indexThresholdHF];
-     unsigned int nHF_minus = (*nHFMinus)[indexThresholdHF];
+    unsigned int nHE_plus = (*nHEPlus)[indexThresholdHE];
+    unsigned int nHE_minus = (*nHEMinus)[indexThresholdHE];
 
-     double sumEHE_plus = (*sumEHEplus)[indexThresholdHE];
-     double sumEHE_minus = (*sumEHEminus)[indexThresholdHE];
+    unsigned int nHF_plus = (*nHFPlus)[indexThresholdHF];
+    unsigned int nHF_minus = (*nHFMinus)[indexThresholdHF];
 
-     double sumETHE_plus = (*sumETHEplus)[indexThresholdHE];
-     double sumETHE_minus = (*sumETHEminus)[indexThresholdHE];
+    double sumEHE_plus = (*sumEHEplus)[indexThresholdHE];
+    double sumEHE_minus = (*sumEHEminus)[indexThresholdHE];
 
-     double sumEHF_plus = (*sumEHFplus)[indexThresholdHF];
-     double sumEHF_minus = (*sumEHFminus)[indexThresholdHF];
+    double sumETHE_plus = (*sumETHEplus)[indexThresholdHE];
+    double sumETHE_minus = (*sumETHEminus)[indexThresholdHE];
 
-     double sumETHF_plus = (*sumETHFplus)[indexThresholdHF];
-     double sumETHF_minus = (*sumETHFminus)[indexThresholdHF];
-    
-     eventData.multiplicityHEPlus_ = nHE_plus;
-     eventData.multiplicityHEMinus_ = nHE_minus;
-     eventData.multiplicityHFPlus_ = nHF_plus;
-     eventData.multiplicityHFMinus_ = nHF_minus;
-     eventData.sumEnergyHEPlus_ = sumEHE_plus;
-     eventData.sumEnergyHEMinus_ = sumEHE_minus;
-     eventData.sumETHEPlus_ = sumETHE_plus;
-     eventData.sumETHEMinus_ = sumETHE_minus;
-     eventData.sumEnergyHFPlus_ = sumEHF_plus;
-     eventData.sumEnergyHFMinus_ = sumEHF_minus;
-     eventData.sumETHFPlus_ = sumETHF_plus;
-     eventData.sumETHFMinus_ = sumETHF_minus;
+    double sumEHF_plus = (*sumEHFplus)[indexThresholdHF];
+    double sumEHF_minus = (*sumEHFminus)[indexThresholdHF];
 
-     for(unsigned int ieta = 29, index = 0; ieta <= 41; ++ieta,++index){
-	unsigned int nHFPlus_ieta = nHCALiEta(*iEtaHFMultiplicityPlus,indexThresholdHF,ieta);
-	eventData.multiplicityHFPlusVsiEta_[index] = nHFPlus_ieta;
-	double sumEHFPlus_ieta = sumEHCALiEta(*iEtaHFEnergySumPlus,indexThresholdHF,ieta);
-	eventData.sumEHFPlusVsiEta_[index] = sumEHFPlus_ieta;
-	double sumETHFPlus_ieta = sumEHCALiEta(*iEtaHFETSumPlus,indexThresholdHF,ieta);
-	eventData.sumETHFPlusVsiEta_[index] = sumETHFPlus_ieta; 
+    double sumETHF_plus = (*sumETHFplus)[indexThresholdHF];
+    double sumETHF_minus = (*sumETHFminus)[indexThresholdHF];
 
-	unsigned int nHFMinus_ieta = nHCALiEta(*iEtaHFMultiplicityMinus,indexThresholdHF,ieta);
-	eventData.multiplicityHFMinusVsiEta_[index] = nHFMinus_ieta;
-	double sumEHFMinus_ieta = sumEHCALiEta(*iEtaHFEnergySumMinus,indexThresholdHF,ieta);
-	eventData.sumEHFMinusVsiEta_[index] = sumEHFMinus_ieta;     
-	double sumETHFMinus_ieta = sumEHCALiEta(*iEtaHFETSumMinus,indexThresholdHF,ieta);
-	eventData.sumETHFMinusVsiEta_[index] = sumETHFMinus_ieta;
-     }
+    eventData.multiplicityHEPlus_ = nHE_plus;
+    eventData.multiplicityHEMinus_ = nHE_minus;
+    eventData.multiplicityHFPlus_ = nHF_plus;
+    eventData.multiplicityHFMinus_ = nHF_minus;
+    eventData.sumEnergyHEPlus_ = sumEHE_plus;
+    eventData.sumEnergyHEMinus_ = sumEHE_minus;
+    eventData.sumETHEPlus_ = sumETHE_plus;
+    eventData.sumETHEMinus_ = sumETHE_minus;
+    eventData.sumEnergyHFPlus_ = sumEHF_plus;
+    eventData.sumEnergyHFMinus_ = sumEHF_minus;
+    eventData.sumETHFPlus_ = sumETHF_plus;
+    eventData.sumETHFMinus_ = sumETHF_minus;
+
+    for(unsigned int ieta = 29, index = 0; ieta <= 41; ++ieta,++index){
+      unsigned int nHFPlus_ieta = nHCALiEta(*iEtaHFMultiplicityPlus,indexThresholdHF,ieta);
+      eventData.multiplicityHFPlusVsiEta_[index] = nHFPlus_ieta;
+      double sumEHFPlus_ieta = sumEHCALiEta(*iEtaHFEnergySumPlus,indexThresholdHF,ieta);
+      eventData.sumEHFPlusVsiEta_[index] = sumEHFPlus_ieta;
+      double sumETHFPlus_ieta = sumEHCALiEta(*iEtaHFETSumPlus,indexThresholdHF,ieta);
+      eventData.sumETHFPlusVsiEta_[index] = sumETHFPlus_ieta; 
+
+      unsigned int nHFMinus_ieta = nHCALiEta(*iEtaHFMultiplicityMinus,indexThresholdHF,ieta);
+      eventData.multiplicityHFMinusVsiEta_[index] = nHFMinus_ieta;
+      double sumEHFMinus_ieta = sumEHCALiEta(*iEtaHFEnergySumMinus,indexThresholdHF,ieta);
+      eventData.sumEHFMinusVsiEta_[index] = sumEHFMinus_ieta;     
+      double sumETHFMinus_ieta = sumEHCALiEta(*iEtaHFETSumMinus,indexThresholdHF,ieta);
+      eventData.sumETHFMinusVsiEta_[index] = sumETHFMinus_ieta;
+    }
   }
 
   //...
@@ -427,127 +441,127 @@ void DiffractiveAnalysis::fillCaloTowerInfo(DiffractiveEvent& eventData, const e
   event.getByLabel(caloTowerTag_,caloTowerCollectionH);
 
   if( caloTowerCollectionH.isValid() ){
-     double energyScale = (applyEnergyScaleHCAL_) ? energyScaleHCAL_ : -1.;
-     double MxFromTowers = MassColl(*caloTowerCollectionH,-1.,energyThresholdHB_,energyThresholdHE_,energyThresholdHF_,energyScale);
-     
-     std::pair<double,double> xiFromTowers = Xi(*caloTowerCollectionH,Ebeam_,-1.,energyThresholdHB_,energyThresholdHE_,energyThresholdHF_,energyScale);
-     double xiFromTowers_plus = xiFromTowers.first;
-     double xiFromTowers_minus = xiFromTowers.second;
+    double energyScale = (applyEnergyScaleHCAL_) ? energyScaleHCAL_ : -1.;
+    double MxFromTowers = MassColl(*caloTowerCollectionH,-1.,energyThresholdHB_,energyThresholdHE_,energyThresholdHF_,energyScale);
 
-     std::pair<double,double> EPlusPzFromTowers = EPlusPz(*caloTowerCollectionH,-1.,energyThresholdHB_,energyThresholdHE_,energyThresholdHF_,energyScale);
+    std::pair<double,double> xiFromTowers = Xi(*caloTowerCollectionH,Ebeam_,-1.,energyThresholdHB_,energyThresholdHE_,energyThresholdHF_,energyScale);
+    double xiFromTowers_plus = xiFromTowers.first;
+    double xiFromTowers_minus = xiFromTowers.second;
 
-     eventData.MxFromTowers_ = MxFromTowers;
-     eventData.xiPlusFromTowers_ = xiFromTowers_plus;
-     eventData.xiMinusFromTowers_ = xiFromTowers_minus;
-     eventData.EPlusPzFromTowers_ = EPlusPzFromTowers.first;
-     eventData.EMinusPzFromTowers_ = EPlusPzFromTowers.second;
+    std::pair<double,double> EPlusPzFromTowers = EPlusPz(*caloTowerCollectionH,-1.,energyThresholdHB_,energyThresholdHE_,energyThresholdHF_,energyScale);
+
+    eventData.MxFromTowers_ = MxFromTowers;
+    eventData.xiPlusFromTowers_ = xiFromTowers_plus;
+    eventData.xiMinusFromTowers_ = xiFromTowers_minus;
+    eventData.EPlusPzFromTowers_ = EPlusPzFromTowers.first;
+    eventData.EMinusPzFromTowers_ = EPlusPzFromTowers.second;
   } else{
-     eventData.MxFromTowers_ = -999.;
-     eventData.xiPlusFromTowers_ = -999.;
-     eventData.xiMinusFromTowers_ = -999.;
-     eventData.EPlusPzFromTowers_ = -999.;
-     eventData.EMinusPzFromTowers_ = -999.;
+    eventData.MxFromTowers_ = -999.;
+    eventData.xiPlusFromTowers_ = -999.;
+    eventData.xiMinusFromTowers_ = -999.;
+    eventData.EPlusPzFromTowers_ = -999.;
+    eventData.EMinusPzFromTowers_ = -999.;
   }
 
 }
 
 void DiffractiveAnalysis::fillGenInfo(DiffractiveEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
   if(accessMCInfo_){
-     // Gen particles
-     edm::Handle<reco::GenParticleCollection> genParticlesCollectionH;
-     event.getByLabel("genParticles",genParticlesCollectionH);
-     const reco::GenParticleCollection& genParticles = *genParticlesCollectionH;   
+    // Gen particles
+    edm::Handle<reco::GenParticleCollection> genParticlesCollectionH;
+    event.getByLabel("genParticles",genParticlesCollectionH);
+    const reco::GenParticleCollection& genParticles = *genParticlesCollectionH;   
 
-     math::XYZTLorentzVector genAllParticles(0.,0.,0.,0.),
-                             genAllParticlesInRange(0.,0.,0.,0.),
-                             genAllParticlesHEPlus(0.,0.,0.,0.),genAllParticlesHEMinus(0.,0.,0.,0.),
-                             genAllParticlesHFPlus(0.,0.,0.,0.),genAllParticlesHFMinus(0.,0.,0.,0.),
-                             genEtaMax(0.,0.,0.,0.),genEtaMin(0.,0.,0.,0.),
-                             genProtonPlus(0.,0.,0.,0.),genProtonMinus(0.,0.,0.,0.);
+    math::XYZTLorentzVector genAllParticles(0.,0.,0.,0.),
+      genAllParticlesInRange(0.,0.,0.,0.),
+      genAllParticlesHEPlus(0.,0.,0.,0.),genAllParticlesHEMinus(0.,0.,0.,0.),
+      genAllParticlesHFPlus(0.,0.,0.,0.),genAllParticlesHFMinus(0.,0.,0.,0.),
+      genEtaMax(0.,0.,0.,0.),genEtaMin(0.,0.,0.,0.),
+      genProtonPlus(0.,0.,0.,0.),genProtonMinus(0.,0.,0.,0.);
 
-     setGenInfo(genParticles,Ebeam_,genAllParticles,
-                                    genAllParticlesInRange,
-                                    genAllParticlesHEPlus,genAllParticlesHEMinus,
-                                    genAllParticlesHFPlus,genAllParticlesHFMinus,
-                                    genEtaMax,genEtaMin, 
-                                    genProtonPlus,genProtonMinus);
+    setGenInfo(genParticles,Ebeam_,genAllParticles,
+	genAllParticlesInRange,
+	genAllParticlesHEPlus,genAllParticlesHEMinus,
+	genAllParticlesHFPlus,genAllParticlesHFMinus,
+	genEtaMax,genEtaMin, 
+	genProtonPlus,genProtonMinus);
 
-     double xigen_plus = -1.;
-     double xigen_minus = -1.;
-     xigen_plus = 1 - genProtonPlus.pz()/Ebeam_;
-     xigen_minus = 1 + genProtonMinus.pz()/Ebeam_;
+    double xigen_plus = -1.;
+    double xigen_minus = -1.;
+    xigen_plus = 1 - genProtonPlus.pz()/Ebeam_;
+    xigen_minus = 1 + genProtonMinus.pz()/Ebeam_;
 
-     LargestGenRapidityGap largestGenGap(-999.,999.);
-     math::XYZTLorentzVector genGapLowEdge(0.,0.,0.,0.),genGapHighEdge(0.,0.,0.,0.);
-     largestGenGap(genParticles,genGapLowEdge,genGapHighEdge);
+    LargestGenRapidityGap largestGenGap(-999.,999.);
+    math::XYZTLorentzVector genGapLowEdge(0.,0.,0.,0.),genGapHighEdge(0.,0.,0.,0.);
+    largestGenGap(genParticles,genGapLowEdge,genGapHighEdge);
 
-     double massDissGenPlus = (genGapHighEdge == math::XYZTLorentzVector(0.,0.,0.,0.)) ? -999. : MassDissGen(genParticles,genGapHighEdge.eta(),999.);
-     double massDissGenMinus = (genGapLowEdge == math::XYZTLorentzVector(0.,0.,0.,0.)) ? -999. : MassDissGen(genParticles,-999.,genGapLowEdge.eta());
+    double massDissGenPlus = (genGapHighEdge == math::XYZTLorentzVector(0.,0.,0.,0.)) ? -999. : MassDissGen(genParticles,genGapHighEdge.eta(),999.);
+    double massDissGenMinus = (genGapLowEdge == math::XYZTLorentzVector(0.,0.,0.,0.)) ? -999. : MassDissGen(genParticles,-999.,genGapLowEdge.eta());
 
-     double deltaEtaGen = 0.;
-     if(genGapHighEdge == math::XYZTLorentzVector(0.,0.,0.,0.) || genGapLowEdge == math::XYZTLorentzVector(0.,0.,0.,0.)) deltaEtaGen = -999.;
-     else deltaEtaGen = genGapHighEdge.eta() - genGapLowEdge.eta(); 
-     double etaGapLow = (genGapLowEdge == math::XYZTLorentzVector(0.,0.,0.,0.)) ? -999. : genGapLowEdge.eta();
-     double etaGapHigh = (genGapHighEdge == math::XYZTLorentzVector(0.,0.,0.,0.)) ? -999. : genGapHighEdge.eta();
+    double deltaEtaGen = 0.;
+    if(genGapHighEdge == math::XYZTLorentzVector(0.,0.,0.,0.) || genGapLowEdge == math::XYZTLorentzVector(0.,0.,0.,0.)) deltaEtaGen = -999.;
+    else deltaEtaGen = genGapHighEdge.eta() - genGapLowEdge.eta(); 
+    double etaGapLow = (genGapLowEdge == math::XYZTLorentzVector(0.,0.,0.,0.)) ? -999. : genGapLowEdge.eta();
+    double etaGapHigh = (genGapHighEdge == math::XYZTLorentzVector(0.,0.,0.,0.)) ? -999. : genGapHighEdge.eta();
 
-     LogDebug("Analysis|DiffractiveAnalysis") << "Gap low,high = " << genGapLowEdge << " , " << genGapHighEdge;
- 
-     eventData.xiGenPlus_ = xigen_plus;
-     eventData.xiGenMinus_ = xigen_minus;
-     eventData.MxGen_ = genAllParticles.mass();
-     eventData.MxGenRange_ = genAllParticlesInRange.mass(); 
-     eventData.sumEnergyHEPlusGen_ = genAllParticlesHEPlus.energy();
-     eventData.sumEnergyHEMinusGen_ = genAllParticlesHEMinus.energy();
-     eventData.sumEnergyHFPlusGen_ = genAllParticlesHFPlus.energy();
-     eventData.sumEnergyHFMinusGen_ = genAllParticlesHFMinus.energy();
-     eventData.etaMaxGen_ = genEtaMax.eta();
-     eventData.etaMinGen_ = genEtaMin.eta();
+    LogDebug("Analysis|DiffractiveAnalysis") << "Gap low,high = " << genGapLowEdge << " , " << genGapHighEdge;
 
-     eventData.deltaEtaGen_ = deltaEtaGen;
-     eventData.etaGapLow_ = etaGapLow;
-     eventData.etaGapHigh_ = etaGapHigh;
-     eventData.MxGenPlus_ = massDissGenPlus;
-     eventData.MxGenMinus_ = massDissGenMinus;
- 
-     // Access variables from event 
-     edm::Handle<std::vector<float> > edmNtupleMxGen;
-     event.getByLabel(edm::InputTag("edmNtupleMxGen","Mx"),edmNtupleMxGen);
- 
-     eventData.MxGenDiss_ = (edmNtupleMxGen.isValid() && edmNtupleMxGen->size()) ? (*edmNtupleMxGen)[0] : -999.;
-     eventData.MyGenDiss_ = (edmNtupleMxGen.isValid() && edmNtupleMxGen->size() > 1) ? (*edmNtupleMxGen)[1] : -999.;
+    eventData.xiGenPlus_ = xigen_plus;
+    eventData.xiGenMinus_ = xigen_minus;
+    eventData.MxGen_ = genAllParticles.mass();
+    eventData.MxGenRange_ = genAllParticlesInRange.mass(); 
+    eventData.sumEnergyHEPlusGen_ = genAllParticlesHEPlus.energy();
+    eventData.sumEnergyHEMinusGen_ = genAllParticlesHEMinus.energy();
+    eventData.sumEnergyHFPlusGen_ = genAllParticlesHFPlus.energy();
+    eventData.sumEnergyHFMinusGen_ = genAllParticlesHFMinus.energy();
+    eventData.etaMaxGen_ = genEtaMax.eta();
+    eventData.etaMinGen_ = genEtaMin.eta();
 
-   
+    eventData.deltaEtaGen_ = deltaEtaGen;
+    eventData.etaGapLow_ = etaGapLow;
+    eventData.etaGapHigh_ = etaGapHigh;
+    eventData.MxGenPlus_ = massDissGenPlus;
+    eventData.MxGenMinus_ = massDissGenMinus;
+
+    // Access variables from event 
+    edm::Handle<std::vector<float> > edmNtupleMxGen;
+    event.getByLabel(edm::InputTag("edmNtupleMxGen","Mx"),edmNtupleMxGen);
+
+    eventData.MxGenDiss_ = (edmNtupleMxGen.isValid() && edmNtupleMxGen->size()) ? (*edmNtupleMxGen)[0] : -999.;
+    eventData.MyGenDiss_ = (edmNtupleMxGen.isValid() && edmNtupleMxGen->size() > 1) ? (*edmNtupleMxGen)[1] : -999.;
+
+
   } else{
-     eventData.xiGenPlus_ = -1.;
-     eventData.xiGenMinus_ = -1.;
-     eventData.MxGen_ = -1.;
-     eventData.MxGenDiss_ = -1.;
-     eventData.MyGenDiss_ = -1.;
-     eventData.MxGenRange_ = -1.;
-     eventData.MxGenPlus_ = -1.; 
-     eventData.MxGenMinus_ = -1.;
-     eventData.deltaEtaGen_ = -1.; 
-     eventData.etaGapLow_ = -999.;
-     eventData.etaGapHigh_ = -999.;
-     eventData.sumEnergyHEPlusGen_ = -1.;
-     eventData.sumEnergyHEMinusGen_ = -1.;
-     eventData.sumEnergyHFPlusGen_ = -1.;
-     eventData.sumEnergyHFMinusGen_ = -1.;
-     eventData.etaMaxGen_ = -999.;
-     eventData.etaMinGen_ = -999.;
+    eventData.xiGenPlus_ = -1.;
+    eventData.xiGenMinus_ = -1.;
+    eventData.MxGen_ = -1.;
+    eventData.MxGenDiss_ = -1.;
+    eventData.MyGenDiss_ = -1.;
+    eventData.MxGenRange_ = -1.;
+    eventData.MxGenPlus_ = -1.; 
+    eventData.MxGenMinus_ = -1.;
+    eventData.deltaEtaGen_ = -1.; 
+    eventData.etaGapLow_ = -999.;
+    eventData.etaGapHigh_ = -999.;
+    eventData.sumEnergyHEPlusGen_ = -1.;
+    eventData.sumEnergyHEMinusGen_ = -1.;
+    eventData.sumEnergyHFPlusGen_ = -1.;
+    eventData.sumEnergyHFMinusGen_ = -1.;
+    eventData.etaMaxGen_ = -999.;
+    eventData.etaMinGen_ = -999.;
   }
 
 }
 
 void DiffractiveAnalysis::fillDiffVariables(DiffractiveEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
 
-  
+
 
   // Leave only PF-based variables
   edm::Handle<reco::PFCandidateCollection> particleFlowCollectionH;
   event.getByLabel(particleFlowTag_,particleFlowCollectionH);
 
- 
+
   double MxFromPFCands = MassColl(*particleFlowCollectionH);
   eventData.MxFromPFCands_ = MxFromPFCands;
 
@@ -558,7 +572,7 @@ void DiffractiveAnalysis::fillDiffVariables(DiffractiveEvent& eventData, const e
   eventData.xiPlusFromPFCands_ = xiFromPFCands_plus;
   eventData.xiMinusFromPFCands_ = xiFromPFCands_minus;
 
-  
+
   std::pair<double,double> EPlusPzFromPFCands = EPlusPz(*particleFlowCollectionH);
   eventData.EPlusPzFromPFCands_ = EPlusPzFromPFCands.first;
   eventData.EMinusPzFromPFCands_ = EPlusPzFromPFCands.second;
@@ -573,246 +587,425 @@ void DiffractiveAnalysis::fillDiffVariables(DiffractiveEvent& eventData, const e
   float etaMin_pfCands = edmNtupleEtaMin->size() ? (*edmNtupleEtaMin)[0] : -999.; 
   eventData.etaMaxFromPFCands_ = etaMax_pfCands;
   eventData.etaMinFromPFCands_ = etaMin_pfCands;
+
 }
 
 void DiffractiveAnalysis::fillCastorInfo(DiffractiveEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
-  // Castor RecHit collection
-  edm::Handle<CastorRecHitCollection> castorRecHitCollectionH;
-  event.getByLabel(castorRecHitTag_,castorRecHitCollectionH);
 
-  if( castorRecHitCollectionH.isValid() ){
-     int modules[] = {1,2,3,4,5};
-     std::vector<int> vec_modules(modules, modules + sizeof(modules)/sizeof(int));
+  // Phi: 16 modules, rh.id().sector(); 
+  // Z: 14 modules, rh.id().module(); 
+  // Channel definition: 16*(rh.id().module()-1) + rh.id().sector(); 
+  // For 2010, Castor uses only first five modules. 
 
-     double sumETotCastor = CastorEnergy(vec_modules)(*castorRecHitCollectionH,event.isRealData());
-     eventData.sumETotCastor_ = sumETotCastor;
+  bool debug = false;
+  bool debug_deep = false;
+  std::vector<double> castor_tower;
+
+  edm::Handle<CastorRecHitCollection> CastorRecHits;
+  event.getByLabel(castorRecHitTag_,CastorRecHits); 
+
+  double sumCastorTower[16];
+  bool accept[16];
+
+  for(int isec = 0; isec < 16; isec++) {
+    accept[isec] = false;
+    sumCastorTower[isec] = 0; 
   }
+
+  for (size_t i = 0; i < CastorRecHits->size(); ++i) {
+
+    bool used_cha = false;
+    const CastorRecHit & rh = (*CastorRecHits)[i];
+    int cha = 16*(rh.id().module()-1) + rh.id().sector();    
+
+    if(cha != 5 && cha != 6) used_cha = true;  
+    if(used_cha == false) continue; 
+
+    // Only 5th modules
+    if (rh.id().module() > 5 ) continue;
+
+    if (debug_deep) std::cout << "Energy: " << rh.energy()*fCGeVCastor_ << " | Sector: " << rh.id().sector() << " | Module: " << rh.id().module() << " | Channel: " << cha << std::endl;
+
+    for(int isec = 0; isec < 16; isec++) {
+      if (rh.id().sector()== isec+1) sumCastorTower[isec]+=rh.energy()*fCGeVCastor_;
+      castor_tower.push_back(sumCastorTower[isec]);
+    }
+
+  }
+
+  /*
+     for (int isec = 0; isec < 16;isec++) {
+// 4 sigma for threshold.
+if (sumCastorTower[isec] > 4.*castorThreshold_) accept[isec]=true;
+if (accept[isec]==true) {
+castor_tower.push_back(sumCastorTower[isec]);
+}
+else castor_tower.push_back(-999.);
+}
+   */
+
+if (debug){
+  for (int isec=0;isec<16;isec++){
+    if(accept[isec]) std::cout << "Sector "<< isec+1 << ", Total Energy [GeV]: " << sumCastorTower[isec] << std::endl;
+  }
+}
+
+eventData.SetCastorTowerEnergy(castor_tower);
+
+}
+
+void DiffractiveAnalysis::fillZDCInfo(DiffractiveEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
+
+  // ZDC have two sections: section 1 = EM, section 2 = HAD. EM has 5 modules. Had has 4 modules. 
+
+  bool debug = false;
+  bool debug_deep = false;
+
+  double ZDCNSumEMEnergy = 0.;
+  double ZDCNSumHADEnergy = 0.;
+  double ZDCPSumEMEnergy = 0.;
+  double ZDCPSumHADEnergy = 0.;
+
+  double ZDCNSumEMTime = 0.;
+  double ZDCNSumHADTime = 0.;
+  double ZDCPSumEMTime = 0.;
+  double ZDCPSumHADTime = 0.;
+
+  int DigiDataADC[180];
+  float DigiDatafC[180];
+
+  edm::Handle <ZDCDigiCollection> zdc_digi_h;
+  event.getByType(zdc_digi_h);
+  edm::ESHandle<HcalDbService> conditions;
+  const ZDCDigiCollection *zdc_digi = zdc_digi_h.failedToGet()? 0 : &*zdc_digi_h;
+
+  edm::Handle <ZDCRecHitCollection> zdc_recHits_h;
+  event.getByLabel(zdcHitsTag_, zdc_recHits_h);
+  const ZDCRecHitCollection *zdc_recHits = zdc_recHits_h.failedToGet()? 0 : &*zdc_recHits_h;
+
+  setup.get<HcalDbRecord>().get(conditions);
+
+  if (zdc_recHits) {
+    for (ZDCRecHitCollection::const_iterator zhit = zdc_recHits->begin(); zhit != zdc_recHits->end(); zhit++){		
+
+      // Some Variables
+      int ZDCSide      = (zhit->id()).zside();
+      int ZDCSection   = (zhit->id()).section();
+      //Float_t ZDCEnergy = zhit->energy();
+      //Float_t ZDCRecHitTime = zhit->time();
+      //int ZDCChannel   = (zhit->id()).channel();
+
+      if (zhit->energy() >= 0.){
+
+	if (ZDCSide == -1){
+
+	  if (ZDCSection == 1 ){
+	    ZDCNSumEMEnergy += zhit->energy();
+	    ZDCNSumEMTime += zhit->time();
+	  }
+
+	  if (ZDCSection == 2 ){
+	    ZDCNSumHADEnergy += zhit->energy();
+	    ZDCNSumHADTime += zhit->time();
+	  }
+
+	}
+
+	if (ZDCSide == 1){
+
+	  if (ZDCSection == 1 ){
+	    ZDCPSumEMEnergy += zhit->energy();
+	    ZDCPSumEMTime += zhit->time();
+	  }
+
+	  if (ZDCSection == 2 ){
+	    ZDCPSumHADEnergy += zhit->energy();
+	    ZDCPSumHADTime += zhit->time();
+	  }
+
+	}
+
+      }
+
+    }
+
+    if (debug){
+      std::cout << "ZDC + | Total EM Energy: " << ZDCPSumEMEnergy << std::endl;
+      std::cout << "ZDC + | Total HAD Energy: " << ZDCPSumHADEnergy << std::endl;
+      std::cout << "ZDC + | EM <Time>: " << ZDCPSumEMTime/5. << std::endl;
+      std::cout << "ZDC + | HAD <Time>: " << ZDCPSumHADTime/4. << std::endl;
+      std::cout << "ZDC - | Total EM Energy: " << ZDCNSumEMEnergy << std::endl;
+      std::cout << "ZDC - | Total HAD Energy: " << ZDCNSumHADEnergy << std::endl;
+      std::cout << "ZDC - | EM <Time>: " << ZDCNSumEMTime/5. << std::endl;
+      std::cout << "ZDC - | HAD <Time>: " << ZDCNSumHADTime/4. << std::endl;
+    }
+
+  }
+
+  if (zdc_digi){
+    for(int i=0; i<180; i++){DigiDatafC[i]=0;DigiDataADC[i]=0;}
+    for (ZDCDigiCollection::const_iterator j=zdc_digi->begin();j!=zdc_digi->end();j++){
+      const ZDCDataFrame digi = (const ZDCDataFrame)(*j);		
+      int iSide      = digi.id().zside();
+      int iSection   = digi.id().section();
+      int iChannel   = digi.id().channel();
+      int chid = (iSection-1)*5+(iSide+1)/2*9+(iChannel-1);
+
+      const HcalQIEShape* qieshape=conditions->getHcalShape();
+      const HcalQIECoder* qiecoder=conditions->getHcalCoder(digi.id());
+      CaloSamples caldigi;
+      HcalCoderDb coder(*qiecoder,*qieshape);
+
+      coder.adc2fC(digi,caldigi);
+
+      int fTS = digi.size();
+
+      for (int i = 0; i < fTS; ++i) {
+	DigiDatafC[i+chid*10] = caldigi[i];
+	DigiDataADC[i+chid*10] = digi[i].adc();
+	if (debug_deep){
+	  std::cout << "DigiDataADC["<<i+chid*10<<"]: " << DigiDataADC[i+chid*10] << std::endl;
+	  std::cout << "DigiDatafC["<<i+chid*10<<"]: " << DigiDatafC[i+chid*10] << std::endl;
+	}
+      }
+
+      if (debug){
+	std::cout << "iSide: " << iSide << std::endl;
+	std::cout << "iSection: " << iSection << std::endl;
+	std::cout << "iChannel: " << iChannel << std::endl;
+	std::cout << "chid: " << chid << std::endl;
+      }
+
+    }
+
+  }
+
 }
 
 template <class PartColl>
 double DiffractiveAnalysis::MassColl(PartColl& partCollection, double ptThreshold,
-                                     double energyHBThreshold, double energyHEThreshold,
-				     double energyHFThreshold, double energyScale){
-   math::XYZTLorentzVector allCands(0.,0.,0.,0.);
-   for(typename PartColl::const_iterator part = partCollection.begin();
-	 part != partCollection.end(); ++part){
-      double part_pt = part->pt();
-      double part_energy = part->energy();
-      if(energyScale > 0.){
-	 part_pt *= energyScale;
-	 part_energy *= energyScale;
-      }
+    double energyHBThreshold, double energyHEThreshold,
+    double energyHFThreshold, double energyScale){
+  math::XYZTLorentzVector allCands(0.,0.,0.,0.);
+  for(typename PartColl::const_iterator part = partCollection.begin();
+      part != partCollection.end(); ++part){
+    double part_pt = part->pt();
+    double part_energy = part->energy();
+    if(energyScale > 0.){
+      part_pt *= energyScale;
+      part_energy *= energyScale;
+    }
 
-      // HF eta rings 29, 40, 41
-      /*if( ( (fabs(part->eta()) >= 2.866) && (fabs(part->eta()) < 2.976) ) || 
-	    (fabs(part->eta()) >= 4.730) ) continue;*/
-      // HF eta rings 29, 30, 40, 41
-      if( ( (fabs(part->eta()) >= 2.866) && (fabs(part->eta()) < 3.152) ) || 
-	    (fabs(part->eta()) >= 4.730) ) continue;
+    // HF eta rings 29, 40, 41
+    /*if( ( (fabs(part->eta()) >= 2.866) && (fabs(part->eta()) < 2.976) ) || 
+      (fabs(part->eta()) >= 4.730) ) continue;*/
+    // HF eta rings 29, 30, 40, 41
+    if( ( (fabs(part->eta()) >= 2.866) && (fabs(part->eta()) < 3.152) ) || 
+	(fabs(part->eta()) >= 4.730) ) continue;
 
-      if(part_pt < ptThreshold) continue;
-      if((fabs(part->eta()) < 1.3) && (part_energy < energyHBThreshold)) continue;
-      if(((fabs(part->eta()) >= 1.3) && (fabs(part->eta()) < 3.0)) && (part_energy < energyHEThreshold)) continue;
-      if((fabs(part->eta()) >= 3.0) && ((fabs(part->eta()) <= 5.0)) && (part_energy < energyHFThreshold)) continue;
-      if(energyScale > 0.) allCands += energyScale*part->p4();
-      else allCands += part->p4();
-   }
+    if(part_pt < ptThreshold) continue;
+    if((fabs(part->eta()) < 1.3) && (part_energy < energyHBThreshold)) continue;
+    if(((fabs(part->eta()) >= 1.3) && (fabs(part->eta()) < 3.0)) && (part_energy < energyHEThreshold)) continue;
+    if((fabs(part->eta()) >= 3.0) && ((fabs(part->eta()) <= 5.0)) && (part_energy < energyHFThreshold)) continue;
+    if(energyScale > 0.) allCands += energyScale*part->p4();
+    else allCands += part->p4();
+  }
 
-   return allCands.M();
+  return allCands.M();
 }
 
 template <class Coll>
 std::pair<double,double> DiffractiveAnalysis::Xi(Coll& partCollection, double Ebeam,
-                                                 double ptThreshold,
-                                                 double energyHBThreshold, double energyHEThreshold,
-						 double energyHFThreshold, double energyScale){
+    double ptThreshold,
+    double energyHBThreshold, double energyHEThreshold,
+    double energyHFThreshold, double energyScale){
 
-   double xi_towers_plus = 0.;
-   double xi_towers_minus = 0.;
-   for(typename Coll::const_iterator part = partCollection.begin(); part != partCollection.end(); ++part){
+  double xi_towers_plus = 0.;
+  double xi_towers_minus = 0.;
+  for(typename Coll::const_iterator part = partCollection.begin(); part != partCollection.end(); ++part){
 
-      double part_pt = part->pt();
-      double part_energy = part->energy();
-      if(energyScale > 0.){
-	 part_pt *= energyScale;
-	 part_energy *= energyScale;
-      }
+    double part_pt = part->pt();
+    double part_energy = part->energy();
+    if(energyScale > 0.){
+      part_pt *= energyScale;
+      part_energy *= energyScale;
+    }
 
-      // HF eta rings 29, 40, 41
-      /*if( ( (fabs(part->eta()) >= 2.866) && (fabs(part->eta()) < 2.976) ) || 
-	    (fabs(part->eta()) >= 4.730) ) continue;*/
-      // HF eta rings 29, 30, 40, 41
-      if( ( (fabs(part->eta()) >= 2.866) && (fabs(part->eta()) < 3.152) ) || 
-	    (fabs(part->eta()) >= 4.730) ) continue;
+    // HF eta rings 29, 40, 41
+    /*if( ( (fabs(part->eta()) >= 2.866) && (fabs(part->eta()) < 2.976) ) || 
+      (fabs(part->eta()) >= 4.730) ) continue;*/
+    // HF eta rings 29, 30, 40, 41
+    if( ( (fabs(part->eta()) >= 2.866) && (fabs(part->eta()) < 3.152) ) || 
+	(fabs(part->eta()) >= 4.730) ) continue;
 
-      if(part_pt < ptThreshold) continue;
-      if((fabs(part->eta()) < 1.3) && (part_energy < energyHBThreshold)) continue;
-      if(((fabs(part->eta()) >= 1.3) && (fabs(part->eta()) < 3.0)) && (part_energy < energyHEThreshold)) continue;
-      if((fabs(part->eta()) >= 3.0) && ((fabs(part->eta()) <= 5.0)) && (part_energy < energyHFThreshold)) continue;
+    if(part_pt < ptThreshold) continue;
+    if((fabs(part->eta()) < 1.3) && (part_energy < energyHBThreshold)) continue;
+    if(((fabs(part->eta()) >= 1.3) && (fabs(part->eta()) < 3.0)) && (part_energy < energyHEThreshold)) continue;
+    if((fabs(part->eta()) >= 3.0) && ((fabs(part->eta()) <= 5.0)) && (part_energy < energyHFThreshold)) continue;
 
-      double part_et = part->et();
-      double part_eta = part->eta();
-      if(energyScale > 0.) part_et *= energyScale;
+    double part_et = part->et();
+    double part_eta = part->eta();
+    if(energyScale > 0.) part_et *= energyScale;
 
-      xi_towers_plus += part_et*TMath::Exp(part_eta);
-      xi_towers_minus += part_et*TMath::Exp(-part_eta);
-   }
+    xi_towers_plus += part_et*TMath::Exp(part_eta);
+    xi_towers_minus += part_et*TMath::Exp(-part_eta);
+  }
 
-   xi_towers_plus /= 2*Ebeam;
-   xi_towers_minus /= 2*Ebeam;
+  xi_towers_plus /= 2*Ebeam;
+  xi_towers_minus /= 2*Ebeam;
 
-   return std::make_pair(xi_towers_plus,xi_towers_minus);
+  return std::make_pair(xi_towers_plus,xi_towers_minus);
 }
 
 template <class Coll>
 std::pair<double,double> DiffractiveAnalysis::EPlusPz(Coll& partCollection,
-                                                      double ptThreshold,
-                                                      double energyHBThreshold,
-                                                      double energyHEThreshold,
-				                      double energyHFThreshold,
-                                                      double energyScale){
-   double e_plus_pz = 0.;
-   double e_minus_pz = 0.;
-   typename Coll::const_iterator part = partCollection.begin();
-   typename Coll::const_iterator part_end = partCollection.end();
-   for(; part != part_end; ++part){
-      double part_pt = part->pt();
-      double part_energy = part->energy();
-      double part_pz = part->pz();
-      if(energyScale > 0.){
-	 part_pt *= energyScale;
-	 part_energy *= energyScale;
-	 part_pz *= energyScale;
-      }
+    double ptThreshold,
+    double energyHBThreshold,
+    double energyHEThreshold,
+    double energyHFThreshold,
+    double energyScale){
+  double e_plus_pz = 0.;
+  double e_minus_pz = 0.;
+  typename Coll::const_iterator part = partCollection.begin();
+  typename Coll::const_iterator part_end = partCollection.end();
+  for(; part != part_end; ++part){
+    double part_pt = part->pt();
+    double part_energy = part->energy();
+    double part_pz = part->pz();
+    if(energyScale > 0.){
+      part_pt *= energyScale;
+      part_energy *= energyScale;
+      part_pz *= energyScale;
+    }
 
-      // HF eta rings 29, 40, 41
-      /*if( ( (fabs(part->eta()) >= 2.866) && (fabs(part->eta()) < 2.976) ) || 
-	    (fabs(part->eta()) >= 4.730) ) continue;*/
-      // HF eta rings 29, 30, 40, 41
-      if( ( (fabs(part->eta()) >= 2.866) && (fabs(part->eta()) < 3.152) ) || 
-	    (fabs(part->eta()) >= 4.730) ) continue;
+    // HF eta rings 29, 40, 41
+    /*if( ( (fabs(part->eta()) >= 2.866) && (fabs(part->eta()) < 2.976) ) || 
+      (fabs(part->eta()) >= 4.730) ) continue;*/
+    // HF eta rings 29, 30, 40, 41
+    if( ( (fabs(part->eta()) >= 2.866) && (fabs(part->eta()) < 3.152) ) || 
+	(fabs(part->eta()) >= 4.730) ) continue;
 
-      if(part_pt < ptThreshold) continue;
-      if((fabs(part->eta()) < 1.3) && (part_energy < energyHBThreshold)) continue;
-      if(((fabs(part->eta()) >= 1.3) && (fabs(part->eta()) < 3.0)) && (part_energy < energyHEThreshold)) continue; 
-      if((fabs(part->eta()) >= 3.0) && ((fabs(part->eta()) <= 5.0)) && (part_energy < energyHFThreshold)) continue;
+    if(part_pt < ptThreshold) continue;
+    if((fabs(part->eta()) < 1.3) && (part_energy < energyHBThreshold)) continue;
+    if(((fabs(part->eta()) >= 1.3) && (fabs(part->eta()) < 3.0)) && (part_energy < energyHEThreshold)) continue; 
+    if((fabs(part->eta()) >= 3.0) && ((fabs(part->eta()) <= 5.0)) && (part_energy < energyHFThreshold)) continue;
 
-      e_plus_pz += part_energy + part_pz; 
-      e_minus_pz += part_energy - part_pz;
-   }
+    e_plus_pz += part_energy + part_pz; 
+    e_minus_pz += part_energy - part_pz;
+  }
 
-   return std::make_pair(e_plus_pz,e_minus_pz);
+  return std::make_pair(e_plus_pz,e_minus_pz);
 }
 
 unsigned int nHFSlice(const std::map<unsigned int, std::vector<unsigned int> >& mapThreshToiEta, unsigned int thresholdHF, unsigned int ieta){
-   const std::vector<unsigned int>& vec_iEta = mapThreshToiEta.find(thresholdHF)->second;
+  const std::vector<unsigned int>& vec_iEta = mapThreshToiEta.find(thresholdHF)->second;
 
-   // Count number of ieta entries in vector 
-   int count_ieta = (int)std::count(vec_iEta.begin(),vec_iEta.end(),ieta);
+  // Count number of ieta entries in vector 
+  int count_ieta = (int)std::count(vec_iEta.begin(),vec_iEta.end(),ieta);
 
-   return count_ieta;
+  return count_ieta;
 }
 
 unsigned int DiffractiveAnalysis::nHCALiEta(const std::map<unsigned int, std::vector<unsigned int> >& iEtaMultiplicity, unsigned int threshold, unsigned int ieta){
 
-   std::map<unsigned int, std::vector<unsigned int> >::const_iterator it_ieta = iEtaMultiplicity.find(ieta);
-   unsigned int count_ieta = 0; 
-   if( it_ieta != iEtaMultiplicity.end() ) count_ieta = (it_ieta->second)[threshold];
+  std::map<unsigned int, std::vector<unsigned int> >::const_iterator it_ieta = iEtaMultiplicity.find(ieta);
+  unsigned int count_ieta = 0; 
+  if( it_ieta != iEtaMultiplicity.end() ) count_ieta = (it_ieta->second)[threshold];
 
-   return count_ieta;
+  return count_ieta;
 }
 
 double DiffractiveAnalysis::sumEHCALiEta(const std::map<unsigned int, std::vector<double> >& iEtaSumE, unsigned int threshold, unsigned int ieta){
 
-   std::map<unsigned int, std::vector<double> >::const_iterator it_ieta = iEtaSumE.find(ieta);
-   double sumE_ieta = 0;
-   if( it_ieta != iEtaSumE.end() ) sumE_ieta = (it_ieta->second)[threshold];
+  std::map<unsigned int, std::vector<double> >::const_iterator it_ieta = iEtaSumE.find(ieta);
+  double sumE_ieta = 0;
+  if( it_ieta != iEtaSumE.end() ) sumE_ieta = (it_ieta->second)[threshold];
 
-   return sumE_ieta;
+  return sumE_ieta;
 }
 
 double DiffractiveAnalysis::MassDissGen(reco::GenParticleCollection const& genParticles, double rangeEtaMin,
-                                                                    double rangeEtaMax){
-                                                                    
-   math::XYZTLorentzVector allGenParticles(0.,0.,0.,0.);
-   reco::GenParticleCollection::const_iterator genpart = genParticles.begin();
-   reco::GenParticleCollection::const_iterator genpart_end = genParticles.end();
-   for(; genpart != genpart_end; ++genpart){
-      if( genpart->status() != 1 ) continue;
+    double rangeEtaMax){
 
-      if( ( genpart->eta() >= (rangeEtaMin - 0.0001) ) && 
-          ( genpart->eta() <= (rangeEtaMax + 0.0001) ) ) allGenParticles += genpart->p4();
-   }
-   return allGenParticles.M();
+  math::XYZTLorentzVector allGenParticles(0.,0.,0.,0.);
+  reco::GenParticleCollection::const_iterator genpart = genParticles.begin();
+  reco::GenParticleCollection::const_iterator genpart_end = genParticles.end();
+  for(; genpart != genpart_end; ++genpart){
+    if( genpart->status() != 1 ) continue;
+
+    if( ( genpart->eta() >= (rangeEtaMin - 0.0001) ) && 
+	( genpart->eta() <= (rangeEtaMax + 0.0001) ) ) allGenParticles += genpart->p4();
+  }
+  return allGenParticles.M();
 }
 
 void DiffractiveAnalysis::setGenInfo(reco::GenParticleCollection const& genParticles, double Ebeam,
-                                                                 math::XYZTLorentzVector& genAllParticles,
-                                                                 math::XYZTLorentzVector& genAllParticlesInRange,
-                                                                 math::XYZTLorentzVector& genAllParticlesHEPlus,
-                                                                 math::XYZTLorentzVector& genAllParticlesHEMinus,
-                                                                 math::XYZTLorentzVector& genAllParticlesHFPlus,
-                                                                 math::XYZTLorentzVector& genAllParticlesHFMinus,
-                                                                 math::XYZTLorentzVector& genEtaMax,
-                                                                 math::XYZTLorentzVector& genEtaMin,
-                                                                 math::XYZTLorentzVector& genProtonPlus,
-								 math::XYZTLorentzVector& genProtonMinus){
+    math::XYZTLorentzVector& genAllParticles,
+    math::XYZTLorentzVector& genAllParticlesInRange,
+    math::XYZTLorentzVector& genAllParticlesHEPlus,
+    math::XYZTLorentzVector& genAllParticlesHEMinus,
+    math::XYZTLorentzVector& genAllParticlesHFPlus,
+    math::XYZTLorentzVector& genAllParticlesHFMinus,
+    math::XYZTLorentzVector& genEtaMax,
+    math::XYZTLorentzVector& genEtaMin,
+    math::XYZTLorentzVector& genProtonPlus,
+    math::XYZTLorentzVector& genProtonMinus){
 
-   math::XYZTLorentzVector allGenParticles(0.,0.,0.,0.);
-   math::XYZTLorentzVector allGenParticlesInRange(0.,0.,0.,0.);
-   math::XYZTLorentzVector allGenParticlesHEPlus(0.,0.,0.,0.);
-   math::XYZTLorentzVector allGenParticlesHEMinus(0.,0.,0.,0.);
-   math::XYZTLorentzVector allGenParticlesHFPlus(0.,0.,0.,0.);
-   math::XYZTLorentzVector allGenParticlesHFMinus(0.,0.,0.,0.);
+  math::XYZTLorentzVector allGenParticles(0.,0.,0.,0.);
+  math::XYZTLorentzVector allGenParticlesInRange(0.,0.,0.,0.);
+  math::XYZTLorentzVector allGenParticlesHEPlus(0.,0.,0.,0.);
+  math::XYZTLorentzVector allGenParticlesHEMinus(0.,0.,0.,0.);
+  math::XYZTLorentzVector allGenParticlesHFPlus(0.,0.,0.,0.);
+  math::XYZTLorentzVector allGenParticlesHFMinus(0.,0.,0.,0.);
 
-   reco::GenParticleCollection::const_iterator proton1 = genParticles.end();
-   reco::GenParticleCollection::const_iterator proton2 = genParticles.end();
-   for(reco::GenParticleCollection::const_iterator genpart = genParticles.begin();
-                                                   genpart != genParticles.end();
-	                                           ++genpart){
-      if( genpart->status() != 1 ) continue;
-      if( genpart->pdgId() != 2212 ) continue;
+  reco::GenParticleCollection::const_iterator proton1 = genParticles.end();
+  reco::GenParticleCollection::const_iterator proton2 = genParticles.end();
+  for(reco::GenParticleCollection::const_iterator genpart = genParticles.begin();
+      genpart != genParticles.end();
+      ++genpart){
+    if( genpart->status() != 1 ) continue;
+    if( genpart->pdgId() != 2212 ) continue;
 
-      if( ( genpart->pz() > 0.50*Ebeam ) && ( ( proton1 == genParticles.end() ) ||
-	       ( genpart->pz() > proton1->pz() ) ) ) proton1 = genpart;
-      if( ( genpart->pz() < -0.50*Ebeam ) && ( ( proton2 == genParticles.end() ) ||
-	       ( genpart->pz() < proton2->pz() ) ) ) proton2 = genpart;
-   }
+    if( ( genpart->pz() > 0.50*Ebeam ) && ( ( proton1 == genParticles.end() ) ||
+	  ( genpart->pz() > proton1->pz() ) ) ) proton1 = genpart;
+    if( ( genpart->pz() < -0.50*Ebeam ) && ( ( proton2 == genParticles.end() ) ||
+	  ( genpart->pz() < proton2->pz() ) ) ) proton2 = genpart;
+  }
 
-   reco::GenParticleCollection::const_iterator etaMaxParticle = genParticles.end();
-   reco::GenParticleCollection::const_iterator etaMinParticle = genParticles.end(); 
-   for(reco::GenParticleCollection::const_iterator genpart = genParticles.begin(); genpart != genParticles.end(); ++genpart){
-      if(genpart->status() != 1) continue;
+  reco::GenParticleCollection::const_iterator etaMaxParticle = genParticles.end();
+  reco::GenParticleCollection::const_iterator etaMinParticle = genParticles.end(); 
+  for(reco::GenParticleCollection::const_iterator genpart = genParticles.begin(); genpart != genParticles.end(); ++genpart){
+    if(genpart->status() != 1) continue;
 
-      allGenParticles += genpart->p4();
-      if(fabs(genpart->eta()) < 5.0) allGenParticlesInRange += genpart->p4();
-      if( (genpart->eta() >= 1.3) && (genpart->eta() < 3.0) ) allGenParticlesHEPlus += genpart->p4();
-      if( (genpart->eta() > -3.0) && (genpart->eta() <= -1.3) ) allGenParticlesHEMinus += genpart->p4();
-      if( (genpart->eta() >= 3.0) && (genpart->eta() < 5.0) ) allGenParticlesHFPlus += genpart->p4();
-      if( (genpart->eta() > -5.0) && (genpart->eta() <= -3.0) ) allGenParticlesHFMinus += genpart->p4(); 
+    allGenParticles += genpart->p4();
+    if(fabs(genpart->eta()) < 5.0) allGenParticlesInRange += genpart->p4();
+    if( (genpart->eta() >= 1.3) && (genpart->eta() < 3.0) ) allGenParticlesHEPlus += genpart->p4();
+    if( (genpart->eta() > -3.0) && (genpart->eta() <= -1.3) ) allGenParticlesHEMinus += genpart->p4();
+    if( (genpart->eta() >= 3.0) && (genpart->eta() < 5.0) ) allGenParticlesHFPlus += genpart->p4();
+    if( (genpart->eta() > -5.0) && (genpart->eta() <= -3.0) ) allGenParticlesHFMinus += genpart->p4(); 
 
-      if( (genpart != proton1) && (genpart != proton2) ){
-	 if( ( etaMaxParticle == genParticles.end() ) ||
-	       ( genpart->eta() > etaMaxParticle->eta() ) ) etaMaxParticle = genpart;
-	 if( ( etaMinParticle == genParticles.end() ) ||
-	       ( genpart->eta() < etaMinParticle->eta() ) ) etaMinParticle = genpart;
-      }
-   }
+    if( (genpart != proton1) && (genpart != proton2) ){
+      if( ( etaMaxParticle == genParticles.end() ) ||
+	  ( genpart->eta() > etaMaxParticle->eta() ) ) etaMaxParticle = genpart;
+      if( ( etaMinParticle == genParticles.end() ) ||
+	  ( genpart->eta() < etaMinParticle->eta() ) ) etaMinParticle = genpart;
+    }
+  }
 
-   // Commit
-   if( proton1 != genParticles.end() ) allGenParticles -= proton1->p4();
-   if( proton2 != genParticles.end() ) allGenParticles -= proton2->p4();
+  // Commit
+  if( proton1 != genParticles.end() ) allGenParticles -= proton1->p4();
+  if( proton2 != genParticles.end() ) allGenParticles -= proton2->p4();
 
-   genAllParticles = allGenParticles;
-   genAllParticlesInRange = allGenParticlesInRange;
-   genAllParticlesHEPlus = allGenParticlesHEPlus;
-   genAllParticlesHEMinus = allGenParticlesHEMinus;
-   genAllParticlesHFPlus = allGenParticlesHFPlus;
-   genAllParticlesHFMinus = allGenParticlesHFMinus;
+  genAllParticles = allGenParticles;
+  genAllParticlesInRange = allGenParticlesInRange;
+  genAllParticlesHEPlus = allGenParticlesHEPlus;
+  genAllParticlesHEMinus = allGenParticlesHEMinus;
+  genAllParticlesHFPlus = allGenParticlesHFPlus;
+  genAllParticlesHFMinus = allGenParticlesHFMinus;
 
-   if( proton1 != genParticles.end() ) genProtonPlus = proton1->p4();
-   if( proton2 != genParticles.end() ) genProtonMinus = proton2->p4();
+  if( proton1 != genParticles.end() ) genProtonPlus = proton1->p4();
+  if( proton2 != genParticles.end() ) genProtonMinus = proton2->p4();
 
-   if( etaMaxParticle != genParticles.end() ) genEtaMax = etaMaxParticle->p4();
-   if( etaMinParticle != genParticles.end() ) genEtaMin = etaMinParticle->p4();
+  if( etaMaxParticle != genParticles.end() ) genEtaMax = etaMaxParticle->p4();
+  if( etaMinParticle != genParticles.end() ) genEtaMin = etaMinParticle->p4();
 }
