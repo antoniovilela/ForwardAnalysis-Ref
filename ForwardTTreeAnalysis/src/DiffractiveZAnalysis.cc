@@ -1517,6 +1517,7 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
     eventData.SetPatMuon2relIso(relIsoSecondMuon);
 
     if (debug){
+
       std::cout<<"Muon1 -> 0.3 Radion Rel Iso: "<<relIsoFirstMuonDr03<<" sumPt "<<muon1SumPtR03<<" emEt "<<muon1EmEtR03<<" hadEt "<<muon1HadEtR03<<std::endl;
       std::cout<<"Muon1 -> 0.5 Radion Rel Iso: "<<relIsoFirstMuonDr05<<" sumPt "<<muon1SumPtR05<<" emEt "<<muon1EmEtR05<<" hadEt "<<muon1HadEtR05<<std::endl;
       std::cout << "Muon1 -> trackIso(): " << muon1->trackIso() << " | muon1 -> ecalIso(): " << muon1->ecalIso() << " | muon1 -> hcalIso(): " << muon1->hcalIso() << " | muon1->Iso(): " << relIsoFirstMuon << std::endl; 
@@ -1576,6 +1577,7 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
     eventData.SetPatDiMuonPt(-999.);
     eventData.SetPatDiMuonEta(-999.);
     eventData.SetPatDiMuonPhi(-999.);
+
 
   } 
 
@@ -1658,7 +1660,10 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
     eventData.SetPatElectron2relIsoDr03(relIsoSecondElectronDr03);
     eventData.SetPatElectron2relIsoDr04(relIsoSecondElectronDr04);
 
+
     if (debug) {
+
+
       std::cout << "electron1 -> dr03 TK: " << electron1->dr03TkSumPt() << "| dr03 Ecal: " << electron1->dr03EcalRecHitSumEt() << " | dr03 Hcal: " << electron1->dr03HcalTowerSumEt() << std::endl;
       std::cout << "electron1 -> dr04 TK: " << electron1->dr04TkSumPt() << "| dr04 Ecal: " << electron1->dr04EcalRecHitSumEt() << " | dr04 Hcal: " << electron1->dr04HcalTowerSumEt() <<  std::endl;
       std::cout << "electron2 -> dr03 TK: " << electron2->dr03TkSumPt() << "| dr03 Ecal: " << electron2->dr03EcalRecHitSumEt() << " | dr03 Hcal: " << electron2->dr03HcalTowerSumEt() << std::endl;
@@ -1673,10 +1678,14 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
       std::cout << "Eta Z: " << DipatElectronSystem.eta() << std::endl;
       std::cout << "Phi Z: " << DipatElectronSystem.phi() << std::endl;
       std::cout << "pT Z: " << DipatElectronSystem.pt() << std::endl;
+
     }
 
   }
   else{
+
+
+
     eventData.SetPatElectron1Pt(-999.);
     eventData.SetPatElectron1Charge(-999);
     eventData.SetPatElectron1Phi(-999.);
@@ -1715,8 +1724,8 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
     eventData.SetPatDiElectronPhi(-999.);
     eventData.SetPatDiElectronPt(-999.);
 
-  }
 
+  }
 
 }
 
@@ -1725,8 +1734,6 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 void DiffractiveZAnalysis::fillCastor(DiffractiveZEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
-
-
 
   // Phi: 16 modules, rh.id().sector(); 
   // Z: 14 modules, rh.id().module(); 
@@ -1764,26 +1771,29 @@ void DiffractiveZAnalysis::fillCastor(DiffractiveZEvent& eventData, const edm::E
 
     for(int isec = 0; isec < 16; isec++) {
       if (rh.id().sector()== isec+1) sumCastorTower[isec]+=rh.energy()*fCGeVCastor_;
-    }
-
-  }
-
-  for (int isec = 0; isec < 16;isec++) {
-    // 4 sigma for threshold.
-    if (sumCastorTower[isec] > 4.*castorThreshold_) accept[isec]=true;
-    if (accept[isec]==true) {
       castor_tower.push_back(sumCastorTower[isec]);
     }
-    else castor_tower.push_back(-999.);
+
   }
 
-  if (debug){
-    for (int isec=0;isec<16;isec++){
-      if(accept[isec]) std::cout << "Sector "<< isec+1 << ", Total Energy [GeV]: " << sumCastorTower[isec] << std::endl;
-    }
-  }
+  /*
+     for (int isec = 0; isec < 16;isec++) {
+// 4 sigma for threshold.
+if (sumCastorTower[isec] > 4.*castorThreshold_) accept[isec]=true;
+if (accept[isec]==true) {
+castor_tower.push_back(sumCastorTower[isec]);
+}
+else castor_tower.push_back(-999.);
+}
+   */
 
-  eventData.SetCastorTowerEnergy(castor_tower);
+if (debug){
+  for (int isec=0;isec<16;isec++){
+    if(accept[isec]) std::cout << "Sector "<< isec+1 << ", Total Energy [GeV]: " << sumCastorTower[isec] << std::endl;
+  }
+}
+
+eventData.SetCastorTowerEnergy(castor_tower);
 
 }
 
@@ -1938,6 +1948,8 @@ void DiffractiveZAnalysis::fillDetectorEnergyEtaInfo(DiffractiveZEvent& eventDat
   calotower = towerCollection.begin();
   CaloTowerCollection::const_iterator calotowers_end = towerCollection.end();
 
+  int counter_tower=0;
+
   for(; calotower != calotowers_end; ++calotower) {
 
     if (fabs(calotower->eta())> 4.7) continue;   /// excluding ring12 and ring13 of HF
@@ -1980,6 +1992,7 @@ void DiffractiveZAnalysis::fillDetectorEnergyEtaInfo(DiffractiveZEvent& eventDat
     {
       if( caloTowerEnergy > energyThresholdHF_ && fabs(calotower->eta())> 2.98 )   //// excluding HF ring1
       {
+	++counter_tower;
 	CalAboveTh = true;
 	caloTowerEnergy = calotower->energy();
 	caloTowerEta = calotower->eta();
@@ -1996,6 +2009,7 @@ void DiffractiveZAnalysis::fillDetectorEnergyEtaInfo(DiffractiveZEvent& eventDat
     {
       if( caloTowerHadEnergy > energyThresholdHE_)
       {
+	++counter_tower;
 	CalAboveTh = true;
 	caloTowerEnergy = calotower->energy();
 	caloTowerEta = calotower->eta();
@@ -2012,6 +2026,7 @@ void DiffractiveZAnalysis::fillDetectorEnergyEtaInfo(DiffractiveZEvent& eventDat
     {
       if( caloTowerHadEnergy > energyThresholdHB_)
       {
+	++counter_tower;
 	CalAboveTh = true;
 	caloTowerEnergy = calotower->energy();
 	caloTowerEta = calotower->eta();
@@ -2029,6 +2044,7 @@ void DiffractiveZAnalysis::fillDetectorEnergyEtaInfo(DiffractiveZEvent& eventDat
     {
       if( caloTowerEmEnergy >= energyThresholdEE_)
       {
+	++counter_tower;
 	CalAboveTh = true;    
 	caloTowerEnergy = calotower->energy();
 	caloTowerEta = calotower->eta();
@@ -2044,6 +2060,7 @@ void DiffractiveZAnalysis::fillDetectorEnergyEtaInfo(DiffractiveZEvent& eventDat
     {
       if( caloTowerEmEnergy >= energyThresholdEB_)
       {
+	++counter_tower;
 	CalAboveTh = true;
 	caloTowerEnergy = calotower->energy();
 	caloTowerEta = calotower->eta();
@@ -2061,6 +2078,9 @@ void DiffractiveZAnalysis::fillDetectorEnergyEtaInfo(DiffractiveZEvent& eventDat
     eventData.SetEachTowerEnergy(energy_tower);
 
   }  ////has to close calotower loop
+
+  if (debug) std::cout << "Active Towers: " << counter_tower << std::endl;
+  eventData.SetEachTowerCounter(counter_tower);
 
 }
 
