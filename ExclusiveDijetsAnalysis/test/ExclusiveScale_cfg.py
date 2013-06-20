@@ -160,12 +160,22 @@ process.exclusiveDijetsAnalysisTTree.ExclusiveDijetsAnalysis.PFlowThresholds.Tra
 process.exclusiveDijetsAnalysisTTree.ExclusiveDijetsAnalysis.PFlowThresholds.Forward.hadronHF.energy = 7.0
 process.exclusiveDijetsAnalysisTTree.ExclusiveDijetsAnalysis.PFlowThresholds.Forward.emHF.energy = 7.0
 
+process.exclusiveDijetsAnalysisTTreePFShiftedUp = process.exclusiveDijetsAnalysisTTree.clone()
+process.exclusiveDijetsAnalysisTTreePFShiftedUp.DiffractiveAnalysis.particleFlowTag = "pfCandidateNoiseThresholdsShiftedUp"
+process.exclusiveDijetsAnalysisTTreePFShiftedUp.DiffractiveAnalysis.edmNtupleEtaMaxTag = "edmNtupleEtaMaxShiftedUp"
+process.exclusiveDijetsAnalysisTTreePFShiftedUp.DiffractiveAnalysis.edmNtupleEtaMinTag = "edmNtupleEtaMinShiftedUp"
+process.exclusiveDijetsAnalysisTTreePFShiftedUp.ExclusiveDijetsAnalysis.ParticleFlowTag = "pfCandidateNoiseThresholdsShiftedUp"
+
+process.exclusiveDijetsAnalysisTTreePFShiftedDown = process.exclusiveDijetsAnalysisTTree.clone() 	 
+process.exclusiveDijetsAnalysisTTreePFShiftedDown.DiffractiveAnalysis.particleFlowTag = "pfCandidateNoiseThresholdsShiftedDown" 	 
+process.exclusiveDijetsAnalysisTTreePFShiftedDown.DiffractiveAnalysis.edmNtupleEtaMaxTag = "edmNtupleEtaMaxShiftedDown" 	 
+process.exclusiveDijetsAnalysisTTreePFShiftedDown.DiffractiveAnalysis.edmNtupleEtaMinTag = "edmNtupleEtaMinShiftedDown" 	 
+process.exclusiveDijetsAnalysisTTreePFShiftedDown.ExclusiveDijetsAnalysis.ParticleFlowTag = "pfCandidateNoiseThresholdsShiftedDown"
+
 if config.runOnMC:
      process.exclusiveDijetsAnalysisTTree.DiffractiveAnalysis.fCGeVCastor = 0.9375
 else:
      process.exclusiveDijetsAnalysisTTree.DiffractiveAnalysis.fCGeVCastor = 0.015 
-
-process.exclusiveDijetsAnalysisTTreePFShifted = process.exclusiveDijetsAnalysisTTree.clone()
 
 if config.runOnMC:
      process.exclusiveDijetsAnalysisTTree.DiffractiveAnalysis.accessMCInfo = True
@@ -180,21 +190,26 @@ if config.runOnMC:
 else:
      process.exclusiveDijetsAnalysisTTree.DiffractiveAnalysis.accessMCInfo = False 
      process.exclusiveDijetsAnalysisTTree.ExclusiveDijetsAnalysis.AccessMCInfo = False 
+     process.exclusiveDijetsAnalysisTTreePFShiftedUp.DiffractiveAnalysis.accessMCInfo = False 	 
+     process.exclusiveDijetsAnalysisTTreePFShiftedUp.ExclusiveDijetsAnalysis.AccessMCInfo = False 	 
+     process.exclusiveDijetsAnalysisTTreePFShiftedDown.DiffractiveAnalysis.accessMCInfo = False 	 
+     process.exclusiveDijetsAnalysisTTreePFShiftedDown.ExclusiveDijetsAnalysis.AccessMCInfo = False
 
 #
 # Run Path. 
 # If TriggerOn = True (Run with trigger)
 #
 
-process.analysis_reco_step = cms.Path(process.analysisSequences)
+#process.analysis_reco_step = cms.Path(process.analysisSequences)
 process.castor_step = cms.Path(process.castorSequence)
 
 
 if config.TriggerOn:
-    process.analysis_diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree_step = cms.Path(
-    process.eventSelectionHLT + process.exclusiveDijetsAnalysisTTree)
+    process.analysis_diffractiveExclusiveDijetsAnalysisPATTriggerInfoShiftedUpTTree_step = cms.Path(
+    process.analysisSequencesShiftedUp + process.analysisSequencesShiftedDown + process.analysisSequences + process.eventSelectionHLT + 
+    process.exclusiveDijetsAnalysisTTreePFShiftedUp + process.exclusiveDijetsAnalysisTTreePFShiftedDown + process.exclusiveDijetsAnalysisTTree)
 
 else: 
-    process.analysis_diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree_step = cms.Path(
-    process.eventSelection + process.exclusiveDijetsAnalysisTTree)
+    process.analysis_diffractiveExclusiveDijetsAnalysisPATTriggerInfoShiftedUpTTree_step = cms.Path(
+    process.analysisSequencesShiftedUp + process.analysisSequencesShiftedDown + process.analysisSequences + process.eventSelection + process.exclusiveDijetsAnalysisTTreePFShiftedUp + process.exclusiveDijetsAnalysisTTreePFShiftedDown + process.exclusiveDijetsAnalysisTTree)
 
