@@ -8,7 +8,7 @@ class config: pass
 config.verbose = True
 config.writeEdmOutput = False
 config.outputTTreeFile = 'ExclusiveDijetsPATTuple.root'
-config.runOnMC = True
+config.runOnMC = False
 config.runPATSequences = True
 config.usePAT = False
 config.globalTagNameData = 'GR_R_42_V23::All' 
@@ -18,7 +18,7 @@ config.comEnergy = 7000.0
 config.trackAnalyzerName = 'trackHistoAnalyzer'
 config.trackTagName = 'analysisTracks'
 config.NumberOfEvents = 1000
-config.TriggerOn = False
+config.TriggerOn = True
 
 #
 # Define Triggers and Input Files
@@ -131,9 +131,9 @@ PATTriggerInfo.runALLTriggerPath = True
 
 process.exclusiveDijetsAnalysisTTree = cms.EDAnalyzer("EventInfoDiffractiveExclusiveDijetsAnalysisTTree",
 	EventInfo = cms.PSet(
-	            RunOnData = cms.untracked.bool(not config.runOnMC),
-		    RunWithMCPU = cms.untracked.bool(config.runPUMC),
-                    RunWithGen = cms.untracked.bool(config.runGen)
+                    RunOnData = cms.untracked.bool(not config.runOnMC),
+                    RunWithMCPU = cms.untracked.bool(config.runPUMC),
+                    RunWithWeightGen = cms.untracked.bool(config.runGen)
 	),
 	DiffractiveAnalysis = DiffractiveAnalysis,
         ExclusiveDijetsAnalysis = ExclusiveDijetsAnalysis
@@ -147,6 +147,11 @@ process.exclusiveDijetsAnalysisTTree.DiffractiveAnalysis.vertexTag = "goodOfflin
 process.exclusiveDijetsAnalysisTTree.DiffractiveAnalysis.particleFlowTag = "pfCandidateNoiseThresholds"
 process.exclusiveDijetsAnalysisTTree.DiffractiveAnalysis.jetTag = "selectedPatJetsPFlow"
 process.exclusiveDijetsAnalysisTTree.DiffractiveAnalysis.energyThresholdHF = 7.0
+
+if config.runOnMC:
+     process.exclusiveDijetsAnalysisTTree.DiffractiveAnalysis.fCGeVCastor = 0.9375
+else:
+     process.exclusiveDijetsAnalysisTTree.DiffractiveAnalysis.fCGeVCastor = 0.015 
 
 process.exclusiveDijetsAnalysisTTree.ExclusiveDijetsAnalysis.hltPaths = config.hltPaths 
 process.exclusiveDijetsAnalysisTTree.ExclusiveDijetsAnalysis.TrackTag = 'analysisTracks'
