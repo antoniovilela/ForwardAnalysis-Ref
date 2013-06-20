@@ -14,6 +14,8 @@ class DiffractiveEvent {
 
       DiffractiveEvent();
       ~DiffractiveEvent();
+      
+      void SetCastorTowerEnergy(const std::vector<double>& fCastorTowerEnergy) { CastorTowerEnergy_ = fCastorTowerEnergy; }
 
       int GetProcessId() const {return processId_;}
       int GetRunNumber() const {return runNumber_;}
@@ -113,6 +115,8 @@ class DiffractiveEvent {
       double GetEtaGapLow() const {return etaGapLow_;}
       double GetEtaGapHigh() const {return etaGapHigh_;}
 
+      double GetCastorTowerEnergy(int i) const { return CastorTowerEnergy_[i]; }
+
    private:
       friend class diffractiveAnalysis::DiffractiveAnalysis;
       
@@ -200,6 +204,8 @@ class DiffractiveEvent {
       int BeamHaloTightId_;
       int LooseNoiseFilter_;
       int TightNoiseFilter_;
+      std::vector<double> CastorTowerEnergy_;
+
 };
 
 #endif

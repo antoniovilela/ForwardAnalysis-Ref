@@ -177,6 +177,6 @@ void ExclusiveDijetsEvent::reset(){
   EnergyEGammaHFPlus_= 999.;
   EnergyHadronHFMinus_= 999.;
   EnergyEGammaHFMinus_= 999.;
-     
-  //...
+
+    //...
 }

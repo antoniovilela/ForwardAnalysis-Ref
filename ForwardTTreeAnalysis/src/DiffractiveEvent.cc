@@ -8,7 +8,7 @@ DiffractiveEvent::DiffractiveEvent() {}
 DiffractiveEvent::~DiffractiveEvent() {}
 
 void DiffractiveEvent::reset(){
- 
+
 
   processId_ = -1;
   lumiWeight_ = -1.;
@@ -59,14 +59,14 @@ void DiffractiveEvent::reset(){
   sumETHFMinus_ = -999.;
 
   /*size_t len_multiplicityHFPlusVsiEta = sizeof(multiplicityHFPlusVsiEta_)/sizeof(int);
-  for(size_t k = 0; k < len_multiplicityHFPlusVsiEta; ++k){
-     multiplicityHFPlusVsiEta_[k] = -1;
-     multiplicityHFMinusVsiEta_[k] = -1;
-     sumEHFPlusVsiEta_[k] = -999.;
-     sumEHFMinusVsiEta_[k] = -999.;
-     sumETHFPlusVsiEta_[k] = -999.;
-     sumETHFMinusVsiEta_[k] = -999.;
-  }*/
+    for(size_t k = 0; k < len_multiplicityHFPlusVsiEta; ++k){
+    multiplicityHFPlusVsiEta_[k] = -1;
+    multiplicityHFMinusVsiEta_[k] = -1;
+    sumEHFPlusVsiEta_[k] = -999.;
+    sumEHFMinusVsiEta_[k] = -999.;
+    sumETHFPlusVsiEta_[k] = -999.;
+    sumETHFMinusVsiEta_[k] = -999.;
+    }*/
   multiplicityHFPlusVsiEta_.clear();
   multiplicityHFMinusVsiEta_.clear();
   sumEHFPlusVsiEta_.clear();
@@ -106,4 +106,8 @@ void DiffractiveEvent::reset(){
   etaMinFromPFCands_ = -999.;
 
   sumETotCastor_ = -999.;
+
+  CastorTowerEnergy_.clear();
+
+
 }

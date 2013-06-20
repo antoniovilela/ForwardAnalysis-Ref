@@ -38,6 +38,7 @@ class DiffractiveAnalysis {
       void fillJetInfo(DiffractiveEvent&, const edm::Event&, const edm::EventSetup&);
       void fillCaloTowerInfo(DiffractiveEvent&, const edm::Event&, const edm::EventSetup&);
       void fillCastorInfo(DiffractiveEvent&, const edm::Event&, const edm::EventSetup&);
+      void fillZDCInfo(DiffractiveEvent&, const edm::Event&, const edm::EventSetup&);
       void fillDiffVariables(DiffractiveEvent&, const edm::Event&, const edm::EventSetup&);
       void fillGenInfo(DiffractiveEvent&, const edm::Event&, const edm::EventSetup&);
  
@@ -76,6 +77,9 @@ class DiffractiveAnalysis {
       std::pair<double,double> EPlusPz(Coll& partCollection, double ptThreshold = -1.,
                                        double energyHBThreshold = -1., double energyHEThreshold = -1.,
                                        double energyHFThreshold = -1., double energyScale = -1.);
+
+      bool accessCastorInfo_;
+      bool accessZDCInfo_;
   
       edm::InputTag vertexTag_;
       edm::InputTag trackTag_;
@@ -83,6 +87,9 @@ class DiffractiveAnalysis {
       edm::InputTag jetTag_;
       edm::InputTag caloTowerTag_;
       edm::InputTag castorRecHitTag_;
+      edm::InputTag zdcHitsTag_;
+      double castorThreshold_;
+      double fCGeVCastor_;
       edm::InputTag particleFlowTag_;
       edm::InputTag genChargedTag_;
       edm::InputTag triggerResultsTag_;

@@ -66,7 +66,7 @@ elif options.Run == "data_MuonB":
   print("Data Muon 2010 RunB")
   print("###################")
   print("")
-  config.globalTagNameData = 'FT_R_38X_V14A::All'
+  config.globalTagNameData = 'GR_R_42_V23::All'
   config.TriggerOn = True
   triggerlist = 'HLT_Mu9','HLT_L1Mu20'
   l1list = 'L1_ZeroBias','L1_SingleEG5'
@@ -94,9 +94,9 @@ elif options.Run == "data_ElectronB":
   print("Data Electron 2010 RunB")
   print("#######################")
   print("")
-  config.globalTagNameData = 'FT_R_38X_V14A::All'
+  config.globalTagNameData = 'GR_R_42_V23::All'
   config.TriggerOn = True
-  triggerlist = 'HLT_Ele15_SW_CaloEleId_L1R','HLT_Ele17_SW_CaloEleId_L1R','HLT_Ele17_SW_TightEleId_L1R','HLT_Ele22_SW_TighterCaloIdIsol_L1R_v*' 
+  triggerlist = 'HLT_Ele15_SW_CaloEleId_L1R','HLT_Ele17_SW_CaloEleId_L1R','HLT_Ele17_SW_TightEleId_L1R' 
   l1list = 'L1_ZeroBias','L1_SingleEG5'
   config.runOnMC = False
   config.runPUMC = False

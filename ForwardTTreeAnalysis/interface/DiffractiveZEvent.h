@@ -279,6 +279,7 @@ class DiffractiveZEvent {
 
     void SetEachTowerEta(const std::vector<double>& fEachTowerEta) { EachTowerEta_ = fEachTowerEta; }
     void SetEachTowerEnergy(const std::vector<double>& fEachTowerEnergy) { EachTowerEnergy_ = fEachTowerEnergy; }
+    void SetEachTowerCounter(int fEachTowerCounter)    {EachTowerCounter_ = fEachTowerCounter;}
 
     int GetHLTPath(int idx)                    const { return hltTrigResults_[idx]; }
     double GetDiElectronMass() const {return DiElectronMass_;}
@@ -537,6 +538,7 @@ class DiffractiveZEvent {
 
     double GetEachTowerEta(int i) const { return EachTowerEta_[i]; }
     double GetEachTowerEnergy(int i) const { return EachTowerEnergy_[i]; }
+    int GetEachTowerCounter() const {return EachTowerCounter_;}
 
     double GetCastorTowerEnergy(int i) const { return CastorTowerEnergy_[i]; }
     
@@ -628,6 +630,8 @@ class DiffractiveZEvent {
     std::vector<double> EachTowerEta_;
     std::vector<double> EachTowerEnergy_;
     std::vector<double> CastorTowerEnergy_;
+
+    int EachTowerCounter_;
 
     double PrimaryGapMaxGen_;
     double SecondGapMaxGen_;
@@ -761,6 +765,11 @@ class DiffractiveZEvent {
     double patDiMuonEta_;
     double patDiMuonPhi_;
 
+    double patDiElectronMass_;
+    double patDiElectronPt_;
+    double patDiElectronEta_;
+    double patDiElectronPhi_;
+
     int patNElectron_; 
 
     double patElectron1Pt_;
@@ -793,11 +802,6 @@ class DiffractiveZEvent {
     double patElectron1relIsoDr04_;
     double patElectron2relIsoDr03_;
     double patElectron2relIsoDr04_;
-
-    double patDiElectronMass_;
-    double patDiElectronPt_;
-    double patDiElectronEta_;
-    double patDiElectronPhi_;
 
 };
 

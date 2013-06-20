@@ -21,6 +21,9 @@ SecondElectronEta_=-999.;
 SecondElectronPhi_=-999.;
 SecondElectronCharge_=-999.;
 DiElectronMass_=-999.;
+DiElectronPt_ = -999.;
+DiElectronEta_ = -999.;
+DiElectronPhi_ = -999.;
 ElectronsN_=0;
 
 LeadingMuonPt_=-999.;
@@ -32,6 +35,9 @@ SecondMuonEta_=-999.;
 SecondMuonPhi_=-999.;
 SecondMuonCharge_=-999.;
 DiMuonMass_=-999.;
+DiMuonPt_ = -999.;
+DiMuonEta_ = -999.;
+DiMuonPhi_ = -999.; 
 MuonsN_=0;
 
 VertexMultiplicity_.clear();
@@ -41,6 +47,10 @@ Vz_.clear();
 Vx_.clear();
 Vy_.clear();
 TracksPt_.clear();
+EachTowerEnergy_.clear();
+EachTowerEta_.clear();
+CastorTowerEnergy_.clear();
+EachTowerCounter_ = 0;
 
 PrimaryGapMaxGen_=-999.;
 SecondGapMaxGen_=-999.;
@@ -164,6 +174,9 @@ patMuon1relIso_=-999.;
 patMuon2relIso_=-999.;
 
 patDiMuonMass_ = -999.;
+patDiMuonPt_ = -999.;
+patDiMuonEta_ = -999.;
+patDiMuonPhi_ = -999.;
 
 patNElectron_ = 0;
 
@@ -199,6 +212,9 @@ patElectron1relIsoDr03_=-999.;
 patElectron2relIsoDr04_=-999.;
 
 patDiElectronMass_ = -999.;
+patDiElectronPt_ = -999.;
+patDiElectronPhi_ = -999.;
+patDiElectronEta_ = -999.;
 
 LeadingElectronTkDr03_=-999.;
 LeadingElectronEcalDr03_=-999.;
