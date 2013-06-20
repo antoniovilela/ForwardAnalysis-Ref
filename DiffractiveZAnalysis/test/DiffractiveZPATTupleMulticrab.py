@@ -26,7 +26,7 @@ import atexit
 
 from FWCore.ParameterSet.VarParsing import VarParsing
 options = VarParsing ('analysis')
-options.register('Run','MC_PU',VarParsing.multiplicity.singleton, VarParsing.varType.string,"Option to Run: data or MC.")
+options.register('Run','data_MuonA',VarParsing.multiplicity.singleton, VarParsing.varType.string,"Option to Run: data or MC.")
 options.parseArguments()
 
 process = cms.Process("Analysis")
@@ -39,7 +39,7 @@ config.runPATSequences = True
 config.comEnergy = 7000.0
 config.trackAnalyzerName = 'trackHistoAnalyzer'
 config.trackTagName = 'analysisTracks'
-config.NumberOfEvents = -1
+config.NumberOfEvents = 100
 
 #
 # Define Options to Run
@@ -368,6 +368,8 @@ process.diffractiveZAnalysisTTree.DiffractiveAnalysis.trackTag = 'analysisTracks
 process.diffractiveZAnalysisTTree.DiffractiveAnalysis.vertexTag = "goodOfflinePrimaryVertices"
 process.diffractiveZAnalysisTTree.DiffractiveAnalysis.particleFlowTag = "pfCandidateNoiseThresholds"
 process.diffractiveZAnalysisTTree.DiffractiveAnalysis.jetTag = "selectedPatJetsPFlow"
+process.diffractiveZAnalysisTTree.DiffractiveAnalysis.accessCastorInfo = False
+process.diffractiveZAnalysisTTree.DiffractiveAnalysis.accessZDCInfo = False
 
 process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.hltPaths = config.hltPaths
 if config.runOnMC:

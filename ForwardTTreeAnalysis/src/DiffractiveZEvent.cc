@@ -254,4 +254,9 @@ SecondMuonrelIsoDr03_=-999.;
 LeadingMuonrelIsoDr05_=-999.;
 SecondMuonrelIsoDr05_=-999.;
 
+TracksNonConeMuon_ = 0;
+TracksNonConeElectron_ = 0;
+TracksNonConepatMuon_ = 0;
+TracksNonConepatElectron_ = 0;
+
 }

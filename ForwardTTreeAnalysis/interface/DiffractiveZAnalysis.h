@@ -71,6 +71,7 @@ class DiffractiveZAnalysis {
       double castorThreshold_;
       double fCGeVCastor_;
       edm::InputTag caloTowerTag_; 
+      edm::InputTag trackTag_;
 
       std::string selectionPathName_;
 

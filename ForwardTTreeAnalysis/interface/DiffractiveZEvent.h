@@ -281,6 +281,11 @@ class DiffractiveZEvent {
     void SetEachTowerEnergy(const std::vector<double>& fEachTowerEnergy) { EachTowerEnergy_ = fEachTowerEnergy; }
     void SetEachTowerCounter(int fEachTowerCounter)    {EachTowerCounter_ = fEachTowerCounter;}
 
+    void SetTracksNonConeMuon(int fTracksNonConeMuon)    {TracksNonConeMuon_ = fTracksNonConeMuon;}
+    void SetTracksNonConeElectron(int fTracksNonConeElectron)    {TracksNonConeElectron_ = fTracksNonConeElectron;}
+    void SetTracksNonConepatMuon(int fTracksNonConepatMuon)    {TracksNonConepatMuon_ = fTracksNonConepatMuon;}
+    void SetTracksNonConepatElectron(int fTracksNonConepatElectron)    {TracksNonConepatElectron_ = fTracksNonConepatElectron;}
+
     int GetHLTPath(int idx)                    const { return hltTrigResults_[idx]; }
     double GetDiElectronMass() const {return DiElectronMass_;}
     double GetDiElectronPt() const {return DiElectronPt_;}
@@ -541,6 +546,11 @@ class DiffractiveZEvent {
     int GetEachTowerCounter() const {return EachTowerCounter_;}
 
     double GetCastorTowerEnergy(int i) const { return CastorTowerEnergy_[i]; }
+
+    int GetTracksNonConeMuon()    const {return TracksNonConeMuon_;}
+    int GetTracksNonConeElectron()    const {return TracksNonConeElectron_;}
+    int GetTracksNonConepatMuon()    const {return TracksNonConepatMuon_;}
+    int GetTracksNonConepatElectron()    const {return TracksNonConepatElectron_;}
     
   private:
     friend class diffractiveZAnalysis::DiffractiveZAnalysis;
@@ -802,6 +812,11 @@ class DiffractiveZEvent {
     double patElectron1relIsoDr04_;
     double patElectron2relIsoDr03_;
     double patElectron2relIsoDr04_;
+
+    int TracksNonConeMuon_;
+    int TracksNonConeElectron_;
+    int TracksNonConepatMuon_;
+    int TracksNonConepatElectron_;
 
 };
 

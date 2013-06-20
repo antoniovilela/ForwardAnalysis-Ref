@@ -90,7 +90,8 @@ DiffractiveZAnalysis::DiffractiveZAnalysis(const edm::ParameterSet& pset):
   energyThresholdEE_(pset.getParameter<double>("energyThresholdEE")),
   castorThreshold_(pset.getParameter<double>("castorThreshold")),
   fCGeVCastor_(pset.getParameter<double>("fCGeVCastor")),
-  caloTowerTag_(pset.getParameter<edm::InputTag>("CaloTowerTag"))
+  caloTowerTag_(pset.getParameter<edm::InputTag>("CaloTowerTag")),
+  trackTag_(pset.getParameter<edm::InputTag>("TrackTag"))
 {
 }
 
@@ -262,6 +263,25 @@ void DiffractiveZAnalysis::fillElectronsInfo(DiffractiveZEvent& eventData, const
     eventData.SetSecondElectronrelIsoDr03(relIsoSecondElectronDr03);
     eventData.SetSecondElectronrelIsoDr04(relIsoSecondElectronDr04);
 
+    edm::Handle<edm::View<reco::Track> > trackHandle;
+    event.getByLabel(trackTag_,trackHandle);
+    const edm::View<reco::Track>& trackColl = *(trackHandle.product());
+
+    int goodTracksCount = 0;
+
+    // Tracks Outside Cone
+    edm::View<reco::Track>::const_iterator track = trackColl.begin();
+    edm::View<reco::Track>::const_iterator tracks_end = trackColl.end();
+    for (; track != tracks_end; ++track)
+    {
+      if ((deltaR(track->eta(),track->phi(),electron1->eta(),electron1->phi()) > 0.5) && (deltaR(track->eta(),track->phi(),electron2->eta(),electron2->phi()) > 0.5))
+      {
+	goodTracksCount++;
+      }
+
+    }
+
+    eventData.SetTracksNonConeElectron(goodTracksCount);
 
     if (debug){
       std::cout << "electron1 -> dr03 TK: " << electron1->dr03TkSumPt() << "| dr03 Ecal: " << electron1->dr03EcalRecHitSumEt() << " | dr03 Hcal: " << electron1->dr03HcalTowerSumEt() << std::endl;
@@ -424,6 +444,26 @@ void DiffractiveZAnalysis::fillMuonsInfo(DiffractiveZEvent& eventData, const edm
     eventData.SetSecondMuonrelIsoDr03(relIsoSecondMuonDr03);
     eventData.SetLeadingMuonrelIsoDr05(relIsoFirstMuonDr05);
     eventData.SetSecondMuonrelIsoDr05(relIsoSecondMuonDr05);
+
+    edm::Handle<edm::View<reco::Track> > trackHandle;
+    event.getByLabel(trackTag_,trackHandle);
+    const edm::View<reco::Track>& trackColl = *(trackHandle.product());
+
+    int goodTracksCount = 0;
+
+    // Tracks Outside Cone
+    edm::View<reco::Track>::const_iterator track = trackColl.begin();
+    edm::View<reco::Track>::const_iterator tracks_end = trackColl.end();
+    for (; track != tracks_end; ++track)
+    {
+      if ((deltaR(track->eta(),track->phi(),muon1->eta(),muon1->phi()) > 0.5) && (deltaR(track->eta(),track->phi(),muon2->eta(),muon2->phi()) > 0.5))
+      {
+	goodTracksCount++;
+      }
+
+    }
+
+    eventData.SetTracksNonConeMuon(goodTracksCount);
 
     if (debug){
       std::cout << "NMuons: " << MuonsN << std::endl;
@@ -1516,6 +1556,26 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
     eventData.SetPatMuon1relIso(relIsoFirstMuon);
     eventData.SetPatMuon2relIso(relIsoSecondMuon);
 
+    edm::Handle<edm::View<reco::Track> > trackHandle;
+    event.getByLabel(trackTag_,trackHandle);
+    const edm::View<reco::Track>& trackColl = *(trackHandle.product());
+
+    int goodTracksCountm= 0;
+
+    // Tracks Outside Cone
+    edm::View<reco::Track>::const_iterator track = trackColl.begin();
+    edm::View<reco::Track>::const_iterator tracks_end = trackColl.end();
+    for (; track != tracks_end; ++track)
+    {
+      if ((deltaR(track->eta(),track->phi(),muon1->eta(),muon1->phi()) > 0.5) && (deltaR(track->eta(),track->phi(),muon2->eta(),muon2->phi()) > 0.5))
+      {
+	goodTracksCountm++;
+      }
+
+    }
+
+    eventData.SetTracksNonConepatMuon(goodTracksCountm);
+
     if (debug){
 
       std::cout<<"Muon1 -> 0.3 Radion Rel Iso: "<<relIsoFirstMuonDr03<<" sumPt "<<muon1SumPtR03<<" emEt "<<muon1EmEtR03<<" hadEt "<<muon1HadEtR03<<std::endl;
@@ -1660,9 +1720,27 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
     eventData.SetPatElectron2relIsoDr03(relIsoSecondElectronDr03);
     eventData.SetPatElectron2relIsoDr04(relIsoSecondElectronDr04);
 
+    edm::Handle<edm::View<reco::Track> > trackHandle;
+    event.getByLabel(trackTag_,trackHandle);
+    const edm::View<reco::Track>& trackColl = *(trackHandle.product());
+
+    int goodTracksCounte = 0;
+
+    // Tracks Outside Cone
+    edm::View<reco::Track>::const_iterator track = trackColl.begin();
+    edm::View<reco::Track>::const_iterator tracks_end = trackColl.end();
+    for (; track != tracks_end; ++track)
+    {
+      if ((deltaR(track->eta(),track->phi(),electron1->eta(),electron1->phi()) > 0.5) && (deltaR(track->eta(),track->phi(),electron2->eta(),electron2->phi()) > 0.5))
+      {
+	goodTracksCounte++;
+      }
+
+    }
+
+    eventData.SetTracksNonConepatElectron(goodTracksCounte);
 
     if (debug) {
-
 
       std::cout << "electron1 -> dr03 TK: " << electron1->dr03TkSumPt() << "| dr03 Ecal: " << electron1->dr03EcalRecHitSumEt() << " | dr03 Hcal: " << electron1->dr03HcalTowerSumEt() << std::endl;
       std::cout << "electron1 -> dr04 TK: " << electron1->dr04TkSumPt() << "| dr04 Ecal: " << electron1->dr04EcalRecHitSumEt() << " | dr04 Hcal: " << electron1->dr04HcalTowerSumEt() <<  std::endl;
@@ -1683,8 +1761,6 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
 
   }
   else{
-
-
 
     eventData.SetPatElectron1Pt(-999.);
     eventData.SetPatElectron1Charge(-999);
