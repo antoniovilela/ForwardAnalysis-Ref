@@ -302,6 +302,17 @@ void ExclusiveDijetsAnalysis::fillJetInfo(ExclusiveDijetsEvent& eventData, const
   const edm::View<reco::Track>& trackColl = *(trackHandle.product());
 
   int goodTracksCount = 0;
+  int goodTracksCountTrans = 0;
+  int goodTracksCountOut = 0;
+
+  edm::Handle<edm::View<reco::Track> > trackHandleOut;
+  event.getByLabel("tracksOutsideJets",trackHandleOut);
+  const edm::View<reco::Track>& trackCollOut = *(trackHandleOut.product());
+
+  edm::Handle<edm::View<reco::Track> > trackHandleTrans;
+  event.getByLabel("tracksTransverseRegion",trackHandleTrans);
+  const edm::View<reco::Track>& trackCollTrans = *(trackHandleTrans.product());
+
 
   //JES
   JetCorrectionUncertainty *jecUnc1 = 0;
@@ -345,7 +356,31 @@ void ExclusiveDijetsAnalysis::fillJetInfo(ExclusiveDijetsEvent& eventData, const
 
     }
 
+    edm::View<reco::Track>::const_iterator trackOut = trackCollOut.begin();
+    edm::View<reco::Track>::const_iterator tracksOut_end = trackCollOut.end();
+    for (; trackOut != tracksOut_end; ++trackOut)
+    {
+      //if ((deltaR(trackOut->eta(),trackOut->phi(),jet1.eta(),jet1.phi()) > 0.5) && (deltaR(trackOut->eta(),trackOut->phi(),jet2.eta(),jet2.phi()) > 0.5))
+      //{
+        goodTracksCountOut++;
+      //}
+
+    }
+
+    edm::View<reco::Track>::const_iterator trackTrans = trackCollTrans.begin();
+    edm::View<reco::Track>::const_iterator tracksTrans_end = trackCollTrans.end();
+    for (; trackTrans != tracksTrans_end; ++trackTrans)
+    {
+      //if ((deltaR(trackTrans->eta(),trackTrans->phi(),jet1.eta(),jet1.phi()) > 0.5) && (deltaR(trackTrans->eta(),trackTrans->phi(),jet2.eta(),jet2.phi()) > 0.5))
+      //{
+        goodTracksCountTrans++;
+      //}
+
+    }
+
     eventData.SetTracksNonCone(goodTracksCount);
+    eventData.SetTracksTransverse(goodTracksCountTrans);
+    eventData.SetTracksOutsideJets(goodTracksCountOut);
 
     //JES
     double unc1 = 0.0;
@@ -496,6 +531,9 @@ void ExclusiveDijetsAnalysis::fillJetInfo(ExclusiveDijetsEvent& eventData, const
     eventData.SetJetsDeltaPhi(-999.);
     eventData.SetJetsDeltaPt(-999.);
     eventData.SetTracksNonCone(-999);
+    eventData.SetTracksTransverse(-999);
+    eventData.SetTracksOutsideJets(-999);
+
   }
 
 

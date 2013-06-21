@@ -25,7 +25,8 @@ class ExclusiveDijetsEvent {
   void SetNPileUpBxp1(int fnPileUpBxp1)           { nPileUpBxp1_       = fnPileUpBxp1;}
   void SetNVertex(int fnVertex)                 { nVertex_          = fnVertex;}
   void SetTracksNonCone(int fnTracksNonCone)      { nTracksNonCone_ = fnTracksNonCone;} 
-
+  void SetTracksTransverse(int fnTracksTransverse)      { nTracksTransverse_ = fnTracksTransverse;}
+  void SetTracksOutsideJets(int fnTracksOutsideJets)      { nTracksOutsideJets_ = fnTracksOutsideJets;}
 
   //added by eliza
   void SetLumiWeight(double flumiWeight)        { lumiWeight_       = flumiWeight;}
@@ -220,6 +221,8 @@ class ExclusiveDijetsEvent {
   int GetNPileUpBxp1()         const { return nPileUpBxp1_;}
   int GetNVertex()             const { return nVertex_ ;}
   int GetTracksNonCone()       const { return nTracksNonCone_;}
+  int GetTracksTransverse()    const { return nTracksTransverse_;}
+  int GetTracksOutsideJets()   const { return nTracksOutsideJets_;}
 
   //------ jet 4-momentum vector------------------
   const LorentzVector& GetLeadingJetP4()       const {return leadingJetP4_;}
@@ -442,6 +445,8 @@ class ExclusiveDijetsEvent {
      
      int trackMultiplicity_;
      int nTracksNonCone_;    
+     int nTracksTransverse_;
+     int nTracksOutsideJets_;
  
      int multiplicityHFPlus_;
      int multiplicityHFMinus_;

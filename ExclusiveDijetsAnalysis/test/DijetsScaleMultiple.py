@@ -331,7 +331,6 @@ else:
 #
 ########################################
 
-process.analysis_reco_step = cms.Path(process.analysisSequences)
 process.castor_step = cms.Path(process.castorSequence)
 
 if config.TriggerOn:

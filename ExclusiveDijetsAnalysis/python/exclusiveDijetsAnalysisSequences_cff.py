@@ -273,7 +273,7 @@ eventSelectionHLTSumEMaxHBPlusAndMinus16 = cms.Sequence(eventSelectionHLT+hcalVe
 #jets = cms.Sequence(ak5PFJetsL2L3)
 tracks = cms.Sequence(analysisTracks*
                       selectTracksAssociatedToPV*
-                     #tracksOutsideJets*
+                      tracksOutsideJets*
                       tracksTransverseRegion)
 
 pfCandidates_ShiftedUp = cms.Sequence(pfCandidatesShiftedUp+
