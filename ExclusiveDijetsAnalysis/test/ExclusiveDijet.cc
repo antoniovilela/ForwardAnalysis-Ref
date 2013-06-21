@@ -538,7 +538,7 @@ double* ExclusiveDijet::triggerCorrection(){
 
 void ExclusiveDijet::Run(std::string filein_, std::string savehistofile_, std::string processname_, std::string switchtrigger_, std::string type_, std::string jetunc_, std::string switchpucorr_, std::string pudatafile_, std::string pumcfile_, std::string switchcutcorr_, std::string switchtriggercorr_, std::string cutcorrfile_, std::string triggercorrfile_, std::string switchlumiweight_, double lumiweight_, std::string switchmceventweight_, int optnVertex_, int optTrigger_, double jet1pT_, double jet2pT_, std::string switchcastor_, std::string switchpresel_){
 
-  bool debug = true;
+  bool debug = false;
 
   counterinfcut = 0.;
   counterinftrigger = 0.;
