@@ -1,5 +1,5 @@
 <flags CXXFLAGS="-g -O0"/>
-<bin   file="DiffractiveZ.cc" name="DiffractiveZ">
+<bin   file="source/DiffractiveZ.cc" name="DiffractiveZ">
   <use   name="root"/>
   <use   name="rootcore"/>
   <use   name="FWCore/FWLite"/>
@@ -7,4 +7,14 @@
   <use   name="ForwardAnalysis/Utilities"/>
   <use   name="ForwardAnalysis/ForwardTTreeAnalysis"/>
 </bin>
+
+<bin   file="source/FasterCheck.cc" name="FasterCheck">
+  <use   name="root"/>
+  <use   name="rootcore"/>
+  <use   name="FWCore/FWLite"/>
+  <use   name="PhysicsTools/Utilities"/>
+  <use   name="ForwardAnalysis/Utilities"/>
+  <use   name="ForwardAnalysis/ForwardTTreeAnalysis"/>
+</bin>
+
 
