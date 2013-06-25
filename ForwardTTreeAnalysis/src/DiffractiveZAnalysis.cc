@@ -1816,8 +1816,8 @@ void DiffractiveZAnalysis::fillCastor(DiffractiveZEvent& eventData, const edm::E
   // Channel definition: 16*(rh.id().module()-1) + rh.id().sector(); 
   // For 2010, Castor uses only first five modules. 
 
-  bool debug = true;
-  bool debug_deep = true;
+  bool debug = false;
+  bool debug_deep = false;
   std::vector<double> castor_tower;
 
   edm::Handle<CastorRecHitCollection> CastorRecHits;
