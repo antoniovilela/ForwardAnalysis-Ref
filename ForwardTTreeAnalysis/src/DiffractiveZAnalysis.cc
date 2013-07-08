@@ -96,6 +96,7 @@ DiffractiveZAnalysis::DiffractiveZAnalysis(const edm::ParameterSet& pset):
 }
 
 void DiffractiveZAnalysis::setTFileService(){
+/*
   edm::Service<TFileService> fs;
   std::ostringstream oss;
   hltTriggerNamesHisto_ = fs->make<TH1F>("HLTTriggerNames","HLTTriggerNames",1,0,1);
@@ -108,6 +109,7 @@ void DiffractiveZAnalysis::setTFileService(){
 
   hltTriggerPassHisto_ = fs->make<TH1F>("HLTTriggerPass","HLTTriggerPass",1,0,1);
   hltTriggerPassHisto_->SetBit(TH1::kCanRebin);
+*/
 }
 
 DiffractiveZAnalysis::~DiffractiveZAnalysis(){}
@@ -166,10 +168,16 @@ void DiffractiveZAnalysis::fillTriggerInfo(DiffractiveZEvent& eventData, const e
 	resolvedPathName = *hltpath;
       }
 
+      std::cout << "Error idx_HLT?" << std::endl;
       int idx_HLT = triggerNames.triggerIndex(resolvedPathName);
+      std::cout << "No..." << std::endl;
+      std::cout << "Error accept_HLT?" << std::endl;
       int accept_HLT = ( triggerResults->wasrun(idx_HLT) && triggerResults->accept(idx_HLT) ) ? 1 : 0;
+      std::cout << "No..." << std::endl;
+      std::cout << "Error eventData.SetHLTPath?" << std::endl;
       eventData.SetHLTPath(idxpath, accept_HLT);
-      hltTriggerPassHisto_->Fill( (*hltpath).c_str(), 1 ); 
+      std::cout << "No..." << std::endl;
+      //hltTriggerPassHisto_->Fill( (*hltpath).c_str(), 1 ); 
     }
 
   }else{
@@ -588,7 +596,6 @@ void DiffractiveZAnalysis::fillTracksInfo(DiffractiveZEvent& eventData, const ed
   eventData.SetVx(V_x);
   eventData.SetVy(V_y); 
   eventData.SetTracksPt(tracksPT);
-
 }
 
 // Fill Gen Level Information
@@ -1881,7 +1888,10 @@ void DiffractiveZAnalysis::fillZDC(DiffractiveZEvent& eventData, const edm::Even
 
   // ZDC have two sections: section 1 = EM, section 2 = HAD. EM has 5 modules. Had has 4 modules. 
 
-  bool debug = false;
+  std::vector<std::vector<double> > digiAllPMT;
+  std::vector<double> digiPMT;
+
+  bool debug = true;
   bool debug_deep = true;
 
   double ZDCNSumEMEnergy = 0.;
@@ -1966,7 +1976,9 @@ void DiffractiveZAnalysis::fillZDC(DiffractiveZEvent& eventData, const edm::Even
   }
 
   if (zdc_digi){
+
     for(int i=0; i<180; i++){DigiDatafC[i]=0;DigiDataADC[i]=0;}
+
     for (ZDCDigiCollection::const_iterator j=zdc_digi->begin();j!=zdc_digi->end();j++){
       const ZDCDataFrame digi = (const ZDCDataFrame)(*j);		
       int iSide      = digi.id().zside();
@@ -1986,12 +1998,14 @@ void DiffractiveZAnalysis::fillZDC(DiffractiveZEvent& eventData, const edm::Even
       for (int i = 0; i < fTS; ++i) {
 	DigiDatafC[i+chid*10] = caldigi[i];
 	DigiDataADC[i+chid*10] = digi[i].adc();
+        digiPMT.push_back(DigiDatafC[i+chid*10]);
 	if (debug_deep){
+          std::cout << "Digi Size: " << fTS << std::endl;
 	  std::cout << "DigiDataADC["<<i+chid*10<<"]: " << DigiDataADC[i+chid*10] << std::endl;
 	  std::cout << "DigiDatafC["<<i+chid*10<<"]: " << DigiDatafC[i+chid*10] << std::endl;
 	}
       }
-
+     
       if (debug){
 	std::cout << "iSide: " << iSide << std::endl;
 	std::cout << "iSection: " << iSection << std::endl;
@@ -1999,7 +2013,11 @@ void DiffractiveZAnalysis::fillZDC(DiffractiveZEvent& eventData, const edm::Even
 	std::cout << "chid: " << chid << std::endl;
       }
 
+    digiAllPMT.push_back(digiPMT);
+
     }
+
+    eventData.SetZDCdigifC(digiAllPMT);
 
   }
 
