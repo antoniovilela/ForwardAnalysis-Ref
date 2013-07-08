@@ -96,7 +96,7 @@ DiffractiveZAnalysis::DiffractiveZAnalysis(const edm::ParameterSet& pset):
 }
 
 void DiffractiveZAnalysis::setTFileService(){
-/*
+
   edm::Service<TFileService> fs;
   std::ostringstream oss;
   hltTriggerNamesHisto_ = fs->make<TH1F>("HLTTriggerNames","HLTTriggerNames",1,0,1);
@@ -109,7 +109,7 @@ void DiffractiveZAnalysis::setTFileService(){
 
   hltTriggerPassHisto_ = fs->make<TH1F>("HLTTriggerPass","HLTTriggerPass",1,0,1);
   hltTriggerPassHisto_->SetBit(TH1::kCanRebin);
-*/
+
 }
 
 DiffractiveZAnalysis::~DiffractiveZAnalysis(){}
@@ -145,8 +145,12 @@ void DiffractiveZAnalysis::fill(DiffractiveZEvent& eventData, const edm::Event& 
 
 void DiffractiveZAnalysis::fillTriggerInfo(DiffractiveZEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
 
+  bool debug = true;
+
   edm::Handle<edm::TriggerResults> triggerResults;
   event.getByLabel(triggerResultsTag_, triggerResults);
+
+  int nSize = triggerResults->size();
 
   if( triggerResults.isValid() ){
     const edm::TriggerNames& triggerNames = event.triggerNames(*triggerResults);
@@ -167,17 +171,18 @@ void DiffractiveZAnalysis::fillTriggerInfo(DiffractiveZEvent& eventData, const e
       } else{
 	resolvedPathName = *hltpath;
       }
-
-      std::cout << "Error idx_HLT?" << std::endl;
+ 
+      if (debug) std::cout << "Trigger Results Size: " << nSize << std::endl;
+      if (debug) std::cout << "Error idx_HLT?" << std::endl;
       int idx_HLT = triggerNames.triggerIndex(resolvedPathName);
-      std::cout << "No..." << std::endl;
-      std::cout << "Error accept_HLT?" << std::endl;
+      if (debug) std::cout << "No... , idx_HLT: " << idx_HLT << std::endl;
+      if (debug) std::cout << "Error accept_HLT?" << std::endl;
       int accept_HLT = ( triggerResults->wasrun(idx_HLT) && triggerResults->accept(idx_HLT) ) ? 1 : 0;
-      std::cout << "No..." << std::endl;
-      std::cout << "Error eventData.SetHLTPath?" << std::endl;
+      if (debug) std::cout << "No... , accept_HLT: " << accept_HLT << std::endl;
+      if (debug) std::cout << "Error eventData.SetHLTPath?" << std::endl;
       eventData.SetHLTPath(idxpath, accept_HLT);
-      std::cout << "No..." << std::endl;
-      //hltTriggerPassHisto_->Fill( (*hltpath).c_str(), 1 ); 
+      if (debug) std::cout << "No..." << std::endl;
+      hltTriggerPassHisto_->Fill( (*hltpath).c_str(), 1 ); 
     }
 
   }else{
