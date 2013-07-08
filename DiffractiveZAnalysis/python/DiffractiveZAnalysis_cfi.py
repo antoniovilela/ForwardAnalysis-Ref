@@ -29,4 +29,5 @@ DiffractiveZAnalysis = cms.PSet(
     energyThresholdEB = cms.double(0.6),
     energyThresholdEE = cms.double(1.5),
     CaloTowerTag = cms.InputTag("towerMaker"),
+    TrackTag = cms.InputTag("analysisTracks")
     )

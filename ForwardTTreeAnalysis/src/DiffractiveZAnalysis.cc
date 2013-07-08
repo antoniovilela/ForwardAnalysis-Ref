@@ -145,7 +145,7 @@ void DiffractiveZAnalysis::fill(DiffractiveZEvent& eventData, const edm::Event& 
 
 void DiffractiveZAnalysis::fillTriggerInfo(DiffractiveZEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
 
-  bool debug = true;
+  bool debug = false;
 
   edm::Handle<edm::TriggerResults> triggerResults;
   event.getByLabel(triggerResultsTag_, triggerResults);
@@ -171,18 +171,22 @@ void DiffractiveZAnalysis::fillTriggerInfo(DiffractiveZEvent& eventData, const e
       } else{
 	resolvedPathName = *hltpath;
       }
- 
-      if (debug) std::cout << "Trigger Results Size: " << nSize << std::endl;
-      if (debug) std::cout << "Error idx_HLT?" << std::endl;
+
       int idx_HLT = triggerNames.triggerIndex(resolvedPathName);
-      if (debug) std::cout << "No... , idx_HLT: " << idx_HLT << std::endl;
-      if (debug) std::cout << "Error accept_HLT?" << std::endl;
-      int accept_HLT = ( triggerResults->wasrun(idx_HLT) && triggerResults->accept(idx_HLT) ) ? 1 : 0;
-      if (debug) std::cout << "No... , accept_HLT: " << accept_HLT << std::endl;
-      if (debug) std::cout << "Error eventData.SetHLTPath?" << std::endl;
-      eventData.SetHLTPath(idxpath, accept_HLT);
-      if (debug) std::cout << "No..." << std::endl;
-      hltTriggerPassHisto_->Fill( (*hltpath).c_str(), 1 ); 
+
+      if (idx_HLT >= 0 && idx_HLT < nSize){
+	if (debug) std::cout << "Error accept_HLT?" << std::endl;
+	int accept_HLT = ( triggerResults->wasrun(idx_HLT) && triggerResults->accept(idx_HLT) ) ? 1 : 0;
+	if (debug) std::cout << "No... , accept_HLT: " << accept_HLT << std::endl;
+	if (debug) std::cout << "Error eventData.SetHLTPath?" << std::endl;
+	eventData.SetHLTPath(idxpath, accept_HLT);
+	if (debug) std::cout << "No..." << std::endl;
+	hltTriggerPassHisto_->Fill( (*hltpath).c_str(), 1 ); 
+      }else{
+	eventData.SetHLTPath(idxpath, -1);
+	hltTriggerPassHisto_->Fill( (*hltpath).c_str(), -1 );
+      }
+
     }
 
   }else{
@@ -1864,24 +1868,24 @@ void DiffractiveZAnalysis::fillCastor(DiffractiveZEvent& eventData, const edm::E
 
   }
 
-/*
-  for (int isec = 0; isec < 16;isec++) {
-    // 4 sigma for threshold.
-    if (sumCastorTower[isec] > 4.*castorThreshold_) accept[isec]=true;
-    if (accept[isec]==true) {
-      castor_tower.push_back(sumCastorTower[isec]);
-    }
-    else castor_tower.push_back(-999.);
-  }
-*/
+  /*
+     for (int isec = 0; isec < 16;isec++) {
+// 4 sigma for threshold.
+if (sumCastorTower[isec] > 4.*castorThreshold_) accept[isec]=true;
+if (accept[isec]==true) {
+castor_tower.push_back(sumCastorTower[isec]);
+}
+else castor_tower.push_back(-999.);
+}
+   */
 
-  if (debug){
-    for (int isec=0;isec<16;isec++){
-      std::cout << "Sector "<< isec+1 << ", Total Energy [GeV]: " << sumCastorTower[isec] << std::endl;
-    }
+if (debug){
+  for (int isec=0;isec<16;isec++){
+    std::cout << "Sector "<< isec+1 << ", Total Energy [GeV]: " << sumCastorTower[isec] << std::endl;
   }
+}
 
-  eventData.SetCastorTowerEnergy(castor_tower);
+eventData.SetCastorTowerEnergy(castor_tower);
 
 }
 
@@ -2003,14 +2007,14 @@ void DiffractiveZAnalysis::fillZDC(DiffractiveZEvent& eventData, const edm::Even
       for (int i = 0; i < fTS; ++i) {
 	DigiDatafC[i+chid*10] = caldigi[i];
 	DigiDataADC[i+chid*10] = digi[i].adc();
-        digiPMT.push_back(DigiDatafC[i+chid*10]);
+	digiPMT.push_back(DigiDatafC[i+chid*10]);
 	if (debug_deep){
-          std::cout << "Digi Size: " << fTS << std::endl;
+	  std::cout << "Digi Size: " << fTS << std::endl;
 	  std::cout << "DigiDataADC["<<i+chid*10<<"]: " << DigiDataADC[i+chid*10] << std::endl;
 	  std::cout << "DigiDatafC["<<i+chid*10<<"]: " << DigiDatafC[i+chid*10] << std::endl;
 	}
       }
-     
+
       if (debug){
 	std::cout << "iSide: " << iSide << std::endl;
 	std::cout << "iSection: " << iSection << std::endl;
@@ -2018,7 +2022,7 @@ void DiffractiveZAnalysis::fillZDC(DiffractiveZEvent& eventData, const edm::Even
 	std::cout << "chid: " << chid << std::endl;
       }
 
-    digiAllPMT.push_back(digiPMT);
+      digiAllPMT.push_back(digiPMT);
 
     }
 
