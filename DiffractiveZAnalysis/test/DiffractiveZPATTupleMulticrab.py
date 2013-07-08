@@ -54,7 +54,8 @@ if options.Run == "data_MuonA":
   print("")
   config.globalTagNameData = 'GR_R_42_V23::All'
   config.TriggerOn = True
-  triggerlist = 'HLT_Mu9','HLT_L1Mu20'
+  #triggerlist = 'HLT_Mu9','HLT_L1Mu20'
+  triggerlist = 'HLT_Mu9','HLT_L1'
   l1list = 'L1_ZeroBias','L1_SingleEG5'
   config.runOnMC = False
   config.runPUMC = False
@@ -329,7 +330,7 @@ else:
 #
 ######################################################################################
 
-process.load("ForwardAnalysis.AnalysisSequences.CommonModulesSequences_cff")
+process.load("ForwardAnalysis.DiffractiveZAnalysis.diffractiveZAnalysisSequences_cff")
 process.pfCandidateNoiseThresholds.src = "pfNoPileUpPFlow"
 process.tracksTransverseRegion.JetTag = "selectedPatJetsPFlow"
 
@@ -340,16 +341,18 @@ process.tracksTransverseRegion.JetTag = "selectedPatJetsPFlow"
 
 from ForwardAnalysis.ForwardTTreeAnalysis.DiffractiveAnalysis_cfi import DiffractiveAnalysis
 from ForwardAnalysis.DiffractiveZAnalysis.DiffractiveZAnalysis_cfi import DiffractiveZAnalysis
-from ForwardAnalysis.ForwardTTreeAnalysis.PATTriggerInfo_cfi import PATTriggerInfo
+#from ForwardAnalysis.ForwardTTreeAnalysis.PATTriggerInfo_cfi import PATTriggerInfo
 
 #PATTriggerInfo.L1AlgoBitName =  config.l1Paths 
-PATTriggerInfo.HLTAlgoBitName = config.hltPaths
-PATTriggerInfo.runALLTriggerPath = True
+#PATTriggerInfo.HLTAlgoBitName = config.hltPaths
+#PATTriggerInfo.runALLTriggerPath = True
 
 #
 # Define Analyzers
 #
 ######################################################################################
+
+process.diffractiveZHLTFilter.HLTPaths = config.hltPaths
 
 process.diffractiveZAnalysisTTree = cms.EDAnalyzer("EventInfoDiffractiveDiffractiveZAnalysisTTree",
         EventInfo = cms.PSet(
@@ -361,7 +364,7 @@ process.diffractiveZAnalysisTTree = cms.EDAnalyzer("EventInfoDiffractiveDiffract
         DiffractiveZAnalysis = DiffractiveZAnalysis
         )
 
-process.CommonHLTFilter.HLTPaths = config.hltPaths 
+process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.hltPaths = config.hltPaths
 
 process.diffractiveZAnalysisTTree.DiffractiveAnalysis.hltPath = ''
 process.diffractiveZAnalysisTTree.DiffractiveAnalysis.trackTag = 'analysisTracks'
@@ -371,7 +374,18 @@ process.diffractiveZAnalysisTTree.DiffractiveAnalysis.jetTag = "selectedPatJetsP
 process.diffractiveZAnalysisTTree.DiffractiveAnalysis.accessCastorInfo = False
 process.diffractiveZAnalysisTTree.DiffractiveAnalysis.accessZDCInfo = False
 
-process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.hltPaths = config.hltPaths
+process.diffractiveZAnalysisTTreePFShiftedUp = process.diffractiveZAnalysisTTree.clone()
+process.diffractiveZAnalysisTTreePFShiftedUp.DiffractiveAnalysis.particleFlowTag = "pfCandidateNoiseThresholdsShiftedUp"
+process.diffractiveZAnalysisTTreePFShiftedUp.DiffractiveAnalysis.edmNtupleEtaMaxTag = "edmNtupleEtaMaxShiftedUp"
+process.diffractiveZAnalysisTTreePFShiftedUp.DiffractiveAnalysis.edmNtupleEtaMinTag = "edmNtupleEtaMinShiftedUp"
+process.diffractiveZAnalysisTTreePFShiftedUp.DiffractiveZAnalysis.pfTag = "pfCandidateNoiseThresholdsShiftedUp"
+
+process.diffractiveZAnalysisTTreePFShiftedDown = process.diffractiveZAnalysisTTree.clone() 	 
+process.diffractiveZAnalysisTTreePFShiftedDown.DiffractiveAnalysis.particleFlowTag = "pfCandidateNoiseThresholdsShiftedDown" 	 
+process.diffractiveZAnalysisTTreePFShiftedDown.DiffractiveAnalysis.edmNtupleEtaMaxTag = "edmNtupleEtaMaxShiftedDown" 	 
+process.diffractiveZAnalysisTTreePFShiftedDown.DiffractiveAnalysis.edmNtupleEtaMinTag = "edmNtupleEtaMinShiftedDown" 	 
+process.diffractiveZAnalysisTTreePFShiftedDown.DiffractiveZAnalysis.pfTag = "pfCandidateNoiseThresholdsShiftedDown"
+
 if config.runOnMC:
      process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.RunMC = True
      process.diffractiveZAnalysisTTree.DiffractiveZAnalysis.fCGeVCastor = 0.9375
@@ -402,15 +416,15 @@ else:
 ######################################################################################
 
 process.pat_Producer = cms.Path(process.makePatElectrons + process.makePatMuons)
-process.analysis_reco_step = cms.Path(process.analysisSequences)
 process.castor_step = cms.Path(process.castorSequence)
-
 
 if config.TriggerOn:
     process.analysis_diffractiveDiffractiveZAnalysisPATTriggerInfoTTree_step = cms.Path(
-    process.eventSelectionHLT + process.diffractiveZAnalysisTTree)
+    process.analysisSequencesShiftedUp + process.analysisSequencesShiftedDown + process.analysisSequences + process.eventSelectionHLT + 
+    process.diffractiveZAnalysisTTreePFShiftedUp + process.diffractiveZAnalysisTTreePFShiftedDown + process.diffractiveZAnalysisTTree)
 
 else:
     process.analysis_diffractiveDiffractiveZAnalysisPATTriggerInfoTTree_step = cms.Path(
-    process.eventSelection + process.diffractiveZAnalysisTTree)
+    process.analysisSequencesShiftedUp + process.analysisSequencesShiftedDown + process.analysisSequences + process.eventSelection +
+    process.diffractiveZAnalysisTTreePFShiftedUp + process.diffractiveZAnalysisTTreePFShiftedDown + process.diffractiveZAnalysisTTree)
 
