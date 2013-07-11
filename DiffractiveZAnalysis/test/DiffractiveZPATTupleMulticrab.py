@@ -26,7 +26,7 @@ import atexit
 
 from FWCore.ParameterSet.VarParsing import VarParsing
 options = VarParsing ('analysis')
-options.register('Run','data_MuonA',VarParsing.multiplicity.singleton, VarParsing.varType.string,"Option to Run: data or MC.")
+options.register('Run','data_MuonP1',VarParsing.multiplicity.singleton, VarParsing.varType.string,"Option to Run: data or MC.")
 options.parseArguments()
 
 process = cms.Process("Analysis")
@@ -46,58 +46,57 @@ config.NumberOfEvents = 100
 #
 ######################################################################################
 
-if options.Run == "data_MuonA":
+if options.Run == "data_MuonP1":
   print("")
   print("###################")
-  print("Data Muon 2010 RunA")
+  print("Data Muon 2010 P1")
   print("###################")
   print("")
   config.globalTagNameData = 'GR_R_42_V23::All'
   config.TriggerOn = True
-  #triggerlist = 'HLT_Mu9','HLT_L1Mu20'
-  triggerlist = 'HLT_Mu9','HLT_L1'
+  triggerlist = 'HLT_Mu9','HLT_DoubleMu3'
   l1list = 'L1_ZeroBias','L1_SingleEG5'
   config.runOnMC = False
   config.runPUMC = False
   config.runGen = False
 
-elif options.Run == "data_MuonB":
+elif options.Run == "data_MuonP2":
   print("")
   print("###################")
-  print("Data Muon 2010 RunB")
+  print("Data Muon 2010 P2")
   print("###################")
   print("")
   config.globalTagNameData = 'GR_R_42_V23::All'
   config.TriggerOn = True
-  triggerlist = 'HLT_Mu9','HLT_L1Mu20'
+  triggerlist = 'HLT_Mu15','HLT_DoubleMu5_v*'
   l1list = 'L1_ZeroBias','L1_SingleEG5'
   config.runOnMC = False
   config.runPUMC = False
   config.runGen = False
 
-elif options.Run == "data_ElectronA":
+elif options.Run == "data_ElectronP1":
   print("")
   print("#######################")
-  print("Data Electron 2010 RunA")
+  print("Data Electron 2010 P1")
   print("#######################")
   print("")
   config.globalTagNameData = 'GR_R_42_V23::All'
   config.TriggerOn = True
-  triggerlist = 'HLT_Photon10_L1R','HLT_Photon15_Cleaned_l1R'
+  triggerlist = 'HLT_Photon10_L1R','HLT_Photon15_Cleaned_L1R','HLT_Ele15_SW_CaloEleId_L1R','HLT_Ele17_SW_CaloEleId_L1R','HLT_Ele17_SW_TightEleId_L1R','HLT_Ele22_SW_TighterCaloIdIsol_L1R_v1','HLT_Ele22_SW_TighterCaloIdIsol_L1R_v2'
   l1list = 'L1_ZeroBias','L1_SingleEG5'
   config.runOnMC = False
   config.runPUMC = False
   config.runGen = False
 
-elif options.Run == "data_ElectronB":
+elif options.Run == "data_ElectronP2":
   print("")
   print("#######################")
-  print("Data Electron 2010 RunB")
+  print("Data Electron 2010 P2")
   print("#######################")
   print("")
   config.globalTagNameData = 'GR_R_42_V23::All'
   config.TriggerOn = True
-  triggerlist = 'HLT_Ele15_SW_CaloEleId_L1R','HLT_Ele17_SW_CaloEleId_L1R','HLT_Ele17_SW_TightEleId_L1R' 
+  triggerlist = 'HLT_Photon10_L1R','HLT_Photon15_Cleaned_L1R','HLT_Ele15_SW_CaloEleId_L1R','HLT_Ele17_SW_CaloEleId_L1R','HLT_Ele17_SW_TightEleId_L1R','HLT_Ele22_SW_TighterCaloIdIsol_L1R_v1','HLT_Ele22_SW_TighterCaloIdIsol_L1R_v2' 
   l1list = 'L1_ZeroBias','L1_SingleEG5'
   config.runOnMC = False
   config.runPUMC = False
