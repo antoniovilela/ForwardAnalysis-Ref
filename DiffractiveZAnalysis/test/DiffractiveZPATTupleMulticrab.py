@@ -40,7 +40,7 @@ config.comEnergy = 7000.0
 config.trackAnalyzerName = 'trackHistoAnalyzer'
 config.trackTagName = 'analysisTracks'
 config.NumberOfEvents = 100
-config.sys = True
+config.sys = False
 
 #
 # Define Options to Run
@@ -418,26 +418,31 @@ else:
 process.pat_Producer = cms.Path(process.makePatElectrons + process.makePatMuons)
 process.castor_step = cms.Path(process.castorSequence)
 
-
 if config.sys:
 
+   print(">> With Energy Scale.")
    if config.TriggerOn:
+       print(">> With Trigger.")
        process.analysis_diffractiveDiffractiveZAnalysisPATTriggerInfoTTree_step = cms.Path(
        process.analysisSequencesShiftedUp + process.analysisSequencesShiftedDown + process.analysisSequences + process.eventSelectionHLT + 
        process.diffractiveZAnalysisTTreePFShiftedUp + process.diffractiveZAnalysisTTreePFShiftedDown + process.diffractiveZAnalysisTTree)
 
    else:
+       print(">> No Trigger.") 
        process.analysis_diffractiveDiffractiveZAnalysisPATTriggerInfoTTree_step = cms.Path(
        process.analysisSequencesShiftedUp + process.analysisSequencesShiftedDown + process.analysisSequences + process.eventSelection +
        process.diffractiveZAnalysisTTreePFShiftedUp + process.diffractiveZAnalysisTTreePFShiftedDown + process.diffractiveZAnalysisTTree)
 
 else:
 
+   print(">> No Energy Scale.")
    if config.TriggerOn:
+       print(">> With Trigger.")
        process.analysis_diffractiveDiffractiveZAnalysisPATTriggerInfoTTree_step = cms.Path(
        process.analysisSequences + process.eventSelectionHLT + process.diffractiveZAnalysisTTree)
 
    else:
+       print(">> No Trigger.")
        process.analysis_diffractiveDiffractiveZAnalysisPATTriggerInfoTTree_step = cms.Path(
        process.analysisSequences + process.eventSelection + process.diffractiveZAnalysisTTree)
 
