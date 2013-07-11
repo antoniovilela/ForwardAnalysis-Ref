@@ -150,9 +150,9 @@ void DiffractiveZAnalysis::fillTriggerInfo(DiffractiveZEvent& eventData, const e
   edm::Handle<edm::TriggerResults> triggerResults;
   event.getByLabel(triggerResultsTag_, triggerResults);
 
-  int nSize = triggerResults->size();
-
   if( triggerResults.isValid() ){
+
+    int nSize = triggerResults->size(); 
     const edm::TriggerNames& triggerNames = event.triggerNames(*triggerResults);
 
     size_t idxpath = 0;
@@ -190,7 +190,7 @@ void DiffractiveZAnalysis::fillTriggerInfo(DiffractiveZEvent& eventData, const e
     }
 
   }else{
-    std::cout << "\n No valid trigger result." <<std::endl;
+    std::cout << "\n No valid trigger result.\n" <<std::endl;
   }
 
 }
