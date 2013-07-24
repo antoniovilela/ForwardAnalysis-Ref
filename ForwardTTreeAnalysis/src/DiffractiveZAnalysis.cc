@@ -284,21 +284,35 @@ void DiffractiveZAnalysis::fillElectronsInfo(DiffractiveZEvent& eventData, const
     event.getByLabel(trackTag_,trackHandle);
     const edm::View<reco::Track>& trackColl = *(trackHandle.product());
 
-    int goodTracksCount = 0;
+    int goodTracksCount03 = 0;
+    int goodTracksCount04 = 0;
+    int goodTracksCount05 = 0;
 
     // Tracks Outside Cone
     edm::View<reco::Track>::const_iterator track = trackColl.begin();
     edm::View<reco::Track>::const_iterator tracks_end = trackColl.end();
     for (; track != tracks_end; ++track)
     {
+      if ((deltaR(track->eta(),track->phi(),electron1->eta(),electron1->phi()) > 0.3) && (deltaR(track->eta(),track->phi(),electron2->eta(),electron2->phi()) > 0.3))
+      {
+	goodTracksCount03++;
+      }
+
+      if ((deltaR(track->eta(),track->phi(),electron1->eta(),electron1->phi()) > 0.4) && (deltaR(track->eta(),track->phi(),electron2->eta(),electron2->phi()) > 0.4))
+      {
+        goodTracksCount04++;
+      }
+
       if ((deltaR(track->eta(),track->phi(),electron1->eta(),electron1->phi()) > 0.5) && (deltaR(track->eta(),track->phi(),electron2->eta(),electron2->phi()) > 0.5))
       {
-	goodTracksCount++;
+        goodTracksCount05++;
       }
 
     }
 
-    eventData.SetTracksNonConeElectron(goodTracksCount);
+    eventData.SetTracksNonConeElectron03(goodTracksCount03);
+    eventData.SetTracksNonConeElectron04(goodTracksCount04);
+    eventData.SetTracksNonConeElectron05(goodTracksCount05);
 
     if (debug){
       std::cout << "electron1 -> dr03 TK: " << electron1->dr03TkSumPt() << "| dr03 Ecal: " << electron1->dr03EcalRecHitSumEt() << " | dr03 Hcal: " << electron1->dr03HcalTowerSumEt() << std::endl;
@@ -321,7 +335,7 @@ void DiffractiveZAnalysis::fillElectronsInfo(DiffractiveZEvent& eventData, const
     eventData.SetDiElectronPt(-999.);
     eventData.SetDiElectronEta(-999.);
     eventData.SetDiElectronPhi(-999.);
-    eventData.SetElectronsN(0);
+    eventData.SetElectronsN(-1);
     eventData.SetLeadingElectronPt(-999.);
     eventData.SetLeadingElectronEta(-999.);
     eventData.SetLeadingElectronPhi(-999.);
@@ -466,21 +480,35 @@ void DiffractiveZAnalysis::fillMuonsInfo(DiffractiveZEvent& eventData, const edm
     event.getByLabel(trackTag_,trackHandle);
     const edm::View<reco::Track>& trackColl = *(trackHandle.product());
 
-    int goodTracksCount = 0;
+    int goodTracksCount03 = 0;
+    int goodTracksCount04 = 0;
+    int goodTracksCount05 = 0;
 
     // Tracks Outside Cone
     edm::View<reco::Track>::const_iterator track = trackColl.begin();
     edm::View<reco::Track>::const_iterator tracks_end = trackColl.end();
     for (; track != tracks_end; ++track)
     {
+      if ((deltaR(track->eta(),track->phi(),muon1->eta(),muon1->phi()) > 0.3) && (deltaR(track->eta(),track->phi(),muon2->eta(),muon2->phi()) > 0.3))
+      {
+	goodTracksCount03++;
+      }
+
+      if ((deltaR(track->eta(),track->phi(),muon1->eta(),muon1->phi()) > 0.4) && (deltaR(track->eta(),track->phi(),muon2->eta(),muon2->phi()) > 0.4))
+      {
+        goodTracksCount04++;
+      }
+
       if ((deltaR(track->eta(),track->phi(),muon1->eta(),muon1->phi()) > 0.5) && (deltaR(track->eta(),track->phi(),muon2->eta(),muon2->phi()) > 0.5))
       {
-	goodTracksCount++;
+        goodTracksCount05++;
       }
 
     }
 
-    eventData.SetTracksNonConeMuon(goodTracksCount);
+    eventData.SetTracksNonConeMuon03(goodTracksCount03);
+    eventData.SetTracksNonConeMuon04(goodTracksCount04);
+    eventData.SetTracksNonConeMuon05(goodTracksCount05);
 
     if (debug){
       std::cout << "NMuons: " << MuonsN << std::endl;
@@ -498,7 +526,7 @@ void DiffractiveZAnalysis::fillMuonsInfo(DiffractiveZEvent& eventData, const edm
     eventData.SetDiMuonPt(-999.);
     eventData.SetDiMuonEta(-999.);
     eventData.SetDiMuonPhi(-999.);
-    eventData.SetMuonsN(0);
+    eventData.SetMuonsN(-1);
     eventData.SetLeadingMuonPt(-999.);
     eventData.SetLeadingMuonEta(-999.);
     eventData.SetLeadingMuonPhi(-999.);
@@ -1576,21 +1604,35 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
     event.getByLabel(trackTag_,trackHandle);
     const edm::View<reco::Track>& trackColl = *(trackHandle.product());
 
-    int goodTracksCountm= 0;
+    int goodTracksCountm03= 0;
+    int goodTracksCountm04= 0;
+    int goodTracksCountm05= 0;
 
     // Tracks Outside Cone
     edm::View<reco::Track>::const_iterator track = trackColl.begin();
     edm::View<reco::Track>::const_iterator tracks_end = trackColl.end();
     for (; track != tracks_end; ++track)
     {
+      if ((deltaR(track->eta(),track->phi(),muon1->eta(),muon1->phi()) > 0.3) && (deltaR(track->eta(),track->phi(),muon2->eta(),muon2->phi()) > 0.3))
+      {
+	goodTracksCountm03++;
+      }
+
+      if ((deltaR(track->eta(),track->phi(),muon1->eta(),muon1->phi()) > 0.4) && (deltaR(track->eta(),track->phi(),muon2->eta(),muon2->phi()) > 0.4))
+      {
+        goodTracksCountm04++;
+      }
+
       if ((deltaR(track->eta(),track->phi(),muon1->eta(),muon1->phi()) > 0.5) && (deltaR(track->eta(),track->phi(),muon2->eta(),muon2->phi()) > 0.5))
       {
-	goodTracksCountm++;
+        goodTracksCountm05++;
       }
 
     }
 
-    eventData.SetTracksNonConepatMuon(goodTracksCountm);
+    eventData.SetTracksNonConepatMuon03(goodTracksCountm03);
+    eventData.SetTracksNonConepatMuon04(goodTracksCountm04);
+    eventData.SetTracksNonConepatMuon05(goodTracksCountm05);
 
     if (debug){
 
@@ -1740,21 +1782,35 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
     event.getByLabel(trackTag_,trackHandle);
     const edm::View<reco::Track>& trackColl = *(trackHandle.product());
 
-    int goodTracksCounte = 0;
+    int goodTracksCounte03 = 0;
+    int goodTracksCounte04 = 0;
+    int goodTracksCounte05 = 0;
 
     // Tracks Outside Cone
     edm::View<reco::Track>::const_iterator track = trackColl.begin();
     edm::View<reco::Track>::const_iterator tracks_end = trackColl.end();
     for (; track != tracks_end; ++track)
     {
+      if ((deltaR(track->eta(),track->phi(),electron1->eta(),electron1->phi()) > 0.3) && (deltaR(track->eta(),track->phi(),electron2->eta(),electron2->phi()) > 0.3))
+      {
+	goodTracksCounte03++;
+      }
+
+      if ((deltaR(track->eta(),track->phi(),electron1->eta(),electron1->phi()) > 0.4) && (deltaR(track->eta(),track->phi(),electron2->eta(),electron2->phi()) > 0.4))
+      {
+        goodTracksCounte04++;
+      }
+
       if ((deltaR(track->eta(),track->phi(),electron1->eta(),electron1->phi()) > 0.5) && (deltaR(track->eta(),track->phi(),electron2->eta(),electron2->phi()) > 0.5))
       {
-	goodTracksCounte++;
+        goodTracksCounte05++;
       }
 
     }
 
-    eventData.SetTracksNonConepatElectron(goodTracksCounte);
+    eventData.SetTracksNonConepatElectron03(goodTracksCounte03);
+    eventData.SetTracksNonConepatElectron04(goodTracksCounte04);
+    eventData.SetTracksNonConepatElectron05(goodTracksCounte05);
 
     if (debug) {
 
@@ -1863,7 +1919,6 @@ void DiffractiveZAnalysis::fillCastor(DiffractiveZEvent& eventData, const edm::E
 
     for(int isec = 0; isec < 16; isec++) {
       if (rh.id().sector()== isec+1) sumCastorTower[isec]+=rh.energy()*fCGeVCastor_;
-      castor_tower.push_back(sumCastorTower[isec]);
     }
 
   }
@@ -1876,13 +1931,12 @@ if (accept[isec]==true) {
 castor_tower.push_back(sumCastorTower[isec]);
 }
 else castor_tower.push_back(-999.);
-}
+} 
    */
 
-if (debug){
-  for (int isec=0;isec<16;isec++){
-    std::cout << "Sector "<< isec+1 << ", Total Energy [GeV]: " << sumCastorTower[isec] << std::endl;
-  }
+for (int isec=0;isec<16;isec++){
+  castor_tower.push_back(sumCastorTower[isec]);
+  if (debug) std::cout << "Sector "<< isec+1 << ", Total Energy [GeV]: " << sumCastorTower[isec] << std::endl;
 }
 
 eventData.SetCastorTowerEnergy(castor_tower);
@@ -2039,6 +2093,7 @@ void DiffractiveZAnalysis::fillZDC(DiffractiveZEvent& eventData, const edm::Even
 void DiffractiveZAnalysis::fillDetectorEnergyEtaInfo(DiffractiveZEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
 
   bool debug = false;
+  bool debug_deep = false;
 
   std::vector<double> energy_tower;
   std::vector<double> eta_tower; 
@@ -2071,73 +2126,90 @@ void DiffractiveZAnalysis::fillDetectorEnergyEtaInfo(DiffractiveZEvent& eventDat
       DetId adetId = calotower->constituent(iconst);
       if(adetId.det()==DetId::Hcal){
 	hasHCAL = true;
+	if (debug_deep) std::cout << "HCAL is true." << std::endl;
 	HcalDetId hcalDetId(adetId);
-	if(hcalDetId.subdet()==HcalForward) hasHF = true;
-	else if(hcalDetId.subdet()==HcalEndcap) hasHE = true;
-	else if(hcalDetId.subdet()==HcalBarrel) hasHB = true;
-	else if(hcalDetId.subdet()==HcalOuter) hasHO = true;  
+	if(hcalDetId.subdet()==HcalForward) {
+	  hasHF = true;
+	  if (debug_deep) std::cout << "HF is true." << std::endl;
+	}
+	else if(hcalDetId.subdet()==HcalEndcap) {
+	  hasHE = true;
+	  if (debug_deep) std::cout << "HE is true." << std::endl;
+	}
+	else if(hcalDetId.subdet()==HcalBarrel) {
+	  hasHB = true;
+	  if (debug_deep) std::cout << "HB is true." << std::endl;
+	} 
+	else if(hcalDetId.subdet()==HcalOuter) {
+	  hasHO = true;  
+	  if (debug_deep) std::cout << "HO is true." << std::endl;
+	}
       } 
       else if(adetId.det()==DetId::Ecal){
 	hasECAL = true;
+	if (debug_deep) std::cout << "ECAL is true." << std::endl;
 	EcalSubdetector ecalSubDet = (EcalSubdetector)adetId.subdetId();
-	if(ecalSubDet == EcalEndcap) hasEE = true;
-	else if(ecalSubDet == EcalBarrel) hasEB = true;
+	if(ecalSubDet == EcalEndcap) {
+	  hasEE = true;
+	  if (debug_deep) std::cout << "EE is true." << std::endl; 
+	}
+	else if(ecalSubDet == EcalBarrel) {
+	  hasEB = true;
+	  if (debug_deep) std::cout << "EB is true." << std::endl;
+	}
       }
     }
 
-    bool CalAboveTh = false;
-    double caloTowerEnergy = -999.;
-    double caloTowerEta = -999;
+    double caloTowerEnergy = calotower->energy();
+    double caloTowerEta = calotower->eta();
+    double caloTowerPhi = calotower->phi();
     double caloTowerEmEnergy = calotower->emEnergy();
     double caloTowerHadEnergy = calotower->hadEnergy();
 
     if( hasHF && !hasHE )
     {
+
+      if (debug_deep) std::cout << "HF, no threshold." << std::endl;    
+
       if( caloTowerEnergy > energyThresholdHF_ && fabs(calotower->eta())> 2.98 )   //// excluding HF ring1
       {
 	++counter_tower;
-	CalAboveTh = true;
-	caloTowerEnergy = calotower->energy();
-	caloTowerEta = calotower->eta();
 	energy_tower.push_back(caloTowerEnergy);
 	eta_tower.push_back(caloTowerEta);
 
 	if (debug) {
-	  std::cout << "HF Energy for each CaloTower (GeV): " << caloTowerEnergy << " | Eta for each CaloTower: " << caloTowerEta << std::endl;
+	  std::cout << "HF Energy for each CaloTower (GeV): " << caloTowerEnergy << " | Eta for each CaloTower: " << caloTowerEta << " | Phi for each CaloTower: " << caloTowerPhi << std::endl;
 	}
 
       }
     }
     else if( hasHE && !hasHF && !hasHB )
     {
+
+      if (debug_deep) std::cout << "HE, no threshold." << std::endl;
       if( caloTowerHadEnergy > energyThresholdHE_)
       {
 	++counter_tower;
-	CalAboveTh = true;
-	caloTowerEnergy = calotower->energy();
-	caloTowerEta = calotower->eta();
 	energy_tower.push_back(caloTowerEnergy);
 	eta_tower.push_back(caloTowerEta);
 
 	if (debug) {
-	  std::cout << "HE Energy for each CaloTower (GeV): " << caloTowerEnergy << " | Eta for each CaloTower: " << caloTowerEta << std::endl;
+	  std::cout << "HE Energy for each CaloTower (GeV): " << caloTowerEnergy << " | Eta for each CaloTower: " << caloTowerEta << " | Phi for each CaloTower: " << caloTowerPhi << std::endl;
 	}
 
       }
     }
     else if( hasHB && !hasHE )
     {
+      if (debug_deep) std::cout << "HB, no threshold." << std::endl;
       if( caloTowerHadEnergy > energyThresholdHB_)
       {
 	++counter_tower;
-	CalAboveTh = true;
-	caloTowerEnergy = calotower->energy();
-	caloTowerEta = calotower->eta();
 	energy_tower.push_back(caloTowerEnergy);
 	eta_tower.push_back(caloTowerEta);
 
 	if (debug) {
-	  std::cout << "HB Energy for each CaloTower (GeV): " << caloTowerEnergy << " | Eta for each CaloTower: " << caloTowerEta << std::endl;
+	  std::cout << "HB Energy for each CaloTower (GeV): " << caloTowerEnergy << " | Eta for each CaloTower: " << caloTowerEta << " | Phi for each CaloTower: " << caloTowerPhi << std::endl;
 	}
 
       }
@@ -2145,45 +2217,39 @@ void DiffractiveZAnalysis::fillDetectorEnergyEtaInfo(DiffractiveZEvent& eventDat
 
     if( hasEE && !hasEB )
     {
+      if (debug_deep) std::cout << "EE, no threshold." << std::endl;
       if( caloTowerEmEnergy >= energyThresholdEE_)
       {
 	++counter_tower;
-	CalAboveTh = true;    
-	caloTowerEnergy = calotower->energy();
-	caloTowerEta = calotower->eta();
 	energy_tower.push_back(caloTowerEnergy);
 	eta_tower.push_back(caloTowerEta);
 	if (debug) {
-	  std::cout << "EB Energy for each CaloTower (GeV): " << caloTowerEnergy << " | Eta for each CaloTower: " << caloTowerEta << std::endl;
+	  std::cout << "EB Energy for each CaloTower (GeV): " << caloTowerEnergy << " | Eta for each CaloTower: " << caloTowerEta << " | Phi for each CaloTower: " << caloTowerPhi << std::endl;
 	}
 
       }
     }
     else if( hasEB && !hasEE )
     {
+      if (debug_deep) std::cout << "EB, no threshold." << std::endl;
       if( caloTowerEmEnergy >= energyThresholdEB_)
       {
 	++counter_tower;
-	CalAboveTh = true;
-	caloTowerEnergy = calotower->energy();
-	caloTowerEta = calotower->eta();
 	energy_tower.push_back(caloTowerEnergy);
 	eta_tower.push_back(caloTowerEta);
 
 	if (debug) {
-	  std::cout << "EB Energy for each CaloTower (GeV): " << caloTowerEnergy << " | Eta for each CaloTower: " << caloTowerEta << std::endl;
+	  std::cout << "EB Energy for each CaloTower (GeV): " << caloTowerEnergy << " | Eta for each CaloTower: " << caloTowerEta << " | Phi for each CaloTower: " << caloTowerPhi << std::endl;
 	}
-
       }
     }
-
-    eventData.SetEachTowerEta(eta_tower);
-    eventData.SetEachTowerEnergy(energy_tower);
-
   }  ////has to close calotower loop
 
   if (debug) std::cout << "Active Towers: " << counter_tower << std::endl;
   eventData.SetEachTowerCounter(counter_tower);
+  eventData.SetEachTowerEta(eta_tower);
+  eventData.SetEachTowerEnergy(energy_tower);
 
 }
+
 

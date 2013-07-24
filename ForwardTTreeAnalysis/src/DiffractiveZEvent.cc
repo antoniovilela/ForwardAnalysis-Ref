@@ -24,7 +24,7 @@ DiElectronMass_=-999.;
 DiElectronPt_ = -999.;
 DiElectronEta_ = -999.;
 DiElectronPhi_ = -999.;
-ElectronsN_=0;
+ElectronsN_= -1;
 
 LeadingMuonPt_=-999.;
 LeadingMuonEta_=-999.;
@@ -38,7 +38,7 @@ DiMuonMass_=-999.;
 DiMuonPt_ = -999.;
 DiMuonEta_ = -999.;
 DiMuonPhi_ = -999.; 
-MuonsN_=0;
+MuonsN_= -1;
 
 VertexMultiplicity_.clear();
 VertexChiNorm_.clear();
@@ -50,7 +50,7 @@ TracksPt_.clear();
 EachTowerEnergy_.clear();
 EachTowerEta_.clear();
 CastorTowerEnergy_.clear();
-EachTowerCounter_ = 0;
+EachTowerCounter_ = -1;
 
 PrimaryGapMaxGen_=-999.;
 SecondGapMaxGen_=-999.;
@@ -137,7 +137,7 @@ LimMinusGapPF_ = -999.;
 MultiplicityGapPlusPF_ = -999;
 MultiplicityGapMinusPF_ = -999;
 
-patNMuon_ = 0;
+patNMuon_ = -1;
 
 patMuon1Pt_=-999.;
 patMuon1Charge_=-999;
@@ -178,7 +178,7 @@ patDiMuonPt_ = -999.;
 patDiMuonEta_ = -999.;
 patDiMuonPhi_ = -999.;
 
-patNElectron_ = 0;
+patNElectron_ = -1;
 
 patElectron1Pt_=-999.;
 patElectron1Charge_=-999;
@@ -254,9 +254,21 @@ SecondMuonrelIsoDr03_=-999.;
 LeadingMuonrelIsoDr05_=-999.;
 SecondMuonrelIsoDr05_=-999.;
 
-TracksNonConeMuon_ = 0;
-TracksNonConeElectron_ = 0;
-TracksNonConepatMuon_ = 0;
-TracksNonConepatElectron_ = 0;
+TracksNonConeMuon03_ = -1;
+TracksNonConeElectron03_ = -1;
+TracksNonConepatMuon03_ = -1;
+TracksNonConepatElectron03_ = -1;
+
+TracksNonConeMuon04_ = -1;
+TracksNonConeElectron04_ = -1;
+TracksNonConepatMuon04_ = -1;
+TracksNonConepatElectron04_ = -1;
+
+TracksNonConeMuon05_ = -1;
+TracksNonConeElectron05_ = -1;
+TracksNonConepatMuon05_ = -1;
+TracksNonConepatElectron05_ = -1;
+
+//ZDCdigifC_.clear();
 
 }
