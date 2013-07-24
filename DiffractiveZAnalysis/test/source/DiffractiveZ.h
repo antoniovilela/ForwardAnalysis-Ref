@@ -36,6 +36,7 @@ class DiffractiveZ {
   int pileup;
   int totalweight;
   double aSumE;
+  int l, k;
 
   double deltaphielectrons;
   double deltaphimuons;
@@ -43,6 +44,7 @@ class DiffractiveZ {
   double deltaetamuons;
   double deltapTelectrons;
   double deltapTmuons;
+  double sumCastorEnergy;
 
   std::string filein;
   std::string processname;
@@ -58,6 +60,9 @@ class DiffractiveZ {
   double lepton2pt;
 
   std::vector<std::vector<TH1D*> > m_hVector_DiElectron;
+  std::vector<std::vector<TH1D*> > m_hVector_DiElectronEta;
+  std::vector<std::vector<TH1D*> > m_hVector_DiElectronPt;
+  std::vector<std::vector<TH1D*> > m_hVector_DiElectronPhi;
   std::vector<std::vector<TH1D*> > m_hVector_LeadingElectronPt;
   std::vector<std::vector<TH1D*> > m_hVector_LeadingElectronEta;
   std::vector<std::vector<TH1D*> > m_hVector_LeadingElectronPhi;
@@ -69,6 +74,9 @@ class DiffractiveZ {
   std::vector<std::vector<TH1D*> > m_hVector_ElectronsN;
 
   std::vector<std::vector<TH1D*> > m_hVector_DiMuon;
+  std::vector<std::vector<TH1D*> > m_hVector_DiMuonEta;
+  std::vector<std::vector<TH1D*> > m_hVector_DiMuonPt;
+  std::vector<std::vector<TH1D*> > m_hVector_DiMuonPhi;
   std::vector<std::vector<TH1D*> > m_hVector_LeadingMuonPt;
   std::vector<std::vector<TH1D*> > m_hVector_LeadingMuonEta;
   std::vector<std::vector<TH1D*> > m_hVector_LeadingMuonPhi;
@@ -126,6 +134,12 @@ class DiffractiveZ {
   std::vector<std::vector<TH1D*> > m_hVector_patMuon2Et;
   std::vector<std::vector<TH1D*> > m_hVector_patDiElectronMass;
   std::vector<std::vector<TH1D*> > m_hVector_patDiMuonMass;
+  std::vector<std::vector<TH1D*> > m_hVector_patDiElectronEta;
+  std::vector<std::vector<TH1D*> > m_hVector_patDiMuonEta;
+  std::vector<std::vector<TH1D*> > m_hVector_patDiElectronPt;
+  std::vector<std::vector<TH1D*> > m_hVector_patDiMuonPt;
+  std::vector<std::vector<TH1D*> > m_hVector_patDiElectronPhi;
+  std::vector<std::vector<TH1D*> > m_hVector_patDiMuonPhi;
   std::vector<std::vector<TH1D*> > m_hVector_patElectron1TkDr03;
   std::vector<std::vector<TH1D*> > m_hVector_patElectron1TkDr04;
   std::vector<std::vector<TH1D*> > m_hVector_patElectron1EcalDr03;
@@ -211,6 +225,27 @@ class DiffractiveZ {
   std::vector<std::vector<TH2D*> > m_hVector_correlationMuon2Eta;
   std::vector<std::vector<TH2D*> > m_hVector_correlationMuon2Phi;
   std::vector<std::vector<TH2D*> > m_hVector_correlationMuon2Iso;
+
+  std::vector<std::vector<TH2D*> > m_hVector_ECaloVsEta;
+  std::vector<std::vector<TProfile*> > m_hVector_ECaloVsEtaTProf;
+  std::vector<std::vector<TH1D*> > m_hVector_sumECastorMinus;
+  std::vector<std::vector<TH2D*> > m_hVector_ECastorSector;
+  std::vector<std::vector<TProfile*> > m_hVector_ECastorSectorTProf;
+
+  std::vector<std::vector<TH1D*> > m_hVector_tracksOutMuonsCone03;
+  std::vector<std::vector<TH1D*> > m_hVector_tracksOutElectronsCone03;
+  std::vector<std::vector<TH1D*> > m_hVector_tracksOutpatMuonsCone03;
+  std::vector<std::vector<TH1D*> > m_hVector_tracksOutpatElectronsCone03;
+
+  std::vector<std::vector<TH1D*> > m_hVector_tracksOutMuonsCone04;
+  std::vector<std::vector<TH1D*> > m_hVector_tracksOutElectronsCone04;
+  std::vector<std::vector<TH1D*> > m_hVector_tracksOutpatMuonsCone04;
+  std::vector<std::vector<TH1D*> > m_hVector_tracksOutpatElectronsCone04;
+
+  std::vector<std::vector<TH1D*> > m_hVector_tracksOutMuonsCone05;
+  std::vector<std::vector<TH1D*> > m_hVector_tracksOutElectronsCone05;
+  std::vector<std::vector<TH1D*> > m_hVector_tracksOutpatMuonsCone05;
+  std::vector<std::vector<TH1D*> > m_hVector_tracksOutpatElectronsCone05;
 
   std::vector <std::string> Folders;
 

@@ -44,6 +44,7 @@ class DiffractiveZAnalysis {
       void fillCastor(DiffractiveZEvent&, const edm::Event&, const edm::EventSetup&);
       void fillZDC(DiffractiveZEvent&, const edm::Event&, const edm::EventSetup&);
       void fillDetectorEnergyEtaInfo(DiffractiveZEvent&, const edm::Event&, const edm::EventSetup&);
+      //void fillDetectorEnergyEtaInfoNoThreshold(DiffractiveZEvent&, const edm::Event&, const edm::EventSetup&);
 
       edm::InputTag triggerResultsTag_;
       std::vector<std::string> hltPathNames_;

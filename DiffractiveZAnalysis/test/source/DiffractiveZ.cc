@@ -12,6 +12,7 @@
 #include <TString.h>
 #include <TH1.h>
 #include <TH2.h>
+#include <TProfile.h>
 #include <TTree.h>
 #include <TMath.h>
 
@@ -113,6 +114,9 @@ void DiffractiveZ::CreateHistos(std::string type){
   for (std::vector<std::string>::size_type j=0; j<Folders.size(); j++){
 
     m_hVector_DiElectron.push_back( std::vector<TH1D*>() );
+    m_hVector_DiElectronEta.push_back( std::vector<TH1D*>() );
+    m_hVector_DiElectronPt.push_back( std::vector<TH1D*>() );
+    m_hVector_DiElectronPhi.push_back( std::vector<TH1D*>() );
     m_hVector_LeadingElectronPt.push_back( std::vector<TH1D*>() );
     m_hVector_LeadingElectronEta.push_back( std::vector<TH1D*>() );
     m_hVector_LeadingElectronPhi.push_back( std::vector<TH1D*>() );
@@ -123,6 +127,9 @@ void DiffractiveZ::CreateHistos(std::string type){
     m_hVector_SecondElectronCharge.push_back( std::vector<TH1D*>() );
     m_hVector_ElectronsN.push_back( std::vector<TH1D*>() );
     m_hVector_DiMuon.push_back( std::vector<TH1D*>() );
+    m_hVector_DiMuonEta.push_back( std::vector<TH1D*>() );
+    m_hVector_DiMuonPt.push_back( std::vector<TH1D*>() );
+    m_hVector_DiMuonPhi.push_back( std::vector<TH1D*>() );
     m_hVector_LeadingMuonPt.push_back( std::vector<TH1D*>() );
     m_hVector_LeadingMuonEta.push_back( std::vector<TH1D*>() );
     m_hVector_LeadingMuonPhi.push_back( std::vector<TH1D*>() );
@@ -176,6 +183,12 @@ void DiffractiveZ::CreateHistos(std::string type){
     m_hVector_patMuon2Et.push_back( std::vector<TH1D*>() );
     m_hVector_patDiElectronMass.push_back( std::vector<TH1D*>() );
     m_hVector_patDiMuonMass.push_back( std::vector<TH1D*>() );
+    m_hVector_patDiElectronPt.push_back( std::vector<TH1D*>() );
+    m_hVector_patDiMuonPt.push_back( std::vector<TH1D*>() );
+    m_hVector_patDiElectronEta.push_back( std::vector<TH1D*>() );
+    m_hVector_patDiMuonEta.push_back( std::vector<TH1D*>() );
+    m_hVector_patDiElectronPhi.push_back( std::vector<TH1D*>() );
+    m_hVector_patDiMuonPhi.push_back( std::vector<TH1D*>() );
     m_hVector_patElectron1TkDr03.push_back( std::vector<TH1D*>() );
     m_hVector_patElectron1TkDr04.push_back( std::vector<TH1D*>() );
     m_hVector_patElectron1EcalDr03.push_back( std::vector<TH1D*>() );
@@ -261,13 +274,34 @@ void DiffractiveZ::CreateHistos(std::string type){
     m_hVector_correlationMuon2Phi.push_back( std::vector<TH2D*>() );
     m_hVector_correlationMuon2Iso.push_back( std::vector<TH2D*>() );
 
+    m_hVector_sumECastorMinus.push_back( std::vector<TH1D*>() );
+    m_hVector_ECastorSector.push_back( std::vector<TH2D*>() );
+    m_hVector_ECaloVsEta.push_back( std::vector<TH2D*>() );
+    m_hVector_ECastorSectorTProf.push_back( std::vector<TProfile*>() );
+    m_hVector_ECaloVsEtaTProf.push_back( std::vector<TProfile*>() );
+
+    m_hVector_tracksOutMuonsCone03.push_back( std::vector<TH1D*>() );
+    m_hVector_tracksOutElectronsCone03.push_back( std::vector<TH1D*>() );
+    m_hVector_tracksOutpatMuonsCone03.push_back( std::vector<TH1D*>() );
+    m_hVector_tracksOutpatElectronsCone03.push_back( std::vector<TH1D*>() );
+
+    m_hVector_tracksOutMuonsCone04.push_back( std::vector<TH1D*>() );
+    m_hVector_tracksOutElectronsCone04.push_back( std::vector<TH1D*>() );
+    m_hVector_tracksOutpatMuonsCone04.push_back( std::vector<TH1D*>() );
+    m_hVector_tracksOutpatElectronsCone04.push_back( std::vector<TH1D*>() );
+
+    m_hVector_tracksOutMuonsCone05.push_back( std::vector<TH1D*>() );
+    m_hVector_tracksOutElectronsCone05.push_back( std::vector<TH1D*>() );
+    m_hVector_tracksOutpatMuonsCone05.push_back( std::vector<TH1D*>() );
+    m_hVector_tracksOutpatElectronsCone05.push_back( std::vector<TH1D*>() );
+
     for (int k=0;k<nloop;k++){
 
       if (type=="multiple_pileup"){
 	sprintf(tag,"multiple_pileup_%i",k);
       }
       else {
-	sprintf(tag,"no_multiple_pileup");
+	sprintf(tag,"single");
       }
 
       char name1[300];
@@ -995,12 +1029,160 @@ void DiffractiveZ::CreateHistos(std::string type){
       TH2D *histo_correlationMuon2Iso = new TH2D(name145,"Correlation Second Muon Isolation; Reco::Muon Iso; Pat::Muon Iso", 100,  0., 1., 100, 0., 1.);
       m_hVector_correlationMuon2Iso[j].push_back(histo_correlationMuon2Iso);
 
+      char name146[300];
+      sprintf(name146,"DiElectronPt_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_DiElectronPt = new TH1D(name146,"Dielectron Pt Distribution; P_{T} [GeV.c^{-1}]; N events",200,0,1000);
+      m_hVector_DiElectronPt[j].push_back(histo_DiElectronPt);
+
+      char name147[300];
+      sprintf(name147,"DiElectronEta_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_DiElectronEta = new TH1D(name147,"Dielectron #eta Distribution; #eta; N events",50,-5.2,5.2);
+      m_hVector_DiElectronEta[j].push_back(histo_DiElectronEta);
+
+      char name148[300];
+      sprintf(name148,"DiElectronPhi_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_DiElectronPhi = new TH1D(name148,"Dielectron #phi Distribution; #phi [rad]; N events",60,-3.3,3.3);
+      m_hVector_DiElectronPhi[j].push_back(histo_DiElectronPhi);
+
+      char name149[300];
+      sprintf(name149,"DiMuonPt_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_DiMuonPt = new TH1D(name149,"DiMuon Pt Distribution; P_{T} [GeV.c^{-1}]; N events",200,0,1000);
+      m_hVector_DiMuonPt[j].push_back(histo_DiMuonPt);
+
+      char name150[300];
+      sprintf(name150,"DiMuonEta_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_DiMuonEta = new TH1D(name150,"DiMuon #eta Distribution; #eta; N events",50,-5.2,5.2);
+      m_hVector_DiMuonEta[j].push_back(histo_DiMuonEta);
+
+      char name151[300];
+      sprintf(name151,"DiMuonPhi_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_DiMuonPhi = new TH1D(name151,"DiMuon #phi Distribution; #phi [rad]; N events",60,-3.3,3.3);
+      m_hVector_DiMuonPhi[j].push_back(histo_DiMuonPhi);
+
+      char name152[300];
+      sprintf(name152,"patDiMuonPt_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_patDiMuonPt = new TH1D(name152,"DiMuon Pt Distribution; P_{T} [GeV.c^{-1}]; N events",200,0,1000);
+      m_hVector_patDiMuonPt[j].push_back(histo_patDiMuonPt);
+
+      char name153[300];
+      sprintf(name153,"patDiMuonEta_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_patDiMuonEta = new TH1D(name153,"DiMuon #eta Distribution; #eta; N events",50,-5.2,5.2);
+      m_hVector_patDiMuonEta[j].push_back(histo_patDiMuonEta);
+
+      char name154[300];
+      sprintf(name154,"patDiMuonPhi_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_patDiMuonPhi = new TH1D(name154,"DiMuon #phi Distribution; #phi [rad]; N events",60,-3.3,3.3);
+      m_hVector_patDiMuonPhi[j].push_back(histo_patDiMuonPhi);
+
+      char name155[300];
+      sprintf(name155,"patDiElectronPt_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_patDiElectronPt = new TH1D(name155,"DiElectron Pt Distribution; P_{T} [GeV.c^{-1}]; N events",200,0,1000);
+      m_hVector_patDiElectronPt[j].push_back(histo_patDiElectronPt);
+
+      char name156[300];
+      sprintf(name156,"patDiElectronEta_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_patDiElectronEta = new TH1D(name156,"DiElectron #eta Distribution; #eta; N events",50,-5.2,5.2);
+      m_hVector_patDiElectronEta[j].push_back(histo_patDiElectronEta);
+
+      char name157[300];
+      sprintf(name157,"patDiElectronPhi_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_patDiElectronPhi = new TH1D(name157,"DiElectron #phi Distribution; #phi [rad]; N events",60,-3.3,3.3);
+      m_hVector_patDiElectronPhi[j].push_back(histo_patDiElectronPhi);
+
+      char name158[300];
+      sprintf(name158,"ECaloVsEta_%s_%s",tag,Folders.at(j).c_str());
+      TH2D *histo_ECaloVsEta = new TH2D(name158,"Calorimeter Energy X #eta; #eta; Energy [GeV]", 12,  -6, 6, 100, 0., 1000.);
+      m_hVector_ECaloVsEta[j].push_back(histo_ECaloVsEta);
+
+      char name159[300];
+      sprintf(name159,"sumECastorMinus_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_sumECastorMinus = new TH1D(name159,"Castor Sum of Energy; Energy [GeV]; N events",500,0,500);
+      m_hVector_sumECastorMinus[j].push_back(histo_sumECastorMinus);
+
+      char name160[300];
+      sprintf(name160,"ECastorSector_%s_%s",tag,Folders.at(j).c_str());
+      TH2D *histo_ECastorSector = new TH2D(name160,"Castor Energy X Sector; Sector; Energy [GeV]", 17,  0, 17, 100, 0., 7000.);
+      m_hVector_ECastorSector[j].push_back(histo_ECastorSector);
+
+      char name161[300];
+      sprintf(name161,"ECaloVsEtaTProf_%s_%s",tag,Folders.at(j).c_str());
+      TProfile *histo_ECaloVsEtaTProf = new TProfile(name161,"Calorimeter Energy X #eta; #eta; Energy [GeV]", 100,  -6, 6, 0., 1000.);
+      m_hVector_ECaloVsEtaTProf[j].push_back(histo_ECaloVsEtaTProf);
+
+      char name162[300];
+      sprintf(name162,"ECastorSectorTProf_%s_%s",tag,Folders.at(j).c_str());
+      TProfile *histo_ECastorSectorTProf = new TProfile(name162,"Castor Energy X Sector; Sector; Energy [GeV]", 100,  0, 17, 0., 7000.);
+      m_hVector_ECastorSectorTProf[j].push_back(histo_ECastorSectorTProf); 
+
+      char name163[300]; 
+      sprintf(name163,"tracksOutMuonsCone03_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_tracksOutMuonsCone03 = new TH1D(name163,"Tracks Outside Leading and Second Muon Cone; Number of Tracks, #DeltaR>0.3; N events",500,0,500);
+      m_hVector_tracksOutMuonsCone03[j].push_back(histo_tracksOutMuonsCone03);
+
+      char name164[300];
+      sprintf(name164,"tracksOutElectronsCone03_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_tracksOutElectronsCone03 = new TH1D(name164,"Tracks Outside Leading and Second Electron Cone; Number of Tracks, #DeltaR>0.3; N events",500,0,500);
+      m_hVector_tracksOutElectronsCone03[j].push_back(histo_tracksOutElectronsCone03);
+
+      char name165[300];
+      sprintf(name165,"tracksOutpatMuonsCone03_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_tracksOutpatMuonsCone03 = new TH1D(name165,"Tracks Outside Leading and Second Muon Cone; Number of Tracks, #DeltaR>0.3; N events",500,0,500);
+      m_hVector_tracksOutpatMuonsCone03[j].push_back(histo_tracksOutpatMuonsCone03);
+
+      char name166[300];
+      sprintf(name166,"tracksOutpatElectronsCone03_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_tracksOutpatElectronsCone03 = new TH1D(name166,"Tracks Outside Leading and Second Electron Cone; Number of Tracks, #DeltaR>0.3; N events",500,0,500);
+      m_hVector_tracksOutpatElectronsCone03[j].push_back(histo_tracksOutpatElectronsCone03);
+
+      char name167[300]; 
+      sprintf(name167,"tracksOutMuonsCone04_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_tracksOutMuonsCone04 = new TH1D(name167,"Tracks Outside Leading and Second Muon Cone; Number of Tracks, #DeltaR>0.4; N events",500,0,500);
+      m_hVector_tracksOutMuonsCone04[j].push_back(histo_tracksOutMuonsCone04);
+
+      char name168[300];
+      sprintf(name168,"tracksOutElectronsCone04_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_tracksOutElectronsCone04 = new TH1D(name168,"Tracks Outside Leading and Second Electron Cone; Number of Tracks, #DeltaR>0.4; N events",500,0,500);
+      m_hVector_tracksOutElectronsCone04[j].push_back(histo_tracksOutElectronsCone04);
+
+      char name169[300];
+      sprintf(name169,"tracksOutpatMuonsCone04_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_tracksOutpatMuonsCone04 = new TH1D(name169,"Tracks Outside Leading and Second Muon Cone; Number of Tracks, #DeltaR>0.4; N events",500,0,500);
+      m_hVector_tracksOutpatMuonsCone04[j].push_back(histo_tracksOutpatMuonsCone04);
+
+      char name170[300];
+      sprintf(name170,"tracksOutpatElectronsCone04_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_tracksOutpatElectronsCone04 = new TH1D(name170,"Tracks Outside Leading and Second Electron Cone; Number of Tracks, #DeltaR>0.4; N events",500,0,500);
+      m_hVector_tracksOutpatElectronsCone04[j].push_back(histo_tracksOutpatElectronsCone04);
+
+      char name171[300]; 
+      sprintf(name171,"tracksOutMuonsCone05_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_tracksOutMuonsCone05 = new TH1D(name171,"Tracks Outside Leading and Second Muon Cone; Number of Tracks, #DeltaR>0.5; N events",500,0,500);
+      m_hVector_tracksOutMuonsCone05[j].push_back(histo_tracksOutMuonsCone05);
+
+      char name172[300];
+      sprintf(name172,"tracksOutElectronsCone05_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_tracksOutElectronsCone05 = new TH1D(name172,"Tracks Outside Leading and Second Electron Cone; Number of Tracks, #DeltaR>0.5; N events",500,0,500);
+      m_hVector_tracksOutElectronsCone05[j].push_back(histo_tracksOutElectronsCone05);
+
+      char name173[300];
+      sprintf(name173,"tracksOutpatMuonsCone05_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_tracksOutpatMuonsCone05 = new TH1D(name173,"Tracks Outside Leading and Second Muon Cone; Number of Tracks, #DeltaR>0.5; N events",500,0,500);
+      m_hVector_tracksOutpatMuonsCone05[j].push_back(histo_tracksOutpatMuonsCone05);
+
+      char name174[300];
+      sprintf(name174,"tracksOutpatElectronsCone05_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_tracksOutpatElectronsCone05 = new TH1D(name174,"Tracks Outside Leading and Second Electron Cone; Number of Tracks, #DeltaR>0.5; N events",500,0,500);
+      m_hVector_tracksOutpatElectronsCone05[j].push_back(histo_tracksOutpatElectronsCone05);
+
     }
   }
 }
 
 void DiffractiveZ::FillHistos(int index, int pileup, double totalweight){
   m_hVector_DiElectron[index].at(pileup)->Fill(eventdiffZ->GetDiElectronMass(),totalweight);
+  m_hVector_DiElectronEta[index].at(pileup)->Fill(eventdiffZ->GetDiElectronEta(),totalweight);
+  m_hVector_DiElectronPhi[index].at(pileup)->Fill(eventdiffZ->GetDiElectronPhi(),totalweight);
+  m_hVector_DiElectronPt[index].at(pileup)->Fill(eventdiffZ->GetDiElectronPt(),totalweight);
   m_hVector_LeadingElectronPt[index].at(pileup)->Fill(eventdiffZ->GetLeadingElectronPt(),totalweight);
   m_hVector_LeadingElectronEta[index].at(pileup)->Fill(eventdiffZ->GetLeadingElectronEta(),totalweight);
   m_hVector_LeadingElectronPhi[index].at(pileup)->Fill(eventdiffZ->GetLeadingElectronPhi(),totalweight);
@@ -1011,6 +1193,9 @@ void DiffractiveZ::FillHistos(int index, int pileup, double totalweight){
   m_hVector_SecondElectronCharge[index].at(pileup)->Fill(eventdiffZ->GetSecondElectronCharge(),totalweight);
   m_hVector_ElectronsN[index].at(pileup)->Fill(eventdiffZ->GetElectronsN(),totalweight);
   m_hVector_DiMuon[index].at(pileup)->Fill(eventdiffZ->GetDiMuonMass(),totalweight);
+  m_hVector_DiMuonEta[index].at(pileup)->Fill(eventdiffZ->GetDiMuonEta(),totalweight);
+  m_hVector_DiMuonPhi[index].at(pileup)->Fill(eventdiffZ->GetDiMuonPhi(),totalweight);
+  m_hVector_DiMuonPt[index].at(pileup)->Fill(eventdiffZ->GetDiMuonPt(),totalweight);
   m_hVector_LeadingMuonPt[index].at(pileup)->Fill(eventdiffZ->GetLeadingMuonPt(),totalweight);
   m_hVector_LeadingMuonEta[index].at(pileup)->Fill(eventdiffZ->GetLeadingMuonEta(),totalweight);
   m_hVector_LeadingMuonPhi[index].at(pileup)->Fill(eventdiffZ->GetLeadingMuonPhi(),totalweight);
@@ -1063,6 +1248,12 @@ void DiffractiveZ::FillHistos(int index, int pileup, double totalweight){
   m_hVector_patMuon2Et[index].at(pileup)->Fill(eventdiffZ->GetPatMuon2Et(),totalweight);
   m_hVector_patDiElectronMass[index].at(pileup)->Fill(eventdiffZ->GetPatDiElectronMass(),totalweight);
   m_hVector_patDiMuonMass[index].at(pileup)->Fill(eventdiffZ->GetPatDiMuonMass(),totalweight);
+  m_hVector_patDiElectronEta[index].at(pileup)->Fill(eventdiffZ->GetPatDiElectronEta(),totalweight);
+  m_hVector_patDiMuonEta[index].at(pileup)->Fill(eventdiffZ->GetPatDiMuonEta(),totalweight);
+  m_hVector_patDiElectronPhi[index].at(pileup)->Fill(eventdiffZ->GetPatDiElectronPhi(),totalweight);
+  m_hVector_patDiMuonPhi[index].at(pileup)->Fill(eventdiffZ->GetPatDiMuonPhi(),totalweight);
+  m_hVector_patDiElectronPt[index].at(pileup)->Fill(eventdiffZ->GetPatDiElectronPt(),totalweight);
+  m_hVector_patDiMuonPt[index].at(pileup)->Fill(eventdiffZ->GetPatDiMuonPt(),totalweight);
   m_hVector_patElectron1TkDr03[index].at(pileup)->Fill(eventdiffZ->GetPatElectron1TkDr03(),totalweight);
   m_hVector_patElectron1TkDr04[index].at(pileup)->Fill(eventdiffZ->GetPatElectron1TkDr04(),totalweight);
   m_hVector_patElectron1EcalDr03[index].at(pileup)->Fill(eventdiffZ->GetPatElectron1EcalDr03(),totalweight);
@@ -1146,6 +1337,36 @@ void DiffractiveZ::FillHistos(int index, int pileup, double totalweight){
   m_hVector_correlationMuon2Eta[index].at(pileup)->Fill(eventdiffZ->GetSecondMuonEta(),eventdiffZ->GetPatMuon2Eta());
   m_hVector_correlationMuon2Phi[index].at(pileup)->Fill(eventdiffZ->GetSecondMuonPhi(),eventdiffZ->GetPatMuon2Phi());
   m_hVector_correlationMuon2Iso[index].at(pileup)->Fill(eventdiffZ->GetSecondMuonrelIsoDr03(),eventdiffZ->GetPatMuon2relIsoDr03());
+
+  sumCastorEnergy = 0.;
+  for (l=0; l<16;l++){
+    m_hVector_ECastorSector[index].at(pileup)->Fill(l+1,eventdiffZ->GetCastorTowerEnergy(l),totalweight);
+    m_hVector_ECastorSectorTProf[index].at(pileup)->Fill(l+1,eventdiffZ->GetCastorTowerEnergy(l),totalweight);
+    sumCastorEnergy+=eventdiffZ->GetCastorTowerEnergy(l);
+  }
+  m_hVector_sumECastorMinus[index].at(pileup)->Fill(sumCastorEnergy,totalweight);
+
+
+  for (k=0; k<eventdiffZ->GetEachTowerCounter();k++){
+    m_hVector_ECaloVsEta[index].at(pileup)->Fill(eventdiffZ->GetEachTowerEta(k),eventdiffZ->GetEachTowerEnergy(k),totalweight);
+    m_hVector_ECaloVsEtaTProf[index].at(pileup)->Fill(eventdiffZ->GetEachTowerEta(k),eventdiffZ->GetEachTowerEnergy(k),totalweight);
+  }
+
+  m_hVector_tracksOutMuonsCone03[index].at(pileup)->Fill(eventdiffZ->GetTracksNonConeMuon03(),totalweight);  
+  m_hVector_tracksOutElectronsCone03[index].at(pileup)->Fill(eventdiffZ->GetTracksNonConeElectron03(),totalweight);   
+  m_hVector_tracksOutpatMuonsCone03[index].at(pileup)->Fill(eventdiffZ->GetTracksNonConepatMuon03(),totalweight);
+  m_hVector_tracksOutpatElectronsCone03[index].at(pileup)->Fill(eventdiffZ->GetTracksNonConepatElectron03(),totalweight);
+
+  m_hVector_tracksOutMuonsCone04[index].at(pileup)->Fill(eventdiffZ->GetTracksNonConeMuon04(),totalweight);
+  m_hVector_tracksOutElectronsCone04[index].at(pileup)->Fill(eventdiffZ->GetTracksNonConeElectron04(),totalweight);
+  m_hVector_tracksOutpatMuonsCone04[index].at(pileup)->Fill(eventdiffZ->GetTracksNonConepatMuon04(),totalweight);
+  m_hVector_tracksOutpatElectronsCone04[index].at(pileup)->Fill(eventdiffZ->GetTracksNonConepatElectron04(),totalweight);
+
+  m_hVector_tracksOutMuonsCone05[index].at(pileup)->Fill(eventdiffZ->GetTracksNonConeMuon05(),totalweight);
+  m_hVector_tracksOutElectronsCone05[index].at(pileup)->Fill(eventdiffZ->GetTracksNonConeElectron05(),totalweight);
+  m_hVector_tracksOutpatMuonsCone05[index].at(pileup)->Fill(eventdiffZ->GetTracksNonConepatMuon05(),totalweight);
+  m_hVector_tracksOutpatElectronsCone05[index].at(pileup)->Fill(eventdiffZ->GetTracksNonConepatElectron05(),totalweight);
+
 }
 
 void DiffractiveZ::SaveHistos(std::string type){
@@ -1303,6 +1524,35 @@ void DiffractiveZ::SaveHistos(std::string type){
       m_hVector_correlationMuon2Eta[j].at(i)->Write();
       m_hVector_correlationMuon2Phi[j].at(i)->Write();
       m_hVector_correlationMuon2Iso[j].at(i)->Write();
+      m_hVector_DiElectronEta[j].at(i)->Write();
+      m_hVector_DiElectronPhi[j].at(i)->Write();
+      m_hVector_DiElectronPt[j].at(i)->Write();
+      m_hVector_DiMuonEta[j].at(i)->Write();
+      m_hVector_DiMuonPhi[j].at(i)->Write();
+      m_hVector_DiMuonPt[j].at(i)->Write();
+      m_hVector_patDiElectronEta[j].at(i)->Write();
+      m_hVector_patDiMuonEta[j].at(i)->Write();
+      m_hVector_patDiElectronPhi[j].at(i)->Write();
+      m_hVector_patDiMuonPhi[j].at(i)->Write();
+      m_hVector_patDiElectronPt[j].at(i)->Write();
+      m_hVector_patDiMuonPt[j].at(i)->Write();
+      m_hVector_ECaloVsEta[j].at(i)->Write();
+      m_hVector_ECaloVsEtaTProf[j].at(i)->Write();
+      m_hVector_sumECastorMinus[j].at(i)->Write();
+      m_hVector_ECastorSector[j].at(i)->Write();
+      m_hVector_ECastorSectorTProf[j].at(i)->Write();
+      m_hVector_tracksOutMuonsCone03[j].at(i)->Write();
+      m_hVector_tracksOutElectronsCone03[j].at(i)->Write();
+      m_hVector_tracksOutpatMuonsCone03[j].at(i)->Write();
+      m_hVector_tracksOutpatElectronsCone03[j].at(i)->Write();
+      m_hVector_tracksOutMuonsCone04[j].at(i)->Write();
+      m_hVector_tracksOutElectronsCone04[j].at(i)->Write();
+      m_hVector_tracksOutpatMuonsCone04[j].at(i)->Write();
+      m_hVector_tracksOutpatElectronsCone04[j].at(i)->Write();
+      m_hVector_tracksOutMuonsCone05[j].at(i)->Write();
+      m_hVector_tracksOutElectronsCone05[j].at(i)->Write();
+      m_hVector_tracksOutpatMuonsCone05[j].at(i)->Write();
+      m_hVector_tracksOutpatElectronsCone05[j].at(i)->Write();
     }
   }
 
@@ -1329,6 +1579,7 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
   typesel = typesel_;
 
   std::string selStatus;
+  std::string TriggerStatus;
 
   TFile check1(filein.c_str());
 
@@ -1369,6 +1620,7 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
   int NEVENTS = tr->GetEntries();
   int pileup = -999;
   int triggercounter[20]={0};
+  int totalT=0;
 
   aSumE = -999.;
   deltaphielectrons = -999.;
@@ -1388,28 +1640,9 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
 
   std::string status;  
 
-  std::cout << "" << std::endl;
-  std::cout<< "Status Bar" << std::endl;
-  std::cout << "" << std::endl;
-
-
   for(int i=0;i<NEVENTS;i++){
 
-    if (!debug) {
-      loadBar(i,NEVENTS,100,100);
-    }
-
     tr->GetEntry(i);
-
-    if (debug){
-      std::cout << " " << std::endl;
-      std::cout << "# of active towers: " << eventdiffZ->GetEachTowerCounter() << std::endl;
-      std::cout << " " <<std::endl;
-      for (int ic=0; ic<eventdiffZ->GetEachTowerCounter(); ic++){
-	std::cout << "Each Tower Energy: " << eventdiffZ->GetEachTowerEnergy(ic) << std::endl; 
-      }
-      std::cout << " " <<std::endl;
-    }
 
     if ( type=="multiple_pileup" && (eventinfo->GetNPileUpBx0()==-1 && eventinfo->GetNPileUpBxm1()==-1 && eventinfo->GetNPileUpBxp1()==-1 )){
       std::cout << " " << std::endl; 
@@ -1449,16 +1682,26 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
       mclumiweight = mcweight;
     }
 
-    if(switchtrigger == "trigger" || switchtrigger == "no_trigger") {}
-    else{
-      std::cout << " " << std::endl;
-      std::cout << "\nPlease Insert type of selection: " << std::endl;
-      std::cout << "1) trigger: with trigger. If PATTuple has trigger." << std::endl;
-      std::cout << "2) no_trigger: without trigger. If PATTuple has not trigger." << std::endl;
-      exit(EXIT_FAILURE);
+    totalcommon = mclumiweight;
+
+    if (!debug){
+      if (i==0) {
+	std::cout << "" << std::endl;
+	std::cout<< "Status Bar" << std::endl;
+	std::cout << "" << std::endl;
+      }
+      loadBar(i,NEVENTS,100,100);
     }
 
-    totalcommon = mclumiweight;
+    if (debug){
+      std::cout << " " << std::endl;
+      std::cout << "# of active towers: " << eventdiffZ->GetEachTowerCounter() << std::endl;
+      std::cout << " " <<std::endl;
+      for (int ic=0; ic<eventdiffZ->GetEachTowerCounter(); ic++){
+	std::cout << "Each Tower Energy: " << eventdiffZ->GetEachTowerEnergy(ic) << std::endl;
+      }
+      std::cout << " " <<std::endl;
+    }
 
     if (debug){
       if( i % 1000 == 0 ){
@@ -1479,12 +1722,30 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
     bool nSel = false;
     bool isolation = false;
 
-    if (eventdiffZ->GetHLTPath(optTrigger)) trigger = true;
+    if (switchtrigger == "trigger_all_electron"){
+      if (eventdiffZ->GetHLTPath(0) || eventdiffZ->GetHLTPath(1) || eventdiffZ->GetHLTPath(2) || eventdiffZ->GetHLTPath(3) || eventdiffZ->GetHLTPath(4) || eventdiffZ->GetHLTPath(5) || eventdiffZ->GetHLTPath(6)) trigger = true;
+      if (debug) std::cout << "\nTrigger Status: " << trigger << ", Trigger All Electron accepted." << std::endl;
+      TriggerStatus = "trigger_all_electron";
+    }
+    else if (switchtrigger == "trigger"){
+      if (eventdiffZ->GetHLTPath(optTrigger)) trigger = true;
+      if (debug) std::cout << "\nTrigger Status: " << trigger <<", trigger accepted." << std::endl;
+      TriggerStatus = "trigger";
+    }
+    else if (switchtrigger == "no_trigger") {
+      trigger = true;
+      if (debug) std::cout << "\nTrigger Status: " << trigger << ", no trigger." << std::endl; 
+      TriggerStatus = "no_trigger";
+    }
+    else{
+      exit(EXIT_FAILURE);
+    }
+
     if (eventdiff->GetNVertex() == nVertex) vertex = true;
     if ((eventdiff->GetEtaMaxFromPFCands() < 3.) || (eventdiff->GetEtaMinFromPFCands() > -3.)) diffsel = true;
 
     if (typesel == "RecoElectron"){
-      selStatus == "Reco::Electron";
+      selStatus = "Reco::Electron";
       if (eventdiffZ->GetLeadingElectronPt() > lepton1pt && eventdiffZ->GetSecondElectronPt() > lepton2pt) presel = true;
       if (eventdiffZ->GetLeadingElectronCharge()*eventdiffZ->GetSecondElectronCharge()==-1) charge = true;
       if (eventdiffZ->GetDiElectronMass() > 60. && eventdiffZ->GetDiElectronMass() < 110.) dimass = true;
@@ -1493,7 +1754,7 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
     }
 
     else if (typesel == "RecoMuon"){
-      selStatus == "Reco::Muon";
+      selStatus = "Reco::Muon";
       if (eventdiffZ->GetLeadingMuonPt() > lepton1pt && eventdiffZ->GetSecondMuonPt() > lepton2pt) presel = true;
       if (eventdiffZ->GetLeadingMuonCharge()*eventdiffZ->GetSecondMuonCharge()==-1) charge = true;
       if (eventdiffZ->GetDiMuonMass() > 60. && eventdiffZ->GetDiMuonMass() < 110.) dimass = true;
@@ -1502,7 +1763,7 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
     }
 
     else if (typesel == "PatElectron"){
-      selStatus == "Pat::Electron";
+      selStatus = "Pat::Electron";
       if (eventdiffZ->GetPatElectron1Pt() > lepton1pt && eventdiffZ->GetPatElectron2Pt() > lepton2pt) presel = true;
       if (eventdiffZ->GetPatElectron1Charge()*eventdiffZ->GetPatElectron2Charge()==-1) charge = true;
       if (eventdiffZ->GetPatDiElectronMass() > 60. && eventdiffZ->GetPatDiElectronMass() < 110.) dimass = true;
@@ -1511,7 +1772,7 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
     }
 
     else if(typesel == "PatMuon"){
-      selStatus == "Pat::Muon";
+      selStatus = "Pat::Muon";
       if (eventdiffZ->GetPatMuon1Pt() > lepton1pt && eventdiffZ->GetPatMuon2Pt() > lepton2pt) presel = true;
       if (eventdiffZ->GetPatMuon1Charge()*eventdiffZ->GetPatMuon2Charge()==-1) charge = true;
       if (eventdiffZ->GetPatDiMuonMass() > 60. && eventdiffZ->GetPatDiMuonMass() < 110.) dimass = true;
@@ -1523,13 +1784,14 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
       exit(EXIT_FAILURE);
     }
 
-
-
     if(pileup < 21){ // Never comment this line. It is the program defense.
 
-      if(switchtrigger == "trigger"){ 
+      if(switchtrigger == "trigger" || switchtrigger == "trigger_all_electron"){ 
 	FillHistos(0,pileup,totalcommon); 
-	if(trigger) FillHistos(1,pileup,totalcommon);
+	if(trigger) {
+	  ++totalT;
+	  FillHistos(1,pileup,totalcommon);
+	} 
 	if(trigger && vertex && presel) FillHistos(2,pileup,totalcommon);
 	if(trigger && vertex && presel && nSel) FillHistos(3,pileup,totalcommon);
 	if(trigger && vertex && presel && nSel && charge) FillHistos(4,pileup,totalcommon);
@@ -1542,6 +1804,7 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
       }
 
       else if (switchtrigger =="no_trigger"){
+	--totalT;
 	FillHistos(0,pileup,totalcommon);
 	if(vertex && presel) FillHistos(2,pileup,totalcommon);
 	if(vertex && presel && nSel) FillHistos(3,pileup,totalcommon);
@@ -1567,7 +1830,7 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
   outstring << " " << std::endl;
   outstring << "<< OPTIONS >>" << std::endl; 
   outstring << " " << std::endl;
-  outstring << ">> Trigger: " << switchtrigger << " | Option: " << optTrigger << std::endl;
+  outstring << ">> Trigger: " << TriggerStatus << std::endl;
   outstring << ">> # Vertex: " << nVertex << std::endl;
   outstring << ">> Lumi. Weight: " << switchlumiweight << " | Weight: " << mcweight << std::endl;
   outstring << ">> Lepton1(pT) > " << lepton1pt <<std::endl;
@@ -1576,7 +1839,11 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
   outstring << " " << std::endl;
   outstring << "<< TRIGGER >> " << std::endl;
   outstring << " " << std::endl;
-  outstring << "Total Trigger Fired: " <<  std::endl;
+  outstring << "Total Number of Events: " <<  NEntries << std::endl;
+  outstring << "Number of Triggered Events: " << totalT << " | Option: " << optTrigger << std::endl;
+  outstring << "(if negative, trigger option is off)" << std::endl;
+  outstring << "" << std::endl; 
+  outstring << "Each Trigger Fired: " <<  std::endl;
   outstring << "Trigger 0: " << triggercounter[0] << std::endl;
   outstring << "Trigger 1: " << triggercounter[1] << std::endl;
   outstring << "Trigger 2: " << triggercounter[2] << std::endl;
@@ -1602,7 +1869,7 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
   outf->cd();
   SaveHistos(type);
   outf->Close();
-
+  std::cout << "\n" << std::endl;
 }
 
 #if !defined(__CINT__) || defined(__MAKECINT__)
@@ -1656,17 +1923,26 @@ int main(int argc, char **argv)
   std::cout << "Type of Selection: " << typesel_ << std::endl;
   std::cout << "" << std::endl;
 
-  if (typesel_=="RecoMuon" || typesel_=="RecoElectron" || typesel_=="PatElectron" || typesel_=="PatMuon" ) {}
-  else{
-    std::cout << "Please Insert type of Selections: " << std::endl;
-    std::cout << "1) RecoMuon: selections with Reco::Muon." << std::endl;
-    std::cout << "2) RecoElectron: selections with Reco::Electron." << std::endl;
-    std::cout << "3) PatMuon: selections with Pat::Muon." << std::endl;
-    std::cout << "4) PatElectron: selections with Pat::Electron." << std::endl;
-    return 0;
-  }
-
   if (type_=="multiple_pileup" || type_=="no_multiple_pileup") {
+
+    if (switchtrigger_=="trigger" || switchtrigger_=="no_trigger" || switchtrigger_=="trigger_all_electron") {}
+    else{
+      std::cout << "Please Insert type of Swithtrigger: " << std::endl;
+      std::cout << "1) trigger: run with trigger. Need optTrigger >=0;" << std::endl;
+      std::cout << "2) trigger_all_electron: all trigger electron path will be accepted. Do not require optTrigger." << std::endl;
+      std::cout << "3) no_trigger: run without trigger." << std::endl;
+      return 0;
+    }
+
+    if (typesel_=="RecoMuon" || typesel_=="RecoElectron" || typesel_=="PatElectron" || typesel_=="PatMuon" ) {}
+    else{
+      std::cout << "Please Insert type of Selections: " << std::endl;
+      std::cout << "1) RecoMuon: selections with Reco::Muon." << std::endl;
+      std::cout << "2) RecoElectron: selections with Reco::Electron." << std::endl;
+      std::cout << "3) PatMuon: selections with Pat::Muon." << std::endl;
+      std::cout << "4) PatElectron: selections with Pat::Electron." << std::endl;
+      return 0;
+    }
 
     if (nVertex_ <= 0 || optTrigger_ < 0 || mcweight_ <= 0 || lepton1pt_ < 0 || lepton2pt_ < 0 ){
       std::cout << "----------------------------------------------" << std::endl;

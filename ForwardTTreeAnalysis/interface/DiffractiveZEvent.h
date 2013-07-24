@@ -98,6 +98,7 @@ class DiffractiveZEvent {
     void SetVx(const std::vector<double>& fVx) { Vx_ = fVx; }
     void SetVy(const std::vector<double>& fVy) { Vy_ = fVy; }
     void SetTracksPt(const std::vector<std::vector<double> >& fTracksPt) { TracksPt_ = fTracksPt; }
+    void SetZDCdigifC(const std::vector<std::vector<double> >& fZDCdigifC) { ZDCdigifC_ = fZDCdigifC; }
 
     void SetPrimaryGapMaxGen(double fPrimaryGapMaxGen)    { PrimaryGapMaxGen_     = fPrimaryGapMaxGen;}
     void SetSecondGapMaxGen(double fSecondGapMaxGen)    { SecondGapMaxGen_    = fSecondGapMaxGen;}
@@ -281,10 +282,20 @@ class DiffractiveZEvent {
     void SetEachTowerEnergy(const std::vector<double>& fEachTowerEnergy) { EachTowerEnergy_ = fEachTowerEnergy; }
     void SetEachTowerCounter(int fEachTowerCounter)    {EachTowerCounter_ = fEachTowerCounter;}
 
-    void SetTracksNonConeMuon(int fTracksNonConeMuon)    {TracksNonConeMuon_ = fTracksNonConeMuon;}
-    void SetTracksNonConeElectron(int fTracksNonConeElectron)    {TracksNonConeElectron_ = fTracksNonConeElectron;}
-    void SetTracksNonConepatMuon(int fTracksNonConepatMuon)    {TracksNonConepatMuon_ = fTracksNonConepatMuon;}
-    void SetTracksNonConepatElectron(int fTracksNonConepatElectron)    {TracksNonConepatElectron_ = fTracksNonConepatElectron;}
+    void SetTracksNonConeMuon03(int fTracksNonConeMuon03)    {TracksNonConeMuon03_ = fTracksNonConeMuon03;}
+    void SetTracksNonConeElectron03(int fTracksNonConeElectron03)    {TracksNonConeElectron03_ = fTracksNonConeElectron03;}
+    void SetTracksNonConepatMuon03(int fTracksNonConepatMuon03)    {TracksNonConepatMuon03_ = fTracksNonConepatMuon03;}
+    void SetTracksNonConepatElectron03(int fTracksNonConepatElectron03)    {TracksNonConepatElectron03_ = fTracksNonConepatElectron03;}
+
+    void SetTracksNonConeMuon04(int fTracksNonConeMuon04)    {TracksNonConeMuon04_ = fTracksNonConeMuon04;}
+    void SetTracksNonConeElectron04(int fTracksNonConeElectron04)    {TracksNonConeElectron04_ = fTracksNonConeElectron04;}
+    void SetTracksNonConepatMuon04(int fTracksNonConepatMuon04)    {TracksNonConepatMuon04_ = fTracksNonConepatMuon04;}
+    void SetTracksNonConepatElectron04(int fTracksNonConepatElectron04)    {TracksNonConepatElectron04_ = fTracksNonConepatElectron04;}
+
+    void SetTracksNonConeMuon05(int fTracksNonConeMuon05)    {TracksNonConeMuon05_ = fTracksNonConeMuon05;}
+    void SetTracksNonConeElectron05(int fTracksNonConeElectron05)    {TracksNonConeElectron05_ = fTracksNonConeElectron05;}
+    void SetTracksNonConepatMuon05(int fTracksNonConepatMuon05)    {TracksNonConepatMuon05_ = fTracksNonConepatMuon05;}
+    void SetTracksNonConepatElectron05(int fTracksNonConepatElectron05)    {TracksNonConepatElectron05_ = fTracksNonConepatElectron05;}
 
     int GetHLTPath(int idx)                    const { return hltTrigResults_[idx]; }
     double GetDiElectronMass() const {return DiElectronMass_;}
@@ -364,7 +375,7 @@ class DiffractiveZEvent {
     double GetVx(int i) const { return Vx_[i]; }
     double GetVy(int i) const { return Vy_[i]; }
     double GetTracksPt(int i,int j) const { return TracksPt_[i][j]; }
-
+    double GetZDCdigifC(int i,int j) const { return ZDCdigifC_[i][j]; }
     double GetPrimaryGapMaxGen()    const {return PrimaryGapMaxGen_;}
     double GetSecondGapMaxGen()    const {return SecondGapMaxGen_;}
     double GetTracksPtGen(int i)    const {return TracksPtGen_[i];}
@@ -547,11 +558,21 @@ class DiffractiveZEvent {
 
     double GetCastorTowerEnergy(int i) const { return CastorTowerEnergy_[i]; }
 
-    int GetTracksNonConeMuon()    const {return TracksNonConeMuon_;}
-    int GetTracksNonConeElectron()    const {return TracksNonConeElectron_;}
-    int GetTracksNonConepatMuon()    const {return TracksNonConepatMuon_;}
-    int GetTracksNonConepatElectron()    const {return TracksNonConepatElectron_;}
-    
+    int GetTracksNonConeMuon03()    const {return TracksNonConeMuon03_;}
+    int GetTracksNonConeElectron03()    const {return TracksNonConeElectron03_;}
+    int GetTracksNonConepatMuon03()    const {return TracksNonConepatMuon03_;}
+    int GetTracksNonConepatElectron03()    const {return TracksNonConepatElectron03_;}
+
+    int GetTracksNonConeMuon04()    const {return TracksNonConeMuon04_;}
+    int GetTracksNonConeElectron04()    const {return TracksNonConeElectron04_;}
+    int GetTracksNonConepatMuon04()    const {return TracksNonConepatMuon04_;}
+    int GetTracksNonConepatElectron04()    const {return TracksNonConepatElectron04_;}
+
+    int GetTracksNonConeMuon05()    const {return TracksNonConeMuon05_;}
+    int GetTracksNonConeElectron05()    const {return TracksNonConeElectron05_;}
+    int GetTracksNonConepatMuon05()    const {return TracksNonConepatMuon05_;}
+    int GetTracksNonConepatElectron05()    const {return TracksNonConepatElectron05_;}
+
   private:
     friend class diffractiveZAnalysis::DiffractiveZAnalysis;
 
@@ -637,6 +658,7 @@ class DiffractiveZEvent {
     std::vector<double> Vx_;
     std::vector<double> Vy_;
     std::vector<std::vector<double> > TracksPt_;
+    std::vector<std::vector<double> > ZDCdigifC_;
     std::vector<double> EachTowerEta_;
     std::vector<double> EachTowerEnergy_;
     std::vector<double> CastorTowerEnergy_;
@@ -813,10 +835,20 @@ class DiffractiveZEvent {
     double patElectron2relIsoDr03_;
     double patElectron2relIsoDr04_;
 
-    int TracksNonConeMuon_;
-    int TracksNonConeElectron_;
-    int TracksNonConepatMuon_;
-    int TracksNonConepatElectron_;
+    int TracksNonConeMuon03_;
+    int TracksNonConeElectron03_;
+    int TracksNonConepatMuon03_;
+    int TracksNonConepatElectron03_;
+
+    int TracksNonConeMuon04_;
+    int TracksNonConeElectron04_;
+    int TracksNonConepatMuon04_;
+    int TracksNonConepatElectron04_;
+
+    int TracksNonConeMuon05_;
+    int TracksNonConeElectron05_;
+    int TracksNonConepatMuon05_;
+    int TracksNonConepatElectron05_;
 
 };
 
