@@ -237,6 +237,8 @@ void DiffractiveZAnalysis::fillElectronsInfo(DiffractiveZEvent& eventData, const
     double relIsoFirstElectronDr04 = (electron1->dr04TkSumPt()+electron1->dr04EcalRecHitSumEt()+electron1->dr04HcalTowerSumEt())/electron1->et();
     double relIsoSecondElectronDr03 = (electron2->dr03TkSumPt()+electron2->dr03EcalRecHitSumEt()+electron2->dr03HcalTowerSumEt())/electron2->et();
     double relIsoSecondElectronDr04 = (electron2->dr04TkSumPt()+electron2->dr04EcalRecHitSumEt()+electron2->dr04HcalTowerSumEt())/electron2->et();
+    double InnerHits1 = electron1->gsfTrack()->trackerExpectedHitsInner().numberOfHits();
+    double InnerHits2 = electron2->gsfTrack()->trackerExpectedHitsInner().numberOfHits();
 
     // Dielectron Mass
     math::XYZTLorentzVector DielectronSystem(0.,0.,0.,0.);
@@ -280,6 +282,23 @@ void DiffractiveZAnalysis::fillElectronsInfo(DiffractiveZEvent& eventData, const
     eventData.SetSecondElectronrelIsoDr03(relIsoSecondElectronDr03);
     eventData.SetSecondElectronrelIsoDr04(relIsoSecondElectronDr04);
 
+    eventData.SetLeadingElectronDeltaPhiTkClu(electron1->deltaPhiSuperClusterTrackAtVtx());
+    eventData.SetLeadingElectronDeltaEtaTkClu(electron1->deltaEtaSuperClusterTrackAtVtx());
+    eventData.SetLeadingElectronSigmaIeIe(electron1->sigmaIetaIeta());
+    eventData.SetLeadingElectronDCot(electron1->convDcot());
+    eventData.SetLeadingElectronDist(electron1->convDist());
+    eventData.SetLeadingElectronInnerHits(InnerHits1);
+    eventData.SetLeadingElectronHE(electron1->hadronicOverEm());
+
+    eventData.SetSecondElectronDeltaPhiTkClu(electron2->deltaPhiSuperClusterTrackAtVtx());
+    eventData.SetSecondElectronDeltaEtaTkClu(electron2->deltaEtaSuperClusterTrackAtVtx());
+    eventData.SetSecondElectronSigmaIeIe(electron2->sigmaIetaIeta());
+    eventData.SetSecondElectronDCot(electron2->convDcot());
+    eventData.SetSecondElectronDist(electron2->convDist());
+    eventData.SetSecondElectronInnerHits(InnerHits2);
+    eventData.SetSecondElectronHE(electron2->hadronicOverEm());
+
+
     edm::Handle<edm::View<reco::Track> > trackHandle;
     event.getByLabel(trackTag_,trackHandle);
     const edm::View<reco::Track>& trackColl = *(trackHandle.product());
@@ -300,12 +319,12 @@ void DiffractiveZAnalysis::fillElectronsInfo(DiffractiveZEvent& eventData, const
 
       if ((deltaR(track->eta(),track->phi(),electron1->eta(),electron1->phi()) > 0.4) && (deltaR(track->eta(),track->phi(),electron2->eta(),electron2->phi()) > 0.4))
       {
-        goodTracksCount04++;
+	goodTracksCount04++;
       }
 
       if ((deltaR(track->eta(),track->phi(),electron1->eta(),electron1->phi()) > 0.5) && (deltaR(track->eta(),track->phi(),electron2->eta(),electron2->phi()) > 0.5))
       {
-        goodTracksCount05++;
+	goodTracksCount05++;
       }
 
     }
@@ -314,7 +333,9 @@ void DiffractiveZAnalysis::fillElectronsInfo(DiffractiveZEvent& eventData, const
     eventData.SetTracksNonConeElectron04(goodTracksCount04);
     eventData.SetTracksNonConeElectron05(goodTracksCount05);
 
+
     if (debug){
+      std::cout << ">>> Reco Electron" << std::endl;
       std::cout << "electron1 -> dr03 TK: " << electron1->dr03TkSumPt() << "| dr03 Ecal: " << electron1->dr03EcalRecHitSumEt() << " | dr03 Hcal: " << electron1->dr03HcalTowerSumEt() << std::endl;
       std::cout << "electron1 -> dr04 TK: " << electron1->dr04TkSumPt() << "| dr04 Ecal: " << electron1->dr04EcalRecHitSumEt() << " | dr04 Hcal: " << electron1->dr04HcalTowerSumEt() <<  std::endl;
       std::cout << "electron2 -> dr03 TK: " << electron2->dr03TkSumPt() << "| dr03 Ecal: " << electron2->dr03EcalRecHitSumEt() << " | dr03 Hcal: " << electron2->dr03HcalTowerSumEt() << std::endl;
@@ -327,6 +348,21 @@ void DiffractiveZAnalysis::fillElectronsInfo(DiffractiveZEvent& eventData, const
       std::cout << "Eta Z: " << DielectronSystem.eta() << std::endl;
       std::cout << "Phi Z: " << DielectronSystem.phi() << std::endl;
       std::cout << "pT Z: " << DielectronSystem.pt() << std::endl;
+      std::cout << "DeltaPhiTkClu, electron1: " << electron1->deltaPhiSuperClusterTrackAtVtx() << std::endl;
+      std::cout << "DeltaEtaTkClu, electron1: " << electron1->deltaEtaSuperClusterTrackAtVtx() << std::endl;
+      std::cout << "SigmaIeIe, electron1: " << electron1->sigmaIetaIeta() << std::endl;
+      std::cout << "Dcot, electron1: " << electron1->convDcot() << std::endl;
+      std::cout << "Dist, electron1: " << electron1->convDist() << std::endl;
+      std::cout << "Number Of Expected Inner Hits, electron1: " << electron1->gsfTrack()->trackerExpectedHitsInner().numberOfHits() << std::endl;
+      std::cout << "H/E, electron1: " << electron1->hadronicOverEm() << std::endl;
+      std::cout << "DeltaPhiTkClu, electron2: " << electron2->deltaPhiSuperClusterTrackAtVtx() << std::endl;
+      std::cout << "DeltaEtaTkClu, electron2: " << electron2->deltaEtaSuperClusterTrackAtVtx() << std::endl;
+      std::cout << "SigmaIeIe, electron2: " << electron2->sigmaIetaIeta() << std::endl;
+      std::cout << "Dcot, electron2: " << electron2->convDcot() << std::endl;
+      std::cout << "Dist, electron2: " << electron2->convDist() << std::endl;
+      std::cout << "Number Of Expected Inner Hits, electron2: " << electron2->gsfTrack()->trackerExpectedHitsInner().numberOfHits() << std::endl;
+      std::cout << "H/E, electron2: " << electron2->hadronicOverEm() << std::endl;
+      std::cout << "" << std::endl;
     }
 
   }
@@ -365,6 +401,22 @@ void DiffractiveZAnalysis::fillElectronsInfo(DiffractiveZEvent& eventData, const
     eventData.SetLeadingElectronrelIsoDr04(-999.);
     eventData.SetSecondElectronrelIsoDr03(-999.);
     eventData.SetSecondElectronrelIsoDr04(-999.);
+
+    eventData.SetLeadingElectronDeltaPhiTkClu(-999.);
+    eventData.SetLeadingElectronDeltaEtaTkClu(-999.);
+    eventData.SetLeadingElectronSigmaIeIe(-999.);
+    eventData.SetLeadingElectronDCot(-999.);
+    eventData.SetLeadingElectronDist(-999.);
+    eventData.SetLeadingElectronInnerHits(-999.);
+    eventData.SetLeadingElectronHE(-999.);
+    eventData.SetSecondElectronDeltaPhiTkClu(-999.);
+    eventData.SetSecondElectronDeltaEtaTkClu(-999.);
+    eventData.SetSecondElectronSigmaIeIe(-999.);
+    eventData.SetSecondElectronDCot(-999.);
+    eventData.SetSecondElectronDist(-999.);
+    eventData.SetSecondElectronInnerHits(-999.);
+    eventData.SetSecondElectronHE(-999.);
+
   }
 
 }
@@ -408,12 +460,14 @@ void DiffractiveZAnalysis::fillMuonsInfo(DiffractiveZEvent& eventData, const edm
 
 
       if (debug){
+	std::cout << ">>> Reco Muon" << std::endl;
 	std::cout << "\n----------------------------------------------------" << std::endl;
 	std::cout << "\t energy (ecal, hcal, ho): " << muon1->calEnergy().em << ", " << muon1->calEnergy().had << ", " << muon1->calEnergy().ho << std::endl;
 	std::cout << "\t isolation dR=0.3 (sumPt, emEt, hadEt, hoEt, nTracks, nJets): " << muon1->isolationR03().sumPt << ", " << muon1->isolationR03().emEt << ", " << muon1->isolationR03().hadEt << ", " << muon1->isolationR03().hoEt << ", " << muon1->isolationR03().nTracks << ", " << muon1->isolationR03().nJets << std::endl;
 	std::cout << "\t isolation dR=0.5 (sumPt, emEt, hadEt, hoEt, nTracks, nJets): " << muon1->isolationR05().sumPt << ", " << muon1->isolationR05().emEt << ", " << muon1->isolationR05().hadEt << ", " << muon1->isolationR05().hoEt << ", " << muon1->isolationR05().nTracks << ", " << muon1->isolationR05().nJets << std::endl;
 	std::cout << "\t # matches: " << muon1->numberOfMatches() << std::endl;
 	std::cout << "\t # caloCompatibility: " << muon1->caloCompatibility() << std::endl;  
+	std::cout << "" << std::endl;
       }
 
     }
@@ -496,12 +550,12 @@ void DiffractiveZAnalysis::fillMuonsInfo(DiffractiveZEvent& eventData, const edm
 
       if ((deltaR(track->eta(),track->phi(),muon1->eta(),muon1->phi()) > 0.4) && (deltaR(track->eta(),track->phi(),muon2->eta(),muon2->phi()) > 0.4))
       {
-        goodTracksCount04++;
+	goodTracksCount04++;
       }
 
       if ((deltaR(track->eta(),track->phi(),muon1->eta(),muon1->phi()) > 0.5) && (deltaR(track->eta(),track->phi(),muon2->eta(),muon2->phi()) > 0.5))
       {
-        goodTracksCount05++;
+	goodTracksCount05++;
       }
 
     }
@@ -1620,12 +1674,12 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
 
       if ((deltaR(track->eta(),track->phi(),muon1->eta(),muon1->phi()) > 0.4) && (deltaR(track->eta(),track->phi(),muon2->eta(),muon2->phi()) > 0.4))
       {
-        goodTracksCountm04++;
+	goodTracksCountm04++;
       }
 
       if ((deltaR(track->eta(),track->phi(),muon1->eta(),muon1->phi()) > 0.5) && (deltaR(track->eta(),track->phi(),muon2->eta(),muon2->phi()) > 0.5))
       {
-        goodTracksCountm05++;
+	goodTracksCountm05++;
       }
 
     }
@@ -1635,7 +1689,7 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
     eventData.SetTracksNonConepatMuon05(goodTracksCountm05);
 
     if (debug){
-
+      std::cout << ">>> Pat Muon" << std::endl;
       std::cout<<"Muon1 -> 0.3 Radion Rel Iso: "<<relIsoFirstMuonDr03<<" sumPt "<<muon1SumPtR03<<" emEt "<<muon1EmEtR03<<" hadEt "<<muon1HadEtR03<<std::endl;
       std::cout<<"Muon1 -> 0.5 Radion Rel Iso: "<<relIsoFirstMuonDr05<<" sumPt "<<muon1SumPtR05<<" emEt "<<muon1EmEtR05<<" hadEt "<<muon1HadEtR05<<std::endl;
       std::cout << "Muon1 -> trackIso(): " << muon1->trackIso() << " | muon1 -> ecalIso(): " << muon1->ecalIso() << " | muon1 -> hcalIso(): " << muon1->hcalIso() << " | muon1->Iso(): " << relIsoFirstMuon << std::endl; 
@@ -1651,6 +1705,7 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
       std::cout << "Eta Z: " << DipatMuonSystem.eta() << std::endl;
       std::cout << "Phi Z: " << DipatMuonSystem.phi() << std::endl;
       std::cout << "pT Z: " << DipatMuonSystem.pt() << std::endl;
+      std::cout << "" << std::endl;
     }
 
   }
@@ -1732,6 +1787,8 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
     double relIsoFirstElectronDr04 = (electron1->dr04TkSumPt()+electron1->dr04EcalRecHitSumEt()+electron1->dr04HcalTowerSumEt())/electron1->et();
     double relIsoSecondElectronDr03 = (electron2->dr03TkSumPt()+electron2->dr03EcalRecHitSumEt()+electron2->dr03HcalTowerSumEt())/electron2->et();
     double relIsoSecondElectronDr04 = (electron2->dr04TkSumPt()+electron2->dr04EcalRecHitSumEt()+electron2->dr04HcalTowerSumEt())/electron2->et();
+    double InnerHits1 = electron1->gsfTrack()->trackerExpectedHitsInner().numberOfHits();
+    double InnerHits2 = electron2->gsfTrack()->trackerExpectedHitsInner().numberOfHits();
 
     // Dielectron Mass
     math::XYZTLorentzVector DipatElectronSystem(0.,0.,0.,0.);
@@ -1778,6 +1835,22 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
     eventData.SetPatElectron2relIsoDr03(relIsoSecondElectronDr03);
     eventData.SetPatElectron2relIsoDr04(relIsoSecondElectronDr04);
 
+    eventData.SetPatElectron1DeltaPhiTkClu(electron1->deltaPhiSuperClusterTrackAtVtx());
+    eventData.SetPatElectron1DeltaEtaTkClu(electron1->deltaEtaSuperClusterTrackAtVtx());
+    eventData.SetPatElectron1SigmaIeIe(electron1->sigmaIetaIeta());
+    eventData.SetPatElectron1DCot(electron1->convDcot());
+    eventData.SetPatElectron1Dist(electron1->convDist());
+    eventData.SetPatElectron1InnerHits(InnerHits1);
+    eventData.SetPatElectron1HE(electron1->hadronicOverEm());
+
+    eventData.SetPatElectron2DeltaPhiTkClu(electron2->deltaPhiSuperClusterTrackAtVtx());
+    eventData.SetPatElectron2DeltaEtaTkClu(electron2->deltaEtaSuperClusterTrackAtVtx());
+    eventData.SetPatElectron2SigmaIeIe(electron2->sigmaIetaIeta());
+    eventData.SetPatElectron2DCot(electron2->convDcot());
+    eventData.SetPatElectron2Dist(electron2->convDist());
+    eventData.SetPatElectron2InnerHits(InnerHits2);
+    eventData.SetPatElectron2HE(electron2->hadronicOverEm());
+
     edm::Handle<edm::View<reco::Track> > trackHandle;
     event.getByLabel(trackTag_,trackHandle);
     const edm::View<reco::Track>& trackColl = *(trackHandle.product());
@@ -1798,12 +1871,12 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
 
       if ((deltaR(track->eta(),track->phi(),electron1->eta(),electron1->phi()) > 0.4) && (deltaR(track->eta(),track->phi(),electron2->eta(),electron2->phi()) > 0.4))
       {
-        goodTracksCounte04++;
+	goodTracksCounte04++;
       }
 
       if ((deltaR(track->eta(),track->phi(),electron1->eta(),electron1->phi()) > 0.5) && (deltaR(track->eta(),track->phi(),electron2->eta(),electron2->phi()) > 0.5))
       {
-        goodTracksCounte05++;
+	goodTracksCounte05++;
       }
 
     }
@@ -1813,7 +1886,7 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
     eventData.SetTracksNonConepatElectron05(goodTracksCounte05);
 
     if (debug) {
-
+      std::cout << ">>> Pat Electron" << std::endl;
       std::cout << "electron1 -> dr03 TK: " << electron1->dr03TkSumPt() << "| dr03 Ecal: " << electron1->dr03EcalRecHitSumEt() << " | dr03 Hcal: " << electron1->dr03HcalTowerSumEt() << std::endl;
       std::cout << "electron1 -> dr04 TK: " << electron1->dr04TkSumPt() << "| dr04 Ecal: " << electron1->dr04EcalRecHitSumEt() << " | dr04 Hcal: " << electron1->dr04HcalTowerSumEt() <<  std::endl;
       std::cout << "electron2 -> dr03 TK: " << electron2->dr03TkSumPt() << "| dr03 Ecal: " << electron2->dr03EcalRecHitSumEt() << " | dr03 Hcal: " << electron2->dr03HcalTowerSumEt() << std::endl;
@@ -1828,7 +1901,21 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
       std::cout << "Eta Z: " << DipatElectronSystem.eta() << std::endl;
       std::cout << "Phi Z: " << DipatElectronSystem.phi() << std::endl;
       std::cout << "pT Z: " << DipatElectronSystem.pt() << std::endl;
-
+      std::cout << "DeltaPhiTkClu, electron1: " << electron1->deltaPhiSuperClusterTrackAtVtx() << std::endl;
+      std::cout << "DeltaEtaTkClu, electron1: " << electron1->deltaEtaSuperClusterTrackAtVtx() << std::endl;
+      std::cout << "SigmaIeIe, electron1: " << electron1->sigmaIetaIeta() << std::endl;
+      std::cout << "Dcot, electron1: " << electron1->convDcot() << std::endl;
+      std::cout << "Dist, electron1: " << electron1->convDist() << std::endl;
+      std::cout << "Number Of Expected Inner Hits, electron1: " << electron1->gsfTrack()->trackerExpectedHitsInner().numberOfHits() << std::endl;
+      std::cout << "H/E, electron1: " << electron1->hadronicOverEm() << std::endl;
+      std::cout << "DeltaPhiTkClu, electron2: " << electron2->deltaPhiSuperClusterTrackAtVtx() << std::endl;
+      std::cout << "DeltaEtaTkClu, electron2: " << electron2->deltaEtaSuperClusterTrackAtVtx() << std::endl;
+      std::cout << "SigmaIeIe, electron2: " << electron2->sigmaIetaIeta() << std::endl;
+      std::cout << "Dcot, electron2: " << electron2->convDcot() << std::endl;
+      std::cout << "Dist, electron2: " << electron2->convDist() << std::endl;
+      std::cout << "Number Of Expected Inner Hits, electron2: " << electron2->gsfTrack()->trackerExpectedHitsInner().numberOfHits() << std::endl;
+      std::cout << "H/E, electron2: " << electron2->hadronicOverEm() << std::endl;
+      std::cout << "" << std::endl;
     }
 
   }
@@ -1872,6 +1959,20 @@ void DiffractiveZAnalysis::fillZPat(DiffractiveZEvent& eventData, const edm::Eve
     eventData.SetPatDiElectronPhi(-999.);
     eventData.SetPatDiElectronPt(-999.);
 
+    eventData.SetPatElectron1DeltaPhiTkClu(-999.);
+    eventData.SetPatElectron1DeltaEtaTkClu(-999.);
+    eventData.SetPatElectron1SigmaIeIe(-999.);
+    eventData.SetPatElectron1DCot(-999.);
+    eventData.SetPatElectron1Dist(-999.);
+    eventData.SetPatElectron1InnerHits(-999.);
+    eventData.SetPatElectron1HE(-999.);
+    eventData.SetPatElectron2DeltaPhiTkClu(-999.);
+    eventData.SetPatElectron2DeltaEtaTkClu(-999.);
+    eventData.SetPatElectron2SigmaIeIe(-999.);
+    eventData.SetPatElectron2DCot(-999.);
+    eventData.SetPatElectron2Dist(-999.);
+    eventData.SetPatElectron2InnerHits(-999.);
+    eventData.SetPatElectron2HE(-999.);
 
   }
 

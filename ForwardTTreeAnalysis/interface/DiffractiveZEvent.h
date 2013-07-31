@@ -297,6 +297,38 @@ class DiffractiveZEvent {
     void SetTracksNonConepatMuon05(int fTracksNonConepatMuon05)    {TracksNonConepatMuon05_ = fTracksNonConepatMuon05;}
     void SetTracksNonConepatElectron05(int fTracksNonConepatElectron05)    {TracksNonConepatElectron05_ = fTracksNonConepatElectron05;}
 
+    void SetLeadingElectronDeltaPhiTkClu(double fLeadingElectronDeltaPhiTkClu)    {LeadingElectronDeltaPhiTkClu_ = fLeadingElectronDeltaPhiTkClu;}
+    void SetLeadingElectronDeltaEtaTkClu(double fLeadingElectronDeltaEtaTkClu)    {LeadingElectronDeltaEtaTkClu_ = fLeadingElectronDeltaEtaTkClu;}
+    void SetLeadingElectronSigmaIeIe(double fLeadingElectronSigmaIeIe)    {LeadingElectronSigmaIeIe_ = fLeadingElectronSigmaIeIe;}
+    void SetLeadingElectronDCot(double fLeadingElectronDCot)    {LeadingElectronDCot_ = fLeadingElectronDCot;}
+    void SetLeadingElectronDist(double fLeadingElectronDist)    {LeadingElectronDist_ = fLeadingElectronDist;}
+    void SetLeadingElectronInnerHits(double fLeadingElectronInnerHits)    {LeadingElectronInnerHits_ = fLeadingElectronInnerHits;}
+    void SetLeadingElectronHE(double fLeadingElectronHE)    {LeadingElectronHE_ = fLeadingElectronHE;}
+
+    void SetSecondElectronDeltaPhiTkClu(double fSecondElectronDeltaPhiTkClu)    {SecondElectronDeltaPhiTkClu_ = fSecondElectronDeltaPhiTkClu;}
+    void SetSecondElectronDeltaEtaTkClu(double fSecondElectronDeltaEtaTkClu)    {SecondElectronDeltaEtaTkClu_ = fSecondElectronDeltaEtaTkClu;}
+    void SetSecondElectronSigmaIeIe(double fSecondElectronSigmaIeIe)    {SecondElectronSigmaIeIe_ = fSecondElectronSigmaIeIe;}
+    void SetSecondElectronDCot(double fSecondElectronDCot)    {SecondElectronDCot_ = fSecondElectronDCot;}
+    void SetSecondElectronDist(double fSecondElectronDist)    {SecondElectronDist_ = fSecondElectronDist;}
+    void SetSecondElectronInnerHits(double fSecondElectronInnerHits)    {SecondElectronInnerHits_ = fSecondElectronInnerHits;}
+    void SetSecondElectronHE(double fSecondElectronHE)    {SecondElectronHE_ = fSecondElectronHE;}
+
+    void SetPatElectron1DeltaPhiTkClu(double fpatElectron1DeltaPhiTkClu)    {patElectron1DeltaPhiTkClu_ = fpatElectron1DeltaPhiTkClu;}
+    void SetPatElectron1DeltaEtaTkClu(double fpatElectron1DeltaEtaTkClu)    {patElectron1DeltaEtaTkClu_ = fpatElectron1DeltaEtaTkClu;}
+    void SetPatElectron1SigmaIeIe(double fpatElectron1SigmaIeIe)    {patElectron1SigmaIeIe_ = fpatElectron1SigmaIeIe;}
+    void SetPatElectron1DCot(double fpatElectron1DCot)    {patElectron1DCot_ = fpatElectron1DCot;}
+    void SetPatElectron1Dist(double fpatElectron1Dist)    {patElectron1Dist_ = fpatElectron1Dist;}
+    void SetPatElectron1InnerHits(double fpatElectron1InnerHits)    {patElectron1InnerHits_ = fpatElectron1InnerHits;}
+    void SetPatElectron1HE(double fpatElectron1HE)    {patElectron1HE_ = fpatElectron1HE;}
+
+    void SetPatElectron2DeltaPhiTkClu(double fpatElectron2DeltaPhiTkClu)    {patElectron2DeltaPhiTkClu_ = fpatElectron2DeltaPhiTkClu;}
+    void SetPatElectron2DeltaEtaTkClu(double fpatElectron2DeltaEtaTkClu)    {patElectron2DeltaEtaTkClu_ = fpatElectron2DeltaEtaTkClu;}
+    void SetPatElectron2SigmaIeIe(double fpatElectron2SigmaIeIe)    {patElectron2SigmaIeIe_ = fpatElectron2SigmaIeIe;}
+    void SetPatElectron2DCot(double fpatElectron2DCot)    {patElectron2DCot_ = fpatElectron2DCot;}
+    void SetPatElectron2Dist(double fpatElectron2Dist)    {patElectron2Dist_ = fpatElectron2Dist;}
+    void SetPatElectron2InnerHits(double fpatElectron2InnerHits)    {patElectron2InnerHits_ = fpatElectron2InnerHits;}
+    void SetPatElectron2HE(double fpatElectron2HE)    {patElectron2HE_ = fpatElectron2HE;}
+
     int GetHLTPath(int idx)                    const { return hltTrigResults_[idx]; }
     double GetDiElectronMass() const {return DiElectronMass_;}
     double GetDiElectronPt() const {return DiElectronPt_;}
@@ -572,6 +604,39 @@ class DiffractiveZEvent {
     int GetTracksNonConeElectron05()    const {return TracksNonConeElectron05_;}
     int GetTracksNonConepatMuon05()    const {return TracksNonConepatMuon05_;}
     int GetTracksNonConepatElectron05()    const {return TracksNonConepatElectron05_;}
+
+    double GetLeadingElectronDeltaPhiTkClu() const {return LeadingElectronDeltaPhiTkClu_;}
+    double GetLeadingElectronDeltaEtaTkClu() const {return LeadingElectronDeltaEtaTkClu_;}
+    double GetLeadingElectronSigmaIeIe() const {return LeadingElectronSigmaIeIe_;}
+    double GetLeadingElectronDCot() const {return LeadingElectronDCot_;}
+    double GetLeadingElectronDist() const {return LeadingElectronDist_;}
+    double GetLeadingElectronInnerHits() const {return LeadingElectronInnerHits_;}
+    double GetLeadingElectronHE() const {return LeadingElectronHE_;}
+
+    double GetSecondElectronDeltaPhiTkClu() const {return SecondElectronDeltaPhiTkClu_;}
+    double GetSecondElectronDeltaEtaTkClu() const {return SecondElectronDeltaEtaTkClu_;}
+    double GetSecondElectronSigmaIeIe() const {return SecondElectronSigmaIeIe_;}
+    double GetSecondElectronDCot() const {return SecondElectronDCot_;}
+    double GetSecondElectronDist() const {return SecondElectronDist_;}
+    double GetSecondElectronInnerHits() const {return SecondElectronInnerHits_;}
+    double GetSecondElectronHE() const {return SecondElectronHE_;}
+
+    double GetPatElectron1DeltaPhiTkClu() const {return patElectron1DeltaPhiTkClu_;}
+    double GetPatElectron1DeltaEtaTkClu() const {return patElectron1DeltaEtaTkClu_;}
+    double GetPatElectron1SigmaIeIe() const {return patElectron1SigmaIeIe_;}
+    double GetPatElectron1DCot() const {return patElectron1DCot_;}
+    double GetPatElectron1Dist() const {return patElectron1Dist_;}
+    double GetPatElectron1InnerHits() const {return patElectron1InnerHits_;}
+    double GetPatElectron1HE() const {return patElectron1HE_;}
+
+    double GetPatElectron2DeltaPhiTkClu() const {return patElectron2DeltaPhiTkClu_;}
+    double GetPatElectron2DeltaEtaTkClu() const {return patElectron2DeltaEtaTkClu_;}
+    double GetPatElectron2SigmaIeIe() const {return patElectron2SigmaIeIe_;}
+    double GetPatElectron2DCot() const {return patElectron2DCot_;}
+    double GetPatElectron2Dist() const {return patElectron2Dist_;}
+    double GetPatElectron2InnerHits() const {return patElectron2InnerHits_;}
+    double GetPatElectron2HE() const {return patElectron2HE_;}
+
 
   private:
     friend class diffractiveZAnalysis::DiffractiveZAnalysis;
@@ -849,6 +914,35 @@ class DiffractiveZEvent {
     int TracksNonConeElectron05_;
     int TracksNonConepatMuon05_;
     int TracksNonConepatElectron05_;
+
+    double LeadingElectronDeltaPhiTkClu_;
+    double LeadingElectronDeltaEtaTkClu_;
+    double LeadingElectronSigmaIeIe_;
+    double LeadingElectronDCot_;
+    double LeadingElectronDist_;
+    double LeadingElectronInnerHits_;
+    double LeadingElectronHE_;
+    double SecondElectronDeltaPhiTkClu_;
+    double SecondElectronDeltaEtaTkClu_;
+    double SecondElectronSigmaIeIe_;
+    double SecondElectronDCot_ ;
+    double SecondElectronDist_;
+    double SecondElectronInnerHits_;
+    double SecondElectronHE_;
+    double patElectron1DeltaPhiTkClu_;
+    double patElectron1DeltaEtaTkClu_;
+    double patElectron1SigmaIeIe_;
+    double patElectron1DCot_;
+    double patElectron1Dist_;
+    double patElectron1InnerHits_;
+    double patElectron1HE_;
+    double patElectron2DeltaPhiTkClu_;
+    double patElectron2DeltaEtaTkClu_;
+    double patElectron2SigmaIeIe_;
+    double patElectron2DCot_;
+    double patElectron2Dist_;
+    double patElectron2InnerHits_;
+    double patElectron2HE_;    
 
 };
 

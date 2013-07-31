@@ -103,7 +103,7 @@ void DiffractiveAnalysis::fill(DiffractiveEvent& eventData, const edm::Event& ev
 
   fillEventInfo(eventData,event,setup);
   fillNoiseInfo(eventData,event,setup); 
-  fillTriggerInfo(eventData,event,setup);
+  //fillTriggerInfo(eventData,event,setup);
   fillVertexInfo(eventData,event,setup);
   fillTrackInfo(eventData,event,setup);
   fillJetInfo(eventData,event,setup);
@@ -556,8 +556,6 @@ void DiffractiveAnalysis::fillGenInfo(DiffractiveEvent& eventData, const edm::Ev
 }
 
 void DiffractiveAnalysis::fillDiffVariables(DiffractiveEvent& eventData, const edm::Event& event, const edm::EventSetup& setup){
-
-
 
   // Leave only PF-based variables
   edm::Handle<reco::PFCandidateCollection> particleFlowCollectionH;

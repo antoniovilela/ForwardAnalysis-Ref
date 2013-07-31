@@ -45,6 +45,26 @@ class DiffractiveZ {
   double deltapTelectrons;
   double deltapTmuons;
   double sumCastorEnergy;
+  double isoTk1;
+  double isoTk2;
+  double isoEcal1;
+  double isoEcal2;
+  double isoHcal1;
+  double isoHcal2;
+  int innerHits1;
+  double Dcot1;
+  double Dist1;
+  double DeltaEtaTkClu1;
+  double DeltaPhiTkClu1;
+  double sigmaIeIe1;
+  double HE1;
+  int innerHits2;
+  double Dcot2;
+  double Dist2;
+  double DeltaEtaTkClu2;
+  double DeltaPhiTkClu2;
+  double sigmaIeIe2;
+  double HE2;
 
   std::string filein;
   std::string processname;
@@ -59,7 +79,7 @@ class DiffractiveZ {
   double lepton1pt;
   double lepton2pt;
 
-  std::vector<std::vector<TH1D*> > m_hVector_DiElectron;
+  std::vector<std::vector<TH1D*> > m_hVector_DiElectronMass;
   std::vector<std::vector<TH1D*> > m_hVector_DiElectronEta;
   std::vector<std::vector<TH1D*> > m_hVector_DiElectronPt;
   std::vector<std::vector<TH1D*> > m_hVector_DiElectronPhi;
@@ -73,7 +93,7 @@ class DiffractiveZ {
   std::vector<std::vector<TH1D*> > m_hVector_SecondElectronCharge;
   std::vector<std::vector<TH1D*> > m_hVector_ElectronsN;
 
-  std::vector<std::vector<TH1D*> > m_hVector_DiMuon;
+  std::vector<std::vector<TH1D*> > m_hVector_DiMuonMass;
   std::vector<std::vector<TH1D*> > m_hVector_DiMuonEta;
   std::vector<std::vector<TH1D*> > m_hVector_DiMuonPt;
   std::vector<std::vector<TH1D*> > m_hVector_DiMuonPhi;
@@ -246,6 +266,27 @@ class DiffractiveZ {
   std::vector<std::vector<TH1D*> > m_hVector_tracksOutElectronsCone05;
   std::vector<std::vector<TH1D*> > m_hVector_tracksOutpatMuonsCone05;
   std::vector<std::vector<TH1D*> > m_hVector_tracksOutpatElectronsCone05;
+
+  std::vector<std::vector<TH1I*> > m_hVector_LeadingElectronInnerHits;
+  std::vector<std::vector<TH1D*> > m_hVector_LeadingElectronDCot;
+  std::vector<std::vector<TH1D*> > m_hVector_LeadingElectronDist;
+  std::vector<std::vector<TH1D*> > m_hVector_LeadingElectronDeltaEtaTkClu;
+  std::vector<std::vector<TH1D*> > m_hVector_LeadingElectronDeltaPhiTkClu;
+  std::vector<std::vector<TH1D*> > m_hVector_LeadingElectronSigmaIeIe;
+  std::vector<std::vector<TH1D*> > m_hVector_LeadingElectronHE;
+  std::vector<std::vector<TH1I*> > m_hVector_SecondElectronInnerHits;
+  std::vector<std::vector<TH1D*> > m_hVector_SecondElectronDCot;
+  std::vector<std::vector<TH1D*> > m_hVector_SecondElectronDist;
+  std::vector<std::vector<TH1D*> > m_hVector_SecondElectronDeltaEtaTkClu;
+  std::vector<std::vector<TH1D*> > m_hVector_SecondElectronDeltaPhiTkClu;
+  std::vector<std::vector<TH1D*> > m_hVector_SecondElectronSigmaIeIe;
+  std::vector<std::vector<TH1D*> > m_hVector_SecondElectronHE;
+  std::vector<std::vector<TH1D*> > m_hVector_SumEHFplus_S;
+  std::vector<std::vector<TH1D*> > m_hVector_SumEHFminus_S;
+  std::vector<std::vector<TH1D*> > m_hVector_SumEHFplus_L;
+  std::vector<std::vector<TH1D*> > m_hVector_SumEHFminus_L;
+
+  std::vector<std::vector<TH1D*> > m_hVector_maxetagap;
 
   std::vector <std::string> Folders;
 

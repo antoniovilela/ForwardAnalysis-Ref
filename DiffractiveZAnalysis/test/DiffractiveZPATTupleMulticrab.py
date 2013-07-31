@@ -26,7 +26,7 @@ import atexit
 
 from FWCore.ParameterSet.VarParsing import VarParsing
 options = VarParsing ('analysis')
-options.register('Run','data_MuonP1',VarParsing.multiplicity.singleton, VarParsing.varType.string,"Option to Run: data or MC.")
+options.register('Run','MC_none',VarParsing.multiplicity.singleton, VarParsing.varType.string,"Option to Run: data or MC.")
 options.parseArguments()
 
 process = cms.Process("Analysis")
@@ -39,7 +39,7 @@ config.runPATSequences = True
 config.comEnergy = 7000.0
 config.trackAnalyzerName = 'trackHistoAnalyzer'
 config.trackTagName = 'analysisTracks'
-config.NumberOfEvents = -1
+config.NumberOfEvents = 100
 config.sys = False
 
 #
@@ -191,7 +191,8 @@ if config.runOnMC:
 else:
     config.l1Paths = (l1list)
     config.hltPaths = (triggerlist)
-    config.inputFileName = '/storage1/dmf/TestSamples/MuRun2010/MuRunA2010.root'
+    #config.inputFileName = '/storage1/dmf/TestSamples/MuRun2010/MuRunA2010.root'
+    config.inputFileName = '/storage1/dmf/TestSamples/Electron2010B/Electron2010B.root'   
 
 #
 # CMSSW Main Code
@@ -348,6 +349,18 @@ from ForwardAnalysis.DiffractiveZAnalysis.DiffractiveZAnalysis_cfi import Diffra
 #PATTriggerInfo.runALLTriggerPath = True
 
 #
+# Define Filter
+#
+######################################################################################
+
+process.diffractiveZFilter = cms.EDFilter("diffractiveZFilter",
+                             nLeptons = cms.untracked.int32(2),
+                             muonTag = cms.untracked.InputTag("muons"),
+                             electronTag = cms.untracked.InputTag("gsfElectrons")
+                             )
+
+
+#
 # Define Analyzers
 #
 ######################################################################################
@@ -424,13 +437,13 @@ if config.sys:
    if config.TriggerOn:
        print(">> With Trigger.")
        process.analysis_diffractiveDiffractiveZAnalysisPATTriggerInfoTTree_step = cms.Path(
-       process.analysisSequencesShiftedUp + process.analysisSequencesShiftedDown + process.analysisSequences + process.eventSelectionHLT + 
+       process.analysisSequencesShiftedUp + process.analysisSequencesShiftedDown + process.analysisSequences + process.diffractiveZFilter + process.eventSelectionHLT + 
        process.diffractiveZAnalysisTTreePFShiftedUp + process.diffractiveZAnalysisTTreePFShiftedDown + process.diffractiveZAnalysisTTree)
 
    else:
        print(">> No Trigger.") 
        process.analysis_diffractiveDiffractiveZAnalysisPATTriggerInfoTTree_step = cms.Path(
-       process.analysisSequencesShiftedUp + process.analysisSequencesShiftedDown + process.analysisSequences + process.eventSelection +
+       process.analysisSequencesShiftedUp + process.analysisSequencesShiftedDown + process.analysisSequences + process.diffractiveZFilter + process.eventSelection +
        process.diffractiveZAnalysisTTreePFShiftedUp + process.diffractiveZAnalysisTTreePFShiftedDown + process.diffractiveZAnalysisTTree)
 
 else:
@@ -439,11 +452,11 @@ else:
    if config.TriggerOn:
        print(">> With Trigger.")
        process.analysis_diffractiveDiffractiveZAnalysisPATTriggerInfoTTree_step = cms.Path(
-       process.analysisSequences + process.eventSelectionHLT + process.diffractiveZAnalysisTTree)
+       process.analysisSequences + process.diffractiveZFilter + process.eventSelectionHLT + process.diffractiveZAnalysisTTree)
 
    else:
        print(">> No Trigger.")
        process.analysis_diffractiveDiffractiveZAnalysisPATTriggerInfoTTree_step = cms.Path(
-       process.analysisSequences + process.eventSelection + process.diffractiveZAnalysisTTree)
+       process.analysisSequences + process.diffractiveZFilter + process.eventSelection + process.diffractiveZAnalysisTTree)
 
 

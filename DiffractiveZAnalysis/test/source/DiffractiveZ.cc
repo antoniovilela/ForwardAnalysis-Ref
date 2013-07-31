@@ -88,12 +88,14 @@ void DiffractiveZ::CreateHistos(std::string type){
 
   std::string step0 = "without_cuts"; 
   std::string step1 = "with_trigger"; 
-  std::string step2 = "step1"; 
-  std::string step3 = "step2"; 
-  std::string step4 = "step3"; 
-  std::string step5 = "step4"; 
-  std::string step6 = "step5"; 
-  std::string step7 = "step6"; 
+  std::string step2 = "step2"; 
+  std::string step3 = "step3"; 
+  std::string step4 = "step4"; 
+  std::string step5 = "step5"; 
+  std::string step6 = "step6"; 
+  std::string step7 = "step7"; 
+  std::string step8 = "step8";
+  std::string step9 = "step9";
 
   Folders.push_back(step0);
   Folders.push_back(step1);
@@ -103,6 +105,8 @@ void DiffractiveZ::CreateHistos(std::string type){
   Folders.push_back(step5);
   Folders.push_back(step6);
   Folders.push_back(step7);
+  Folders.push_back(step8);
+  Folders.push_back(step9);
 
   int nloop=-999;
 
@@ -113,7 +117,7 @@ void DiffractiveZ::CreateHistos(std::string type){
 
   for (std::vector<std::string>::size_type j=0; j<Folders.size(); j++){
 
-    m_hVector_DiElectron.push_back( std::vector<TH1D*>() );
+    m_hVector_DiElectronMass.push_back( std::vector<TH1D*>() );
     m_hVector_DiElectronEta.push_back( std::vector<TH1D*>() );
     m_hVector_DiElectronPt.push_back( std::vector<TH1D*>() );
     m_hVector_DiElectronPhi.push_back( std::vector<TH1D*>() );
@@ -126,7 +130,7 @@ void DiffractiveZ::CreateHistos(std::string type){
     m_hVector_SecondElectronPhi.push_back( std::vector<TH1D*>() );
     m_hVector_SecondElectronCharge.push_back( std::vector<TH1D*>() );
     m_hVector_ElectronsN.push_back( std::vector<TH1D*>() );
-    m_hVector_DiMuon.push_back( std::vector<TH1D*>() );
+    m_hVector_DiMuonMass.push_back( std::vector<TH1D*>() );
     m_hVector_DiMuonEta.push_back( std::vector<TH1D*>() );
     m_hVector_DiMuonPt.push_back( std::vector<TH1D*>() );
     m_hVector_DiMuonPhi.push_back( std::vector<TH1D*>() );
@@ -295,6 +299,28 @@ void DiffractiveZ::CreateHistos(std::string type){
     m_hVector_tracksOutpatMuonsCone05.push_back( std::vector<TH1D*>() );
     m_hVector_tracksOutpatElectronsCone05.push_back( std::vector<TH1D*>() );
 
+    m_hVector_LeadingElectronInnerHits.push_back( std::vector<TH1I*>() );
+    m_hVector_LeadingElectronDCot.push_back( std::vector<TH1D*>() );
+    m_hVector_LeadingElectronDist.push_back( std::vector<TH1D*>() );
+    m_hVector_LeadingElectronDeltaEtaTkClu.push_back( std::vector<TH1D*>() );
+    m_hVector_LeadingElectronDeltaPhiTkClu.push_back( std::vector<TH1D*>() );
+    m_hVector_LeadingElectronSigmaIeIe.push_back( std::vector<TH1D*>() );
+    m_hVector_LeadingElectronHE.push_back( std::vector<TH1D*>() );
+    m_hVector_SecondElectronInnerHits.push_back( std::vector<TH1I*>() );
+    m_hVector_SecondElectronDCot.push_back( std::vector<TH1D*>() );
+    m_hVector_SecondElectronDist.push_back( std::vector<TH1D*>() );
+    m_hVector_SecondElectronDeltaEtaTkClu.push_back( std::vector<TH1D*>() );
+    m_hVector_SecondElectronDeltaPhiTkClu.push_back( std::vector<TH1D*>() );
+    m_hVector_SecondElectronSigmaIeIe.push_back( std::vector<TH1D*>() );
+    m_hVector_SecondElectronHE.push_back( std::vector<TH1D*>() );
+
+    m_hVector_SumEHFplus_S.push_back( std::vector<TH1D*>() );
+    m_hVector_SumEHFminus_S.push_back( std::vector<TH1D*>() );
+    m_hVector_SumEHFplus_L.push_back( std::vector<TH1D*>() );
+    m_hVector_SumEHFminus_L.push_back( std::vector<TH1D*>() );
+
+    m_hVector_maxetagap.push_back( std::vector<TH1D*>() );
+
     for (int k=0;k<nloop;k++){
 
       if (type=="multiple_pileup"){
@@ -305,48 +331,48 @@ void DiffractiveZ::CreateHistos(std::string type){
       }
 
       char name1[300];
-      sprintf(name1,"DiElectron_%s_%s",tag,Folders.at(j).c_str());
-      TH1D *histo_DiElectron = new TH1D(name1,"Dielectron Invariant Mass Distribution; M_{ee} [GeV]; N events",500,0,500);
-      m_hVector_DiElectron[j].push_back(histo_DiElectron);
+      sprintf(name1,"DiElectronMass_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_DiElectronMass = new TH1D(name1,"Dielectron Invariant Mass Distribution; M_{ee} [GeV]; N events",500,0,500);
+      m_hVector_DiElectronMass[j].push_back(histo_DiElectronMass);
 
       char name2[300];
       sprintf(name2,"LeadingElectronPt_%s_%s",tag,Folders.at(j).c_str());
-      TH1D *histo_LeadingElectronPt = new TH1D(name2,"Leading Electron - P_{T} Distribution; P_{T} [GeV.c^{-1}]; N events",200,0,1000);
+      TH1D *histo_LeadingElectronPt = new TH1D(name2,"Leading Electron - P_{T} Distribution; P_{T} [GeV.c^{-1}]; N events",500,0,500);
       m_hVector_LeadingElectronPt[j].push_back(histo_LeadingElectronPt);
 
       char name3[300];
       sprintf(name3,"LeadingElectronEta_%s_%s",tag,Folders.at(j).c_str());
-      TH1D *histo_LeadingElectronEta = new TH1D(name3,"Leading Electron - #eta Distribution; #eta; N events",50,-5.2,5.2);
+      TH1D *histo_LeadingElectronEta = new TH1D(name3,"Leading Electron - #eta Distribution; #eta; N events",60,-6,6);
       m_hVector_LeadingElectronEta[j].push_back(histo_LeadingElectronEta);
 
       char name4[300];
       sprintf(name4,"LeadingElectronPhi_%s_%s",tag,Folders.at(j).c_str());
-      TH1D *histo_LeadingElectronPhi = new TH1D(name4,"Leading Electron - #phi Distribution; #phi [rad]; N events",50,-3.3,3.3);
+      TH1D *histo_LeadingElectronPhi = new TH1D(name4,"Leading Electron - #phi Distribution; #phi [rad]; N events",16,-3.2,3.2);
       m_hVector_LeadingElectronPhi[j].push_back(histo_LeadingElectronPhi);
 
       char name5[300];
       sprintf(name5,"LeadingElectronCharge_%s_%s",tag,Folders.at(j).c_str());
-      TH1D *histo_LeadingElectronCharge = new TH1D(name5,"Leading Electron - Charge Distribution; Charge; N events",50,-3,3);
+      TH1D *histo_LeadingElectronCharge = new TH1D(name5,"Leading Electron - Charge Distribution; Charge; N events",6,-3,3);
       m_hVector_LeadingElectronCharge[j].push_back(histo_LeadingElectronCharge);
 
       char name6[300];
       sprintf(name6,"SecondElectronPt_%s_%s",tag,Folders.at(j).c_str());
-      TH1D *histo_SecondElectronPt = new TH1D(name6,"Second Electron - P_{T} Distribution; P_{T} [GeV.c^{-1}]; N events",200,0,1000);
+      TH1D *histo_SecondElectronPt = new TH1D(name6,"Second Electron - P_{T} Distribution; P_{T} [GeV.c^{-1}]; N events",500,0,500);
       m_hVector_SecondElectronPt[j].push_back(histo_SecondElectronPt);
 
       char name7[300];
       sprintf(name7,"SecondElectronEta_%s_%s",tag,Folders.at(j).c_str());
-      TH1D *histo_SecondElectronEta = new TH1D(name7,"Second Electron - #eta Distribution; #eta; N events",50,-5.2,5.2);
+      TH1D *histo_SecondElectronEta = new TH1D(name7,"Second Electron - #eta Distribution; #eta; N events",60,-6,6);
       m_hVector_SecondElectronEta[j].push_back(histo_SecondElectronEta);
 
       char name8[300];
       sprintf(name8,"SecondElectronPhi_%s_%s",tag,Folders.at(j).c_str());
-      TH1D *histo_SecondElectronPhi = new TH1D(name8,"Second Electron - #phi Distribution; #phi [rad]; N events",50,-3.3,3.3);
+      TH1D *histo_SecondElectronPhi = new TH1D(name8,"Second Electron - #phi Distribution; #phi [rad]; N events",16,-3.2,3.2);
       m_hVector_SecondElectronPhi[j].push_back(histo_SecondElectronPhi);
 
       char name9[300];
       sprintf(name9,"SecondElectronCharge_%s_%s",tag,Folders.at(j).c_str());
-      TH1D *histo_SecondElectronCharge = new TH1D(name9,"Second Electron - Charge Distribution; Charge; N events",50,-3,3);
+      TH1D *histo_SecondElectronCharge = new TH1D(name9,"Second Electron - Charge Distribution; Charge; N events",6,-3,3);
       m_hVector_SecondElectronCharge[j].push_back(histo_SecondElectronCharge);
 
       char name10[300];
@@ -355,48 +381,48 @@ void DiffractiveZ::CreateHistos(std::string type){
       m_hVector_ElectronsN[j].push_back(histo_ElectronsN);
 
       char name11[300];
-      sprintf(name11,"DiMuon_%s_%s",tag,Folders.at(j).c_str());
-      TH1D *histo_DiMuon = new TH1D(name11,"DiMuon Invariant Mass Distribution; M_{#mu#mu} [GeV]; N events",500,0,500);
-      m_hVector_DiMuon[j].push_back(histo_DiMuon);
+      sprintf(name11,"DiMuonMass_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_DiMuonMass = new TH1D(name11,"DiMuon Invariant Mass Distribution; M_{#mu#mu} [GeV]; N events",500,0,500);
+      m_hVector_DiMuonMass[j].push_back(histo_DiMuonMass);
 
       char name12[300];
       sprintf(name12,"LeadingMuonPt_%s_%s",tag,Folders.at(j).c_str());
-      TH1D *histo_LeadingMuonPt = new TH1D(name12,"Leading Muon - P_{T} Distribution; P_{T} [GeV.c^{-1}]; N events",200,0,1000);
+      TH1D *histo_LeadingMuonPt = new TH1D(name12,"Leading Muon - P_{T} Distribution; P_{T} [GeV.c^{-1}]; N events",500,0,500);
       m_hVector_LeadingMuonPt[j].push_back(histo_LeadingMuonPt);
 
       char name13[300];
       sprintf(name13,"LeadingMuonEta_%s_%s",tag,Folders.at(j).c_str());
-      TH1D *histo_LeadingMuonEta = new TH1D(name13,"Leading Muon - #eta Distribution; #eta; N events",50,-5.2,5.2);
+      TH1D *histo_LeadingMuonEta = new TH1D(name13,"Leading Muon - #eta Distribution; #eta; N events",60,-6,6);
       m_hVector_LeadingMuonEta[j].push_back(histo_LeadingMuonEta);
 
       char name14[300];
       sprintf(name14,"LeadingMuonPhi_%s_%s",tag,Folders.at(j).c_str());
-      TH1D *histo_LeadingMuonPhi = new TH1D(name14,"Leading Muon - #phi Distribution; #phi [rad]; N events",50,-3.3,3.3);
+      TH1D *histo_LeadingMuonPhi = new TH1D(name14,"Leading Muon - #phi Distribution; #phi [rad]; N events",16,-3.2,3.2);
       m_hVector_LeadingMuonPhi[j].push_back(histo_LeadingMuonPhi);
 
       char name15[300];
       sprintf(name15,"LeadingMuonCharge_%s_%s",tag,Folders.at(j).c_str());
-      TH1D *histo_LeadingMuonCharge = new TH1D(name15,"Leading Muon - Charge Distribution; Charge; N events",50,-3,3);
+      TH1D *histo_LeadingMuonCharge = new TH1D(name15,"Leading Muon - Charge Distribution; Charge; N events",6,-3,3);
       m_hVector_LeadingMuonCharge[j].push_back(histo_LeadingMuonCharge);
 
       char name16[300];
       sprintf(name16,"SecondMuonPt_%s_%s",tag,Folders.at(j).c_str());
-      TH1D *histo_SecondMuonPt = new TH1D(name16,"Second Muon - P_{T} Distribution; P_{T} [GeV.c^{-1}]; N events",200,0,1000);
+      TH1D *histo_SecondMuonPt = new TH1D(name16,"Second Muon - P_{T} Distribution; P_{T} [GeV.c^{-1}]; N events",500,0,500);
       m_hVector_SecondMuonPt[j].push_back(histo_SecondMuonPt);
 
       char name17[300];
       sprintf(name17,"SecondMuonEta_%s_%s",tag,Folders.at(j).c_str());
-      TH1D *histo_SecondMuonEta = new TH1D(name17,"Second Muon - #eta Distribution; #eta; N events",50,-5.2,5.2);
+      TH1D *histo_SecondMuonEta = new TH1D(name17,"Second Muon - #eta Distribution; #eta; N events",60,-6,6);
       m_hVector_SecondMuonEta[j].push_back(histo_SecondMuonEta);
 
       char name18[300];
       sprintf(name18,"SecondMuonPhi_%s_%s",tag,Folders.at(j).c_str());
-      TH1D *histo_SecondMuonPhi = new TH1D(name18,"Second Muon - #phi Distribution; #phi [rad]; N events",50,-3.3,3.3);
+      TH1D *histo_SecondMuonPhi = new TH1D(name18,"Second Muon - #phi Distribution; #phi [rad]; N events",16,-3.2,3.2);
       m_hVector_SecondMuonPhi[j].push_back(histo_SecondMuonPhi);
 
       char name19[300];
       sprintf(name19,"SecondMuonCharge_%s_%s",tag,Folders.at(j).c_str());
-      TH1D *histo_SecondMuonCharge = new TH1D(name19,"Second Muon - Charge Distribution; Charge; N events",50,-3,3);
+      TH1D *histo_SecondMuonCharge = new TH1D(name19,"Second Muon - Charge Distribution; Charge; N events",6,-3,3);
       m_hVector_SecondMuonCharge[j].push_back(histo_SecondMuonCharge);
 
       char name20[300];
@@ -406,22 +432,22 @@ void DiffractiveZ::CreateHistos(std::string type){
 
       char name21[300];
       sprintf(name21,"sumEHFplus_%s_%s",tag,Folders.at(j).c_str());
-      TH1D *histo_sumEHFplus = new TH1D(name21,"HF^{+} - Sum of Energy; #sum E_{HF^{+}} [GeV]; N events",200,0,2000);
+      TH1D *histo_sumEHFplus = new TH1D(name21,"HF^{+} - Sum of Energy; #sum E_{HF^{+}} [GeV]; N events",2000,0,2000);
       m_hVector_sumEHFplus[j].push_back(histo_sumEHFplus);
 
       char name22[300];
       sprintf(name22,"sumEHFminus_%s_%s",tag,Folders.at(j).c_str());
-      TH1D *histo_sumEHFminus = new TH1D(name22,"HF^{-} - Sum of Energy; #sum E_{HF^{-}} [GeV]; N events",200,0,2000);
+      TH1D *histo_sumEHFminus = new TH1D(name22,"HF^{-} - Sum of Energy; #sum E_{HF^{-}} [GeV]; N events",2000,0,2000);
       m_hVector_sumEHFminus[j].push_back(histo_sumEHFminus);
 
       char name23[300];
-      sprintf(name23,"sumEHEplus_PU_%s_%s",tag,Folders.at(j).c_str());
-      TH1D *histo_sumEHEplus = new TH1D(name23,"HE^{+} - Sum of Energy; #sum E_{HE^{+}} [GeV]; N events",200,0,2000);
+      sprintf(name23,"sumEHEplus_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_sumEHEplus = new TH1D(name23,"HE^{+} - Sum of Energy; #sum E_{HE^{+}} [GeV]; N events",2000,0,2000);
       m_hVector_sumEHEplus[j].push_back(histo_sumEHEplus);
 
       char name24[300];
       sprintf(name24,"sumEHEminus_%s_%s",tag,Folders.at(j).c_str());
-      TH1D *histo_sumEHEminus = new TH1D(name24,"HE^{-} - Sum of Energy; #sum E_{HE^{-}} [GeV]; N events",200,0,2000);
+      TH1D *histo_sumEHEminus = new TH1D(name24,"HE^{-} - Sum of Energy; #sum E_{HE^{-}} [GeV]; N events",2000,0,2000);
       m_hVector_sumEHEminus[j].push_back(histo_sumEHEminus);
 
       char name25[300];
@@ -436,17 +462,17 @@ void DiffractiveZ::CreateHistos(std::string type){
 
       char name27[300];
       sprintf(name27,"mHF_%s_%s",tag,Folders.at(j).c_str());
-      TH2D *histo_MultHF = new TH2D(name27,"HF^{+} and HF^{-} Multiplicity; n HF^{+}; n HF^{-}; N events", 10,  0., 10., 10,  0., 10. );
+      TH2D *histo_MultHF = new TH2D(name27,"HF^{+} and HF^{-} Multiplicity; n HF^{+}; n HF^{-}; N events", 100,  0., 100., 100,  0., 100. );
       m_hVector_multhf[j].push_back(histo_MultHF);
 
       char name28[300];
       sprintf(name28,"ETCalos_%s_%s",tag,Folders.at(j).c_str());
-      TH2D *histo_ET_Calos = new TH2D(name28,"HF^{+} and Castor; #sum Energy HF^{+}; log_{10} #sum Castor Signal [fC]; N events", 10,  0., 10., 50,  0., 50. );
+      TH2D *histo_ET_Calos = new TH2D(name28,"HF^{+} and Castor; #sum Energy HF^{+}; log_{10} #sum Castor Signal [fC]; N events", 100,  0., 100., 500,  0., 500. );
       m_hVector_etcalos[j].push_back(histo_ET_Calos);
 
       char name29[300];
       sprintf(name29,"Tracks_%s_%s",tag,Folders.at(j).c_str());
-      TH1D *histo_Tracks = new TH1D(name29,"Tracks Multiplicity; n Tracks; N events",50,0,150);
+      TH1D *histo_Tracks = new TH1D(name29,"Tracks Multiplicity; n Tracks; N events",150,0,150);
       m_hVector_tracks[j].push_back(histo_Tracks);
 
       char name30[300];
@@ -506,27 +532,27 @@ void DiffractiveZ::CreateHistos(std::string type){
 
       char name41[300];
       sprintf(name41,"patElectron1Pt_%s_%s",tag,Folders.at(j).c_str());
-      TH1D *histo_patElectron1Pt = new TH1D(name41,"Leading Electron - P_{T} Distribution; P_{T} [GeV.c^{-1}]; N events",200,0,1000);
+      TH1D *histo_patElectron1Pt = new TH1D(name41,"Leading Electron - P_{T} Distribution; P_{T} [GeV.c^{-1}]; N events",500,0,500);
       m_hVector_patElectron1Pt[j].push_back(histo_patElectron1Pt);
 
       char name42[300];
       sprintf(name42,"patElectron1Eta_%s_%s",tag,Folders.at(j).c_str());
-      TH1D *histo_patElectron1Eta = new TH1D(name42,"Leading Electron - #eta Distribution; #eta; N events",50,-5.2,5.2);
+      TH1D *histo_patElectron1Eta = new TH1D(name42,"Leading Electron - #eta Distribution; #eta; N events",60,-6,6);
       m_hVector_patElectron1Eta[j].push_back(histo_patElectron1Eta);
 
       char name43[300];
       sprintf(name43,"patElectron1Phi_%s_%s",tag,Folders.at(j).c_str());
-      TH1D *histo_patElectron1Phi = new TH1D(name43,"Leading Electron - #phi Distribution; #phi [rad]; N events",50,-3.3,3.3);
+      TH1D *histo_patElectron1Phi = new TH1D(name43,"Leading Electron - #phi Distribution; #phi [rad]; N events",16,-3.2,3.2);
       m_hVector_patElectron1Phi[j].push_back(histo_patElectron1Phi);
 
       char name44[300];
       sprintf(name44,"patElectron1Charge_%s_%s",tag,Folders.at(j).c_str());
-      TH1D *histo_patElectron1Charge= new TH1D(name44,"Leading Electron - Charge Distribution; Charge; N events",50,-3,3);
+      TH1D *histo_patElectron1Charge= new TH1D(name44,"Leading Electron - Charge Distribution; Charge; N events",6,-3,3);
       m_hVector_patElectron1Charge[j].push_back(histo_patElectron1Charge);
 
       char name45[300];
       sprintf(name45,"patElectron1Et_%s_%s",tag,Folders.at(j).c_str());
-      TH1D *histo_patElectron1Et = new TH1D(name45,"Leading Electron - E_{T} Distribution; E_{T} [GeV]; N events",200,0,1000);
+      TH1D *histo_patElectron1Et = new TH1D(name45,"Leading Electron - E_{T} Distribution; E_{T} [GeV]; N events",500,0,500);
       m_hVector_patElectron1Et[j].push_back(histo_patElectron1Et);
 
       char name46[300];
@@ -536,77 +562,77 @@ void DiffractiveZ::CreateHistos(std::string type){
 
       char name47[300];
       sprintf(name47,"patMuon1Pt_%s_%s",tag,Folders.at(j).c_str());
-      TH1D *histo_patMuon1Pt = new TH1D(name47,"Leading Muon - P_{T} Distribution; P_{T} [GeV.c^{-1}]; N events",200,0,1000);
+      TH1D *histo_patMuon1Pt = new TH1D(name47,"Leading Muon - P_{T} Distribution; P_{T} [GeV.c^{-1}]; N events",500,0,500);
       m_hVector_patMuon1Pt[j].push_back(histo_patMuon1Pt);
 
       char name48[300];
       sprintf(name48,"patMuon1Eta_%s_%s",tag,Folders.at(j).c_str());
-      TH1D *histo_patMuon1Eta = new TH1D(name48,"Leading Muon - #eta Distribution; #eta; N events",50,-5.2,5.2);
+      TH1D *histo_patMuon1Eta = new TH1D(name48,"Leading Muon - #eta Distribution; #eta; N events",60,-6,6);
       m_hVector_patMuon1Eta[j].push_back(histo_patMuon1Eta);
 
       char name49[300];
       sprintf(name49,"patMuon1Phi_%s_%s",tag,Folders.at(j).c_str());
-      TH1D *histo_patMuon1Phi = new TH1D(name49,"Leading Muon - #phi Distribution; #phi [rad]; N events",50,-3.3,3.3);
+      TH1D *histo_patMuon1Phi = new TH1D(name49,"Leading Muon - #phi Distribution; #phi [rad]; N events",16,-3.2,3.2);
       m_hVector_patMuon1Phi[j].push_back(histo_patMuon1Phi);
 
       char name50[300];
       sprintf(name50,"patMuon1Charge_%s_%s",tag,Folders.at(j).c_str());
-      TH1D *histo_patMuon1Charge= new TH1D(name50,"Leading Muon - Charge Distribution; Charge; N events",50,-3,3);
+      TH1D *histo_patMuon1Charge= new TH1D(name50,"Leading Muon - Charge Distribution; Charge; N events",6,-3,3);
       m_hVector_patMuon1Charge[j].push_back(histo_patMuon1Charge);
 
       char name51[300];
       sprintf(name51,"patMuon1Et_%s_%s",tag,Folders.at(j).c_str());
-      TH1D *histo_patMuon1Et = new TH1D(name51,"Leading Muon - E_{T} Distribution; E_{T} [GeV]; N events",200,0,1000);
+      TH1D *histo_patMuon1Et = new TH1D(name51,"Leading Muon - E_{T} Distribution; E_{T} [GeV]; N events",500,0,500);
       m_hVector_patMuon1Et[j].push_back(histo_patMuon1Et);
 
       char name52[300];
       sprintf(name52,"patElectron2Pt_%s_%s",tag,Folders.at(j).c_str());
-      TH1D *histo_patElectron2Pt = new TH1D(name52,"Second Electron - P_{T} Distribution; P_{T} [GeV.c^{-1}]; N events",200,0,1000);
+      TH1D *histo_patElectron2Pt = new TH1D(name52,"Second Electron - P_{T} Distribution; P_{T} [GeV.c^{-1}]; N events",500,0,500);
       m_hVector_patElectron2Pt[j].push_back(histo_patElectron2Pt);
 
       char name53[300];
       sprintf(name53,"patElectron2Eta_%s_%s",tag,Folders.at(j).c_str());
-      TH1D *histo_patElectron2Eta = new TH1D(name53,"Second Electron - #eta Distribution; #eta; N events",60,-5.2,5.2);
+      TH1D *histo_patElectron2Eta = new TH1D(name53,"Second Electron - #eta Distribution; #eta; N events",60,-6,6);
       m_hVector_patElectron2Eta[j].push_back(histo_patElectron2Eta);
 
       char name54[300];
       sprintf(name54,"patElectron2Phi_%s_%s",tag,Folders.at(j).c_str());
-      TH1D *histo_patElectron2Phi = new TH1D(name54,"Second Electron - #phi Distribution; #phi [rad]; N events",60,-3.3,3.3);
+      TH1D *histo_patElectron2Phi = new TH1D(name54,"Second Electron - #phi Distribution; #phi [rad]; N events",16,-3.2,3.2);
       m_hVector_patElectron2Phi[j].push_back(histo_patElectron2Phi);
 
       char name55[300];
       sprintf(name55,"patElectron2Charge_%s_%s",tag,Folders.at(j).c_str());
-      TH1D *histo_patElectron2Charge= new TH1D(name55,"Second Electron - Charge Distribution; Charge; N events",60,-3,3);
+      TH1D *histo_patElectron2Charge= new TH1D(name55,"Second Electron - Charge Distribution; Charge; N events",6,-3,3);
       m_hVector_patElectron2Charge[j].push_back(histo_patElectron2Charge);
 
       char name56[300];
       sprintf(name56,"patElectron2Et_%s_%s",tag,Folders.at(j).c_str());
-      TH1D *histo_patElectron2Et = new TH1D(name56,"Second Electron - E_{T} Distribution; E_{T} [GeV]; N events",200,0,1000);
+      TH1D *histo_patElectron2Et = new TH1D(name56,"Second Electron - E_{T} Distribution; E_{T} [GeV]; N events",500,0,500);
       m_hVector_patElectron2Et[j].push_back(histo_patElectron2Et);
 
       char name57[300];
       sprintf(name57,"patMuon2Pt_%s_%s",tag,Folders.at(j).c_str());
-      TH1D *histo_patMuon2Pt = new TH1D(name57,"Second Muon - P_{T} Distribution; P_{T} [GeV.c^{-1}]; N events",200,0,1000);
+      TH1D *histo_patMuon2Pt = new TH1D(name57,"Second Muon - P_{T} Distribution; P_{T} [GeV.c^{-1}]; N events",500,0,500);
       m_hVector_patMuon2Pt[j].push_back(histo_patMuon2Pt);
 
       char name58[300];
       sprintf(name58,"patMuon2Eta_%s_%s",tag,Folders.at(j).c_str());
-      TH1D *histo_patMuon2Eta = new TH1D(name58,"Second Muon - #eta Distribution; #eta; N events",60,-5.2,5.2);
+      TH1D *histo_patMuon2Eta = new TH1D(name58,"Second Muon - #eta Distribution; #eta; N events",60,-6,6);
       m_hVector_patMuon2Eta[j].push_back(histo_patMuon2Eta);
 
       char name59[300];
       sprintf(name59,"patMuon2Phi_%s_%s",tag,Folders.at(j).c_str());
-      TH1D *histo_patMuon2Phi = new TH1D(name59,"Second Muon - #phi Distribution; #phi [rad]; N events",60,-3.3,3.3);
+      TH1D *histo_patMuon2Phi = new TH1D(name59,"Second Muon - #phi Distribution; #phi [rad]; N events",16,-3.2,3.2);
       m_hVector_patMuon2Phi[j].push_back(histo_patMuon2Phi);
 
       char name60[300];
       sprintf(name60,"patMuon2Charge_%s_%s",tag,Folders.at(j).c_str());
-      TH1D *histo_patMuon2Charge= new TH1D(name60,"Second Muon - Charge Distribution; Charge; N events",60,-3,3);
+      TH1D *histo_patMuon2Charge= new TH1D(name60,"Second Muon - Charge Distribution; Charge; N events",6,-3,3);
       m_hVector_patMuon2Charge[j].push_back(histo_patMuon2Charge);
 
       char name61[300];
       sprintf(name61,"patMuon2Et_%s_%s",tag,Folders.at(j).c_str());
-      TH1D *histo_patMuon2Et = new TH1D(name61,"Second Muon - E_{T} Distribution; E_{T} [GeV]; N events",200,0,1000);
+      TH1D *histo_patMuon2Et = new TH1D(name61,"Second Muon - E_{T} Distribution; E_{T} [GeV]; N events",500,0,500);
       m_hVector_patMuon2Et[j].push_back(histo_patMuon2Et);
 
       char name62[300];
@@ -1091,7 +1117,7 @@ void DiffractiveZ::CreateHistos(std::string type){
 
       char name158[300];
       sprintf(name158,"ECaloVsEta_%s_%s",tag,Folders.at(j).c_str());
-      TH2D *histo_ECaloVsEta = new TH2D(name158,"Calorimeter Energy X #eta; #eta; Energy [GeV]", 12,  -6, 6, 100, 0., 1000.);
+      TH2D *histo_ECaloVsEta = new TH2D(name158,"Calorimeter Energy X #eta; #eta; Energy [GeV]", 500,  -6, 6, 100, 0., 1000.);
       m_hVector_ECaloVsEta[j].push_back(histo_ECaloVsEta);
 
       char name159[300];
@@ -1101,7 +1127,7 @@ void DiffractiveZ::CreateHistos(std::string type){
 
       char name160[300];
       sprintf(name160,"ECastorSector_%s_%s",tag,Folders.at(j).c_str());
-      TH2D *histo_ECastorSector = new TH2D(name160,"Castor Energy X Sector; Sector; Energy [GeV]", 17,  0, 17, 100, 0., 7000.);
+      TH2D *histo_ECastorSector = new TH2D(name160,"Castor Energy X Sector; Sector; Energy [GeV]", 17,  0, 17, 44, 0., 220.);
       m_hVector_ECastorSector[j].push_back(histo_ECastorSector);
 
       char name161[300];
@@ -1174,12 +1200,107 @@ void DiffractiveZ::CreateHistos(std::string type){
       TH1D *histo_tracksOutpatElectronsCone05 = new TH1D(name174,"Tracks Outside Leading and Second Electron Cone; Number of Tracks, #DeltaR>0.5; N events",500,0,500);
       m_hVector_tracksOutpatElectronsCone05[j].push_back(histo_tracksOutpatElectronsCone05);
 
+      char name175[300];
+      sprintf(name175,"LeadingElectronInnerHits_%s_%s",tag,Folders.at(j).c_str());
+      TH1I *histo_LeadingElectronInnerHits = new TH1I(name175,"Leading Electron; Number Of Expected Inner Hits; N events",500,0,500);
+      m_hVector_LeadingElectronInnerHits[j].push_back(histo_LeadingElectronInnerHits);
+
+      char name176[300];
+      sprintf(name176,"LeadingElectronDCot_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_LeadingElectronDCot = new TH1D(name176,"Leading Electron; DCot [a.u.]; N events",500,0,500);
+      m_hVector_LeadingElectronDCot[j].push_back(histo_LeadingElectronDCot);
+
+      char name177[300];
+      sprintf(name177,"LeadingElectronDist_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_LeadingElectronDist = new TH1D(name177,"Leading Electron; Dist [a.u.]; N events",500,0,500);
+      m_hVector_LeadingElectronDist[j].push_back(histo_LeadingElectronDist);
+
+      char name178[300];
+      sprintf(name178,"LeadingElectronDeltaEtaTkClu_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_LeadingElectronDeltaEtaTkClu = new TH1D(name178,"Leading Electron; #Delta#eta_{TK, Cluster} [a.u.]; N events",500,0,500);
+      m_hVector_LeadingElectronDeltaEtaTkClu[j].push_back(histo_LeadingElectronDeltaEtaTkClu);
+
+      char name179[300];
+      sprintf(name179,"LeadingElectronDeltaPhiTkClu_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_LeadingElectronDeltaPhiTkClu = new TH1D(name179,"Leading Electron; #Delta#phi_{TK, Cluster} [a.u.]; N events",500,0,500);
+      m_hVector_LeadingElectronDeltaPhiTkClu[j].push_back(histo_LeadingElectronDeltaPhiTkClu);
+
+      char name180[300];
+      sprintf(name180,"LeadingElectronSigmaIeIe_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_LeadingElectronSigmaIeIe = new TH1D(name180,"Leading Electron; #sigma_{i#etai#eta} [a.u.]; N events",500,0,500);
+      m_hVector_LeadingElectronSigmaIeIe[j].push_back(histo_LeadingElectronSigmaIeIe);
+
+      char name181[300];
+      sprintf(name181,"LeadingElectronHE_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_LeadingElectronHE = new TH1D(name181,"Leading Electron; HE; N events",500,0,500);
+      m_hVector_LeadingElectronHE[j].push_back(histo_LeadingElectronHE);
+
+      char name182[300];
+      sprintf(name182,"SecondElectronInnerHits_%s_%s",tag,Folders.at(j).c_str());
+      TH1I *histo_SecondElectronInnerHits = new TH1I(name182,"Second Electron; Number Of Expected Inner Hits; N events",500,0,500);
+      m_hVector_SecondElectronInnerHits[j].push_back(histo_SecondElectronInnerHits);
+
+      char name183[300];
+      sprintf(name183,"SecondElectronDCot_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_SecondElectronDCot = new TH1D(name183,"Second Electron; DCot [a.u.]; N events",500,0,500);
+      m_hVector_SecondElectronDCot[j].push_back(histo_SecondElectronDCot);
+
+      char name184[300];
+      sprintf(name184,"SecondElectronDist_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_SecondElectronDist = new TH1D(name184,"Second Electron; Dist [a.u.]; N events",500,0,500);
+      m_hVector_SecondElectronDist[j].push_back(histo_SecondElectronDist);
+
+      char name185[300];
+      sprintf(name185,"SecondElectronDeltaEtaTkClu_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_SecondElectronDeltaEtaTkClu = new TH1D(name185,"Second Electron; #Delta#eta_{TK, Cluster} [a.u.]; N events",500,0,500);
+      m_hVector_SecondElectronDeltaEtaTkClu[j].push_back(histo_SecondElectronDeltaEtaTkClu);
+
+      char name186[300];
+      sprintf(name186,"SecondElectronDeltaPhiTkClu_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_SecondElectronDeltaPhiTkClu = new TH1D(name186,"Second Electron; #Delta#phi_{TK, Cluster} [a.u.]; N events",500,0,500);
+      m_hVector_SecondElectronDeltaPhiTkClu[j].push_back(histo_SecondElectronDeltaPhiTkClu);
+
+      char name187[300];
+      sprintf(name187,"SecondElectronSigmaIeIe_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_SecondElectronSigmaIeIe = new TH1D(name187,"Second Electron; #sigma_{i#etai#eta} [a.u.]; N events",500,0,500);
+      m_hVector_SecondElectronSigmaIeIe[j].push_back(histo_SecondElectronSigmaIeIe);
+
+      char name188[300];
+      sprintf(name188,"SecondElectronHE_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_SecondElectronHE = new TH1D(name188,"Second Electron; HE; N events",500,0,500);
+      m_hVector_SecondElectronHE[j].push_back(histo_SecondElectronHE);
+
+      char name189[300];
+      sprintf(name189,"sumEHFplus_S_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_SumEHFplus_S = new TH1D(name189,"HF^{+} - Sum of Energy, Short Fibers; #sum E_{HF^{+},Short} [GeV]; N events",2000,0,2000);
+      m_hVector_SumEHFplus_S[j].push_back(histo_SumEHFplus_S);
+
+      char name190[300];
+      sprintf(name190,"sumEHFminus_S_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_SumEHFminus_S = new TH1D(name190,"HF^{-} - Sum of Energy, Short Fibers; #sum E_{HF^{-},Short} [GeV]; N events",2000,0,2000);
+      m_hVector_SumEHFminus_S[j].push_back(histo_SumEHFminus_S);
+
+      char name191[300];
+      sprintf(name191,"sumEHFplus_L_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_SumEHFplus_L = new TH1D(name191,"HF^{+} - Sum of Energy, Long Fibers; #sum E_{HF^{+},Long} [GeV]; N events",2000,0,2000);
+      m_hVector_SumEHFplus_L[j].push_back(histo_SumEHFplus_L);
+
+      char name192[300];
+      sprintf(name192,"sumEHFminus_L_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_SumEHFminus_L = new TH1D(name192,"HF^{-} - Sum of Energy, Long Fibers; #sum E_{HF^{-},Long} [GeV]; N events",2000,0,2000);
+      m_hVector_SumEHFminus_L[j].push_back(histo_SumEHFminus_L);
+
+      char name193[300];
+      sprintf(name193,"maxetagap_%s_%s",tag,Folders.at(j).c_str());
+      TH1D *histo_maxetagap = new TH1D(name193,"Particle Flow #eta_{max} Gap Distribution; #eta_{max, gap}; N events",40,-6,6);
+      m_hVector_maxetagap[j].push_back(histo_maxetagap);
+
     }
   }
 }
 
 void DiffractiveZ::FillHistos(int index, int pileup, double totalweight){
-  m_hVector_DiElectron[index].at(pileup)->Fill(eventdiffZ->GetDiElectronMass(),totalweight);
+  m_hVector_DiElectronMass[index].at(pileup)->Fill(eventdiffZ->GetDiElectronMass(),totalweight);
   m_hVector_DiElectronEta[index].at(pileup)->Fill(eventdiffZ->GetDiElectronEta(),totalweight);
   m_hVector_DiElectronPhi[index].at(pileup)->Fill(eventdiffZ->GetDiElectronPhi(),totalweight);
   m_hVector_DiElectronPt[index].at(pileup)->Fill(eventdiffZ->GetDiElectronPt(),totalweight);
@@ -1192,7 +1313,7 @@ void DiffractiveZ::FillHistos(int index, int pileup, double totalweight){
   m_hVector_SecondElectronPhi[index].at(pileup)->Fill(eventdiffZ->GetSecondElectronPhi(),totalweight);
   m_hVector_SecondElectronCharge[index].at(pileup)->Fill(eventdiffZ->GetSecondElectronCharge(),totalweight);
   m_hVector_ElectronsN[index].at(pileup)->Fill(eventdiffZ->GetElectronsN(),totalweight);
-  m_hVector_DiMuon[index].at(pileup)->Fill(eventdiffZ->GetDiMuonMass(),totalweight);
+  m_hVector_DiMuonMass[index].at(pileup)->Fill(eventdiffZ->GetDiMuonMass(),totalweight);
   m_hVector_DiMuonEta[index].at(pileup)->Fill(eventdiffZ->GetDiMuonEta(),totalweight);
   m_hVector_DiMuonPhi[index].at(pileup)->Fill(eventdiffZ->GetDiMuonPhi(),totalweight);
   m_hVector_DiMuonPt[index].at(pileup)->Fill(eventdiffZ->GetDiMuonPt(),totalweight);
@@ -1367,6 +1488,26 @@ void DiffractiveZ::FillHistos(int index, int pileup, double totalweight){
   m_hVector_tracksOutpatMuonsCone05[index].at(pileup)->Fill(eventdiffZ->GetTracksNonConepatMuon05(),totalweight);
   m_hVector_tracksOutpatElectronsCone05[index].at(pileup)->Fill(eventdiffZ->GetTracksNonConepatElectron05(),totalweight);
 
+  m_hVector_LeadingElectronInnerHits[index].at(pileup)->Fill(innerHits1,totalweight);
+  m_hVector_LeadingElectronDCot[index].at(pileup)->Fill(Dcot1,totalweight);
+  m_hVector_LeadingElectronDist[index].at(pileup)->Fill(Dist1,totalweight);
+  m_hVector_LeadingElectronDeltaEtaTkClu[index].at(pileup)->Fill(DeltaEtaTkClu1,totalweight);
+  m_hVector_LeadingElectronDeltaPhiTkClu[index].at(pileup)->Fill(DeltaPhiTkClu1,totalweight);
+  m_hVector_LeadingElectronSigmaIeIe[index].at(pileup)->Fill(sigmaIeIe1,totalweight);
+  m_hVector_LeadingElectronHE[index].at(pileup)->Fill(HE1,totalweight);
+  m_hVector_SecondElectronInnerHits[index].at(pileup)->Fill(innerHits2,totalweight);
+  m_hVector_SecondElectronDCot[index].at(pileup)->Fill(Dcot2,totalweight);
+  m_hVector_SecondElectronDist[index].at(pileup)->Fill(Dist2,totalweight);
+  m_hVector_SecondElectronDeltaEtaTkClu[index].at(pileup)->Fill(DeltaEtaTkClu2,totalweight);
+  m_hVector_SecondElectronDeltaPhiTkClu[index].at(pileup)->Fill(DeltaPhiTkClu2,totalweight);
+  m_hVector_SecondElectronSigmaIeIe[index].at(pileup)->Fill(sigmaIeIe2,totalweight);
+  m_hVector_SecondElectronHE[index].at(pileup)->Fill(HE2,totalweight);
+  m_hVector_SumEHFplus_S[index].at(pileup)->Fill(eventdiffZ->GetSumEHF_SPlus(),totalweight);
+  m_hVector_SumEHFminus_S[index].at(pileup)->Fill(eventdiffZ->GetSumEHF_SMinus(),totalweight);
+  m_hVector_SumEHFplus_L[index].at(pileup)->Fill(eventdiffZ->GetSumEHF_LPlus(),totalweight);
+  m_hVector_SumEHFminus_L[index].at(pileup)->Fill(eventdiffZ->GetSumEHF_LMinus(),totalweight);
+  m_hVector_maxetagap[index].at(pileup)->Fill(eventdiffZ->GetMaxGapPF(),totalweight);
+
 }
 
 void DiffractiveZ::SaveHistos(std::string type){
@@ -1379,7 +1520,7 @@ void DiffractiveZ::SaveHistos(std::string type){
   for (int i = 0; i < ipileup; i++){
     for (std::vector<std::string>::size_type j=0; j<Folders.size(); j++){
 
-      m_hVector_DiElectron[j].at(i)->Write();
+      m_hVector_DiElectronMass[j].at(i)->Write();
       m_hVector_LeadingElectronPt[j].at(i)->Write();
       m_hVector_LeadingElectronEta[j].at(i)->Write();
       m_hVector_LeadingElectronPhi[j].at(i)->Write();
@@ -1389,7 +1530,7 @@ void DiffractiveZ::SaveHistos(std::string type){
       m_hVector_SecondElectronPhi[j].at(i)->Write();
       m_hVector_SecondElectronCharge[j].at(i)->Write();
       m_hVector_ElectronsN[j].at(i)->Write();
-      m_hVector_DiMuon[j].at(i)->Write();
+      m_hVector_DiMuonMass[j].at(i)->Write();
       m_hVector_LeadingMuonPt[j].at(i)->Write();
       m_hVector_LeadingMuonEta[j].at(i)->Write();
       m_hVector_LeadingMuonPhi[j].at(i)->Write();
@@ -1553,6 +1694,25 @@ void DiffractiveZ::SaveHistos(std::string type){
       m_hVector_tracksOutElectronsCone05[j].at(i)->Write();
       m_hVector_tracksOutpatMuonsCone05[j].at(i)->Write();
       m_hVector_tracksOutpatElectronsCone05[j].at(i)->Write();
+      m_hVector_LeadingElectronInnerHits[j].at(i)->Write();
+      m_hVector_LeadingElectronDCot[j].at(i)->Write();
+      m_hVector_LeadingElectronDist[j].at(i)->Write();
+      m_hVector_LeadingElectronDeltaEtaTkClu[j].at(i)->Write();
+      m_hVector_LeadingElectronDeltaPhiTkClu[j].at(i)->Write();
+      m_hVector_LeadingElectronSigmaIeIe[j].at(i)->Write();
+      m_hVector_LeadingElectronHE[j].at(i)->Write();
+      m_hVector_SecondElectronInnerHits[j].at(i)->Write();
+      m_hVector_SecondElectronDCot[j].at(i)->Write();
+      m_hVector_SecondElectronDist[j].at(i)->Write();
+      m_hVector_SecondElectronDeltaEtaTkClu[j].at(i)->Write();
+      m_hVector_SecondElectronDeltaPhiTkClu[j].at(i)->Write();
+      m_hVector_SecondElectronSigmaIeIe[j].at(i)->Write();
+      m_hVector_SecondElectronHE[j].at(i)->Write();   
+      m_hVector_SumEHFplus_S[j].at(i)->Write();
+      m_hVector_SumEHFminus_S[j].at(i)->Write();
+      m_hVector_SumEHFplus_L[j].at(i)->Write();
+      m_hVector_SumEHFminus_L[j].at(i)->Write();
+      m_hVector_maxetagap[j].at(i)->Write();
     }
   }
 
@@ -1629,6 +1789,27 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
   deltaetamuons = -999;
   deltapTelectrons = -999;
   deltapTmuons = -999;   
+
+  isoTk1 = -999.;
+  isoTk2 = -999.;
+  isoEcal1 = -999.;
+  isoEcal2 = -999.;
+  isoHcal1 = -999.;
+  isoHcal2 = -999.;  
+  innerHits1 = -999;
+  Dcot1 = -999.;
+  Dist1 = -999.;
+  DeltaEtaTkClu1 = -999.;
+  DeltaPhiTkClu1 = -999.;
+  sigmaIeIe1 = -999.;
+  HE1 = -999.;
+  innerHits2 = -999;
+  Dcot2 = -999.;
+  Dist2 = -999.;
+  DeltaEtaTkClu2 = -999.;
+  DeltaPhiTkClu2 = -999.;
+  sigmaIeIe2 = -999.;
+  HE2 = -999.;
 
   TH1::SetDefaultSumw2(true);
   TH2::SetDefaultSumw2(true);
@@ -1715,11 +1896,21 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
     bool trigger = false;
     bool vertex = false;
     bool diffsel = false;
+    bool castorgap = true;
 
     bool presel = false;
     bool charge = false;
     bool dimass = false;
     bool nSel = false;
+    bool eleBarrel1 = false;
+    bool eleEndCap1 = false;
+    bool eleBarrel2 = false;
+    bool eleEndCap2 = false; 
+    bool candSel = false;
+    bool isoBarrel1 = false;
+    bool isoEndCap1 = false;
+    bool isoBarrel2 = false;
+    bool isoEndCap2 = false;
     bool isolation = false;
 
     if (switchtrigger == "trigger_all_electron"){
@@ -1744,13 +1935,76 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
     if (eventdiff->GetNVertex() == nVertex) vertex = true;
     if ((eventdiff->GetEtaMaxFromPFCands() < 3.) || (eventdiff->GetEtaMinFromPFCands() > -3.)) diffsel = true;
 
+    for(int sec=0; sec<16; sec++){
+      if (eventdiffZ->GetCastorTowerEnergy(sec) > 4*0.364) castorgap = false; 
+    }
+
     if (typesel == "RecoElectron"){
       selStatus = "Reco::Electron";
+      isoTk1 = eventdiffZ->GetLeadingElectronTkDr03()/eventdiffZ->GetLeadingElectronPt();
+      isoEcal1 = eventdiffZ->GetLeadingElectronEcalDr03()/eventdiffZ->GetLeadingElectronPt();
+      isoHcal1 = eventdiffZ->GetLeadingElectronHcalDr03()/eventdiffZ->GetLeadingElectronPt();
+      isoTk2 = eventdiffZ->GetSecondElectronTkDr03()/eventdiffZ->GetSecondElectronPt();
+      isoEcal2 = eventdiffZ->GetSecondElectronEcalDr03()/eventdiffZ->GetSecondElectronPt();
+      isoHcal2 = eventdiffZ->GetSecondElectronHcalDr03()/eventdiffZ->GetSecondElectronPt();
+      innerHits1 = eventdiffZ->GetLeadingElectronInnerHits();
+      Dcot1 = eventdiffZ->GetLeadingElectronDCot();
+      Dist1 = eventdiffZ->GetLeadingElectronDist();
+      DeltaEtaTkClu1 = eventdiffZ->GetLeadingElectronDeltaEtaTkClu();
+      DeltaPhiTkClu1 = eventdiffZ->GetLeadingElectronDeltaPhiTkClu();
+      sigmaIeIe1 = eventdiffZ->GetLeadingElectronSigmaIeIe();
+      HE1 = eventdiffZ->GetLeadingElectronHE();
+      innerHits2 = eventdiffZ->GetSecondElectronInnerHits();
+      Dcot2 = eventdiffZ->GetSecondElectronDCot();
+      Dist2 = eventdiffZ->GetSecondElectronDist();
+      DeltaEtaTkClu2 = eventdiffZ->GetSecondElectronDeltaEtaTkClu();
+      DeltaPhiTkClu2 = eventdiffZ->GetSecondElectronDeltaPhiTkClu();
+      sigmaIeIe2 = eventdiffZ->GetSecondElectronSigmaIeIe();
+      HE2 = eventdiffZ->GetSecondElectronHE();
+
       if (eventdiffZ->GetLeadingElectronPt() > lepton1pt && eventdiffZ->GetSecondElectronPt() > lepton2pt) presel = true;
       if (eventdiffZ->GetLeadingElectronCharge()*eventdiffZ->GetSecondElectronCharge()==-1) charge = true;
       if (eventdiffZ->GetDiElectronMass() > 60. && eventdiffZ->GetDiElectronMass() < 110.) dimass = true;
       if (eventdiffZ->GetElectronsN() > 1) nSel = true;
-      if (eventdiffZ->GetLeadingElectronrelIsoDr03() < 0.05 || eventdiffZ->GetSecondElectronrelIsoDr03() < 0.05 ) isolation = true;
+
+      //Isolation Electron
+      if ((fabs (eventdiffZ->GetLeadingElectronEta()) <= 1.4442) ){
+	if (isoTk1<0.09 && isoEcal1<0.07 && isoHcal1<0.10) isoBarrel1 = true;
+      }
+
+      if ((fabs (eventdiffZ->GetLeadingElectronEta()) >= 1.5660) && (fabs (eventdiffZ->GetLeadingElectronEta()) <= 2.5)){
+	if (isoTk1<0.04 && isoEcal1<0.05 && isoHcal1<0.025) isoEndCap1 = true;
+      }
+
+      if ((fabs (eventdiffZ->GetSecondElectronEta()) <= 1.4442) ){
+	if (isoTk2<0.09 && isoEcal2<0.07 && isoHcal2<0.10) isoBarrel2 = true;
+      }
+
+      if ((fabs (eventdiffZ->GetSecondElectronEta()) >= 1.5660) && (fabs (eventdiffZ->GetSecondElectronEta()) <= 2.5)){
+	if (isoTk2<0.04 && isoEcal2<0.05 && isoHcal2<0.025) isoEndCap2 = true;
+      }
+
+      if ((isoEndCap1 || isoBarrel1) && (isoEndCap2 || isoBarrel2)) isolation = true;
+
+      //Electron Candidate Selection
+      if ((fabs (eventdiffZ->GetLeadingElectronEta()) <= 1.4442) ){
+	if (innerHits1 == 0 && (fabs (Dcot1) >= 0.02 || fabs (Dist1) >= 0.02 ) && fabs (DeltaEtaTkClu1) < 0.004 && fabs (DeltaPhiTkClu1) < 0.06 && sigmaIeIe1 < 0.01 && HE1 < 0.04 ) eleBarrel1 = true;
+      }
+
+      if ((fabs (eventdiffZ->GetLeadingElectronEta()) >= 1.5660) && (fabs (eventdiffZ->GetLeadingElectronEta()) <= 2.5)){
+	if (innerHits1 == 0 && (fabs (Dcot1) >= 0.02 || fabs (Dist1) >= 0.02 ) && fabs (DeltaEtaTkClu1) < 0.007 && fabs (DeltaPhiTkClu1) < 0.03 && sigmaIeIe1 < 0.03 && HE1 < 0.025) eleEndCap1 = true;
+      }
+
+      if ((fabs (eventdiffZ->GetSecondElectronEta()) <= 1.4442) ){
+	if (innerHits2 == 0 && (fabs (Dcot2) >= 0.02 || fabs (Dist2) >= 0.02 ) && fabs (DeltaEtaTkClu2) < 0.004 && fabs (DeltaPhiTkClu2) < 0.06 && sigmaIeIe2 < 0.01 && HE2 < 0.04 ) eleBarrel2 = true;
+      }
+
+      if ((fabs (eventdiffZ->GetSecondElectronEta()) >= 1.5660) && (fabs (eventdiffZ->GetSecondElectronEta()) <= 2.5)){
+	if (innerHits2 == 0 && (fabs (Dcot2) >= 0.02 || fabs (Dist2) >= 0.02 ) && fabs (DeltaEtaTkClu2) < 0.007 && fabs (DeltaPhiTkClu2) < 0.03 && sigmaIeIe2 < 0.03 && HE2 < 0.025) eleEndCap2 = true;
+      }
+
+      if ((eleEndCap1 || eleBarrel1) && (eleEndCap2 || eleBarrel2)) candSel = true;
+
     }
 
     else if (typesel == "RecoMuon"){
@@ -1759,16 +2013,79 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
       if (eventdiffZ->GetLeadingMuonCharge()*eventdiffZ->GetSecondMuonCharge()==-1) charge = true;
       if (eventdiffZ->GetDiMuonMass() > 60. && eventdiffZ->GetDiMuonMass() < 110.) dimass = true;
       if (eventdiffZ->GetMuonsN() > 1) nSel = true;
-      if (eventdiffZ->GetLeadingMuonrelIsoDr03() < 0.05 || eventdiffZ->GetSecondMuonrelIsoDr03() < 0.05 ) isolation = true;
+      if (eventdiffZ->GetLeadingMuonSumPtR03() < 3 && eventdiffZ->GetSecondMuonSumPtR03() < 3 ) { 
+	isolation = true;
+	candSel = true;
+      } 
     }
 
     else if (typesel == "PatElectron"){
       selStatus = "Pat::Electron";
+      isoTk1 = eventdiffZ->GetPatElectron1TkDr03()/eventdiffZ->GetPatElectron1Pt();
+      isoEcal1 = eventdiffZ->GetPatElectron1EcalDr03()/eventdiffZ->GetPatElectron1Pt();
+      isoHcal1 = eventdiffZ->GetPatElectron1HcalDr03()/eventdiffZ->GetPatElectron1Pt();
+      isoTk2 = eventdiffZ->GetPatElectron2TkDr03()/eventdiffZ->GetPatElectron2Pt();
+      isoEcal2 = eventdiffZ->GetPatElectron2EcalDr03()/eventdiffZ->GetPatElectron2Pt();
+      isoHcal2 = eventdiffZ->GetPatElectron2HcalDr03()/eventdiffZ->GetPatElectron2Pt();
+      innerHits1 = eventdiffZ->GetPatElectron1InnerHits();
+      Dcot1 = eventdiffZ->GetPatElectron1DCot();
+      Dist1 = eventdiffZ->GetPatElectron1Dist();
+      DeltaEtaTkClu1 = eventdiffZ->GetPatElectron1DeltaEtaTkClu();
+      DeltaPhiTkClu1 = eventdiffZ->GetPatElectron1DeltaPhiTkClu();
+      sigmaIeIe1 = eventdiffZ->GetPatElectron1SigmaIeIe();
+      HE1 = eventdiffZ->GetPatElectron1HE();
+      innerHits2 = eventdiffZ->GetPatElectron2InnerHits();
+      Dcot2 = eventdiffZ->GetPatElectron2DCot();
+      Dist2 = eventdiffZ->GetPatElectron2Dist();
+      DeltaEtaTkClu2 = eventdiffZ->GetPatElectron2DeltaEtaTkClu();
+      DeltaPhiTkClu2 = eventdiffZ->GetPatElectron2DeltaPhiTkClu();
+      sigmaIeIe2 = eventdiffZ->GetPatElectron2SigmaIeIe();
+      HE2 = eventdiffZ->GetPatElectron2HE();
+
       if (eventdiffZ->GetPatElectron1Pt() > lepton1pt && eventdiffZ->GetPatElectron2Pt() > lepton2pt) presel = true;
       if (eventdiffZ->GetPatElectron1Charge()*eventdiffZ->GetPatElectron2Charge()==-1) charge = true;
       if (eventdiffZ->GetPatDiElectronMass() > 60. && eventdiffZ->GetPatDiElectronMass() < 110.) dimass = true;
       if (eventdiffZ->GetPatNElectron() > 1) nSel = true;
-      if (eventdiffZ->GetPatElectron1relIsoDr03() < 0.05 || eventdiffZ->GetPatElectron2relIsoDr03() < 0.05 ) isolation = true;
+
+
+      //Isolation Electron
+      if ((fabs (eventdiffZ->GetPatElectron1Eta()) <= 1.4442) ){
+	if (isoTk1<0.09 && isoEcal1<0.07 && isoHcal1<0.10) isoBarrel1 = true;
+      }
+
+      if ((fabs (eventdiffZ->GetPatElectron1Eta()) >= 1.5660) && (fabs (eventdiffZ->GetPatElectron1Eta()) <= 2.5)){
+	if (isoTk1<0.04 && isoEcal1<0.05 && isoHcal1<0.025) isoEndCap1 = true;
+      }
+
+      if ((fabs (eventdiffZ->GetPatElectron2Eta()) <= 1.4442) ){
+	if (isoTk2<0.09 && isoEcal2<0.07 && isoHcal2<0.10) isoBarrel2 = true;
+      }
+
+      if ((fabs (eventdiffZ->GetPatElectron2Eta()) >= 1.5660) && (fabs (eventdiffZ->GetPatElectron2Eta()) <= 2.5)){
+	if (isoTk2<0.04 && isoEcal2<0.05 && isoHcal2<0.025) isoEndCap2 = true;
+      }
+
+      if ((isoEndCap1 || isoBarrel1) && (isoEndCap2 || isoBarrel2)) isolation = true;
+
+      //Electron Candidate Selection
+      if ((fabs (eventdiffZ->GetPatElectron1Eta()) <= 1.4442) ){
+	if (innerHits1 == 0 && (fabs (Dcot1) >= 0.02 || fabs (Dist1) >= 0.02 ) && fabs (DeltaEtaTkClu1) < 0.004 && fabs (DeltaPhiTkClu1) < 0.06 && sigmaIeIe1 < 0.01 && HE1 < 0.04 ) eleBarrel1 = true;
+      }
+
+      if ((fabs (eventdiffZ->GetPatElectron1Eta()) >= 1.5660) && (fabs (eventdiffZ->GetPatElectron1Eta()) <= 2.5)){
+	if (innerHits1 == 0 && (fabs (Dcot1) >= 0.02 || fabs (Dist1) >= 0.02 ) && fabs (DeltaEtaTkClu1) < 0.007 && fabs (DeltaPhiTkClu1) < 0.03 && sigmaIeIe1 < 0.03 && HE1 < 0.025) eleEndCap1 = true;
+      }
+
+      if ((fabs (eventdiffZ->GetPatElectron2Eta()) <= 1.4442) ){
+	if (innerHits2 == 0 && (fabs (Dcot2) >= 0.02 || fabs (Dist2) >= 0.02 ) && fabs (DeltaEtaTkClu2) < 0.004 && fabs (DeltaPhiTkClu2) < 0.06 && sigmaIeIe2 < 0.01 && HE2 < 0.04 ) eleBarrel2 = true;
+      }
+
+      if ((fabs (eventdiffZ->GetPatElectron2Eta()) >= 1.5660) && (fabs (eventdiffZ->GetPatElectron2Eta()) <= 2.5)){
+	if (innerHits2 == 0 && (fabs (Dcot2) >= 0.02 || fabs (Dist2) >= 0.02 ) && fabs (DeltaEtaTkClu2) < 0.007 && fabs (DeltaPhiTkClu2) < 0.03 && sigmaIeIe2 < 0.03 && HE2 < 0.025) eleEndCap2 = true;
+      }
+
+      if ((eleEndCap1 || eleBarrel1) && (eleEndCap2 || eleBarrel2)) candSel = true;
+
     }
 
     else if(typesel == "PatMuon"){
@@ -1777,7 +2094,10 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
       if (eventdiffZ->GetPatMuon1Charge()*eventdiffZ->GetPatMuon2Charge()==-1) charge = true;
       if (eventdiffZ->GetPatDiMuonMass() > 60. && eventdiffZ->GetPatDiMuonMass() < 110.) dimass = true;
       if (eventdiffZ->GetPatNMuon() > 1) nSel = true; 
-      if (eventdiffZ->GetPatMuon1relIsoDr03() < 0.05 || eventdiffZ->GetPatMuon2relIsoDr03() < 0.05 ) isolation = true;
+      if (eventdiffZ->GetPatMuon1SumPtR03() < 3 && eventdiffZ->GetPatMuon2SumPtR03() < 3 ) {
+	candSel = true;
+	isolation = true;
+      }
     }
 
     else{
@@ -1796,9 +2116,11 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
 	if(trigger && vertex && presel && nSel) FillHistos(3,pileup,totalcommon);
 	if(trigger && vertex && presel && nSel && charge) FillHistos(4,pileup,totalcommon);
 	if(trigger && vertex && presel && nSel && charge && dimass) FillHistos(5,pileup,totalcommon);
-	if(trigger && vertex && presel && nSel && charge && dimass && diffsel) FillHistos(6,pileup,totalcommon);
-	if(trigger && vertex && presel && nSel && charge && dimass && diffsel && isolation){
-	  FillHistos(7,pileup,totalcommon);
+	if(trigger && vertex && presel && nSel && charge && dimass && isolation) FillHistos(6,pileup,totalcommon);
+	if(trigger && vertex && presel && nSel && charge && dimass && isolation && candSel) FillHistos(7,pileup,totalcommon);
+	if(trigger && vertex && presel && nSel && charge && dimass && isolation && candSel && diffsel) FillHistos(8,pileup,totalcommon);
+	if(trigger && vertex && presel && nSel && charge && dimass && isolation && candSel && diffsel && castorgap){
+	  FillHistos(9,pileup,totalcommon);
 	  outstring << eventdiff->GetRunNumber() << ":" << eventdiff->GetLumiSection() << ":" << eventdiff->GetEventNumber() << std::endl;
 	}
       }
@@ -1810,8 +2132,11 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
 	if(vertex && presel && nSel) FillHistos(3,pileup,totalcommon);
 	if(vertex && presel && nSel && charge) FillHistos(4,pileup,totalcommon);
 	if(vertex && presel && nSel && charge && dimass) FillHistos(5,pileup,totalcommon);
-	if(vertex && presel && nSel && charge && dimass && diffsel) FillHistos(6,pileup,totalcommon);
-	if(vertex && presel && nSel && charge && dimass && diffsel && isolation) FillHistos(7,pileup,totalcommon);
+	if(vertex && presel && nSel && charge && dimass && isolation) FillHistos(6,pileup,totalcommon);
+	if(vertex && presel && nSel && charge && dimass && isolation && candSel) FillHistos(7,pileup,totalcommon);
+	if(vertex && presel && nSel && charge && dimass && isolation && candSel && diffsel) FillHistos(8,pileup,totalcommon);
+	if(vertex && presel && nSel && charge && dimass && isolation && candSel && diffsel && castorgap) FillHistos(9,pileup,totalcommon);
+
       }
 
       else {

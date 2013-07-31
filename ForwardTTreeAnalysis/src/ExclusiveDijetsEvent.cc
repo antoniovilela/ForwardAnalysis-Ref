@@ -16,7 +16,9 @@ void ExclusiveDijetsEvent::reset(){
   nPileUpBxp1_ = -1;
   nVertex_=  -1;
   lumiWeight_ = 999.;
-  nTracksNonCone_ = -999.;
+  nTracksNonCone_ = -999;
+  nTracksTransverse_ = -999;
+  nTracksOutsideJets_ = -999;
 
   leadingJetPt_= 999.;
   leadingJetEta_= 999.;
