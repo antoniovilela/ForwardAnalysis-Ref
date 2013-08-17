@@ -209,42 +209,29 @@ void TriggerEff::Run(std::string filein_, std::string savehistofile_, std::strin
 
       for (int i=0; i < 4; i++ ){
 
-	if(i==0) etacut = 4.;
-	if(i==1) etacut = 3.;
-	if(i==2) etacut = 2.;
-	if(i==3) etacut = 1.;
+	if((eventexcl->GetLeadingJetPt() > 30.)){
+	  if(eventexcl->GetNVertex() > 0 && eventexcl->GetNVertex()<= 1){         
+	    counter[i+2]++;
+	    m_hVector_Evt_lumis.at(i+2)->Fill(eventinfo->GetInstLumiBunch());
+	    m_hVector_Eff_lumis.at(i+2)->Fill(eventinfo->GetInstLumiBunch());
+	    m_hVector_Evt_pfetamax.at(i+2)->Fill(eventdiff->GetEtaMaxFromPFCands());
+	    m_hVector_Evt_pfetamin.at(i+2)->Fill(eventdiff->GetEtaMinFromPFCands());
 
-	if(eventdiff->GetEtaMinFromPFCands() < -990. && eventdiff->GetEtaMaxFromPFCands() < -990.) gap = true;
-	if((eventexcl->GetLeadingJetPt() > 60. && eventexcl->GetSecondJetPt() > 60.)){
-	  if(deltaphi_>M_PI) deltaphi_=2.0*M_PI-deltaphi_;
-	  if(deltaphi_>0.5*M_PI) {
-	    if((eventdiff->GetSumEnergyHFPlus() < 30 && eventdiff->GetSumEnergyHFMinus() < 30) || (gap)){
-	      if ( !castor || (castor && (eventdiff->GetSumETotCastor() < 400) )){
-		if(eventexcl->GetNVertex() > 0 && eventexcl->GetNVertex()<= 1){         
-		  if( (eventdiff->GetEtaMinFromPFCands() > -etacut && eventdiff->GetEtaMaxFromPFCands() < etacut ) || (gap) ){
-
-		    counter[i+2]++;
-		    m_hVector_Evt_lumis.at(i+2)->Fill(eventinfo->GetInstLumiBunch());
-		    m_hVector_Eff_lumis.at(i+2)->Fill(eventinfo->GetInstLumiBunch());
-		    m_hVector_Evt_pfetamax.at(i+2)->Fill(eventdiff->GetEtaMaxFromPFCands());
-		    m_hVector_Evt_pfetamin.at(i+2)->Fill(eventdiff->GetEtaMinFromPFCands());
-
-		    if(eventexcl->GetHLTPath(optTrigger)){
-		      counter[i+6]++;
-		      m_hVector_Evt_lumis.at(i+6)->Fill(eventinfo->GetInstLumiBunch());
-		      m_hVector_Eff_lumis.at(i+6)->Fill(eventinfo->GetInstLumiBunch());
-		      m_hVector_Evt_pfetamax.at(i+6)->Fill(eventdiff->GetEtaMaxFromPFCands());
-		      m_hVector_Evt_pfetamin.at(i+6)->Fill(eventdiff->GetEtaMinFromPFCands());
-		    } 	
-		  }
-		} 
-	      }
-	    }
+	    if(eventexcl->GetHLTPath(optTrigger)){
+	      counter[i+6]++;
+	      m_hVector_Evt_lumis.at(i+6)->Fill(eventinfo->GetInstLumiBunch());
+	      m_hVector_Eff_lumis.at(i+6)->Fill(eventinfo->GetInstLumiBunch());
+	      m_hVector_Evt_pfetamax.at(i+6)->Fill(eventdiff->GetEtaMaxFromPFCands());
+	      m_hVector_Evt_pfetamin.at(i+6)->Fill(eventdiff->GetEtaMinFromPFCands());
+	    } 	
 	  }
-	}  
+	} 
       }
     }
   }
+
+
+
 
   //Scalling Plots
   for (int k=0; k<10; k++){

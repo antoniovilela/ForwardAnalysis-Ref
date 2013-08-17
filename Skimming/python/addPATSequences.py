@@ -21,7 +21,13 @@ def addPATSequences(process,runMC):
 	jetCorrections = ('AK5PFchs', ['L1FastJet','L2Relative','L3Absolute','L2L3Residual'])
 
     usePF2PAT(process,runPF2PAT=True,
-                      jetAlgo=jetAlgo, runOnMC=runMC, postfix=postfix,jetCorrections=jetCorrections) 
+                      jetAlgo=jetAlgo, runOnMC=runMC, postfix=postfix,jetCorrections=jetCorrections)
+
+    #from PhysicsTools.PatAlgos.tools.coreTools import removeMCMatching
+    #if not runMC:
+    #    removeMCMatching(process, ['All'],"")
+
+ 
     #-----------------Customization----------------
     process.pfPileUpPFlow.Enable = True
     process.pfPileUpPFlow.checkClosestZVertex = False
@@ -59,10 +65,20 @@ def addPATSequences(process,runMC):
     # Switch on PAT trigger
     from PhysicsTools.PatAlgos.tools.trigTools import switchOnTrigger
     #switchOnTrigger( process,triggerProducer = 'patTrigger', triggerEventProducer = 'patTriggerEvent', sequence = 'patPF2PATSequence',hltProcess = 'HLT', outputModule = 'out')
+    
     switchOnTrigger( process ,sequence ='patPF2PATSequence'+postfix)
     process.patTrigger.addL1Algos = cms.bool( True )
     switchOnTrigger( process ,sequence = 'patPF2PATSequence'+postfix) # to fix event content
     #-------------------------------------------------------------------------------------------------------------
+    
+    # Add modules to default sequence
+    #if runMC:
+    #    getattr(process, "patElectrons"+postfix).embedGenMatch = True
+    #    getattr(process, "patMuons"+postfix).embedGenMatch = True
+    #else:
+    #    getattr(process, "patElectrons"+postfix).embedGenMatch = False
+    #    getattr(process, "patMuons"+postfix).embedGenMatch = False
+
     # Add modules to default sequence
     getattr(process,"patPF2PATSequence"+postfix).replace(
 	getattr(process,"pfNoElectron"+postfix),
