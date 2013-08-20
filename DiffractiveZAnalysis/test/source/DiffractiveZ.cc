@@ -384,6 +384,7 @@ void DiffractiveZ::CreateHistos(std::string type){
 
     m_hVector_RunNumber.push_back( std::vector<TH1I*>() );
     m_hVector_RunNumberZeroCastor.push_back( std::vector<TH1I*>() );
+    m_hVector_RunNumberHighCastor.push_back( std::vector<TH1I*>() );
 
     for (int k=0;k<nloop;k++){
 
@@ -1481,13 +1482,18 @@ void DiffractiveZ::CreateHistos(std::string type){
 
       char name218[300];
       sprintf(name218,"RunNumber_%s_%s",tag,Folders.at(j).c_str());
-      TH1I *histo_RunNumber = new TH1I(name218,"Run Number; Run Number; N Event",31000,124000,155000);
+      TH1I *histo_RunNumber = new TH1I(name218,"Run Number; Run Number; N Event",16000,134000,150000);
       m_hVector_RunNumber[j].push_back(histo_RunNumber);
 
       char name219[300];
       sprintf(name219,"RunNumberZeroCastor_%s_%s",tag,Folders.at(j).c_str());
-      TH1I *histo_RunNumberZeroCastor = new TH1I(name219,"Run Number; Run Number; N Event",31000,124000,155000);
+      TH1I *histo_RunNumberZeroCastor = new TH1I(name219,"Run Number; Run Number; N Event",16000,134000,150000);
       m_hVector_RunNumberZeroCastor[j].push_back(histo_RunNumberZeroCastor);
+
+      char name220[300];
+      sprintf(name220,"RunNumberHighCastor_%s_%s",tag,Folders.at(j).c_str());
+      TH1I *histo_RunNumberHighCastor = new TH1I(name220,"Run Number; Run Number; N Event",16000,134000,150000);
+      m_hVector_RunNumberHighCastor[j].push_back(histo_RunNumberHighCastor);
 
       // Castor Sector Plots
       char name_sector1[300];
@@ -1876,6 +1882,7 @@ void DiffractiveZ::FillHistos(int index, int pileup, double totalweight){
   m_hVector_CastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,totalweight);
   m_hVector_CastorMultiplicityVsLumi[index].at(pileup)->Fill(eventinfo->GetInstLumiBunch(),SectorCastorHit,totalweight);
   if (SectorCastorHit < 1) m_hVector_RunNumberZeroCastor[index].at(pileup)->Fill(eventdiff->GetRunNumber());
+  if (SectorCastorHit > 15) m_hVector_RunNumberHighCastor[index].at(pileup)->Fill(eventdiff->GetRunNumber());
   m_hVector_RunNumber[index].at(pileup)->Fill(eventdiff->GetRunNumber());
 
   for (k=0; k<eventdiffZ->GetEachTowerCounter();k++){
@@ -2204,11 +2211,12 @@ void DiffractiveZ::SaveHistos(std::string type){
 
       m_hVector_EnergyHFMinusVsCastorTProf[j].at(i)->Write();
       m_hVector_EnergyHFPlusVsCastorTProf[j].at(i)->Write();
- 
+
       m_hVector_sumECastorAndHFMinus[j].at(i)->Write();
       m_hVector_CastorMultiplicity[j].at(i)->Write();
       m_hVector_CastorMultiplicityVsLumi[j].at(i)->Write();
 
+      m_hVector_RunNumberHighCastor[j].at(i)->Write();
       m_hVector_RunNumberZeroCastor[j].at(i)->Write();
       m_hVector_RunNumber[j].at(i)->Write();
 
@@ -2418,6 +2426,8 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
     bool isolation = false;
     bool ZKinN = false;
     bool ZKinP = false;
+
+    //if(eventdiff->GetRunNumber() == 146709 || eventdiff->GetRunNumber() == 146710 || eventdiff->GetRunNumber() == 146711 || eventdiff->GetRunNumber() == 146715 || eventdiff->GetRunNumber() == 146726) continue;
 
     if (switchtrigger == "trigger_all_electron"){
       if (eventdiffZ->GetHLTPath(0) || eventdiffZ->GetHLTPath(1) || eventdiffZ->GetHLTPath(2) || eventdiffZ->GetHLTPath(3) || eventdiffZ->GetHLTPath(4) || eventdiffZ->GetHLTPath(5) || eventdiffZ->GetHLTPath(6)) trigger = true;

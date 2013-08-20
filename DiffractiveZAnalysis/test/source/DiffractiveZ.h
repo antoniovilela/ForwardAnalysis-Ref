@@ -343,6 +343,7 @@ class DiffractiveZ {
 
   std::vector<std::vector<TH1I*> > m_hVector_RunNumber;
   std::vector<std::vector<TH1I*> > m_hVector_RunNumberZeroCastor;
+  std::vector<std::vector<TH1I*> > m_hVector_RunNumberHighCastor;
 
   std::vector <std::string> Folders;
 
