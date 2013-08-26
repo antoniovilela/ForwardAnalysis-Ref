@@ -11,6 +11,9 @@
   <class name="PATHLTTrigger"/>
   <class name="std::vector<PATL1Trigger>"/>
   <class name="std::vector<PATHLTTrigger>"/>
+  <class name="PFCandInfoEvent"/> 
+  <class name="PFCand"/> 
+  <class name="std::vector<PFCand>"/>
   <class name="edm::Wrapper<DiffractiveEvent>"/>
   <class name="edm::Wrapper<DiffractiveZEvent>"/>
   <class name="edm::Wrapper<ExclusiveDijetsEvent>"/>
@@ -22,5 +25,8 @@
   <class name="edm::Wrapper<PATHLTTrigger>"/>
   <class name="edm::Wrapper<std::vector<PATL1Trigger> >"/>
   <class name="edm::Wrapper<std::vector<PATHLTTrigger> >"/>
+  <class name="edm::Wrapper<PFCandInfoEvent>"/>
+  <class name="edm::Wrapper<PFCand>"/>
+  <class name="edm::Wrapper<std::vector<PFCand> >"/>
 </selection>
 </lcgdict>
