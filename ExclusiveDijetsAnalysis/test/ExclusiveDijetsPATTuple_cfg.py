@@ -17,7 +17,7 @@ config.globalTagNameMC = 'START42_V17D::All'
 config.comEnergy = 7000.0
 config.trackAnalyzerName = 'trackHistoAnalyzer'
 config.trackTagName = 'analysisTracks'
-config.NumberOfEvents = 1000
+config.NumberOfEvents = 300
 config.TriggerOn = True
 
 #
@@ -119,7 +119,7 @@ from ForwardAnalysis.ForwardTTreeAnalysis.DiffractiveAnalysis_cfi import Diffrac
 from ForwardAnalysis.ForwardTTreeAnalysis.ExclusiveDijetsAnalysis_cfi import ExclusiveDijetsAnalysis
 from ForwardAnalysis.ForwardTTreeAnalysis.PATTriggerInfo_cfi import PATTriggerInfo
 from ForwardAnalysis.ForwardTTreeAnalysis.DijetsTriggerAnalysis_cfi import DijetsTriggerAnalysis  
-
+from ForwardAnalysis.ForwardTTreeAnalysis.PFCandInfo_cfi import PFCandInfo
 
 #PATTriggerInfo.L1AlgoBitName =  config.l1Paths 
 PATTriggerInfo.HLTAlgoBitName = config.hltPaths 
@@ -129,14 +129,15 @@ PATTriggerInfo.runALLTriggerPath = True
 # Module with EventInfo + DiffractiveAnalysis + ExclusiveDijets 
 #
 
-process.exclusiveDijetsAnalysisTTree = cms.EDAnalyzer("EventInfoDiffractiveExclusiveDijetsAnalysisTTree",
+process.exclusiveDijetsAnalysisTTree = cms.EDAnalyzer("EventInfoPFCandInfoDiffractiveExclusiveDijetsAnalysisTTree",
 	EventInfo = cms.PSet(
                     RunOnData = cms.untracked.bool(not config.runOnMC),
                     RunWithMCPU = cms.untracked.bool(config.runPUMC),
                     RunWithWeightGen = cms.untracked.bool(config.runGen)
 	),
 	DiffractiveAnalysis = DiffractiveAnalysis,
-        ExclusiveDijetsAnalysis = ExclusiveDijetsAnalysis
+        ExclusiveDijetsAnalysis = ExclusiveDijetsAnalysis,
+        PFCandInfo = PFCandInfo
         )
 
 process.exclusiveDijetsHLTFilter.HLTPaths = config.hltPaths 
@@ -165,6 +166,17 @@ process.exclusiveDijetsAnalysisTTree.ExclusiveDijetsAnalysis.PFlowThresholds.Tra
 process.exclusiveDijetsAnalysisTTree.ExclusiveDijetsAnalysis.PFlowThresholds.Forward.hadronHF.energy = 7.0
 process.exclusiveDijetsAnalysisTTree.ExclusiveDijetsAnalysis.PFlowThresholds.Forward.emHF.energy = 7.0
 
+process.exclusiveDijetsAnalysisTTreePFShiftedUp = process.exclusiveDijetsAnalysisTTree.clone()
+process.exclusiveDijetsAnalysisTTreePFShiftedUp.DiffractiveAnalysis.particleFlowTag = "pfCandidateNoiseThresholdsShiftedUp"
+process.exclusiveDijetsAnalysisTTreePFShiftedUp.DiffractiveAnalysis.edmNtupleEtaMaxTag = "edmNtupleEtaMaxShiftedUp"
+process.exclusiveDijetsAnalysisTTreePFShiftedUp.DiffractiveAnalysis.edmNtupleEtaMinTag = "edmNtupleEtaMinShiftedUp"
+process.exclusiveDijetsAnalysisTTreePFShiftedUp.ExclusiveDijetsAnalysis.ParticleFlowTag = "pfCandidateNoiseThresholdsShiftedUp"
+
+process.exclusiveDijetsAnalysisTTreePFShiftedDown = process.exclusiveDijetsAnalysisTTree.clone()
+process.exclusiveDijetsAnalysisTTreePFShiftedDown.DiffractiveAnalysis.particleFlowTag = "pfCandidateNoiseThresholdsShiftedDown"
+process.exclusiveDijetsAnalysisTTreePFShiftedDown.DiffractiveAnalysis.edmNtupleEtaMaxTag = "edmNtupleEtaMaxShiftedDown"
+process.exclusiveDijetsAnalysisTTreePFShiftedDown.DiffractiveAnalysis.edmNtupleEtaMinTag = "edmNtupleEtaMinShiftedDown"
+process.exclusiveDijetsAnalysisTTreePFShiftedDown.ExclusiveDijetsAnalysis.ParticleFlowTag = "pfCandidateNoiseThresholdsShiftedDown"
 
 
 
@@ -181,16 +193,23 @@ if config.runOnMC:
 else:
      process.exclusiveDijetsAnalysisTTree.DiffractiveAnalysis.accessMCInfo = False 
      process.exclusiveDijetsAnalysisTTree.ExclusiveDijetsAnalysis.AccessMCInfo = False 
+     process.exclusiveDijetsAnalysisTTreePFShiftedUp.DiffractiveAnalysis.accessMCInfo = False
+     process.exclusiveDijetsAnalysisTTreePFShiftedUp.ExclusiveDijetsAnalysis.AccessMCInfo = False
+     process.exclusiveDijetsAnalysisTTreePFShiftedDown.DiffractiveAnalysis.accessMCInfo = False
+     process.exclusiveDijetsAnalysisTTreePFShiftedDown.ExclusiveDijetsAnalysis.AccessMCInfo = False
+
+
+
 
 #
 # Run Path. 
 # If TriggerOn = True (Run with trigger)
 #
 
-process.analysis_reco_step = cms.Path(process.analysisSequences)
+#process.analysis_reco_step = cms.Path(process.analysisSequences)
 process.castor_step = cms.Path(process.castorSequence)
 
-
+"""
 if config.TriggerOn:
     process.analysis_diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree_step = cms.Path(
     process.eventSelectionHLT + process.exclusiveDijetsAnalysisTTree)
@@ -198,4 +217,12 @@ if config.TriggerOn:
 else: 
     process.analysis_diffractiveExclusiveDijetsAnalysisPATTriggerInfoTTree_step = cms.Path(
     process.eventSelection + process.exclusiveDijetsAnalysisTTree)
+"""
+if config.TriggerOn:
+    process.analysis_diffractiveExclusiveDijetsAnalysisPATTriggerInfoShiftedUpTTree_step = cms.Path(
+    process.analysisSequencesShiftedUp + process.analysisSequencesShiftedDown + process.analysisSequences + process.eventSelectionHLT +
+    process.exclusiveDijetsAnalysisTTreePFShiftedUp + process.exclusiveDijetsAnalysisTTreePFShiftedDown + process.exclusiveDijetsAnalysisTTree)
 
+else:
+    process.analysis_diffractiveExclusiveDijetsAnalysisPATTriggerInfoShiftedUpTTree_step = cms.Path(
+    process.analysisSequencesShiftedUp + process.analysisSequencesShiftedDown + process.analysisSequences + process.eventSelection + process.exclusiveDijetsAnalysisTTreePFShiftedUp + process.exclusiveDijetsAnalysisTTreePFShiftedDown + process.exclusiveDijetsAnalysisTTree)
