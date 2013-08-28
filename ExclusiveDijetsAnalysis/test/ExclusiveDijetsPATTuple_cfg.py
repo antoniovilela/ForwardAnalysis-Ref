@@ -8,7 +8,7 @@ class config: pass
 config.verbose = True
 config.writeEdmOutput = False
 config.outputTTreeFile = 'ExclusiveDijetsPATTuple.root'
-config.runOnMC = False
+config.runOnMC = True
 config.runPATSequences = True
 config.usePAT = False
 config.globalTagNameData = 'GR_R_42_V23::All' 
@@ -18,7 +18,7 @@ config.comEnergy = 7000.0
 config.trackAnalyzerName = 'trackHistoAnalyzer'
 config.trackTagName = 'analysisTracks'
 config.NumberOfEvents = 300
-config.TriggerOn = True
+config.TriggerOn = False
 
 #
 # Define Triggers and Input Files
@@ -27,12 +27,15 @@ config.TriggerOn = True
 if config.runOnMC:
     config.l1Paths = ('L1_ZeroBias','L1_BptxMinus_NotBptxPlus','L1_SingleJet30U')
     config.hltPaths =('HLT_Jet30_v1','HLT_Jet30_v2','HLT_Jet30_v3','HLT_Jet30_v4','HLT_Jet30_v5','HLT_Jet30_v6')
-    config.inputFileName = '/storage1/dmf/PrivateMCProduction/July2012Prod/Pythia/CMSSW_4_2_8_lowpupatch1/src/QCD_Pt_15to3000_TuneZ2_Flat_7TeV_pythia6_cff_py_RAW2DIGI_L1Reco_RECO_inRECOSIM.root'
+    #config.inputFileName = '/storage1/dmf/PrivateMCProduction/July2012Prod/Pythia/CMSSW_4_2_8_lowpupatch1/src/QCD_Pt_15to3000_TuneZ2_Flat_7TeV_pythia6_cff_py_RAW2DIGI_L1Reco_RECO_inRECOSIM.root'
+    config.inputFileName = '/storage1/dmf/TestSamples/PYTHIA6_QCD_15to3000_private_SL_RECO/QCD_Pt_15to3000_TuneZ2_Flat_7TeV_pythia6_cff_py_RAW2DIGI_L1Reco_RECO_233_3_nsm.root'
     config.runPUMC = True  # MC With PU
     config.runGen = True   # MC With Weight
 else:
     config.l1Paths = ('L1_SingleJet36','L1_SingleJet16','L1_DoubleJetC56')
-    config.hltPaths = ('HLT_DiJetAve15U','HLT_DiJetAve30U','HLT_DiJetAve50U','HLT_ExclDiJet30U_HFAND_v*','HLT_ExclDiJet30U_HFOR_v*')
+    #config.hltPaths = ('HLT_DiJetAve15U','HLT_DiJetAve30U','HLT_DiJetAve50U','HLT_ExclDiJet30U_HFAND_v*','HLT_ExclDiJet30U_HFOR_v*')
+    config.hltPaths =('HLT_Jet15U_v*', 'HLT_Jet30U_v*', 'HLT_Jet50U_v*', 'HLT_ExclDiJet30U_HFOR_v*', 'HLT_ExclDiJet30U_HFAND_v*', 'HLT_DiJetAve15U_v*', 'HLT_DiJetAve30U_v*', 'HLT_DiJetAve50U_v*' )
+    #config.hltPaths =('HLT_Jet15U', 'HLT_Jet30U', 'HLT_Jet50U','HLT_DiJetAve15U','HLT_DiJetAve30U','HLT_DiJetAve50U','HLT_ExclDiJet30U_HFAND_v*','HLT_ExclDiJet30U_HFOR_v*')
     config.inputFileName = '/storage2/antoniov/data1/MultiJet_Run2010B_Apr21ReReco-v1_AOD/MultiJet_Run2010B_Apr21ReReco-v1_AOD_7EA7B611-7371-E011-B164-002354EF3BDB.root'
     config.runPUMC = False
     config.runGen = False
