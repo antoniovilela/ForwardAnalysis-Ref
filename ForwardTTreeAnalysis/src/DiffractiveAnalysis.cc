@@ -633,7 +633,7 @@ void DiffractiveAnalysis::fillCastorInfo(DiffractiveEvent& eventData, const edm:
 
   }
 
-  /*
+/*
      for (int isec = 0; isec < 16;isec++) {
 // 4 sigma for threshold.
 if (sumCastorTower[isec] > 4.*castorThreshold_) accept[isec]=true;
