@@ -90,6 +90,8 @@ class DiffractiveZ {
   double y_temp;
   double num_x_centroid;
   double num_y_centroid;
+  double num_phi;
+  double phi_average;
 
   std::vector<std::vector<TH1F*> > m_hVector_DiElectronMass;
   std::vector<std::vector<TH1F*> > m_hVector_DiElectronEta;
@@ -469,6 +471,7 @@ class DiffractiveZ {
   std::vector<std::vector<TH1F*> >  m_hVector_sumEHFminusBin13To16;
 
   std::vector<std::vector<TH2F*> > m_hVector_histo_castor_centroid;
+  std::vector<std::vector<TH1F*> > m_hVector_histo_castor_centroid_phi;
 
   std::vector <std::string> Folders;
 

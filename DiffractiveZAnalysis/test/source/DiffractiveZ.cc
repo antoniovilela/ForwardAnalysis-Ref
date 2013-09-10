@@ -33,6 +33,7 @@ using namespace diffractiveZAnalysis;
 using namespace eventInfo;
 using namespace reweight;
 
+#define PI 3.14159265
 
 static inline void loadBar(int x, int n, int r, int w)
 {
@@ -503,6 +504,7 @@ void DiffractiveZ::CreateHistos(std::string type){
     m_hVector_sumEHFminusBin13To16.push_back( std::vector<TH1F*>() );
 
     m_hVector_histo_castor_centroid.push_back( std::vector<TH2F*>() );
+    m_hVector_histo_castor_centroid_phi.push_back( std::vector<TH1F*>() );
 
     for (int k=0;k<nloop;k++){
 
@@ -2234,6 +2236,11 @@ void DiffractiveZ::CreateHistos(std::string type){
       TH2F *histo_castor_centroid = new TH2F(castor_centroid,"Castor Centroid Energy; x[cm]; y[cm]",30,-15,15,30,-15,15);
       m_hVector_histo_castor_centroid[j].push_back(histo_castor_centroid);
 
+      char castor_centroid_phi[300];
+      sprintf(castor_centroid_phi,"CastorCentroidPhi_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_castor_centroid_phi = new TH1F(castor_centroid_phi,"Castor Centroid Energy; Sector(<#phi>)_i; NEvents",4000,0,4000);
+      m_hVector_histo_castor_centroid_phi[j].push_back(histo_castor_centroid_phi);
+
     }
   }
 }
@@ -2401,10 +2408,15 @@ void DiffractiveZ::FillHistos(int index, int pileup, double totalweight){
   sumCastorAndHFMinusEnergy = 0.;
   SectorCastorHit = 0.;
   SectorZeroCastorCounter = 0.;
+  num_phi = 0.;
   num_x_centroid = 0;
   num_y_centroid = 0.;
   x_temp = 0.;
   y_temp = 0.;
+  x_centroid = 0.;
+  y_centroid = 0.;
+  phi_average = 0.;
+
   double castorId[16] = {11.25,33.75,56.25,78.75,101.25,123.75,146.25,168.75,191.25,213.75,236.25,258.75,281.25,303.75,326.75,348.75};
   for (l=0; l<16;l++){
     if (eventdiffZ->GetCastorTowerEnergy(l) > 4.*0.364){
@@ -2413,8 +2425,9 @@ void DiffractiveZ::FillHistos(int index, int pileup, double totalweight){
       m_hVector_ECastorSectorTProf[index].at(pileup)->Fill(l+1,eventdiffZ->GetCastorTowerEnergy(l),totalweight);
       m_hVector_ECastorSectorBin1D[index].at(pileup)->Fill(l+1,eventdiffZ->GetCastorTowerEnergy(l)*totalweight);
       sumCastorEnergy+=eventdiffZ->GetCastorTowerEnergy(l);
-      x_temp = 15*cos(castorId[l]);
-      y_temp = 15*sin(castorId[l]);
+      x_temp = 15*cos(castorId[l]*PI/180.0);
+      y_temp = 15*sin(castorId[l]*PI/180.0);
+      num_phi += castorId[l]*eventdiffZ->GetCastorTowerEnergy(l);
       num_x_centroid += x_temp*eventdiffZ->GetCastorTowerEnergy(l);
       num_y_centroid += y_temp*eventdiffZ->GetCastorTowerEnergy(l);
     }
@@ -2425,14 +2438,17 @@ void DiffractiveZ::FillHistos(int index, int pileup, double totalweight){
       sumCastorEnergy+=0;
       ++SectorZeroCastorCounter;
       num_x_centroid += 0;
-      num_y_centroid += 0;      
+      num_y_centroid += 0;
+      num_phi += 0;      
     }
   }
 
   if (sumCastorEnergy > 0.){
     x_centroid = num_x_centroid/sumCastorEnergy;
     y_centroid = num_y_centroid/sumCastorEnergy;
+    phi_average = num_phi/sumCastorEnergy;
     m_hVector_histo_castor_centroid[index].at(pileup)->Fill(x_centroid,y_centroid);
+    m_hVector_histo_castor_centroid_phi[index].at(pileup)->Fill(phi_average);
   }
 
   // Castor Energy per Sector
@@ -3386,6 +3402,7 @@ void DiffractiveZ::SaveHistos(std::string type){
       m_hVector_sumEHFminusBin13To16[j].at(i)->Write();
 
       m_hVector_histo_castor_centroid[j].at(i)->Write();
+      m_hVector_histo_castor_centroid_phi[j].at(i)->Write();
 
     }
   }
