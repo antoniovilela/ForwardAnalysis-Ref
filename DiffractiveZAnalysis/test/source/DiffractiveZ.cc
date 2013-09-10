@@ -162,9 +162,9 @@ void DiffractiveZ::CreateHistos(std::string type){
     m_hVector_sumEHEminus.push_back( std::vector<TH1F*>() );
     m_hVector_lumi.push_back( std::vector<TH1F*>() );
     m_hVector_asumE.push_back( std::vector<TH1F*>() );
-    m_hVector_multhf.push_back( std::vector<TH2D*>() );
-    m_hVector_etcalos_p.push_back( std::vector<TH2D*>() );
-    m_hVector_etcalos_n.push_back( std::vector<TH2D*>() );
+    m_hVector_multhf.push_back( std::vector<TH2F*>() );
+    m_hVector_etcalos_p.push_back( std::vector<TH2F*>() );
+    m_hVector_etcalos_n.push_back( std::vector<TH2F*>() );
     m_hVector_tracks.push_back( std::vector<TH1F*>() );
     m_hVector_pfetamax.push_back( std::vector<TH1F*>() );
     m_hVector_pfetamin.push_back( std::vector<TH1F*>() );
@@ -176,7 +176,7 @@ void DiffractiveZ::CreateHistos(std::string type){
     m_hVector_deltapTmuons.push_back( std::vector<TH1F*>() );
     m_hVector_deltaetaelectrons.push_back( std::vector<TH1F*>() );
     m_hVector_deltaetamuons.push_back( std::vector<TH1F*>() );
-    m_hVector_vertexvslumi.push_back( std::vector<TH2D*>() );
+    m_hVector_vertexvslumi.push_back( std::vector<TH2F*>() );
     m_hVector_patNElectron.push_back( std::vector<TH1F*>() );
     m_hVector_patElectron1Pt.push_back( std::vector<TH1F*>() );
     m_hVector_patElectron1Eta.push_back( std::vector<TH1F*>() );
@@ -274,27 +274,27 @@ void DiffractiveZ::CreateHistos(std::string type){
     m_hVector_SecondMuonrelIsoDr03.push_back( std::vector<TH1F*>() );
     m_hVector_SecondMuonrelIsoDr05.push_back( std::vector<TH1F*>() );
 
-    m_hVector_correlationElectron1Pt.push_back( std::vector<TH2D*>() );
-    m_hVector_correlationElectron1Eta.push_back( std::vector<TH2D*>() );
-    m_hVector_correlationElectron1Phi.push_back( std::vector<TH2D*>() );
-    m_hVector_correlationElectron1Iso.push_back( std::vector<TH2D*>() );
-    m_hVector_correlationMuon1Pt.push_back( std::vector<TH2D*>() );
-    m_hVector_correlationMuon1Eta.push_back( std::vector<TH2D*>() );
-    m_hVector_correlationMuon1Phi.push_back( std::vector<TH2D*>() );
-    m_hVector_correlationMuon1Iso.push_back( std::vector<TH2D*>() );
+    m_hVector_correlationElectron1Pt.push_back( std::vector<TH2F*>() );
+    m_hVector_correlationElectron1Eta.push_back( std::vector<TH2F*>() );
+    m_hVector_correlationElectron1Phi.push_back( std::vector<TH2F*>() );
+    m_hVector_correlationElectron1Iso.push_back( std::vector<TH2F*>() );
+    m_hVector_correlationMuon1Pt.push_back( std::vector<TH2F*>() );
+    m_hVector_correlationMuon1Eta.push_back( std::vector<TH2F*>() );
+    m_hVector_correlationMuon1Phi.push_back( std::vector<TH2F*>() );
+    m_hVector_correlationMuon1Iso.push_back( std::vector<TH2F*>() );
 
-    m_hVector_correlationElectron2Pt.push_back( std::vector<TH2D*>() );
-    m_hVector_correlationElectron2Eta.push_back( std::vector<TH2D*>() );
-    m_hVector_correlationElectron2Phi.push_back( std::vector<TH2D*>() );
-    m_hVector_correlationElectron2Iso.push_back( std::vector<TH2D*>() );
-    m_hVector_correlationMuon2Pt.push_back( std::vector<TH2D*>() );
-    m_hVector_correlationMuon2Eta.push_back( std::vector<TH2D*>() );
-    m_hVector_correlationMuon2Phi.push_back( std::vector<TH2D*>() );
-    m_hVector_correlationMuon2Iso.push_back( std::vector<TH2D*>() );
+    m_hVector_correlationElectron2Pt.push_back( std::vector<TH2F*>() );
+    m_hVector_correlationElectron2Eta.push_back( std::vector<TH2F*>() );
+    m_hVector_correlationElectron2Phi.push_back( std::vector<TH2F*>() );
+    m_hVector_correlationElectron2Iso.push_back( std::vector<TH2F*>() );
+    m_hVector_correlationMuon2Pt.push_back( std::vector<TH2F*>() );
+    m_hVector_correlationMuon2Eta.push_back( std::vector<TH2F*>() );
+    m_hVector_correlationMuon2Phi.push_back( std::vector<TH2F*>() );
+    m_hVector_correlationMuon2Iso.push_back( std::vector<TH2F*>() );
 
     m_hVector_sumECastorMinus.push_back( std::vector<TH1F*>() );
-    m_hVector_ECastorSector.push_back( std::vector<TH2D*>() );
-    m_hVector_ECaloVsEta.push_back( std::vector<TH2D*>() );
+    m_hVector_ECastorSector.push_back( std::vector<TH2F*>() );
+    m_hVector_ECaloVsEta.push_back( std::vector<TH2F*>() );
     m_hVector_ECastorSectorTProf.push_back( std::vector<TProfile*>() );
     m_hVector_ECaloVsEtaTProf.push_back( std::vector<TProfile*>() );
 
@@ -313,14 +313,14 @@ void DiffractiveZ::CreateHistos(std::string type){
     m_hVector_tracksOutpatMuonsCone05.push_back( std::vector<TH1F*>() );
     m_hVector_tracksOutpatElectronsCone05.push_back( std::vector<TH1F*>() );
 
-    m_hVector_LeadingElectronInnerHits.push_back( std::vector<TH1I*>() );
+    m_hVector_LeadingElectronInnerHits.push_back( std::vector<TH1F*>() );
     m_hVector_LeadingElectronDCot.push_back( std::vector<TH1F*>() );
     m_hVector_LeadingElectronDist.push_back( std::vector<TH1F*>() );
     m_hVector_LeadingElectronDeltaEtaTkClu.push_back( std::vector<TH1F*>() );
     m_hVector_LeadingElectronDeltaPhiTkClu.push_back( std::vector<TH1F*>() );
     m_hVector_LeadingElectronSigmaIeIe.push_back( std::vector<TH1F*>() );
     m_hVector_LeadingElectronHE.push_back( std::vector<TH1F*>() );
-    m_hVector_SecondElectronInnerHits.push_back( std::vector<TH1I*>() );
+    m_hVector_SecondElectronInnerHits.push_back( std::vector<TH1F*>() );
     m_hVector_SecondElectronDCot.push_back( std::vector<TH1F*>() );
     m_hVector_SecondElectronDist.push_back( std::vector<TH1F*>() );
     m_hVector_SecondElectronDeltaEtaTkClu.push_back( std::vector<TH1F*>() );
@@ -375,23 +375,141 @@ void DiffractiveZ::CreateHistos(std::string type){
     m_hVector_TotalEnergyCastor_sector15.push_back( std::vector<TH1F*>() );
     m_hVector_TotalEnergyCastor_sector16.push_back( std::vector<TH1F*>() );
 
+    m_hVector_TotalEnergyCastor_Before_sector1.push_back( std::vector<TH1F*>() );
+    m_hVector_TotalEnergyCastor_Before_sector2.push_back( std::vector<TH1F*>() );
+    m_hVector_TotalEnergyCastor_Before_sector3.push_back( std::vector<TH1F*>() );
+    m_hVector_TotalEnergyCastor_Before_sector4.push_back( std::vector<TH1F*>() );
+    m_hVector_TotalEnergyCastor_Before_sector5.push_back( std::vector<TH1F*>() );
+    m_hVector_TotalEnergyCastor_Before_sector6.push_back( std::vector<TH1F*>() );
+    m_hVector_TotalEnergyCastor_Before_sector7.push_back( std::vector<TH1F*>() );
+    m_hVector_TotalEnergyCastor_Before_sector8.push_back( std::vector<TH1F*>() );
+    m_hVector_TotalEnergyCastor_Before_sector9.push_back( std::vector<TH1F*>() );
+    m_hVector_TotalEnergyCastor_Before_sector10.push_back( std::vector<TH1F*>() );
+    m_hVector_TotalEnergyCastor_Before_sector11.push_back( std::vector<TH1F*>() );
+    m_hVector_TotalEnergyCastor_Before_sector12.push_back( std::vector<TH1F*>() );
+    m_hVector_TotalEnergyCastor_Before_sector13.push_back( std::vector<TH1F*>() );
+    m_hVector_TotalEnergyCastor_Before_sector14.push_back( std::vector<TH1F*>() );
+    m_hVector_TotalEnergyCastor_Before_sector15.push_back( std::vector<TH1F*>() );
+    m_hVector_TotalEnergyCastor_Before_sector16.push_back( std::vector<TH1F*>() );
+
+    m_hVector_TotalEnergyCastor_After_sector1.push_back( std::vector<TH1F*>() );
+    m_hVector_TotalEnergyCastor_After_sector2.push_back( std::vector<TH1F*>() );
+    m_hVector_TotalEnergyCastor_After_sector3.push_back( std::vector<TH1F*>() );
+    m_hVector_TotalEnergyCastor_After_sector4.push_back( std::vector<TH1F*>() );
+    m_hVector_TotalEnergyCastor_After_sector5.push_back( std::vector<TH1F*>() );
+    m_hVector_TotalEnergyCastor_After_sector6.push_back( std::vector<TH1F*>() );
+    m_hVector_TotalEnergyCastor_After_sector7.push_back( std::vector<TH1F*>() );
+    m_hVector_TotalEnergyCastor_After_sector8.push_back( std::vector<TH1F*>() );
+    m_hVector_TotalEnergyCastor_After_sector9.push_back( std::vector<TH1F*>() );
+    m_hVector_TotalEnergyCastor_After_sector10.push_back( std::vector<TH1F*>() );
+    m_hVector_TotalEnergyCastor_After_sector11.push_back( std::vector<TH1F*>() );
+    m_hVector_TotalEnergyCastor_After_sector12.push_back( std::vector<TH1F*>() );
+    m_hVector_TotalEnergyCastor_After_sector13.push_back( std::vector<TH1F*>() );
+    m_hVector_TotalEnergyCastor_After_sector14.push_back( std::vector<TH1F*>() );
+    m_hVector_TotalEnergyCastor_After_sector15.push_back( std::vector<TH1F*>() );
+    m_hVector_TotalEnergyCastor_After_sector16.push_back( std::vector<TH1F*>() );
+
+    m_hVector_RunNumberHighCastorBefore.push_back( std::vector<TH1F*>() );
+    m_hVector_RunNumberZeroCastorBefore.push_back( std::vector<TH1F*>() );
+    m_hVector_RunNumberBefore.push_back( std::vector<TH1F*>() );
+
+    m_hVector_RunNumberHighCastorAfter.push_back( std::vector<TH1F*>() );
+    m_hVector_RunNumberZeroCastorAfter.push_back( std::vector<TH1F*>() );
+    m_hVector_RunNumberAfter.push_back( std::vector<TH1F*>() );
+
+    m_hVector_RunNumber.push_back( std::vector<TH1F*>() );
+    m_hVector_RunNumberZeroCastor.push_back( std::vector<TH1F*>() );
+    m_hVector_RunNumberHighCastor.push_back( std::vector<TH1F*>() );
+
     m_hVector_EnergyHFMinusVsCastorTProf.push_back( std::vector<TProfile*>() );
     m_hVector_EnergyHFPlusVsCastorTProf.push_back( std::vector<TProfile*>() );
 
     m_hVector_sumECastorAndHFMinus.push_back( std::vector<TH1F*>() );
-    m_hVector_CastorMultiplicity.push_back( std::vector<TH1I*>() );
-    m_hVector_CastorMultiplicityVsLumi.push_back( std::vector<TH2D*>() );
+    m_hVector_CastorMultiplicity.push_back( std::vector<TH1F*>() );
+    m_hVector_CastorMultiplicityAfter.push_back( std::vector<TH1F*>() );
+    m_hVector_CastorMultiplicityBefore.push_back( std::vector<TH1F*>() );
+    m_hVector_CastorMultiplicityVsLumi.push_back( std::vector<TH2F*>() );
 
-    m_hVector_RunNumber.push_back( std::vector<TH1I*>() );
-    m_hVector_RunNumberZeroCastor.push_back( std::vector<TH1I*>() );
-    m_hVector_RunNumberHighCastor.push_back( std::vector<TH1I*>() );
+    m_hVector_SectorVsTotalCastorEnergy.push_back( std::vector<TH2F*>() );
+    m_hVector_SectorVsTotalCastorEnergyBefore.push_back( std::vector<TH2F*>() );
+    m_hVector_SectorVsTotalCastorEnergyAfter.push_back( std::vector<TH2F*>() );
+
+    m_hVector_SectorVsTotalCastorEnergyTProf.push_back( std::vector<TProfile*>() );
+    m_hVector_SectorVsTotalCastorEnergyBeforeTProf.push_back( std::vector<TProfile*>() );
+    m_hVector_SectorVsTotalCastorEnergyAfterTProf.push_back( std::vector<TProfile*>() );
+
+    m_hVector_TotalEnergyCastor_sector1VsCastorMultiplicity.push_back( std::vector<TH2F*>() );
+    m_hVector_TotalEnergyCastor_sector2VsCastorMultiplicity.push_back( std::vector<TH2F*>() );
+    m_hVector_TotalEnergyCastor_sector3VsCastorMultiplicity.push_back( std::vector<TH2F*>() );
+    m_hVector_TotalEnergyCastor_sector4VsCastorMultiplicity.push_back( std::vector<TH2F*>() );
+    m_hVector_TotalEnergyCastor_sector5VsCastorMultiplicity.push_back( std::vector<TH2F*>() );
+    m_hVector_TotalEnergyCastor_sector6VsCastorMultiplicity.push_back( std::vector<TH2F*>() );
+    m_hVector_TotalEnergyCastor_sector7VsCastorMultiplicity.push_back( std::vector<TH2F*>() );
+    m_hVector_TotalEnergyCastor_sector8VsCastorMultiplicity.push_back( std::vector<TH2F*>() );
+    m_hVector_TotalEnergyCastor_sector9VsCastorMultiplicity.push_back( std::vector<TH2F*>() );
+    m_hVector_TotalEnergyCastor_sector10VsCastorMultiplicity.push_back( std::vector<TH2F*>() );
+    m_hVector_TotalEnergyCastor_sector11VsCastorMultiplicity.push_back( std::vector<TH2F*>() );
+    m_hVector_TotalEnergyCastor_sector12VsCastorMultiplicity.push_back( std::vector<TH2F*>() );
+    m_hVector_TotalEnergyCastor_sector13VsCastorMultiplicity.push_back( std::vector<TH2F*>() );
+    m_hVector_TotalEnergyCastor_sector14VsCastorMultiplicity.push_back( std::vector<TH2F*>() );
+    m_hVector_TotalEnergyCastor_sector15VsCastorMultiplicity.push_back( std::vector<TH2F*>() );
+    m_hVector_TotalEnergyCastor_sector16VsCastorMultiplicity.push_back( std::vector<TH2F*>() );
+
+    m_hVector_TotalEnergyCastor_Before_sector1VsCastorMultiplicity.push_back( std::vector<TH2F*>() );
+    m_hVector_TotalEnergyCastor_Before_sector2VsCastorMultiplicity.push_back( std::vector<TH2F*>() );
+    m_hVector_TotalEnergyCastor_Before_sector3VsCastorMultiplicity.push_back( std::vector<TH2F*>() );
+    m_hVector_TotalEnergyCastor_Before_sector4VsCastorMultiplicity.push_back( std::vector<TH2F*>() );
+    m_hVector_TotalEnergyCastor_Before_sector5VsCastorMultiplicity.push_back( std::vector<TH2F*>() );
+    m_hVector_TotalEnergyCastor_Before_sector6VsCastorMultiplicity.push_back( std::vector<TH2F*>() );
+    m_hVector_TotalEnergyCastor_Before_sector7VsCastorMultiplicity.push_back( std::vector<TH2F*>() );
+    m_hVector_TotalEnergyCastor_Before_sector8VsCastorMultiplicity.push_back( std::vector<TH2F*>() );
+    m_hVector_TotalEnergyCastor_Before_sector9VsCastorMultiplicity.push_back( std::vector<TH2F*>() );
+    m_hVector_TotalEnergyCastor_Before_sector10VsCastorMultiplicity.push_back( std::vector<TH2F*>() );
+    m_hVector_TotalEnergyCastor_Before_sector11VsCastorMultiplicity.push_back( std::vector<TH2F*>() );
+    m_hVector_TotalEnergyCastor_Before_sector12VsCastorMultiplicity.push_back( std::vector<TH2F*>() );
+    m_hVector_TotalEnergyCastor_Before_sector13VsCastorMultiplicity.push_back( std::vector<TH2F*>() );
+    m_hVector_TotalEnergyCastor_Before_sector14VsCastorMultiplicity.push_back( std::vector<TH2F*>() );
+    m_hVector_TotalEnergyCastor_Before_sector15VsCastorMultiplicity.push_back( std::vector<TH2F*>() );
+    m_hVector_TotalEnergyCastor_Before_sector16VsCastorMultiplicity.push_back( std::vector<TH2F*>() );
+
+    m_hVector_TotalEnergyCastor_After_sector1VsCastorMultiplicity.push_back( std::vector<TH2F*>() );
+    m_hVector_TotalEnergyCastor_After_sector2VsCastorMultiplicity.push_back( std::vector<TH2F*>() );
+    m_hVector_TotalEnergyCastor_After_sector3VsCastorMultiplicity.push_back( std::vector<TH2F*>() );
+    m_hVector_TotalEnergyCastor_After_sector4VsCastorMultiplicity.push_back( std::vector<TH2F*>() );
+    m_hVector_TotalEnergyCastor_After_sector5VsCastorMultiplicity.push_back( std::vector<TH2F*>() );
+    m_hVector_TotalEnergyCastor_After_sector6VsCastorMultiplicity.push_back( std::vector<TH2F*>() );
+    m_hVector_TotalEnergyCastor_After_sector7VsCastorMultiplicity.push_back( std::vector<TH2F*>() );
+    m_hVector_TotalEnergyCastor_After_sector8VsCastorMultiplicity.push_back( std::vector<TH2F*>() );
+    m_hVector_TotalEnergyCastor_After_sector9VsCastorMultiplicity.push_back( std::vector<TH2F*>() );
+    m_hVector_TotalEnergyCastor_After_sector10VsCastorMultiplicity.push_back( std::vector<TH2F*>() );
+    m_hVector_TotalEnergyCastor_After_sector11VsCastorMultiplicity.push_back( std::vector<TH2F*>() );
+    m_hVector_TotalEnergyCastor_After_sector12VsCastorMultiplicity.push_back( std::vector<TH2F*>() );
+    m_hVector_TotalEnergyCastor_After_sector13VsCastorMultiplicity.push_back( std::vector<TH2F*>() );
+    m_hVector_TotalEnergyCastor_After_sector14VsCastorMultiplicity.push_back( std::vector<TH2F*>() );
+    m_hVector_TotalEnergyCastor_After_sector15VsCastorMultiplicity.push_back( std::vector<TH2F*>() );
+    m_hVector_TotalEnergyCastor_After_sector16VsCastorMultiplicity.push_back( std::vector<TH2F*>() );
+
+    m_hVector_sumECastorMinusBin0To4.push_back( std::vector<TH1F*>() );
+    m_hVector_sumEHFplusBin0To4.push_back( std::vector<TH1F*>() );
+    m_hVector_sumEHFminusBin0To4.push_back( std::vector<TH1F*>() );
+    m_hVector_sumECastorMinusBin5To8.push_back( std::vector<TH1F*>() );
+    m_hVector_sumEHFplusBin5To8.push_back( std::vector<TH1F*>() );
+    m_hVector_sumEHFminusBin5To8.push_back( std::vector<TH1F*>() );
+    m_hVector_sumECastorMinusBin9To12.push_back( std::vector<TH1F*>() );
+    m_hVector_sumEHFplusBin9To12.push_back( std::vector<TH1F*>() );
+    m_hVector_sumEHFminusBin9To12.push_back( std::vector<TH1F*>() );
+    m_hVector_sumECastorMinusBin13To16.push_back( std::vector<TH1F*>() );
+    m_hVector_sumEHFplusBin13To16.push_back( std::vector<TH1F*>() );
+    m_hVector_sumEHFminusBin13To16.push_back( std::vector<TH1F*>() );
+
+    m_hVector_histo_castor_centroid.push_back( std::vector<TH2F*>() );
 
     for (int k=0;k<nloop;k++){
 
       if (type=="multiple_pileup"){
 	sprintf(tag,"multiple_pileup_%i",k);
       }
-      else {
+      else{
 	sprintf(tag,"single");
       }
 
@@ -527,12 +645,12 @@ void DiffractiveZ::CreateHistos(std::string type){
 
       char name27[300];
       sprintf(name27,"mHF_%s_%s",tag,Folders.at(j).c_str());
-      TH2D *histo_MultHF = new TH2D(name27,"HF^{+} and HF^{-} Multiplicity; n HF^{+}; n HF^{-}; N events", 100,  0., 100., 100,  0., 100. );
+      TH2F *histo_MultHF = new TH2F(name27,"HF^{+} and HF^{-} Multiplicity; n HF^{+}; n HF^{-}; N events", 100,  0., 100., 100,  0., 100. );
       m_hVector_multhf[j].push_back(histo_MultHF);
 
       char name28[300];
       sprintf(name28,"EnergyHFPlusVsCastor_%s_%s",tag,Folders.at(j).c_str());
-      TH2D *histo_ET_Calos_p = new TH2D(name28,"HF^{+} and Castor; #sum Energy HF^{+}; #sum Energy Castor [GeV]; N events", 1000,  0., 1000., 6000,  0., 3000. );
+      TH2F *histo_ET_Calos_p = new TH2F(name28,"HF^{+} and Castor; #sum Energy HF^{+}; #sum Energy Castor [GeV]; N events", 1000,  0., 1000., 6000,  0., 3000. );
       m_hVector_etcalos_p[j].push_back(histo_ET_Calos_p);
 
       char name29[300];
@@ -587,7 +705,7 @@ void DiffractiveZ::CreateHistos(std::string type){
 
       char name39[300];
       sprintf(name39,"VertexVsLuminosity_%s_%s",tag,Folders.at(j).c_str());
-      TH2D *histo_vertexvslumi = new TH2D(name39,"Vertex vs Luminosity; # Vertex; Luminosity per Bunch [#mub^{-1}s^{-1}]", 25.,  0., 25., 25,  0., 2.);
+      TH2F *histo_vertexvslumi = new TH2F(name39,"Vertex vs Luminosity; # Vertex; Luminosity per Bunch [#mub^{-1}s^{-1}]", 25.,  0., 25., 25,  0., 2.);
       m_hVector_vertexvslumi[j].push_back(histo_vertexvslumi);
 
       char name40[300];
@@ -1042,82 +1160,82 @@ void DiffractiveZ::CreateHistos(std::string type){
 
       char name130[300];
       sprintf(name130,"correlationElectron1Pt_%s_%s",tag,Folders.at(j).c_str());
-      TH2D *histo_correlationElectron1Pt = new TH2D(name130,"Correlation Leading Electron pT; Reco::Electron P_{T} [GeV.c^{-1}] ; Pat::Electron P_{T} [GeV.c^{-1}] ", 100,  0., 800., 100, 0., 800.);
+      TH2F *histo_correlationElectron1Pt = new TH2F(name130,"Correlation Leading Electron pT; Reco::Electron P_{T} [GeV.c^{-1}] ; Pat::Electron P_{T} [GeV.c^{-1}] ", 100,  0., 800., 100, 0., 800.);
       m_hVector_correlationElectron1Pt[j].push_back(histo_correlationElectron1Pt);
 
       char name131[300];
       sprintf(name131,"correlationElectron1Eta_%s_%s",tag,Folders.at(j).c_str());
-      TH2D *histo_correlationElectron1Eta = new TH2D(name131,"Correlation Leading Electron #eta; Reco::Electron #eta; Pat::Electron #eta", 50,  -5.5, 5.5, 50, -5.5, 5.5);
+      TH2F *histo_correlationElectron1Eta = new TH2F(name131,"Correlation Leading Electron #eta; Reco::Electron #eta; Pat::Electron #eta", 50,  -5.5, 5.5, 50, -5.5, 5.5);
       m_hVector_correlationElectron1Eta[j].push_back(histo_correlationElectron1Eta);
 
       char name132[300];
       sprintf(name132,"correlationElectron1Phi_%s_%s",tag,Folders.at(j).c_str());
-      TH2D *histo_correlationElectron1Phi = new TH2D(name132,"Correlation Leading Electron #phi; Reco::Electron #phi; Pat::Electron #phi", 50,  -3.3, 3.3, 50, -3.3, 3.3);
+      TH2F *histo_correlationElectron1Phi = new TH2F(name132,"Correlation Leading Electron #phi; Reco::Electron #phi; Pat::Electron #phi", 50,  -3.3, 3.3, 50, -3.3, 3.3);
       m_hVector_correlationElectron1Phi[j].push_back(histo_correlationElectron1Phi);
 
       char name133[300];
       sprintf(name133,"correlationElectron1Iso_%s_%s",tag,Folders.at(j).c_str());
-      TH2D *histo_correlationElectron1Iso = new TH2D(name133,"Correlation Leading Electron Isolation; Reco::Electron Iso; Pat::Electron Iso", 100,  0., 1., 100, 0., 1.);
+      TH2F *histo_correlationElectron1Iso = new TH2F(name133,"Correlation Leading Electron Isolation; Reco::Electron Iso; Pat::Electron Iso", 100,  0., 1., 100, 0., 1.);
       m_hVector_correlationElectron1Iso[j].push_back(histo_correlationElectron1Iso);
 
       char name134[300];
       sprintf(name134,"correlationElectron2Pt_%s_%s",tag,Folders.at(j).c_str());
-      TH2D *histo_correlationElectron2Pt = new TH2D(name134,"Correlation Second Electron pT; Reco::Electron P_{T} [GeV.c^{-1}]; Pat::Electron P_{T} [GeV.c^{-1}]", 100,  0., 800., 100, 0., 800.);
+      TH2F *histo_correlationElectron2Pt = new TH2F(name134,"Correlation Second Electron pT; Reco::Electron P_{T} [GeV.c^{-1}]; Pat::Electron P_{T} [GeV.c^{-1}]", 100,  0., 800., 100, 0., 800.);
       m_hVector_correlationElectron2Pt[j].push_back(histo_correlationElectron2Pt);
 
       char name135[300];
       sprintf(name135,"correlationElectron2Eta_%s_%s",tag,Folders.at(j).c_str());
-      TH2D *histo_correlationElectron2Eta = new TH2D(name135,"Correlation Second Electron #eta; Reco::Electron #eta; Pat::Electron #eta", 50,  -5.5, 5.5, 50, -5.5, 5.5);
+      TH2F *histo_correlationElectron2Eta = new TH2F(name135,"Correlation Second Electron #eta; Reco::Electron #eta; Pat::Electron #eta", 50,  -5.5, 5.5, 50, -5.5, 5.5);
       m_hVector_correlationElectron2Eta[j].push_back(histo_correlationElectron2Eta);
 
       char name136[300];
       sprintf(name136,"correlationElectron2Phi_%s_%s",tag,Folders.at(j).c_str());
-      TH2D *histo_correlationElectron2Phi = new TH2D(name136,"Correlation Second Electron #phi; Reco::Electron #phi; Pat::Electron #phi", 50,  -3.3, 3.3, 50, -3.3, 3.3);
+      TH2F *histo_correlationElectron2Phi = new TH2F(name136,"Correlation Second Electron #phi; Reco::Electron #phi; Pat::Electron #phi", 50,  -3.3, 3.3, 50, -3.3, 3.3);
       m_hVector_correlationElectron2Phi[j].push_back(histo_correlationElectron2Phi);
 
       char name137[300];
       sprintf(name137,"correlationElectron2Iso_%s_%s",tag,Folders.at(j).c_str());
-      TH2D *histo_correlationElectron2Iso = new TH2D(name137,"Correlation Second Electron Isolation; Reco::Electron Iso; Pat::Electron Iso", 100,  0., 1., 100, 0., 1.);
+      TH2F *histo_correlationElectron2Iso = new TH2F(name137,"Correlation Second Electron Isolation; Reco::Electron Iso; Pat::Electron Iso", 100,  0., 1., 100, 0., 1.);
       m_hVector_correlationElectron2Iso[j].push_back(histo_correlationElectron2Iso);
 
       char name138[300];
       sprintf(name138,"correlationMuon1Pt_%s_%s",tag,Folders.at(j).c_str());
-      TH2D *histo_correlationMuon1Pt = new TH2D(name138,"Correlation Leading Muon pT; Reco::Muon P_{T} [GeV.c^{-1}] ; Pat::Muon P_{T} [GeV.c^{-1}]", 100,  0., 800., 100, 0., 800.);
+      TH2F *histo_correlationMuon1Pt = new TH2F(name138,"Correlation Leading Muon pT; Reco::Muon P_{T} [GeV.c^{-1}] ; Pat::Muon P_{T} [GeV.c^{-1}]", 100,  0., 800., 100, 0., 800.);
       m_hVector_correlationMuon1Pt[j].push_back(histo_correlationMuon1Pt);
 
       char name139[300];
       sprintf(name139,"correlationMuon1Eta_%s_%s",tag,Folders.at(j).c_str());
-      TH2D *histo_correlationMuon1Eta = new TH2D(name139,"Correlation Leading Muon #eta; Reco::Muon #eta; Pat::Muon #eta", 50,  -5.5, 5.5, 50, -5.5, 5.5);
+      TH2F *histo_correlationMuon1Eta = new TH2F(name139,"Correlation Leading Muon #eta; Reco::Muon #eta; Pat::Muon #eta", 50,  -5.5, 5.5, 50, -5.5, 5.5);
       m_hVector_correlationMuon1Eta[j].push_back(histo_correlationMuon1Eta);
 
       char name140[300];
       sprintf(name140,"correlationMuon1Phi_%s_%s",tag,Folders.at(j).c_str());
-      TH2D *histo_correlationMuon1Phi = new TH2D(name140,"Correlation Leading Muon #phi; Reco::Muon #phi; Pat::Muon #phi", 50,  -3.3, 3.3, 50, -3.3, 3.3);
+      TH2F *histo_correlationMuon1Phi = new TH2F(name140,"Correlation Leading Muon #phi; Reco::Muon #phi; Pat::Muon #phi", 50,  -3.3, 3.3, 50, -3.3, 3.3);
       m_hVector_correlationMuon1Phi[j].push_back(histo_correlationMuon1Phi);
 
       char name141[300];
       sprintf(name141,"correlationMuon1Iso_%s_%s",tag,Folders.at(j).c_str());
-      TH2D *histo_correlationMuon1Iso = new TH2D(name141,"Correlation Leading Muon Isolation; Reco::Muon Iso; Pat::Muon Iso", 100,  0., 1., 100, 0., 1.);
+      TH2F *histo_correlationMuon1Iso = new TH2F(name141,"Correlation Leading Muon Isolation; Reco::Muon Iso; Pat::Muon Iso", 100,  0., 1., 100, 0., 1.);
       m_hVector_correlationMuon1Iso[j].push_back(histo_correlationMuon1Iso);
 
       char name142[300];
       sprintf(name142,"correlationMuon2Pt_%s_%s",tag,Folders.at(j).c_str());
-      TH2D *histo_correlationMuon2Pt = new TH2D(name142,"Correlation Second Muon pT; Reco::Muon P_{T} [GeV.c^{-1}] ; Pat::Muon P_{T} [GeV.c^{-1}]", 100,  0., 800., 100, 0., 800.);
+      TH2F *histo_correlationMuon2Pt = new TH2F(name142,"Correlation Second Muon pT; Reco::Muon P_{T} [GeV.c^{-1}] ; Pat::Muon P_{T} [GeV.c^{-1}]", 100,  0., 800., 100, 0., 800.);
       m_hVector_correlationMuon2Pt[j].push_back(histo_correlationMuon2Pt);
 
       char name143[300];
       sprintf(name143,"correlationMuon2Eta_%s_%s",tag,Folders.at(j).c_str());
-      TH2D *histo_correlationMuon2Eta = new TH2D(name143,"Correlation Second Muon #eta; Reco::Muon #eta; Pat::Muon #eta", 50,  -5.5, 5.5, 50, -5.5, 5.5);
+      TH2F *histo_correlationMuon2Eta = new TH2F(name143,"Correlation Second Muon #eta; Reco::Muon #eta; Pat::Muon #eta", 50,  -5.5, 5.5, 50, -5.5, 5.5);
       m_hVector_correlationMuon2Eta[j].push_back(histo_correlationMuon2Eta);
 
       char name144[300];
       sprintf(name144,"correlationMuon2Phi_%s_%s",tag,Folders.at(j).c_str());
-      TH2D *histo_correlationMuon2Phi = new TH2D(name144,"Correlation Second Muon #phi; Reco::Muon #phi; Pat::Muon #phi", 50,  -3.3, 3.3, 50, -3.3, 3.3);
+      TH2F *histo_correlationMuon2Phi = new TH2F(name144,"Correlation Second Muon #phi; Reco::Muon #phi; Pat::Muon #phi", 50,  -3.3, 3.3, 50, -3.3, 3.3);
       m_hVector_correlationMuon2Phi[j].push_back(histo_correlationMuon2Phi);
 
       char name145[300];
       sprintf(name145,"correlationMuon2Iso_%s_%s",tag,Folders.at(j).c_str());
-      TH2D *histo_correlationMuon2Iso = new TH2D(name145,"Correlation Second Muon Isolation; Reco::Muon Iso; Pat::Muon Iso", 100,  0., 1., 100, 0., 1.);
+      TH2F *histo_correlationMuon2Iso = new TH2F(name145,"Correlation Second Muon Isolation; Reco::Muon Iso; Pat::Muon Iso", 100,  0., 1., 100, 0., 1.);
       m_hVector_correlationMuon2Iso[j].push_back(histo_correlationMuon2Iso);
 
       char name146[300];
@@ -1182,7 +1300,7 @@ void DiffractiveZ::CreateHistos(std::string type){
 
       char name158[300];
       sprintf(name158,"ECaloVsEta_%s_%s",tag,Folders.at(j).c_str());
-      TH2D *histo_ECaloVsEta = new TH2D(name158,"Calorimeter Energy X #eta; #eta; Energy [GeV]", 500,  -6, 6, 100, 0., 1000.);
+      TH2F *histo_ECaloVsEta = new TH2F(name158,"Calorimeter Energy X #eta; #eta; Energy [GeV]", 500,  -6, 6, 100, 0., 1000.);
       m_hVector_ECaloVsEta[j].push_back(histo_ECaloVsEta);
 
       char name159[300];
@@ -1192,7 +1310,7 @@ void DiffractiveZ::CreateHistos(std::string type){
 
       char name160[300];
       sprintf(name160,"ECastorSector_%s_%s",tag,Folders.at(j).c_str());
-      TH2D *histo_ECastorSector = new TH2D(name160,"Castor Energy X Sector; Sector; Energy [GeV]", 17,  0, 17, 44, 0., 220.);
+      TH2F *histo_ECastorSector = new TH2F(name160,"Castor Energy X Sector; Sector; Energy [GeV]", 17,  0, 17, 44, 0., 220.);
       m_hVector_ECastorSector[j].push_back(histo_ECastorSector);
 
       char name161[300];
@@ -1267,7 +1385,7 @@ void DiffractiveZ::CreateHistos(std::string type){
 
       char name175[300];
       sprintf(name175,"LeadingElectronInnerHits_%s_%s",tag,Folders.at(j).c_str());
-      TH1I *histo_LeadingElectronInnerHits = new TH1I(name175,"Leading Electron; Number Of Expected Inner Hits; N events",500,0,500);
+      TH1F *histo_LeadingElectronInnerHits = new TH1F(name175,"Leading Electron; Number Of Expected Inner Hits; N events",500,0,500);
       m_hVector_LeadingElectronInnerHits[j].push_back(histo_LeadingElectronInnerHits);
 
       char name176[300];
@@ -1302,7 +1420,7 @@ void DiffractiveZ::CreateHistos(std::string type){
 
       char name182[300];
       sprintf(name182,"SecondElectronInnerHits_%s_%s",tag,Folders.at(j).c_str());
-      TH1I *histo_SecondElectronInnerHits = new TH1I(name182,"Second Electron; Number Of Expected Inner Hits; N events",500,0,500);
+      TH1F *histo_SecondElectronInnerHits = new TH1F(name182,"Second Electron; Number Of Expected Inner Hits; N events",500,0,500);
       m_hVector_SecondElectronInnerHits[j].push_back(histo_SecondElectronInnerHits);
 
       char name183[300];
@@ -1452,7 +1570,7 @@ void DiffractiveZ::CreateHistos(std::string type){
 
       char name212[300];
       sprintf(name212,"EnergyHFMinusVsCastor_%s_%s",tag,Folders.at(j).c_str());
-      TH2D *histo_ET_Calos_n = new TH2D(name212,"HF^{-} and Castor; #sum Energy HF^{-}; #sum Energy Castor [GeV]; N events", 1000,  0., 1000., 6000,  0., 3000. );
+      TH2F *histo_ET_Calos_n = new TH2F(name212,"HF^{-} and Castor; #sum Energy HF^{-}; #sum Energy Castor [GeV]; N events", 1000,  0., 1000., 6000,  0., 3000. );
       m_hVector_etcalos_n[j].push_back(histo_ET_Calos_n);
 
       char name213[300];
@@ -1472,28 +1590,158 @@ void DiffractiveZ::CreateHistos(std::string type){
 
       char name216[300];
       sprintf(name216,"CastorMultiplicity_%s_%s",tag,Folders.at(j).c_str());
-      TH1I *histo_CastorMultiplicity = new TH1I(name216,"Castor: number of sectors with activity; #Sectors; N events",16,0,16);
+      TH1F *histo_CastorMultiplicity = new TH1F(name216,"Castor: number of sectors with activity; #Sectors; N events",17,0,17);
       m_hVector_CastorMultiplicity[j].push_back(histo_CastorMultiplicity);
 
       char name217[300];
-      sprintf(name217,"CastorMultiplicityVsLumi_%s_%s",tag,Folders.at(j).c_str());
-      TH2D *histo_CastorMultiplicityVsLumi = new TH2D(name217,"CastorMultiplicity Vs Luminosity; Luminosity per Bunch [#mub^{-1}s^{-1}]; Castor Multiplicity",5000,0,2,16,0,16);
-      m_hVector_CastorMultiplicityVsLumi[j].push_back(histo_CastorMultiplicityVsLumi);
+      sprintf(name217,"CastorMultiplicityAfter_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_CastorMultiplicityAfter = new TH1F(name217,"Castor: number of sectors with activity; #Sectors; N events",17,0,17);
+      m_hVector_CastorMultiplicityAfter[j].push_back(histo_CastorMultiplicityAfter);
 
       char name218[300];
-      sprintf(name218,"RunNumber_%s_%s",tag,Folders.at(j).c_str());
-      TH1I *histo_RunNumber = new TH1I(name218,"Run Number; Run Number; N Event",16000,134000,150000);
-      m_hVector_RunNumber[j].push_back(histo_RunNumber);
-
-      char name219[300];
-      sprintf(name219,"RunNumberZeroCastor_%s_%s",tag,Folders.at(j).c_str());
-      TH1I *histo_RunNumberZeroCastor = new TH1I(name219,"Run Number; Run Number; N Event",16000,134000,150000);
-      m_hVector_RunNumberZeroCastor[j].push_back(histo_RunNumberZeroCastor);
+      sprintf(name218,"CastorMultiplicityBefore_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_CastorMultiplicityBefore = new TH1F(name218,"Castor: number of sectors with activity; #Sectors; N events",17,0,17);
+      m_hVector_CastorMultiplicityBefore[j].push_back(histo_CastorMultiplicityBefore);
 
       char name220[300];
-      sprintf(name220,"RunNumberHighCastor_%s_%s",tag,Folders.at(j).c_str());
-      TH1I *histo_RunNumberHighCastor = new TH1I(name220,"Run Number; Run Number; N Event",16000,134000,150000);
+      sprintf(name220,"CastorMultiplicityVsLumi_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_CastorMultiplicityVsLumi = new TH2F(name220,"CastorMultiplicity Vs Luminosity; Luminosity per Bunch [#mub^{-1}s^{-1}]; Castor Multiplicity",5000,0,2,17,0,17);
+      m_hVector_CastorMultiplicityVsLumi[j].push_back(histo_CastorMultiplicityVsLumi);
+
+      char name221[300];
+      sprintf(name221,"RunNumber_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_RunNumber = new TH1F(name221,"Run Number; Run Number; N Event",16000,134000,150000);
+      m_hVector_RunNumber[j].push_back(histo_RunNumber);
+
+      char name222[300];
+      sprintf(name222,"RunNumberZeroCastor_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_RunNumberZeroCastor = new TH1F(name222,"Run Number; Run Number; N Event",16000,134000,150000);
+      m_hVector_RunNumberZeroCastor[j].push_back(histo_RunNumberZeroCastor);
+
+      char name223[300];
+      sprintf(name223,"RunNumberHighCastor_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_RunNumberHighCastor = new TH1F(name223,"Run Number; Run Number; N Event",16000,134000,150000);
       m_hVector_RunNumberHighCastor[j].push_back(histo_RunNumberHighCastor);
+
+      char name224[300];
+      sprintf(name224,"RunNumberBefore_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_RunNumberBefore = new TH1F(name224,"Run Number; Run Number; N Event",16000,134000,150000);
+      m_hVector_RunNumberBefore[j].push_back(histo_RunNumberBefore);
+
+      char name225[300];
+      sprintf(name225,"RunNumberZeroCastorBefore_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_RunNumberZeroCastorBefore = new TH1F(name225,"Run Number; Run Number; N Event",16000,134000,150000);
+      m_hVector_RunNumberZeroCastorBefore[j].push_back(histo_RunNumberZeroCastorBefore);
+
+      char name226[300];
+      sprintf(name226,"RunNumberHighCastorBefore_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_RunNumberHighCastorBefore = new TH1F(name226,"Run Number; Run Number; N Event",16000,134000,150000);
+      m_hVector_RunNumberHighCastorBefore[j].push_back(histo_RunNumberHighCastorBefore);
+
+      char name227[300];
+      sprintf(name227,"RunNumberAfter_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_RunNumberAfter = new TH1F(name227,"Run Number; Run Number; N Event",16000,134000,150000);
+      m_hVector_RunNumberAfter[j].push_back(histo_RunNumberAfter);
+
+      char name228[300];
+      sprintf(name228,"RunNumberZeroCastorAfter_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_RunNumberZeroCastorAfter = new TH1F(name228,"Run Number; Run Number; N Event",16000,134000,150000);
+      m_hVector_RunNumberZeroCastorAfter[j].push_back(histo_RunNumberZeroCastorAfter);
+
+      char name229[300];
+      sprintf(name229,"RunNumberHighCastorAfter_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_RunNumberHighCastorAfter = new TH1F(name229,"Run Number; Run Number; N Event",16000,134000,150000);
+      m_hVector_RunNumberHighCastorAfter[j].push_back(histo_RunNumberHighCastorAfter);
+
+      char name230[300];
+      sprintf(name230,"SectorVsTotalCastorEnergy_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_SectorVsTotalCastorEnergy = new TH2F(name230,"Castor Multiplicity Vs CastorEnergy; # Multiplicity; Castor Energy [GeV]",17,0,17,1500,0,1500);
+      m_hVector_SectorVsTotalCastorEnergy[j].push_back(histo_SectorVsTotalCastorEnergy);
+
+      char name231[300];
+      sprintf(name231,"SectorVsTotalCastorEnergyBefore_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_SectorVsTotalCastorEnergyBefore = new TH2F(name231,"Castor Multiplicity Vs CastorEnergy; # Multiplicity; Castor Energy [GeV]",17,0,17,1500,0,1500);
+      m_hVector_SectorVsTotalCastorEnergyBefore[j].push_back(histo_SectorVsTotalCastorEnergyBefore);
+
+      char name232[300];
+      sprintf(name232,"SectorVsTotalCastorEnergyAfter_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_SectorVsTotalCastorEnergyAfter = new TH2F(name232,"Castor Multiplicity Vs CastorEnergy; # Multiplicity; Castor Energy [GeV]",17,0,17,1500,0,1500);
+      m_hVector_SectorVsTotalCastorEnergyAfter[j].push_back(histo_SectorVsTotalCastorEnergyAfter);
+
+      char name233[300];
+      sprintf(name233,"SectorVsTotalCastorEnergyTProf_%s_%s",tag,Folders.at(j).c_str());
+      TProfile *histo_SectorVsTotalCastorEnergyTProf = new TProfile(name233,"Castor Multiplicity Vs CastorEnergy; # Multiplicity; Castor Energy [GeV]",17,0,17,0,1500);
+      m_hVector_SectorVsTotalCastorEnergyTProf[j].push_back(histo_SectorVsTotalCastorEnergyTProf);
+
+      char name234[300];
+      sprintf(name234,"SectorVsTotalCastorEnergyBeforeTProf_%s_%s",tag,Folders.at(j).c_str());
+      TProfile *histo_SectorVsTotalCastorEnergyBeforeTProf = new TProfile(name234,"Castor Multiplicity Vs CastorEnergy; # Multiplicity; Castor Energy [GeV]",17,0,17,0,1500);
+      m_hVector_SectorVsTotalCastorEnergyBeforeTProf[j].push_back(histo_SectorVsTotalCastorEnergyBeforeTProf);
+
+      char name235[300];
+      sprintf(name235,"SectorVsTotalCastorEnergyAfterTProf_%s_%s",tag,Folders.at(j).c_str());
+      TProfile *histo_SectorVsTotalCastorEnergyAfterTProf = new TProfile(name235,"Castor Multiplicity Vs CastorEnergy; # Multiplicity; Castor Energy [GeV]",17,0,17,0,1500);
+      m_hVector_SectorVsTotalCastorEnergyAfterTProf[j].push_back(histo_SectorVsTotalCastorEnergyAfterTProf);
+
+      char name236[300];
+      sprintf(name236,"sumECastorMinusBin0To4_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_sumECastorMinusBin0To4 = new TH1F(name236,"Castor Sum of Energy; Energy [GeV]; N events",6000,0,3000);
+      m_hVector_sumECastorMinusBin0To4[j].push_back(histo_sumECastorMinusBin0To4);
+
+      char name237[300];
+      sprintf(name237,"sumEHFplusBin0To4_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_sumEHFplusBin0To4 = new TH1F(name237,"HF^{+} - Sum of Energy; #sum E_{HF^{+}} [GeV]; N events",2000,0,2000);
+      m_hVector_sumEHFplusBin0To4[j].push_back(histo_sumEHFplusBin0To4);
+
+      char name238[300];
+      sprintf(name238,"sumEHFminusBin0To4_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_sumEHFminusBin0To4 = new TH1F(name238,"HF^{-} - Sum of Energy; #sum E_{HF^{-}} [GeV]; N events",2000,0,2000);
+      m_hVector_sumEHFminusBin0To4[j].push_back(histo_sumEHFminusBin0To4);
+
+      char name239[300];
+      sprintf(name239,"sumECastorMinusBin5To8_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_sumECastorMinusBin5To8 = new TH1F(name239,"Castor Sum of Energy; Energy [GeV]; N events",6000,0,3000);
+      m_hVector_sumECastorMinusBin5To8[j].push_back(histo_sumECastorMinusBin5To8);
+
+      char name240[300];
+      sprintf(name240,"sumEHFplusBin5To8_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_sumEHFplusBin5To8 = new TH1F(name240,"HF^{+} - Sum of Energy; #sum E_{HF^{+}} [GeV]; N events",2000,0,2000);
+      m_hVector_sumEHFplusBin5To8[j].push_back(histo_sumEHFplusBin5To8);
+
+      char name241[300];
+      sprintf(name241,"sumEHFminusBin5To8_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_sumEHFminusBin5To8 = new TH1F(name241,"HF^{-} - Sum of Energy; #sum E_{HF^{-}} [GeV]; N events",2000,0,2000);
+      m_hVector_sumEHFminusBin5To8[j].push_back(histo_sumEHFminusBin5To8);
+
+      char name242[300];
+      sprintf(name242,"sumECastorMinusBin9To12_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_sumECastorMinusBin9To12 = new TH1F(name242,"Castor Sum of Energy; Energy [GeV]; N events",6000,0,3000);
+      m_hVector_sumECastorMinusBin9To12[j].push_back(histo_sumECastorMinusBin9To12);
+
+      char name243[300];
+      sprintf(name243,"sumEHFplusBin9To12_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_sumEHFplusBin9To12 = new TH1F(name243,"HF^{+} - Sum of Energy; #sum E_{HF^{+}} [GeV]; N events",2000,0,2000);
+      m_hVector_sumEHFplusBin9To12[j].push_back(histo_sumEHFplusBin9To12);
+
+      char name244[300];
+      sprintf(name244,"sumEHFminusBin9To12_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_sumEHFminusBin9To12 = new TH1F(name244,"HF^{-} - Sum of Energy; #sum E_{HF^{-}} [GeV]; N events",2000,0,2000);
+      m_hVector_sumEHFminusBin9To12[j].push_back(histo_sumEHFminusBin9To12);
+
+      char name245[300];
+      sprintf(name245,"sumECastorMinusBin13To16_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_sumECastorMinusBin13To16 = new TH1F(name245,"Castor Sum of Energy; Energy [GeV]; N events",6000,0,3000);
+      m_hVector_sumECastorMinusBin13To16[j].push_back(histo_sumECastorMinusBin13To16);
+
+      char name246[300];
+      sprintf(name246,"sumEHFplusBin13To16_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_sumEHFplusBin13To16 = new TH1F(name246,"HF^{+} - Sum of Energy; #sum E_{HF^{+}} [GeV]; N events",2000,0,2000);
+      m_hVector_sumEHFplusBin13To16[j].push_back(histo_sumEHFplusBin13To16);
+
+      char name247[300];
+      sprintf(name247,"sumEHFminusBin13To16_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_sumEHFminusBin13To16 = new TH1F(name247,"HF^{-} - Sum of Energy; #sum E_{HF^{-}} [GeV]; N events",2000,0,2000);
+      m_hVector_sumEHFminusBin13To16[j].push_back(histo_sumEHFminusBin13To16);
 
       // Castor Sector Plots
       char name_sector1[300];
@@ -1575,6 +1823,416 @@ void DiffractiveZ::CreateHistos(std::string type){
       sprintf(name_sector16,"TotalEnergyCastor_sector16_%s_%s",tag,Folders.at(j).c_str());
       TH1F *histo_TotalEnergyCastor_sector16 = new TH1F(name_sector16,"#sum Energy, Castor Sector 16; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500);
       m_hVector_TotalEnergyCastor_sector16[j].push_back(histo_TotalEnergyCastor_sector16);
+
+      // Castor Sector Plots
+      char name_Before_sector1[300];
+      sprintf(name_Before_sector1,"TotalEnergyCastor_Before_sector1_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_TotalEnergyCastor_Before_sector1 = new TH1F(name_Before_sector1,"#sum Energy, Castor Sector 1; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500);
+      m_hVector_TotalEnergyCastor_Before_sector1[j].push_back(histo_TotalEnergyCastor_Before_sector1);
+
+      char name_Before_sector2[300];
+      sprintf(name_Before_sector2,"TotalEnergyCastor_Before_sector2_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_TotalEnergyCastor_Before_sector2 = new TH1F(name_Before_sector2,"#sum Energy, Castor Sector 2; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500);
+      m_hVector_TotalEnergyCastor_Before_sector2[j].push_back(histo_TotalEnergyCastor_Before_sector2);
+
+      char name_Before_sector3[300];
+      sprintf(name_Before_sector3,"TotalEnergyCastor_Before_sector3_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_TotalEnergyCastor_Before_sector3 = new TH1F(name_Before_sector3,"#sum Energy, Castor Sector 3; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500);
+      m_hVector_TotalEnergyCastor_Before_sector3[j].push_back(histo_TotalEnergyCastor_Before_sector3);
+
+      char name_Before_sector4[300];
+      sprintf(name_Before_sector4,"TotalEnergyCastor_Before_sector4_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_TotalEnergyCastor_Before_sector4 = new TH1F(name_Before_sector4,"#sum Energy, Castor Sector 4; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500);
+      m_hVector_TotalEnergyCastor_Before_sector4[j].push_back(histo_TotalEnergyCastor_Before_sector4);
+
+      char name_Before_sector5[300];
+      sprintf(name_Before_sector5,"TotalEnergyCastor_Before_sector5_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_TotalEnergyCastor_Before_sector5 = new TH1F(name_Before_sector5,"#sum Energy, Castor Sector 5; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500);
+      m_hVector_TotalEnergyCastor_Before_sector5[j].push_back(histo_TotalEnergyCastor_Before_sector5);
+
+      char name_Before_sector6[300];
+      sprintf(name_Before_sector6,"TotalEnergyCastor_Before_sector6_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_TotalEnergyCastor_Before_sector6 = new TH1F(name_Before_sector6,"#sum Energy, Castor Sector 6; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500);
+      m_hVector_TotalEnergyCastor_Before_sector6[j].push_back(histo_TotalEnergyCastor_Before_sector6);
+
+      char name_Before_sector7[300];
+      sprintf(name_Before_sector7,"TotalEnergyCastor_Before_sector7_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_TotalEnergyCastor_Before_sector7 = new TH1F(name_Before_sector7,"#sum Energy, Castor Sector 7; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500);
+      m_hVector_TotalEnergyCastor_Before_sector7[j].push_back(histo_TotalEnergyCastor_Before_sector7);
+
+      char name_Before_sector8[300];
+      sprintf(name_Before_sector8,"TotalEnergyCastor_Before_sector8_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_TotalEnergyCastor_Before_sector8 = new TH1F(name_Before_sector8,"#sum Energy, Castor Sector 8; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500);
+      m_hVector_TotalEnergyCastor_Before_sector8[j].push_back(histo_TotalEnergyCastor_Before_sector8);
+
+      char name_Before_sector9[300];
+      sprintf(name_Before_sector9,"TotalEnergyCastor_Before_sector9_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_TotalEnergyCastor_Before_sector9 = new TH1F(name_Before_sector9,"#sum Energy, Castor Sector 9; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500);
+      m_hVector_TotalEnergyCastor_Before_sector9[j].push_back(histo_TotalEnergyCastor_Before_sector9);
+
+      char name_Before_sector10[300];
+      sprintf(name_Before_sector10,"TotalEnergyCastor_Before_sector10_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_TotalEnergyCastor_Before_sector10 = new TH1F(name_Before_sector10,"#sum Energy, Castor Sector 10; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500);
+      m_hVector_TotalEnergyCastor_Before_sector10[j].push_back(histo_TotalEnergyCastor_Before_sector10);
+
+      char name_Before_sector11[300];
+      sprintf(name_Before_sector11,"TotalEnergyCastor_Before_sector11_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_TotalEnergyCastor_Before_sector11 = new TH1F(name_Before_sector11,"#sum Energy, Castor Sector 11; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500);
+      m_hVector_TotalEnergyCastor_Before_sector11[j].push_back(histo_TotalEnergyCastor_Before_sector11);
+
+      char name_Before_sector12[300];
+      sprintf(name_Before_sector12,"TotalEnergyCastor_Before_sector12_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_TotalEnergyCastor_Before_sector12 = new TH1F(name_Before_sector12,"#sum Energy, Castor Sector 12; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500);
+      m_hVector_TotalEnergyCastor_Before_sector12[j].push_back(histo_TotalEnergyCastor_Before_sector12);
+
+      char name_Before_sector13[300];
+      sprintf(name_Before_sector13,"TotalEnergyCastor_Before_sector13_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_TotalEnergyCastor_Before_sector13 = new TH1F(name_Before_sector13,"#sum Energy, Castor Sector 13; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500);
+      m_hVector_TotalEnergyCastor_Before_sector13[j].push_back(histo_TotalEnergyCastor_Before_sector13);
+
+      char name_Before_sector14[300];
+      sprintf(name_Before_sector14,"TotalEnergyCastor_Before_sector14_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_TotalEnergyCastor_Before_sector14 = new TH1F(name_Before_sector14,"#sum Energy, Castor Sector 14; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500);
+      m_hVector_TotalEnergyCastor_Before_sector14[j].push_back(histo_TotalEnergyCastor_Before_sector14);
+
+      char name_Before_sector15[300];
+      sprintf(name_Before_sector15,"TotalEnergyCastor_Before_sector15_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_TotalEnergyCastor_Before_sector15 = new TH1F(name_Before_sector15,"#sum Energy, Castor Sector 15; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500);
+      m_hVector_TotalEnergyCastor_Before_sector15[j].push_back(histo_TotalEnergyCastor_Before_sector15);
+
+      char name_Before_sector16[300];
+      sprintf(name_Before_sector16,"TotalEnergyCastor_Before_sector16_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_TotalEnergyCastor_Before_sector16 = new TH1F(name_Before_sector16,"#sum Energy, Castor Sector 16; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500);
+      m_hVector_TotalEnergyCastor_Before_sector16[j].push_back(histo_TotalEnergyCastor_Before_sector16);
+
+      // Castor Sector Plots
+      char name_After_sector1[300];
+      sprintf(name_After_sector1,"TotalEnergyCastor_After_sector1_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_TotalEnergyCastor_After_sector1 = new TH1F(name_After_sector1,"#sum Energy, Castor Sector 1; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500);
+      m_hVector_TotalEnergyCastor_After_sector1[j].push_back(histo_TotalEnergyCastor_After_sector1);
+
+      char name_After_sector2[300];
+      sprintf(name_After_sector2,"TotalEnergyCastor_After_sector2_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_TotalEnergyCastor_After_sector2 = new TH1F(name_After_sector2,"#sum Energy, Castor Sector 2; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500);
+      m_hVector_TotalEnergyCastor_After_sector2[j].push_back(histo_TotalEnergyCastor_After_sector2);
+
+      char name_After_sector3[300];
+      sprintf(name_After_sector3,"TotalEnergyCastor_After_sector3_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_TotalEnergyCastor_After_sector3 = new TH1F(name_After_sector3,"#sum Energy, Castor Sector 3; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500);
+      m_hVector_TotalEnergyCastor_After_sector3[j].push_back(histo_TotalEnergyCastor_After_sector3);
+
+      char name_After_sector4[300];
+      sprintf(name_After_sector4,"TotalEnergyCastor_After_sector4_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_TotalEnergyCastor_After_sector4 = new TH1F(name_After_sector4,"#sum Energy, Castor Sector 4; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500);
+      m_hVector_TotalEnergyCastor_After_sector4[j].push_back(histo_TotalEnergyCastor_After_sector4);
+
+      char name_After_sector5[300];
+      sprintf(name_After_sector5,"TotalEnergyCastor_After_sector5_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_TotalEnergyCastor_After_sector5 = new TH1F(name_After_sector5,"#sum Energy, Castor Sector 5; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500);
+      m_hVector_TotalEnergyCastor_After_sector5[j].push_back(histo_TotalEnergyCastor_After_sector5);
+
+      char name_After_sector6[300];
+      sprintf(name_After_sector6,"TotalEnergyCastor_After_sector6_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_TotalEnergyCastor_After_sector6 = new TH1F(name_After_sector6,"#sum Energy, Castor Sector 6; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500);
+      m_hVector_TotalEnergyCastor_After_sector6[j].push_back(histo_TotalEnergyCastor_After_sector6);
+
+      char name_After_sector7[300];
+      sprintf(name_After_sector7,"TotalEnergyCastor_After_sector7_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_TotalEnergyCastor_After_sector7 = new TH1F(name_After_sector7,"#sum Energy, Castor Sector 7; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500);
+      m_hVector_TotalEnergyCastor_After_sector7[j].push_back(histo_TotalEnergyCastor_After_sector7);
+
+      char name_After_sector8[300];
+      sprintf(name_After_sector8,"TotalEnergyCastor_After_sector8_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_TotalEnergyCastor_After_sector8 = new TH1F(name_After_sector8,"#sum Energy, Castor Sector 8; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500);
+      m_hVector_TotalEnergyCastor_After_sector8[j].push_back(histo_TotalEnergyCastor_After_sector8);
+
+      char name_After_sector9[300];
+      sprintf(name_After_sector9,"TotalEnergyCastor_After_sector9_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_TotalEnergyCastor_After_sector9 = new TH1F(name_After_sector9,"#sum Energy, Castor Sector 9; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500);
+      m_hVector_TotalEnergyCastor_After_sector9[j].push_back(histo_TotalEnergyCastor_After_sector9);
+
+      char name_After_sector10[300];
+      sprintf(name_After_sector10,"TotalEnergyCastor_After_sector10_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_TotalEnergyCastor_After_sector10 = new TH1F(name_After_sector10,"#sum Energy, Castor Sector 10; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500);
+      m_hVector_TotalEnergyCastor_After_sector10[j].push_back(histo_TotalEnergyCastor_After_sector10);
+
+      char name_After_sector11[300];
+      sprintf(name_After_sector11,"TotalEnergyCastor_After_sector11_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_TotalEnergyCastor_After_sector11 = new TH1F(name_After_sector11,"#sum Energy, Castor Sector 11; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500);
+      m_hVector_TotalEnergyCastor_After_sector11[j].push_back(histo_TotalEnergyCastor_After_sector11);
+
+      char name_After_sector12[300];
+      sprintf(name_After_sector12,"TotalEnergyCastor_After_sector12_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_TotalEnergyCastor_After_sector12 = new TH1F(name_After_sector12,"#sum Energy, Castor Sector 12; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500);
+      m_hVector_TotalEnergyCastor_After_sector12[j].push_back(histo_TotalEnergyCastor_After_sector12);
+
+      char name_After_sector13[300];
+      sprintf(name_After_sector13,"TotalEnergyCastor_After_sector13_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_TotalEnergyCastor_After_sector13 = new TH1F(name_After_sector13,"#sum Energy, Castor Sector 13; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500);
+      m_hVector_TotalEnergyCastor_After_sector13[j].push_back(histo_TotalEnergyCastor_After_sector13);
+
+      char name_After_sector14[300];
+      sprintf(name_After_sector14,"TotalEnergyCastor_After_sector14_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_TotalEnergyCastor_After_sector14 = new TH1F(name_After_sector14,"#sum Energy, Castor Sector 14; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500);
+      m_hVector_TotalEnergyCastor_After_sector14[j].push_back(histo_TotalEnergyCastor_After_sector14);
+
+      char name_After_sector15[300];
+      sprintf(name_After_sector15,"TotalEnergyCastor_After_sector15_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_TotalEnergyCastor_After_sector15 = new TH1F(name_After_sector15,"#sum Energy, Castor Sector 15; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500);
+      m_hVector_TotalEnergyCastor_After_sector15[j].push_back(histo_TotalEnergyCastor_After_sector15);
+
+      char name_After_sector16[300];
+      sprintf(name_After_sector16,"TotalEnergyCastor_After_sector16_%s_%s",tag,Folders.at(j).c_str());
+      TH1F *histo_TotalEnergyCastor_After_sector16 = new TH1F(name_After_sector16,"#sum Energy, Castor Sector 16; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500);
+      m_hVector_TotalEnergyCastor_After_sector16[j].push_back(histo_TotalEnergyCastor_After_sector16);
+
+      // Castor Sector Plots
+      char name_mult_sector1[300];
+      sprintf(name_mult_sector1,"TotalEnergyCastor_sector1VsCastorMultiplicity_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_TotalEnergyCastor_sector1VsCastorMultiplicity = new TH2F(name_mult_sector1,"#sum Energy, Castor Sector 1 Vs Castor Multiplicity; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500,17,0,17);
+      m_hVector_TotalEnergyCastor_sector1VsCastorMultiplicity[j].push_back(histo_TotalEnergyCastor_sector1VsCastorMultiplicity);
+
+      char name_mult_sector2[300];
+      sprintf(name_mult_sector2,"TotalEnergyCastor_sector2VsCastorMultiplicity_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_TotalEnergyCastor_sector2VsCastorMultiplicity = new TH2F(name_mult_sector2,"#sum Energy, Castor Sector 2 Vs Castor Multiplicity; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500,17,0,17);
+      m_hVector_TotalEnergyCastor_sector2VsCastorMultiplicity[j].push_back(histo_TotalEnergyCastor_sector2VsCastorMultiplicity);
+
+      char name_mult_sector3[300];
+      sprintf(name_mult_sector3,"TotalEnergyCastor_sector3VsCastorMultiplicity_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_TotalEnergyCastor_sector3VsCastorMultiplicity = new TH2F(name_mult_sector3,"#sum Energy, Castor Sector 3 Vs Castor Multiplicity; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500,17,0,17);
+      m_hVector_TotalEnergyCastor_sector3VsCastorMultiplicity[j].push_back(histo_TotalEnergyCastor_sector3VsCastorMultiplicity);
+
+      char name_mult_sector4[300];
+      sprintf(name_mult_sector4,"TotalEnergyCastor_sector4VsCastorMultiplicity_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_TotalEnergyCastor_sector4VsCastorMultiplicity = new TH2F(name_mult_sector4,"#sum Energy, Castor Sector 4 Vs Castor Multiplicity; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500,17,0,17);
+      m_hVector_TotalEnergyCastor_sector4VsCastorMultiplicity[j].push_back(histo_TotalEnergyCastor_sector4VsCastorMultiplicity);
+
+      char name_mult_sector5[300];
+      sprintf(name_mult_sector5,"TotalEnergyCastor_sector5VsCastorMultiplicity_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_TotalEnergyCastor_sector5VsCastorMultiplicity = new TH2F(name_mult_sector5,"#sum Energy, Castor Sector 5 Vs Castor Multiplicity; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500,17,0,17);
+      m_hVector_TotalEnergyCastor_sector5VsCastorMultiplicity[j].push_back(histo_TotalEnergyCastor_sector5VsCastorMultiplicity);
+
+      char name_mult_sector6[300];
+      sprintf(name_mult_sector6,"TotalEnergyCastor_sector6VsCastorMultiplicity_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_TotalEnergyCastor_sector6VsCastorMultiplicity = new TH2F(name_mult_sector6,"#sum Energy, Castor Sector 6 Vs Castor Multiplicity; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500,17,0,17);
+      m_hVector_TotalEnergyCastor_sector6VsCastorMultiplicity[j].push_back(histo_TotalEnergyCastor_sector6VsCastorMultiplicity);
+
+      char name_mult_sector7[300];
+      sprintf(name_mult_sector7,"TotalEnergyCastor_sector7VsCastorMultiplicity_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_TotalEnergyCastor_sector7VsCastorMultiplicity = new TH2F(name_mult_sector7,"#sum Energy, Castor Sector 7 Vs Castor Multiplicity; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500,17,0,17);
+      m_hVector_TotalEnergyCastor_sector7VsCastorMultiplicity[j].push_back(histo_TotalEnergyCastor_sector7VsCastorMultiplicity);
+
+      char name_mult_sector8[300];
+      sprintf(name_mult_sector8,"TotalEnergyCastor_sector8VsCastorMultiplicity_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_TotalEnergyCastor_sector8VsCastorMultiplicity = new TH2F(name_mult_sector8,"#sum Energy, Castor Sector 8 Vs Castor Multiplicity; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500,17,0,17);
+      m_hVector_TotalEnergyCastor_sector8VsCastorMultiplicity[j].push_back(histo_TotalEnergyCastor_sector8VsCastorMultiplicity);
+
+      char name_mult_sector9[300];
+      sprintf(name_mult_sector9,"TotalEnergyCastor_sector9VsCastorMultiplicity_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_TotalEnergyCastor_sector9VsCastorMultiplicity = new TH2F(name_mult_sector9,"#sum Energy, Castor Sector 9 Vs Castor Multiplicity; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500,17,0,17);
+      m_hVector_TotalEnergyCastor_sector9VsCastorMultiplicity[j].push_back(histo_TotalEnergyCastor_sector9VsCastorMultiplicity);
+
+      char name_mult_sector10[300];
+      sprintf(name_mult_sector10,"TotalEnergyCastor_sector10VsCastorMultiplicity_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_TotalEnergyCastor_sector10VsCastorMultiplicity = new TH2F(name_mult_sector10,"#sum Energy, Castor Sector 10 Vs Castor Multiplicity; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500,17,0,17);
+      m_hVector_TotalEnergyCastor_sector10VsCastorMultiplicity[j].push_back(histo_TotalEnergyCastor_sector10VsCastorMultiplicity);
+
+      char name_mult_sector11[300];
+      sprintf(name_mult_sector11,"TotalEnergyCastor_sector11VsCastorMultiplicity_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_TotalEnergyCastor_sector11VsCastorMultiplicity = new TH2F(name_mult_sector11,"#sum Energy, Castor Sector 11 Vs Castor Multiplicity; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500,17,0,17);
+      m_hVector_TotalEnergyCastor_sector11VsCastorMultiplicity[j].push_back(histo_TotalEnergyCastor_sector11VsCastorMultiplicity);
+
+      char name_mult_sector12[300];
+      sprintf(name_mult_sector12,"TotalEnergyCastor_sector12VsCastorMultiplicity_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_TotalEnergyCastor_sector12VsCastorMultiplicity = new TH2F(name_mult_sector12,"#sum Energy, Castor Sector 12 Vs Castor Multiplicity; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500,17,0,17);
+      m_hVector_TotalEnergyCastor_sector12VsCastorMultiplicity[j].push_back(histo_TotalEnergyCastor_sector12VsCastorMultiplicity);
+
+      char name_mult_sector13[300];
+      sprintf(name_mult_sector13,"TotalEnergyCastor_sector13VsCastorMultiplicity_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_TotalEnergyCastor_sector13VsCastorMultiplicity = new TH2F(name_mult_sector13,"#sum Energy, Castor Sector 13 Vs Castor Multiplicity; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500,17,0,17);
+      m_hVector_TotalEnergyCastor_sector13VsCastorMultiplicity[j].push_back(histo_TotalEnergyCastor_sector13VsCastorMultiplicity);
+
+      char name_mult_sector14[300];
+      sprintf(name_mult_sector14,"TotalEnergyCastor_sector14VsCastorMultiplicity_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_TotalEnergyCastor_sector14VsCastorMultiplicity = new TH2F(name_mult_sector14,"#sum Energy, Castor Sector 14 Vs Castor Multiplicity; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500,17,0,17);
+      m_hVector_TotalEnergyCastor_sector14VsCastorMultiplicity[j].push_back(histo_TotalEnergyCastor_sector14VsCastorMultiplicity);
+
+      char name_mult_sector15[300];
+      sprintf(name_mult_sector15,"TotalEnergyCastor_sector15VsCastorMultiplicity_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_TotalEnergyCastor_sector15VsCastorMultiplicity = new TH2F(name_mult_sector15,"#sum Energy, Castor Sector 15 Vs Castor Multiplicity; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500,17,0,17);
+      m_hVector_TotalEnergyCastor_sector15VsCastorMultiplicity[j].push_back(histo_TotalEnergyCastor_sector15VsCastorMultiplicity);
+
+      char name_mult_sector16[300];
+      sprintf(name_mult_sector16,"TotalEnergyCastor_sector16VsCastorMultiplicity_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_TotalEnergyCastor_sector16VsCastorMultiplicity = new TH2F(name_mult_sector16,"#sum Energy, Castor Sector 16 Vs Castor Multiplicity; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500,17,0,17);
+      m_hVector_TotalEnergyCastor_sector16VsCastorMultiplicity[j].push_back(histo_TotalEnergyCastor_sector16VsCastorMultiplicity);
+
+      // Castor Sector Plots
+      char name_mult_Before_sector1[300];
+      sprintf(name_mult_Before_sector1,"TotalEnergyCastor_Before_sector1VsCastorMultiplicity_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_TotalEnergyCastor_Before_sector1VsCastorMultiplicity = new TH2F(name_mult_Before_sector1,"#sum Energy, Castor Sector 1 Vs Castor Multiplicity; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500,17,0,17);
+      m_hVector_TotalEnergyCastor_Before_sector1VsCastorMultiplicity[j].push_back(histo_TotalEnergyCastor_Before_sector1VsCastorMultiplicity);
+
+      char name_mult_Before_sector2[300];
+      sprintf(name_mult_Before_sector2,"TotalEnergyCastor_Before_sector2VsCastorMultiplicity_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_TotalEnergyCastor_Before_sector2VsCastorMultiplicity = new TH2F(name_mult_Before_sector2,"#sum Energy, Castor Sector 2 Vs Castor Multiplicity; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500,17,0,17);
+      m_hVector_TotalEnergyCastor_Before_sector2VsCastorMultiplicity[j].push_back(histo_TotalEnergyCastor_Before_sector2VsCastorMultiplicity);
+
+      char name_mult_Before_sector3[300];
+      sprintf(name_mult_Before_sector3,"TotalEnergyCastor_Before_sector3VsCastorMultiplicity_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_TotalEnergyCastor_Before_sector3VsCastorMultiplicity = new TH2F(name_mult_Before_sector3,"#sum Energy, Castor Sector 3 Vs Castor Multiplicity; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500,17,0,17);
+      m_hVector_TotalEnergyCastor_Before_sector3VsCastorMultiplicity[j].push_back(histo_TotalEnergyCastor_Before_sector3VsCastorMultiplicity);
+
+      char name_mult_Before_sector4[300];
+      sprintf(name_mult_Before_sector4,"TotalEnergyCastor_Before_sector4VsCastorMultiplicity_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_TotalEnergyCastor_Before_sector4VsCastorMultiplicity = new TH2F(name_mult_Before_sector4,"#sum Energy, Castor Sector 4 Vs Castor Multiplicity; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500,17,0,17);
+      m_hVector_TotalEnergyCastor_Before_sector4VsCastorMultiplicity[j].push_back(histo_TotalEnergyCastor_Before_sector4VsCastorMultiplicity);
+
+      char name_mult_Before_sector5[300];
+      sprintf(name_mult_Before_sector5,"TotalEnergyCastor_Before_sector5VsCastorMultiplicity_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_TotalEnergyCastor_Before_sector5VsCastorMultiplicity = new TH2F(name_mult_Before_sector5,"#sum Energy, Castor Sector 5 Vs Castor Multiplicity; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500,17,0,17);
+      m_hVector_TotalEnergyCastor_Before_sector5VsCastorMultiplicity[j].push_back(histo_TotalEnergyCastor_Before_sector5VsCastorMultiplicity);
+
+      char name_mult_Before_sector6[300];
+      sprintf(name_mult_Before_sector6,"TotalEnergyCastor_Before_sector6VsCastorMultiplicity_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_TotalEnergyCastor_Before_sector6VsCastorMultiplicity = new TH2F(name_mult_Before_sector6,"#sum Energy, Castor Sector 6 Vs Castor Multiplicity; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500,17,0,17);
+      m_hVector_TotalEnergyCastor_Before_sector6VsCastorMultiplicity[j].push_back(histo_TotalEnergyCastor_Before_sector6VsCastorMultiplicity);
+
+      char name_mult_Before_sector7[300];
+      sprintf(name_mult_Before_sector7,"TotalEnergyCastor_Before_sector7VsCastorMultiplicity_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_TotalEnergyCastor_Before_sector7VsCastorMultiplicity = new TH2F(name_mult_Before_sector7,"#sum Energy, Castor Sector 7 Vs Castor Multiplicity; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500,17,0,17);
+      m_hVector_TotalEnergyCastor_Before_sector7VsCastorMultiplicity[j].push_back(histo_TotalEnergyCastor_Before_sector7VsCastorMultiplicity);
+
+      char name_mult_Before_sector8[300];
+      sprintf(name_mult_Before_sector8,"TotalEnergyCastor_Before_sector8VsCastorMultiplicity_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_TotalEnergyCastor_Before_sector8VsCastorMultiplicity = new TH2F(name_mult_Before_sector8,"#sum Energy, Castor Sector 8 Vs Castor Multiplicity; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500,17,0,17);
+      m_hVector_TotalEnergyCastor_Before_sector8VsCastorMultiplicity[j].push_back(histo_TotalEnergyCastor_Before_sector8VsCastorMultiplicity);
+
+      char name_mult_Before_sector9[300];
+      sprintf(name_mult_Before_sector9,"TotalEnergyCastor_Before_sector9VsCastorMultiplicity_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_TotalEnergyCastor_Before_sector9VsCastorMultiplicity = new TH2F(name_mult_Before_sector9,"#sum Energy, Castor Sector 9 Vs Castor Multiplicity; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500,17,0,17);
+      m_hVector_TotalEnergyCastor_Before_sector9VsCastorMultiplicity[j].push_back(histo_TotalEnergyCastor_Before_sector9VsCastorMultiplicity);
+
+      char name_mult_Before_sector10[300];
+      sprintf(name_mult_Before_sector10,"TotalEnergyCastor_Before_sector10VsCastorMultiplicity_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_TotalEnergyCastor_Before_sector10VsCastorMultiplicity = new TH2F(name_mult_Before_sector10,"#sum Energy, Castor Sector 10 Vs Castor Multiplicity; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500,17,0,17);
+      m_hVector_TotalEnergyCastor_Before_sector10VsCastorMultiplicity[j].push_back(histo_TotalEnergyCastor_Before_sector10VsCastorMultiplicity);
+
+      char name_mult_Before_sector11[300];
+      sprintf(name_mult_Before_sector11,"TotalEnergyCastor_Before_sector11VsCastorMultiplicity_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_TotalEnergyCastor_Before_sector11VsCastorMultiplicity = new TH2F(name_mult_Before_sector11,"#sum Energy, Castor Sector 11 Vs Castor Multiplicity; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500,17,0,17);
+      m_hVector_TotalEnergyCastor_Before_sector11VsCastorMultiplicity[j].push_back(histo_TotalEnergyCastor_Before_sector11VsCastorMultiplicity);
+
+      char name_mult_Before_sector12[300];
+      sprintf(name_mult_Before_sector12,"TotalEnergyCastor_Before_sector12VsCastorMultiplicity_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_TotalEnergyCastor_Before_sector12VsCastorMultiplicity = new TH2F(name_mult_Before_sector12,"#sum Energy, Castor Sector 12 Vs Castor Multiplicity; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500,17,0,17);
+      m_hVector_TotalEnergyCastor_Before_sector12VsCastorMultiplicity[j].push_back(histo_TotalEnergyCastor_Before_sector12VsCastorMultiplicity);
+
+      char name_mult_Before_sector13[300];
+      sprintf(name_mult_Before_sector13,"TotalEnergyCastor_Before_sector13VsCastorMultiplicity_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_TotalEnergyCastor_Before_sector13VsCastorMultiplicity = new TH2F(name_mult_Before_sector13,"#sum Energy, Castor Sector 13 Vs Castor Multiplicity; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500,17,0,17);
+      m_hVector_TotalEnergyCastor_Before_sector13VsCastorMultiplicity[j].push_back(histo_TotalEnergyCastor_Before_sector13VsCastorMultiplicity);
+
+      char name_mult_Before_sector14[300];
+      sprintf(name_mult_Before_sector14,"TotalEnergyCastor_Before_sector14VsCastorMultiplicity_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_TotalEnergyCastor_Before_sector14VsCastorMultiplicity = new TH2F(name_mult_Before_sector14,"#sum Energy, Castor Sector 14 Vs Castor Multiplicity; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500,17,0,17);
+      m_hVector_TotalEnergyCastor_Before_sector14VsCastorMultiplicity[j].push_back(histo_TotalEnergyCastor_Before_sector14VsCastorMultiplicity);
+
+      char name_mult_Before_sector15[300];
+      sprintf(name_mult_Before_sector15,"TotalEnergyCastor_Before_sector15VsCastorMultiplicity_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_TotalEnergyCastor_Before_sector15VsCastorMultiplicity = new TH2F(name_mult_Before_sector15,"#sum Energy, Castor Sector 15 Vs Castor Multiplicity; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500,17,0,17);
+      m_hVector_TotalEnergyCastor_Before_sector15VsCastorMultiplicity[j].push_back(histo_TotalEnergyCastor_Before_sector15VsCastorMultiplicity);
+
+      char name_mult_Before_sector16[300];
+      sprintf(name_mult_Before_sector16,"TotalEnergyCastor_Before_sector16VsCastorMultiplicity_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_TotalEnergyCastor_Before_sector16VsCastorMultiplicity = new TH2F(name_mult_Before_sector16,"#sum Energy, Castor Sector 16 Vs Castor Multiplicity; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500,17,0,17);
+      m_hVector_TotalEnergyCastor_Before_sector16VsCastorMultiplicity[j].push_back(histo_TotalEnergyCastor_Before_sector16VsCastorMultiplicity);
+
+      // Castor Sector Plots
+      char name_mult_After_sector1[300];
+      sprintf(name_mult_After_sector1,"TotalEnergyCastor_After_sector1VsCastorMultiplicity_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_TotalEnergyCastor_After_sector1VsCastorMultiplicity = new TH2F(name_mult_After_sector1,"#sum Energy, Castor Sector 1 Vs Castor Multiplicity; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500,17,0,17);
+      m_hVector_TotalEnergyCastor_After_sector1VsCastorMultiplicity[j].push_back(histo_TotalEnergyCastor_After_sector1VsCastorMultiplicity);
+
+      char name_mult_After_sector2[300];
+      sprintf(name_mult_After_sector2,"TotalEnergyCastor_After_sector2VsCastorMultiplicity_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_TotalEnergyCastor_After_sector2VsCastorMultiplicity = new TH2F(name_mult_After_sector2,"#sum Energy, Castor Sector 2 Vs Castor Multiplicity; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500,17,0,17);
+      m_hVector_TotalEnergyCastor_After_sector2VsCastorMultiplicity[j].push_back(histo_TotalEnergyCastor_After_sector2VsCastorMultiplicity);
+
+      char name_mult_After_sector3[300];
+      sprintf(name_mult_After_sector3,"TotalEnergyCastor_After_sector3VsCastorMultiplicity_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_TotalEnergyCastor_After_sector3VsCastorMultiplicity = new TH2F(name_mult_After_sector3,"#sum Energy, Castor Sector 3 Vs Castor Multiplicity; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500,17,0,17);
+      m_hVector_TotalEnergyCastor_After_sector3VsCastorMultiplicity[j].push_back(histo_TotalEnergyCastor_After_sector3VsCastorMultiplicity);
+
+      char name_mult_After_sector4[300];
+      sprintf(name_mult_After_sector4,"TotalEnergyCastor_After_sector4VsCastorMultiplicity_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_TotalEnergyCastor_After_sector4VsCastorMultiplicity = new TH2F(name_mult_After_sector4,"#sum Energy, Castor Sector 4 Vs Castor Multiplicity; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500,17,0,17);
+      m_hVector_TotalEnergyCastor_After_sector4VsCastorMultiplicity[j].push_back(histo_TotalEnergyCastor_After_sector4VsCastorMultiplicity);
+
+      char name_mult_After_sector5[300];
+      sprintf(name_mult_After_sector5,"TotalEnergyCastor_After_sector5VsCastorMultiplicity_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_TotalEnergyCastor_After_sector5VsCastorMultiplicity = new TH2F(name_mult_After_sector5,"#sum Energy, Castor Sector 5 Vs Castor Multiplicity; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500,17,0,17);
+      m_hVector_TotalEnergyCastor_After_sector5VsCastorMultiplicity[j].push_back(histo_TotalEnergyCastor_After_sector5VsCastorMultiplicity);
+
+      char name_mult_After_sector6[300];
+      sprintf(name_mult_After_sector6,"TotalEnergyCastor_After_sector6VsCastorMultiplicity_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_TotalEnergyCastor_After_sector6VsCastorMultiplicity = new TH2F(name_mult_After_sector6,"#sum Energy, Castor Sector 6 Vs Castor Multiplicity; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500,17,0,17);
+      m_hVector_TotalEnergyCastor_After_sector6VsCastorMultiplicity[j].push_back(histo_TotalEnergyCastor_After_sector6VsCastorMultiplicity);
+
+      char name_mult_After_sector7[300];
+      sprintf(name_mult_After_sector7,"TotalEnergyCastor_After_sector7VsCastorMultiplicity_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_TotalEnergyCastor_After_sector7VsCastorMultiplicity = new TH2F(name_mult_After_sector7,"#sum Energy, Castor Sector 7 Vs Castor Multiplicity; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500,17,0,17);
+      m_hVector_TotalEnergyCastor_After_sector7VsCastorMultiplicity[j].push_back(histo_TotalEnergyCastor_After_sector7VsCastorMultiplicity);
+
+      char name_mult_After_sector8[300];
+      sprintf(name_mult_After_sector8,"TotalEnergyCastor_After_sector8VsCastorMultiplicity_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_TotalEnergyCastor_After_sector8VsCastorMultiplicity = new TH2F(name_mult_After_sector8,"#sum Energy, Castor Sector 8 Vs Castor Multiplicity; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500,17,0,17);
+      m_hVector_TotalEnergyCastor_After_sector8VsCastorMultiplicity[j].push_back(histo_TotalEnergyCastor_After_sector8VsCastorMultiplicity);
+
+      char name_mult_After_sector9[300];
+      sprintf(name_mult_After_sector9,"TotalEnergyCastor_After_sector9VsCastorMultiplicity_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_TotalEnergyCastor_After_sector9VsCastorMultiplicity = new TH2F(name_mult_After_sector9,"#sum Energy, Castor Sector 9 Vs Castor Multiplicity; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500,17,0,17);
+      m_hVector_TotalEnergyCastor_After_sector9VsCastorMultiplicity[j].push_back(histo_TotalEnergyCastor_After_sector9VsCastorMultiplicity);
+
+      char name_mult_After_sector10[300];
+      sprintf(name_mult_After_sector10,"TotalEnergyCastor_After_sector10VsCastorMultiplicity_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_TotalEnergyCastor_After_sector10VsCastorMultiplicity = new TH2F(name_mult_After_sector10,"#sum Energy, Castor Sector 10 Vs Castor Multiplicity; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500,17,0,17);
+      m_hVector_TotalEnergyCastor_After_sector10VsCastorMultiplicity[j].push_back(histo_TotalEnergyCastor_After_sector10VsCastorMultiplicity);
+
+      char name_mult_After_sector11[300];
+      sprintf(name_mult_After_sector11,"TotalEnergyCastor_After_sector11VsCastorMultiplicity_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_TotalEnergyCastor_After_sector11VsCastorMultiplicity = new TH2F(name_mult_After_sector11,"#sum Energy, Castor Sector 11 Vs Castor Multiplicity; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500,17,0,17);
+      m_hVector_TotalEnergyCastor_After_sector11VsCastorMultiplicity[j].push_back(histo_TotalEnergyCastor_After_sector11VsCastorMultiplicity);
+
+      char name_mult_After_sector12[300];
+      sprintf(name_mult_After_sector12,"TotalEnergyCastor_After_sector12VsCastorMultiplicity_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_TotalEnergyCastor_After_sector12VsCastorMultiplicity = new TH2F(name_mult_After_sector12,"#sum Energy, Castor Sector 12 Vs Castor Multiplicity; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500,17,0,17);
+      m_hVector_TotalEnergyCastor_After_sector12VsCastorMultiplicity[j].push_back(histo_TotalEnergyCastor_After_sector12VsCastorMultiplicity);
+
+      char name_mult_After_sector13[300];
+      sprintf(name_mult_After_sector13,"TotalEnergyCastor_After_sector13VsCastorMultiplicity_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_TotalEnergyCastor_After_sector13VsCastorMultiplicity = new TH2F(name_mult_After_sector13,"#sum Energy, Castor Sector 13 Vs Castor Multiplicity; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500,17,0,17);
+      m_hVector_TotalEnergyCastor_After_sector13VsCastorMultiplicity[j].push_back(histo_TotalEnergyCastor_After_sector13VsCastorMultiplicity);
+
+      char name_mult_After_sector14[300];
+      sprintf(name_mult_After_sector14,"TotalEnergyCastor_After_sector14VsCastorMultiplicity_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_TotalEnergyCastor_After_sector14VsCastorMultiplicity = new TH2F(name_mult_After_sector14,"#sum Energy, Castor Sector 14 Vs Castor Multiplicity; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500,17,0,17);
+      m_hVector_TotalEnergyCastor_After_sector14VsCastorMultiplicity[j].push_back(histo_TotalEnergyCastor_After_sector14VsCastorMultiplicity);
+
+      char name_mult_After_sector15[300];
+      sprintf(name_mult_After_sector15,"TotalEnergyCastor_After_sector15VsCastorMultiplicity_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_TotalEnergyCastor_After_sector15VsCastorMultiplicity = new TH2F(name_mult_After_sector15,"#sum Energy, Castor Sector 15 Vs Castor Multiplicity; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500,17,0,17);
+      m_hVector_TotalEnergyCastor_After_sector15VsCastorMultiplicity[j].push_back(histo_TotalEnergyCastor_After_sector15VsCastorMultiplicity);
+
+      char name_mult_After_sector16[300];
+      sprintf(name_mult_After_sector16,"TotalEnergyCastor_After_sector16VsCastorMultiplicity_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_TotalEnergyCastor_After_sector16VsCastorMultiplicity = new TH2F(name_mult_After_sector16,"#sum Energy, Castor Sector 16 Vs Castor Multiplicity; #sum E_{modules 1,2,3,4,5} [GeV]; N events",1000,0,500,17,0,17);
+      m_hVector_TotalEnergyCastor_After_sector16VsCastorMultiplicity[j].push_back(histo_TotalEnergyCastor_After_sector16VsCastorMultiplicity);
+
+      char castor_centroid[300];
+      sprintf(castor_centroid,"CastorCentroid_%s_%s",tag,Folders.at(j).c_str());
+      TH2F *histo_castor_centroid = new TH2F(castor_centroid,"Castor Centroid Energy; x[cm]; y[cm]",30,-15,15,30,-15,15);
+      m_hVector_histo_castor_centroid[j].push_back(histo_castor_centroid);
 
     }
   }
@@ -1739,123 +2397,15 @@ void DiffractiveZ::FillHistos(int index, int pileup, double totalweight){
   m_hVector_correlationMuon2Phi[index].at(pileup)->Fill(eventdiffZ->GetSecondMuonPhi(),eventdiffZ->GetPatMuon2Phi());
   m_hVector_correlationMuon2Iso[index].at(pileup)->Fill(eventdiffZ->GetSecondMuonrelIsoDr03(),eventdiffZ->GetPatMuon2relIsoDr03());
 
-  // Castor Energy per Sector
-  if (eventdiffZ->GetCastorTowerEnergy(0) > 4.*0.364){
-    m_hVector_TotalEnergyCastor_sector1[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(0),totalweight);
-  }
-  else{
-    m_hVector_TotalEnergyCastor_sector1[index].at(pileup)->Fill(0);
-  }
-
-  if (eventdiffZ->GetCastorTowerEnergy(1) > 4.*0.364){
-    m_hVector_TotalEnergyCastor_sector2[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(1),totalweight);
-  }
-  else{
-    m_hVector_TotalEnergyCastor_sector2[index].at(pileup)->Fill(0);
-  }
-
-  if (eventdiffZ->GetCastorTowerEnergy(2) > 4.*0.364){
-    m_hVector_TotalEnergyCastor_sector3[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(2),totalweight);
-  } 
-  else{
-    m_hVector_TotalEnergyCastor_sector3[index].at(pileup)->Fill(0);
-  }
-
-  if (eventdiffZ->GetCastorTowerEnergy(3) > 4.*0.364){
-    m_hVector_TotalEnergyCastor_sector4[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(3),totalweight);
-  }
-  else{
-    m_hVector_TotalEnergyCastor_sector4[index].at(pileup)->Fill(0);
-  }
-
-  if (eventdiffZ->GetCastorTowerEnergy(4) > 4.*0.364){
-    m_hVector_TotalEnergyCastor_sector5[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(4),totalweight);
-  }
-  else {
-    m_hVector_TotalEnergyCastor_sector5[index].at(pileup)->Fill(0);
-  }
-
-  if (eventdiffZ->GetCastorTowerEnergy(5) > 4.*0.364){
-    m_hVector_TotalEnergyCastor_sector6[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(5),totalweight);
-  } 
-  else {
-    m_hVector_TotalEnergyCastor_sector6[index].at(pileup)->Fill(0);
-  }
-
-  if (eventdiffZ->GetCastorTowerEnergy(6) > 4.*0.364){
-    m_hVector_TotalEnergyCastor_sector7[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(6),totalweight);
-  }
-  else{
-    m_hVector_TotalEnergyCastor_sector7[index].at(pileup)->Fill(0);
-  }
-
-  if (eventdiffZ->GetCastorTowerEnergy(7) > 4.*0.364){
-    m_hVector_TotalEnergyCastor_sector8[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(7),totalweight);
-  }
-  else {
-    m_hVector_TotalEnergyCastor_sector8[index].at(pileup)->Fill(0);
-  }
-
-  if (eventdiffZ->GetCastorTowerEnergy(8) > 4.*0.364){
-    m_hVector_TotalEnergyCastor_sector9[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(8),totalweight);
-  }
-  else{
-    m_hVector_TotalEnergyCastor_sector9[index].at(pileup)->Fill(0);
-  }
-
-  if (eventdiffZ->GetCastorTowerEnergy(9) > 4.*0.364){
-    m_hVector_TotalEnergyCastor_sector10[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(9),totalweight);
-  }
-  else{
-    m_hVector_TotalEnergyCastor_sector10[index].at(pileup)->Fill(0);
-  }
-
-  if (eventdiffZ->GetCastorTowerEnergy(10) > 4.*0.364){
-    m_hVector_TotalEnergyCastor_sector11[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(10),totalweight);
-  } 
-  else{
-    m_hVector_TotalEnergyCastor_sector11[index].at(pileup)->Fill(0);
-  }
-
-  if (eventdiffZ->GetCastorTowerEnergy(11) > 4.*0.364){
-    m_hVector_TotalEnergyCastor_sector12[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(11),totalweight);
-  }
-  else {
-    m_hVector_TotalEnergyCastor_sector12[index].at(pileup)->Fill(0);
-  }
-
-  if (eventdiffZ->GetCastorTowerEnergy(12) > 4.*0.364){
-    m_hVector_TotalEnergyCastor_sector13[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(12),totalweight);
-  }
-  else { 
-    m_hVector_TotalEnergyCastor_sector13[index].at(pileup)->Fill(0);
-  } 
-
-  if (eventdiffZ->GetCastorTowerEnergy(13) > 4.*0.364){
-    m_hVector_TotalEnergyCastor_sector14[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(13),totalweight);
-  } 
-  else {
-    m_hVector_TotalEnergyCastor_sector14[index].at(pileup)->Fill(0);
-  }  
-
-  if (eventdiffZ->GetCastorTowerEnergy(14) > 4.*0.364){
-    m_hVector_TotalEnergyCastor_sector15[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(14),totalweight);
-  }
-  else {
-    m_hVector_TotalEnergyCastor_sector15[index].at(pileup)->Fill(0);
-  }
-
-  if (eventdiffZ->GetCastorTowerEnergy(15) > 4.*0.364){
-    m_hVector_TotalEnergyCastor_sector16[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(15),totalweight);
-  } 
-  else {
-    m_hVector_TotalEnergyCastor_sector16[index].at(pileup)->Fill(0);
-  }
-
   sumCastorEnergy = 0.;
   sumCastorAndHFMinusEnergy = 0.;
   SectorCastorHit = 0.;
   SectorZeroCastorCounter = 0.;
+  num_x_centroid = 0;
+  num_y_centroid = 0.;
+  x_temp = 0.;
+  y_temp = 0.;
+  double castorId[16] = {11.25,33.75,56.25,78.75,101.25,123.75,146.25,168.75,191.25,213.75,236.25,258.75,281.25,303.75,326.75,348.75};
   for (l=0; l<16;l++){
     if (eventdiffZ->GetCastorTowerEnergy(l) > 4.*0.364){
       ++SectorCastorHit;
@@ -1863,15 +2413,175 @@ void DiffractiveZ::FillHistos(int index, int pileup, double totalweight){
       m_hVector_ECastorSectorTProf[index].at(pileup)->Fill(l+1,eventdiffZ->GetCastorTowerEnergy(l),totalweight);
       m_hVector_ECastorSectorBin1D[index].at(pileup)->Fill(l+1,eventdiffZ->GetCastorTowerEnergy(l)*totalweight);
       sumCastorEnergy+=eventdiffZ->GetCastorTowerEnergy(l);
+      x_temp = 15*cos(castorId[l]);
+      y_temp = 15*sin(castorId[l]);
+      num_x_centroid += x_temp*eventdiffZ->GetCastorTowerEnergy(l);
+      num_y_centroid += y_temp*eventdiffZ->GetCastorTowerEnergy(l);
     }
-    else {
+    else{
       m_hVector_ECastorSector[index].at(pileup)->Fill(l+1,0);
       m_hVector_ECastorSectorTProf[index].at(pileup)->Fill(l+1,0);
       m_hVector_ECastorSectorBin1D[index].at(pileup)->Fill(l+1,0);
       sumCastorEnergy+=0;
       ++SectorZeroCastorCounter;
+      num_x_centroid += 0;
+      num_y_centroid += 0;      
     }
   }
+
+  if (sumCastorEnergy > 0.){
+    x_centroid = num_x_centroid/sumCastorEnergy;
+    y_centroid = num_y_centroid/sumCastorEnergy;
+    m_hVector_histo_castor_centroid[index].at(pileup)->Fill(x_centroid,y_centroid);
+  }
+
+  // Castor Energy per Sector
+  if (eventdiffZ->GetCastorTowerEnergy(0) > 4.*0.364){
+    m_hVector_TotalEnergyCastor_sector1[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(0),totalweight);
+    m_hVector_TotalEnergyCastor_sector1VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,eventdiffZ->GetCastorTowerEnergy(0),totalweight);
+  }
+  else{
+    m_hVector_TotalEnergyCastor_sector1[index].at(pileup)->Fill(0);
+    m_hVector_TotalEnergyCastor_sector1VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,0.,totalweight);
+  }
+
+  if (eventdiffZ->GetCastorTowerEnergy(1) > 4.*0.364){
+    m_hVector_TotalEnergyCastor_sector2[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(1),totalweight);
+    m_hVector_TotalEnergyCastor_sector2VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,eventdiffZ->GetCastorTowerEnergy(1),totalweight);
+  }
+  else{
+    m_hVector_TotalEnergyCastor_sector2[index].at(pileup)->Fill(0);
+    m_hVector_TotalEnergyCastor_sector2VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,0.,totalweight);
+  }
+
+  if (eventdiffZ->GetCastorTowerEnergy(2) > 4.*0.364){
+    m_hVector_TotalEnergyCastor_sector3[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(2),totalweight);
+    m_hVector_TotalEnergyCastor_sector3VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,eventdiffZ->GetCastorTowerEnergy(2),totalweight);
+  } 
+  else{
+    m_hVector_TotalEnergyCastor_sector3[index].at(pileup)->Fill(0);
+    m_hVector_TotalEnergyCastor_sector3VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,0.,totalweight);
+  }
+
+  if (eventdiffZ->GetCastorTowerEnergy(3) > 4.*0.364){
+    m_hVector_TotalEnergyCastor_sector4[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(3),totalweight);
+    m_hVector_TotalEnergyCastor_sector4VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,eventdiffZ->GetCastorTowerEnergy(3),totalweight);
+  }
+  else{
+    m_hVector_TotalEnergyCastor_sector4[index].at(pileup)->Fill(0);
+    m_hVector_TotalEnergyCastor_sector4VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,0.,totalweight);
+  }
+
+  if (eventdiffZ->GetCastorTowerEnergy(4) > 4.*0.364){
+    m_hVector_TotalEnergyCastor_sector5[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(4),totalweight);
+    m_hVector_TotalEnergyCastor_sector5VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,eventdiffZ->GetCastorTowerEnergy(4),totalweight);
+  }
+  else{
+    m_hVector_TotalEnergyCastor_sector5[index].at(pileup)->Fill(0);
+    m_hVector_TotalEnergyCastor_sector5VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,0.,totalweight);
+  }
+
+  if (eventdiffZ->GetCastorTowerEnergy(5) > 4.*0.364){
+    m_hVector_TotalEnergyCastor_sector6[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(5),totalweight);
+    m_hVector_TotalEnergyCastor_sector6VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,eventdiffZ->GetCastorTowerEnergy(5),totalweight);
+  } 
+  else{
+    m_hVector_TotalEnergyCastor_sector6[index].at(pileup)->Fill(0);
+    m_hVector_TotalEnergyCastor_sector6VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,0.,totalweight);
+  }
+
+  if (eventdiffZ->GetCastorTowerEnergy(6) > 4.*0.364){
+    m_hVector_TotalEnergyCastor_sector7[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(6),totalweight);
+    m_hVector_TotalEnergyCastor_sector7VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,eventdiffZ->GetCastorTowerEnergy(6),totalweight);
+  }
+  else{
+    m_hVector_TotalEnergyCastor_sector7[index].at(pileup)->Fill(0);
+    m_hVector_TotalEnergyCastor_sector7VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,0.,totalweight);
+  }
+
+  if (eventdiffZ->GetCastorTowerEnergy(7) > 4.*0.364){
+    m_hVector_TotalEnergyCastor_sector8[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(7),totalweight);
+    m_hVector_TotalEnergyCastor_sector8VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,eventdiffZ->GetCastorTowerEnergy(7),totalweight);
+  }
+  else{
+    m_hVector_TotalEnergyCastor_sector8[index].at(pileup)->Fill(0);
+    m_hVector_TotalEnergyCastor_sector8VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,0.,totalweight);
+  }
+
+  if (eventdiffZ->GetCastorTowerEnergy(8) > 4.*0.364){
+    m_hVector_TotalEnergyCastor_sector9[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(8),totalweight);
+    m_hVector_TotalEnergyCastor_sector9VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,eventdiffZ->GetCastorTowerEnergy(8),totalweight);
+  }
+  else{
+    m_hVector_TotalEnergyCastor_sector9[index].at(pileup)->Fill(0);
+    m_hVector_TotalEnergyCastor_sector9VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,0.,totalweight);
+  }
+
+  if (eventdiffZ->GetCastorTowerEnergy(9) > 4.*0.364){
+    m_hVector_TotalEnergyCastor_sector10[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(9),totalweight);
+    m_hVector_TotalEnergyCastor_sector10VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,eventdiffZ->GetCastorTowerEnergy(9),totalweight);
+  }
+  else{
+    m_hVector_TotalEnergyCastor_sector10[index].at(pileup)->Fill(0);
+    m_hVector_TotalEnergyCastor_sector10VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,0.,totalweight);
+  }
+
+  if (eventdiffZ->GetCastorTowerEnergy(10) > 4.*0.364){
+    m_hVector_TotalEnergyCastor_sector11[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(10),totalweight);
+    m_hVector_TotalEnergyCastor_sector11VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,eventdiffZ->GetCastorTowerEnergy(10),totalweight);
+  } 
+  else{
+    m_hVector_TotalEnergyCastor_sector11[index].at(pileup)->Fill(0);
+    m_hVector_TotalEnergyCastor_sector11VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,0.,totalweight);
+  }
+
+  if (eventdiffZ->GetCastorTowerEnergy(11) > 4.*0.364){
+    m_hVector_TotalEnergyCastor_sector12[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(11),totalweight);
+    m_hVector_TotalEnergyCastor_sector12VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,eventdiffZ->GetCastorTowerEnergy(11),totalweight);
+  }
+  else{
+    m_hVector_TotalEnergyCastor_sector12[index].at(pileup)->Fill(0);
+    m_hVector_TotalEnergyCastor_sector12VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,0.,totalweight);
+  }
+
+  if (eventdiffZ->GetCastorTowerEnergy(12) > 4.*0.364){
+    m_hVector_TotalEnergyCastor_sector13[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(12),totalweight);
+    m_hVector_TotalEnergyCastor_sector13VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,eventdiffZ->GetCastorTowerEnergy(12),totalweight);
+  }
+  else{ 
+    m_hVector_TotalEnergyCastor_sector13[index].at(pileup)->Fill(0);
+    m_hVector_TotalEnergyCastor_sector13VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,0.,totalweight);
+  } 
+
+  if (eventdiffZ->GetCastorTowerEnergy(13) > 4.*0.364){
+    m_hVector_TotalEnergyCastor_sector14[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(13),totalweight);
+    m_hVector_TotalEnergyCastor_sector14VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,eventdiffZ->GetCastorTowerEnergy(13),totalweight);
+  } 
+  else{
+    m_hVector_TotalEnergyCastor_sector14[index].at(pileup)->Fill(0);
+    m_hVector_TotalEnergyCastor_sector14VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,0.,totalweight);
+  }  
+
+  if (eventdiffZ->GetCastorTowerEnergy(14) > 4.*0.364){
+    m_hVector_TotalEnergyCastor_sector15[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(14),totalweight);
+    m_hVector_TotalEnergyCastor_sector15VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,eventdiffZ->GetCastorTowerEnergy(14),totalweight);
+  }
+  else{
+    m_hVector_TotalEnergyCastor_sector15[index].at(pileup)->Fill(0);
+    m_hVector_TotalEnergyCastor_sector15VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,0.,totalweight);
+  }
+
+  if (eventdiffZ->GetCastorTowerEnergy(15) > 4.*0.364){
+    m_hVector_TotalEnergyCastor_sector16[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(15),totalweight);
+    m_hVector_TotalEnergyCastor_sector16VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,eventdiffZ->GetCastorTowerEnergy(15),totalweight);
+  } 
+  else{
+    m_hVector_TotalEnergyCastor_sector16[index].at(pileup)->Fill(0);
+    m_hVector_TotalEnergyCastor_sector16VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,0.,totalweight);
+  }
+
+  m_hVector_SectorVsTotalCastorEnergy[index].at(pileup)->Fill(SectorCastorHit,sumCastorEnergy,totalweight);
+  m_hVector_SectorVsTotalCastorEnergyTProf[index].at(pileup)->Fill(SectorCastorHit,sumCastorEnergy,totalweight);
   m_hVector_sumECastorMinus[index].at(pileup)->Fill(sumCastorEnergy,totalweight);
   sumCastorAndHFMinusEnergy = sumCastorEnergy+eventdiff->GetSumEnergyHFMinus();
   m_hVector_sumECastorAndHFMinus[index].at(pileup)->Fill(sumCastorAndHFMinusEnergy,totalweight);
@@ -1881,8 +2591,51 @@ void DiffractiveZ::FillHistos(int index, int pileup, double totalweight){
   m_hVector_EnergyHFPlusVsCastorTProf[index].at(pileup)->Fill(eventdiff->GetSumEnergyHFPlus(),sumCastorEnergy,totalweight);
   m_hVector_CastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,totalweight);
   m_hVector_CastorMultiplicityVsLumi[index].at(pileup)->Fill(eventinfo->GetInstLumiBunch(),SectorCastorHit,totalweight);
+
   if (SectorCastorHit < 1) m_hVector_RunNumberZeroCastor[index].at(pileup)->Fill(eventdiff->GetRunNumber());
   if (SectorCastorHit > 15) m_hVector_RunNumberHighCastor[index].at(pileup)->Fill(eventdiff->GetRunNumber());
+
+  if(eventdiff->GetRunNumber() > 148000){
+    m_hVector_SectorVsTotalCastorEnergyAfter[index].at(pileup)->Fill(SectorCastorHit,sumCastorEnergy,totalweight);
+    m_hVector_SectorVsTotalCastorEnergyAfterTProf[index].at(pileup)->Fill(SectorCastorHit,sumCastorEnergy,totalweight);
+    m_hVector_RunNumberAfter[index].at(pileup)->Fill(eventdiff->GetRunNumber());
+    m_hVector_CastorMultiplicityAfter[index].at(pileup)->Fill(SectorCastorHit,totalweight);
+    if (SectorCastorHit < 1) m_hVector_RunNumberZeroCastorAfter[index].at(pileup)->Fill(eventdiff->GetRunNumber());
+    if (SectorCastorHit > 15) m_hVector_RunNumberHighCastorAfter[index].at(pileup)->Fill(eventdiff->GetRunNumber());
+  }
+  else{
+    m_hVector_SectorVsTotalCastorEnergyBefore[index].at(pileup)->Fill(SectorCastorHit,sumCastorEnergy,totalweight);
+    m_hVector_SectorVsTotalCastorEnergyBeforeTProf[index].at(pileup)->Fill(SectorCastorHit,sumCastorEnergy,totalweight);
+    m_hVector_RunNumberBefore[index].at(pileup)->Fill(eventdiff->GetRunNumber());
+    m_hVector_CastorMultiplicityBefore[index].at(pileup)->Fill(SectorCastorHit,totalweight);
+    if (SectorCastorHit < 1) m_hVector_RunNumberZeroCastorBefore[index].at(pileup)->Fill(eventdiff->GetRunNumber());
+    if (SectorCastorHit > 15) m_hVector_RunNumberHighCastorBefore[index].at(pileup)->Fill(eventdiff->GetRunNumber());
+  }
+
+  if (SectorCastorHit >=0 && SectorCastorHit <=4){
+    m_hVector_sumECastorMinusBin0To4[index].at(pileup)->Fill(sumCastorEnergy,totalweight);
+    m_hVector_sumEHFplusBin0To4[index].at(pileup)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight);
+    m_hVector_sumEHFminusBin0To4[index].at(pileup)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight);
+  }
+
+  if (SectorCastorHit >=5 && SectorCastorHit <=8){
+    m_hVector_sumECastorMinusBin5To8[index].at(pileup)->Fill(sumCastorEnergy,totalweight);
+    m_hVector_sumEHFplusBin5To8[index].at(pileup)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight);
+    m_hVector_sumEHFminusBin5To8[index].at(pileup)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight);
+  }
+
+  if (SectorCastorHit >=9 && SectorCastorHit <=12){
+    m_hVector_sumECastorMinusBin9To12[index].at(pileup)->Fill(sumCastorEnergy,totalweight);
+    m_hVector_sumEHFplusBin9To12[index].at(pileup)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight);
+    m_hVector_sumEHFminusBin9To12[index].at(pileup)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight);
+  }
+
+  if (SectorCastorHit >=13 && SectorCastorHit <=16){
+    m_hVector_sumECastorMinusBin13To16[index].at(pileup)->Fill(sumCastorEnergy,totalweight);
+    m_hVector_sumEHFplusBin13To16[index].at(pileup)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight);
+    m_hVector_sumEHFminusBin13To16[index].at(pileup)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight);
+  }
+
   m_hVector_RunNumber[index].at(pileup)->Fill(eventdiff->GetRunNumber());
 
   for (k=0; k<eventdiffZ->GetEachTowerCounter();k++){
@@ -1896,7 +2649,7 @@ void DiffractiveZ::FillHistos(int index, int pileup, double totalweight){
     m_hVector_SumEHFMin[index].at(pileup)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight);
   }
 
-  else {
+  else{
     m_hVector_SumEHFMax[index].at(pileup)->Fill(eventdiff->GetSumEnergyHFMinus(),totalweight);
     m_hVector_SumEHFMin[index].at(pileup)->Fill(eventdiff->GetSumEnergyHFPlus(),totalweight);
   }
@@ -1963,6 +2716,302 @@ void DiffractiveZ::FillHistos(int index, int pileup, double totalweight){
 
   m_hVector_absdeltaEtaPF[index].at(pileup)->Fill(absdeltaetapf,totalweight);
   m_hVector_deltaEtaPF[index].at(pileup)->Fill(deltaetapf,totalweight);
+
+  if(eventdiff->GetRunNumber() > 148000){
+
+    // Castor Energy per Sector
+    if (eventdiffZ->GetCastorTowerEnergy(0) > 4.*0.364){
+      m_hVector_TotalEnergyCastor_After_sector1[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(0),totalweight);
+      m_hVector_TotalEnergyCastor_After_sector1VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,eventdiffZ->GetCastorTowerEnergy(0),totalweight);
+    }
+    else{
+      m_hVector_TotalEnergyCastor_After_sector1[index].at(pileup)->Fill(0);
+      m_hVector_TotalEnergyCastor_After_sector1VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,0.,totalweight);
+    }
+
+    if (eventdiffZ->GetCastorTowerEnergy(1) > 4.*0.364){
+      m_hVector_TotalEnergyCastor_After_sector2[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(1),totalweight);
+      m_hVector_TotalEnergyCastor_After_sector2VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,eventdiffZ->GetCastorTowerEnergy(1),totalweight);
+    }
+    else{
+      m_hVector_TotalEnergyCastor_After_sector2[index].at(pileup)->Fill(0);
+      m_hVector_TotalEnergyCastor_After_sector2VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,0.,totalweight);
+    }
+
+    if (eventdiffZ->GetCastorTowerEnergy(2) > 4.*0.364){
+      m_hVector_TotalEnergyCastor_After_sector3[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(2),totalweight);
+      m_hVector_TotalEnergyCastor_After_sector3VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,eventdiffZ->GetCastorTowerEnergy(2),totalweight);
+    } 
+    else{
+      m_hVector_TotalEnergyCastor_After_sector3[index].at(pileup)->Fill(0);
+      m_hVector_TotalEnergyCastor_After_sector3VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,0.,totalweight);
+    }
+
+    if (eventdiffZ->GetCastorTowerEnergy(3) > 4.*0.364){
+      m_hVector_TotalEnergyCastor_After_sector4[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(3),totalweight);
+      m_hVector_TotalEnergyCastor_After_sector4VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,eventdiffZ->GetCastorTowerEnergy(3),totalweight);
+    }
+    else{
+      m_hVector_TotalEnergyCastor_After_sector4[index].at(pileup)->Fill(0);
+      m_hVector_TotalEnergyCastor_After_sector4VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,0.,totalweight);
+    }
+
+    if (eventdiffZ->GetCastorTowerEnergy(4) > 4.*0.364){
+      m_hVector_TotalEnergyCastor_After_sector5[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(4),totalweight);
+      m_hVector_TotalEnergyCastor_After_sector5VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,eventdiffZ->GetCastorTowerEnergy(4),totalweight);
+    }
+    else{
+      m_hVector_TotalEnergyCastor_After_sector5[index].at(pileup)->Fill(0);
+      m_hVector_TotalEnergyCastor_After_sector5VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,0.,totalweight);
+    }
+
+    if (eventdiffZ->GetCastorTowerEnergy(5) > 4.*0.364){
+      m_hVector_TotalEnergyCastor_After_sector6[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(5),totalweight);
+      m_hVector_TotalEnergyCastor_After_sector6VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,eventdiffZ->GetCastorTowerEnergy(5),totalweight);
+    } 
+    else{
+      m_hVector_TotalEnergyCastor_After_sector6[index].at(pileup)->Fill(0);
+      m_hVector_TotalEnergyCastor_After_sector6VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,0.,totalweight);
+    }
+
+    if (eventdiffZ->GetCastorTowerEnergy(6) > 4.*0.364){
+      m_hVector_TotalEnergyCastor_After_sector7[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(6),totalweight);
+      m_hVector_TotalEnergyCastor_After_sector7VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,eventdiffZ->GetCastorTowerEnergy(6),totalweight);
+    }
+    else{
+      m_hVector_TotalEnergyCastor_After_sector7[index].at(pileup)->Fill(0);
+      m_hVector_TotalEnergyCastor_After_sector7VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,0.,totalweight);
+    }
+
+    if (eventdiffZ->GetCastorTowerEnergy(7) > 4.*0.364){
+      m_hVector_TotalEnergyCastor_After_sector8[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(7),totalweight);
+      m_hVector_TotalEnergyCastor_After_sector8VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,eventdiffZ->GetCastorTowerEnergy(7),totalweight);
+    }
+    else{
+      m_hVector_TotalEnergyCastor_After_sector8[index].at(pileup)->Fill(0);
+      m_hVector_TotalEnergyCastor_After_sector8VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,0.,totalweight);
+    }
+
+    if (eventdiffZ->GetCastorTowerEnergy(8) > 4.*0.364){
+      m_hVector_TotalEnergyCastor_After_sector9[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(8),totalweight);
+      m_hVector_TotalEnergyCastor_After_sector9VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,eventdiffZ->GetCastorTowerEnergy(8),totalweight);
+    }
+    else{
+      m_hVector_TotalEnergyCastor_After_sector9[index].at(pileup)->Fill(0);
+      m_hVector_TotalEnergyCastor_After_sector9VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,0.,totalweight);
+    }
+
+    if (eventdiffZ->GetCastorTowerEnergy(9) > 4.*0.364){
+      m_hVector_TotalEnergyCastor_After_sector10[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(9),totalweight);
+      m_hVector_TotalEnergyCastor_After_sector10VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,eventdiffZ->GetCastorTowerEnergy(9),totalweight);
+    }
+    else{
+      m_hVector_TotalEnergyCastor_After_sector10[index].at(pileup)->Fill(0);
+      m_hVector_TotalEnergyCastor_After_sector10VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,0.,totalweight);
+    }
+
+    if (eventdiffZ->GetCastorTowerEnergy(10) > 4.*0.364){
+      m_hVector_TotalEnergyCastor_After_sector11[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(10),totalweight);
+      m_hVector_TotalEnergyCastor_After_sector11VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,eventdiffZ->GetCastorTowerEnergy(10),totalweight);
+    } 
+    else{
+      m_hVector_TotalEnergyCastor_After_sector11[index].at(pileup)->Fill(0);
+      m_hVector_TotalEnergyCastor_After_sector11VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,0.,totalweight);
+    }
+
+    if (eventdiffZ->GetCastorTowerEnergy(11) > 4.*0.364){
+      m_hVector_TotalEnergyCastor_After_sector12[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(11),totalweight);
+      m_hVector_TotalEnergyCastor_After_sector12VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,eventdiffZ->GetCastorTowerEnergy(11),totalweight);
+    }
+    else{
+      m_hVector_TotalEnergyCastor_After_sector12[index].at(pileup)->Fill(0);
+      m_hVector_TotalEnergyCastor_After_sector12VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,0.,totalweight);
+    }
+
+    if (eventdiffZ->GetCastorTowerEnergy(12) > 4.*0.364){
+      m_hVector_TotalEnergyCastor_After_sector13[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(12),totalweight);
+      m_hVector_TotalEnergyCastor_After_sector13VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,eventdiffZ->GetCastorTowerEnergy(12),totalweight);
+    }
+    else{ 
+      m_hVector_TotalEnergyCastor_After_sector13[index].at(pileup)->Fill(0);
+      m_hVector_TotalEnergyCastor_After_sector13VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,0.,totalweight);
+    } 
+
+    if (eventdiffZ->GetCastorTowerEnergy(13) > 4.*0.364){
+      m_hVector_TotalEnergyCastor_After_sector14[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(13),totalweight);
+      m_hVector_TotalEnergyCastor_After_sector14VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,eventdiffZ->GetCastorTowerEnergy(13),totalweight);
+    } 
+    else{
+      m_hVector_TotalEnergyCastor_After_sector14[index].at(pileup)->Fill(0);
+      m_hVector_TotalEnergyCastor_After_sector14VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,0.,totalweight);
+    }  
+
+    if (eventdiffZ->GetCastorTowerEnergy(14) > 4.*0.364){
+      m_hVector_TotalEnergyCastor_After_sector15[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(14),totalweight);
+      m_hVector_TotalEnergyCastor_After_sector15VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,eventdiffZ->GetCastorTowerEnergy(14),totalweight);
+    }
+    else{
+      m_hVector_TotalEnergyCastor_After_sector15[index].at(pileup)->Fill(0);
+      m_hVector_TotalEnergyCastor_After_sector15VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,0.,totalweight);
+    }
+
+    if (eventdiffZ->GetCastorTowerEnergy(15) > 4.*0.364){
+      m_hVector_TotalEnergyCastor_After_sector16[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(15),totalweight);
+      m_hVector_TotalEnergyCastor_After_sector16VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,eventdiffZ->GetCastorTowerEnergy(15),totalweight);
+    } 
+    else{
+      m_hVector_TotalEnergyCastor_After_sector16[index].at(pileup)->Fill(0);
+      m_hVector_TotalEnergyCastor_After_sector16VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,0.,totalweight);
+    }
+
+  }else{
+
+    // Castor Energy per Sector
+    if (eventdiffZ->GetCastorTowerEnergy(0) > 4.*0.364){
+      m_hVector_TotalEnergyCastor_Before_sector1[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(0),totalweight);
+      m_hVector_TotalEnergyCastor_Before_sector1VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,eventdiffZ->GetCastorTowerEnergy(0),totalweight);
+    }
+    else{
+      m_hVector_TotalEnergyCastor_Before_sector1[index].at(pileup)->Fill(0);
+      m_hVector_TotalEnergyCastor_Before_sector1VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,0.,totalweight);
+    }
+
+    if (eventdiffZ->GetCastorTowerEnergy(1) > 4.*0.364){
+      m_hVector_TotalEnergyCastor_Before_sector2[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(1),totalweight);
+      m_hVector_TotalEnergyCastor_Before_sector2VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,eventdiffZ->GetCastorTowerEnergy(1),totalweight);
+    }
+    else{
+      m_hVector_TotalEnergyCastor_Before_sector2[index].at(pileup)->Fill(0);
+      m_hVector_TotalEnergyCastor_Before_sector2VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,0.,totalweight);
+    }
+
+    if (eventdiffZ->GetCastorTowerEnergy(2) > 4.*0.364){
+      m_hVector_TotalEnergyCastor_Before_sector3[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(2),totalweight);
+      m_hVector_TotalEnergyCastor_Before_sector3VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,eventdiffZ->GetCastorTowerEnergy(2),totalweight);
+    } 
+    else{
+      m_hVector_TotalEnergyCastor_Before_sector3[index].at(pileup)->Fill(0);
+      m_hVector_TotalEnergyCastor_Before_sector3VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,0.,totalweight);
+    }
+
+    if (eventdiffZ->GetCastorTowerEnergy(3) > 4.*0.364){
+      m_hVector_TotalEnergyCastor_Before_sector4[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(3),totalweight);
+      m_hVector_TotalEnergyCastor_Before_sector4VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,eventdiffZ->GetCastorTowerEnergy(3),totalweight);
+    }
+    else{
+      m_hVector_TotalEnergyCastor_Before_sector4[index].at(pileup)->Fill(0);
+      m_hVector_TotalEnergyCastor_Before_sector4VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,0.,totalweight);
+    }
+
+    if (eventdiffZ->GetCastorTowerEnergy(4) > 4.*0.364){
+      m_hVector_TotalEnergyCastor_Before_sector5[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(4),totalweight);
+      m_hVector_TotalEnergyCastor_Before_sector5VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,eventdiffZ->GetCastorTowerEnergy(4),totalweight);
+    }
+    else{
+      m_hVector_TotalEnergyCastor_Before_sector5[index].at(pileup)->Fill(0);
+      m_hVector_TotalEnergyCastor_Before_sector5VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,0.,totalweight);
+    }
+
+    if (eventdiffZ->GetCastorTowerEnergy(5) > 4.*0.364){
+      m_hVector_TotalEnergyCastor_Before_sector6[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(5),totalweight);
+      m_hVector_TotalEnergyCastor_Before_sector6VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,eventdiffZ->GetCastorTowerEnergy(5),totalweight);
+    } 
+    else{
+      m_hVector_TotalEnergyCastor_Before_sector6[index].at(pileup)->Fill(0);
+      m_hVector_TotalEnergyCastor_Before_sector6VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,0.,totalweight);
+    }
+
+    if (eventdiffZ->GetCastorTowerEnergy(6) > 4.*0.364){
+      m_hVector_TotalEnergyCastor_Before_sector7[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(6),totalweight);
+      m_hVector_TotalEnergyCastor_Before_sector7VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,eventdiffZ->GetCastorTowerEnergy(6),totalweight);
+    }
+    else{
+      m_hVector_TotalEnergyCastor_Before_sector7[index].at(pileup)->Fill(0);
+      m_hVector_TotalEnergyCastor_Before_sector7VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,0.,totalweight);
+    }
+
+    if (eventdiffZ->GetCastorTowerEnergy(7) > 4.*0.364){
+      m_hVector_TotalEnergyCastor_Before_sector8[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(7),totalweight);
+      m_hVector_TotalEnergyCastor_Before_sector8VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,eventdiffZ->GetCastorTowerEnergy(7),totalweight);
+    }
+    else{
+      m_hVector_TotalEnergyCastor_Before_sector8[index].at(pileup)->Fill(0);
+      m_hVector_TotalEnergyCastor_Before_sector8VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,0.,totalweight);
+    }
+
+    if (eventdiffZ->GetCastorTowerEnergy(8) > 4.*0.364){
+      m_hVector_TotalEnergyCastor_Before_sector9[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(8),totalweight);
+      m_hVector_TotalEnergyCastor_Before_sector9VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,eventdiffZ->GetCastorTowerEnergy(8),totalweight);
+    }
+    else{
+      m_hVector_TotalEnergyCastor_Before_sector9[index].at(pileup)->Fill(0);
+      m_hVector_TotalEnergyCastor_Before_sector9VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,0.,totalweight);
+    }
+
+    if (eventdiffZ->GetCastorTowerEnergy(9) > 4.*0.364){
+      m_hVector_TotalEnergyCastor_Before_sector10[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(9),totalweight);
+      m_hVector_TotalEnergyCastor_Before_sector10VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,eventdiffZ->GetCastorTowerEnergy(9),totalweight);
+    }
+    else{
+      m_hVector_TotalEnergyCastor_Before_sector10[index].at(pileup)->Fill(0);
+      m_hVector_TotalEnergyCastor_Before_sector10VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,0.,totalweight);
+    }
+
+    if (eventdiffZ->GetCastorTowerEnergy(10) > 4.*0.364){
+      m_hVector_TotalEnergyCastor_Before_sector11[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(10),totalweight);
+      m_hVector_TotalEnergyCastor_Before_sector11VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,eventdiffZ->GetCastorTowerEnergy(10),totalweight);
+    } 
+    else{
+      m_hVector_TotalEnergyCastor_Before_sector11[index].at(pileup)->Fill(0);
+      m_hVector_TotalEnergyCastor_Before_sector11VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,0.,totalweight);
+    }
+
+    if (eventdiffZ->GetCastorTowerEnergy(11) > 4.*0.364){
+      m_hVector_TotalEnergyCastor_Before_sector12[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(11),totalweight);
+      m_hVector_TotalEnergyCastor_Before_sector12VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,eventdiffZ->GetCastorTowerEnergy(11),totalweight);
+    }
+    else{
+      m_hVector_TotalEnergyCastor_Before_sector12[index].at(pileup)->Fill(0);
+      m_hVector_TotalEnergyCastor_Before_sector12VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,0.,totalweight);
+    }
+
+    if (eventdiffZ->GetCastorTowerEnergy(12) > 4.*0.364){
+      m_hVector_TotalEnergyCastor_Before_sector13[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(12),totalweight);
+      m_hVector_TotalEnergyCastor_Before_sector13VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,eventdiffZ->GetCastorTowerEnergy(12),totalweight);
+    }
+    else{ 
+      m_hVector_TotalEnergyCastor_Before_sector13[index].at(pileup)->Fill(0);
+      m_hVector_TotalEnergyCastor_Before_sector13VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,0.,totalweight);
+    } 
+
+    if (eventdiffZ->GetCastorTowerEnergy(13) > 4.*0.364){
+      m_hVector_TotalEnergyCastor_Before_sector14[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(13),totalweight);
+      m_hVector_TotalEnergyCastor_Before_sector14VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,eventdiffZ->GetCastorTowerEnergy(13),totalweight);
+    } 
+    else{
+      m_hVector_TotalEnergyCastor_Before_sector14[index].at(pileup)->Fill(0);
+      m_hVector_TotalEnergyCastor_Before_sector14VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,0.,totalweight);
+    }  
+
+    if (eventdiffZ->GetCastorTowerEnergy(14) > 4.*0.364){
+      m_hVector_TotalEnergyCastor_Before_sector15[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(14),totalweight);
+      m_hVector_TotalEnergyCastor_Before_sector15VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,eventdiffZ->GetCastorTowerEnergy(14),totalweight);
+    }
+    else{
+      m_hVector_TotalEnergyCastor_Before_sector15[index].at(pileup)->Fill(0);
+      m_hVector_TotalEnergyCastor_Before_sector15VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,0.,totalweight);
+    }
+
+    if (eventdiffZ->GetCastorTowerEnergy(15) > 4.*0.364){
+      m_hVector_TotalEnergyCastor_Before_sector16[index].at(pileup)->Fill(eventdiffZ->GetCastorTowerEnergy(15),totalweight);
+      m_hVector_TotalEnergyCastor_Before_sector16VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,eventdiffZ->GetCastorTowerEnergy(15),totalweight);
+    } 
+    else{
+      m_hVector_TotalEnergyCastor_Before_sector16[index].at(pileup)->Fill(0);
+      m_hVector_TotalEnergyCastor_Before_sector16VsCastorMultiplicity[index].at(pileup)->Fill(SectorCastorHit,0.,totalweight);
+    }
+
+  }
 
 }
 
@@ -2209,16 +3258,134 @@ void DiffractiveZ::SaveHistos(std::string type){
       m_hVector_TotalEnergyCastor_sector15[j].at(i)->Write();
       m_hVector_TotalEnergyCastor_sector16[j].at(i)->Write();
 
+      m_hVector_TotalEnergyCastor_Before_sector1[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_Before_sector2[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_Before_sector3[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_Before_sector4[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_Before_sector5[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_Before_sector6[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_Before_sector7[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_Before_sector8[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_Before_sector9[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_Before_sector10[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_Before_sector11[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_Before_sector12[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_Before_sector13[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_Before_sector14[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_Before_sector15[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_Before_sector16[j].at(i)->Write();
+
+      m_hVector_TotalEnergyCastor_After_sector1[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_After_sector2[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_After_sector3[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_After_sector4[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_After_sector5[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_After_sector6[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_After_sector7[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_After_sector8[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_After_sector9[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_After_sector10[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_After_sector11[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_After_sector12[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_After_sector13[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_After_sector14[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_After_sector15[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_After_sector16[j].at(i)->Write();
+
       m_hVector_EnergyHFMinusVsCastorTProf[j].at(i)->Write();
       m_hVector_EnergyHFPlusVsCastorTProf[j].at(i)->Write();
 
       m_hVector_sumECastorAndHFMinus[j].at(i)->Write();
       m_hVector_CastorMultiplicity[j].at(i)->Write();
+      m_hVector_CastorMultiplicityBefore[j].at(i)->Write();
+      m_hVector_CastorMultiplicityAfter[j].at(i)->Write();
       m_hVector_CastorMultiplicityVsLumi[j].at(i)->Write();
 
       m_hVector_RunNumberHighCastor[j].at(i)->Write();
       m_hVector_RunNumberZeroCastor[j].at(i)->Write();
       m_hVector_RunNumber[j].at(i)->Write();
+
+      m_hVector_RunNumberHighCastorBefore[j].at(i)->Write();
+      m_hVector_RunNumberZeroCastorBefore[j].at(i)->Write();
+      m_hVector_RunNumberBefore[j].at(i)->Write();
+
+      m_hVector_RunNumberHighCastorAfter[j].at(i)->Write();
+      m_hVector_RunNumberZeroCastorAfter[j].at(i)->Write();
+      m_hVector_RunNumberAfter[j].at(i)->Write();
+
+      m_hVector_SectorVsTotalCastorEnergy[j].at(i)->Write();
+      m_hVector_SectorVsTotalCastorEnergyBefore[j].at(i)->Write();
+      m_hVector_SectorVsTotalCastorEnergyAfter[j].at(i)->Write();
+
+      m_hVector_SectorVsTotalCastorEnergyTProf[j].at(i)->Write();
+      m_hVector_SectorVsTotalCastorEnergyBeforeTProf[j].at(i)->Write();
+      m_hVector_SectorVsTotalCastorEnergyAfterTProf[j].at(i)->Write();
+
+      m_hVector_TotalEnergyCastor_sector1VsCastorMultiplicity[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_sector2VsCastorMultiplicity[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_sector3VsCastorMultiplicity[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_sector4VsCastorMultiplicity[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_sector5VsCastorMultiplicity[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_sector6VsCastorMultiplicity[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_sector7VsCastorMultiplicity[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_sector8VsCastorMultiplicity[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_sector9VsCastorMultiplicity[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_sector10VsCastorMultiplicity[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_sector11VsCastorMultiplicity[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_sector12VsCastorMultiplicity[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_sector13VsCastorMultiplicity[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_sector14VsCastorMultiplicity[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_sector15VsCastorMultiplicity[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_sector16VsCastorMultiplicity[j].at(i)->Write();
+
+      m_hVector_TotalEnergyCastor_Before_sector1VsCastorMultiplicity[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_Before_sector2VsCastorMultiplicity[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_Before_sector3VsCastorMultiplicity[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_Before_sector4VsCastorMultiplicity[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_Before_sector5VsCastorMultiplicity[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_Before_sector6VsCastorMultiplicity[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_Before_sector7VsCastorMultiplicity[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_Before_sector8VsCastorMultiplicity[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_Before_sector9VsCastorMultiplicity[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_Before_sector10VsCastorMultiplicity[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_Before_sector11VsCastorMultiplicity[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_Before_sector12VsCastorMultiplicity[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_Before_sector13VsCastorMultiplicity[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_Before_sector14VsCastorMultiplicity[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_Before_sector15VsCastorMultiplicity[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_Before_sector16VsCastorMultiplicity[j].at(i)->Write();
+
+      m_hVector_TotalEnergyCastor_After_sector1VsCastorMultiplicity[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_After_sector2VsCastorMultiplicity[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_After_sector3VsCastorMultiplicity[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_After_sector4VsCastorMultiplicity[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_After_sector5VsCastorMultiplicity[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_After_sector6VsCastorMultiplicity[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_After_sector7VsCastorMultiplicity[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_After_sector8VsCastorMultiplicity[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_After_sector9VsCastorMultiplicity[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_After_sector10VsCastorMultiplicity[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_After_sector11VsCastorMultiplicity[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_After_sector12VsCastorMultiplicity[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_After_sector13VsCastorMultiplicity[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_After_sector14VsCastorMultiplicity[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_After_sector15VsCastorMultiplicity[j].at(i)->Write();
+      m_hVector_TotalEnergyCastor_After_sector16VsCastorMultiplicity[j].at(i)->Write();
+
+      m_hVector_sumECastorMinusBin0To4[j].at(i)->Write();
+      m_hVector_sumEHFplusBin0To4[j].at(i)->Write();
+      m_hVector_sumEHFminusBin0To4[j].at(i)->Write();
+      m_hVector_sumECastorMinusBin5To8[j].at(i)->Write();
+      m_hVector_sumEHFplusBin5To8[j].at(i)->Write();
+      m_hVector_sumEHFminusBin5To8[j].at(i)->Write();
+      m_hVector_sumECastorMinusBin9To12[j].at(i)->Write();
+      m_hVector_sumEHFplusBin9To12[j].at(i)->Write();
+      m_hVector_sumEHFminusBin9To12[j].at(i)->Write();
+      m_hVector_sumECastorMinusBin13To16[j].at(i)->Write();
+      m_hVector_sumEHFplusBin13To16[j].at(i)->Write();
+      m_hVector_sumEHFminusBin13To16[j].at(i)->Write();
+
+      m_hVector_histo_castor_centroid[j].at(i)->Write();
 
     }
   }
@@ -2264,7 +3431,7 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
     LoadFile(filein,processname);
   }
 
-  else {
+  else{
     std::cout << "---------------------------------------------------" << std::endl;
     std::cout << " There is no directory/path " << processname << std::endl;
     std::cout << " in the file." << std::endl;
@@ -2426,6 +3593,10 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
     bool isolation = false;
     bool ZKinN = false;
     bool ZKinP = false;
+
+    //if (eventinfo->GetRunNumber() == 148864 || eventinfo->GetRunNumber() == 148952){
+    //  std::cout << "\nRun Number: " << eventdiff->GetRunNumber() << " | Lumi: " << eventinfo->GetInstLumiBunch() << std::endl;
+    //}
 
     //if(eventdiff->GetRunNumber() == 146709 || eventdiff->GetRunNumber() == 146710 || eventdiff->GetRunNumber() == 146711 || eventdiff->GetRunNumber() == 146715 || eventdiff->GetRunNumber() == 146726) continue;
 
@@ -2688,7 +3859,7 @@ void DiffractiveZ::Run(std::string filein_, std::string processname_, std::strin
 	if(vertex && presel && nSel && charge && dimass && isolation && candSel && diffselp && castoractivity && ZKinN) FillHistos(13,pileup,totalcommon);
       }
 
-      else {
+      else{
 	exit(EXIT_FAILURE);
       }
     }  

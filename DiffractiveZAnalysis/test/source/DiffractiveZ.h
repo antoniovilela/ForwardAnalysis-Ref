@@ -84,6 +84,13 @@ class DiffractiveZ {
   double lepton2pt;
   int SectorZeroCastorCounter;
 
+  double x_centroid;
+  double y_centroid;
+  double x_temp;
+  double y_temp;
+  double num_x_centroid;
+  double num_y_centroid;
+
   std::vector<std::vector<TH1F*> > m_hVector_DiElectronMass;
   std::vector<std::vector<TH1F*> > m_hVector_DiElectronEta;
   std::vector<std::vector<TH1F*> > m_hVector_DiElectronPt;
@@ -119,9 +126,9 @@ class DiffractiveZ {
 
   std::vector<std::vector<TH1F*> > m_hVector_lumi;
   std::vector<std::vector<TH1F*> > m_hVector_asumE;
-  std::vector<std::vector<TH2D*> > m_hVector_multhf;
-  std::vector<std::vector<TH2D*> > m_hVector_etcalos_p;
-  std::vector<std::vector<TH2D*> > m_hVector_etcalos_n;
+  std::vector<std::vector<TH2F*> > m_hVector_multhf;
+  std::vector<std::vector<TH2F*> > m_hVector_etcalos_p;
+  std::vector<std::vector<TH2F*> > m_hVector_etcalos_n;
   std::vector<std::vector<TH1F*> > m_hVector_tracks;
   std::vector<std::vector<TH1F*> > m_hVector_pfetamax;
   std::vector<std::vector<TH1F*> > m_hVector_pfetamin;
@@ -134,7 +141,7 @@ class DiffractiveZ {
   std::vector<std::vector<TH1F*> > m_hVector_deltaetaelectrons;
   std::vector<std::vector<TH1F*> > m_hVector_deltaetamuons;
 
-  std::vector<std::vector<TH2D*> > m_hVector_vertexvslumi;
+  std::vector<std::vector<TH2F*> > m_hVector_vertexvslumi;
 
   std::vector<std::vector<TH1F*> > m_hVector_patNElectron;
   std::vector<std::vector<TH1F*> > m_hVector_patElectron1Pt;
@@ -234,28 +241,28 @@ class DiffractiveZ {
   std::vector<std::vector<TH1F*> > m_hVector_SecondMuonrelIsoDr03;
   std::vector<std::vector<TH1F*> > m_hVector_SecondMuonrelIsoDr05;
 
-  std::vector<std::vector<TH2D*> > m_hVector_correlationElectron1Pt;
-  std::vector<std::vector<TH2D*> > m_hVector_correlationElectron1Eta;
-  std::vector<std::vector<TH2D*> > m_hVector_correlationElectron1Phi;
-  std::vector<std::vector<TH2D*> > m_hVector_correlationElectron1Iso;
-  std::vector<std::vector<TH2D*> > m_hVector_correlationMuon1Pt;
-  std::vector<std::vector<TH2D*> > m_hVector_correlationMuon1Eta;
-  std::vector<std::vector<TH2D*> > m_hVector_correlationMuon1Phi;
-  std::vector<std::vector<TH2D*> > m_hVector_correlationMuon1Iso;
+  std::vector<std::vector<TH2F*> > m_hVector_correlationElectron1Pt;
+  std::vector<std::vector<TH2F*> > m_hVector_correlationElectron1Eta;
+  std::vector<std::vector<TH2F*> > m_hVector_correlationElectron1Phi;
+  std::vector<std::vector<TH2F*> > m_hVector_correlationElectron1Iso;
+  std::vector<std::vector<TH2F*> > m_hVector_correlationMuon1Pt;
+  std::vector<std::vector<TH2F*> > m_hVector_correlationMuon1Eta;
+  std::vector<std::vector<TH2F*> > m_hVector_correlationMuon1Phi;
+  std::vector<std::vector<TH2F*> > m_hVector_correlationMuon1Iso;
 
-  std::vector<std::vector<TH2D*> > m_hVector_correlationElectron2Pt;
-  std::vector<std::vector<TH2D*> > m_hVector_correlationElectron2Eta;
-  std::vector<std::vector<TH2D*> > m_hVector_correlationElectron2Phi;
-  std::vector<std::vector<TH2D*> > m_hVector_correlationElectron2Iso;
-  std::vector<std::vector<TH2D*> > m_hVector_correlationMuon2Pt;
-  std::vector<std::vector<TH2D*> > m_hVector_correlationMuon2Eta;
-  std::vector<std::vector<TH2D*> > m_hVector_correlationMuon2Phi;
-  std::vector<std::vector<TH2D*> > m_hVector_correlationMuon2Iso;
+  std::vector<std::vector<TH2F*> > m_hVector_correlationElectron2Pt;
+  std::vector<std::vector<TH2F*> > m_hVector_correlationElectron2Eta;
+  std::vector<std::vector<TH2F*> > m_hVector_correlationElectron2Phi;
+  std::vector<std::vector<TH2F*> > m_hVector_correlationElectron2Iso;
+  std::vector<std::vector<TH2F*> > m_hVector_correlationMuon2Pt;
+  std::vector<std::vector<TH2F*> > m_hVector_correlationMuon2Eta;
+  std::vector<std::vector<TH2F*> > m_hVector_correlationMuon2Phi;
+  std::vector<std::vector<TH2F*> > m_hVector_correlationMuon2Iso;
 
-  std::vector<std::vector<TH2D*> > m_hVector_ECaloVsEta;
+  std::vector<std::vector<TH2F*> > m_hVector_ECaloVsEta;
   std::vector<std::vector<TProfile*> > m_hVector_ECaloVsEtaTProf;
   std::vector<std::vector<TH1F*> > m_hVector_sumECastorMinus;
-  std::vector<std::vector<TH2D*> > m_hVector_ECastorSector;
+  std::vector<std::vector<TH2F*> > m_hVector_ECastorSector;
   std::vector<std::vector<TProfile*> > m_hVector_ECastorSectorTProf;
 
   std::vector<std::vector<TH1F*> > m_hVector_tracksOutMuonsCone03;
@@ -273,14 +280,14 @@ class DiffractiveZ {
   std::vector<std::vector<TH1F*> > m_hVector_tracksOutpatMuonsCone05;
   std::vector<std::vector<TH1F*> > m_hVector_tracksOutpatElectronsCone05;
 
-  std::vector<std::vector<TH1I*> > m_hVector_LeadingElectronInnerHits;
+  std::vector<std::vector<TH1F*> > m_hVector_LeadingElectronInnerHits;
   std::vector<std::vector<TH1F*> > m_hVector_LeadingElectronDCot;
   std::vector<std::vector<TH1F*> > m_hVector_LeadingElectronDist;
   std::vector<std::vector<TH1F*> > m_hVector_LeadingElectronDeltaEtaTkClu;
   std::vector<std::vector<TH1F*> > m_hVector_LeadingElectronDeltaPhiTkClu;
   std::vector<std::vector<TH1F*> > m_hVector_LeadingElectronSigmaIeIe;
   std::vector<std::vector<TH1F*> > m_hVector_LeadingElectronHE;
-  std::vector<std::vector<TH1I*> > m_hVector_SecondElectronInnerHits;
+  std::vector<std::vector<TH1F*> > m_hVector_SecondElectronInnerHits;
   std::vector<std::vector<TH1F*> > m_hVector_SecondElectronDCot;
   std::vector<std::vector<TH1F*> > m_hVector_SecondElectronDist;
   std::vector<std::vector<TH1F*> > m_hVector_SecondElectronDeltaEtaTkClu;
@@ -334,16 +341,134 @@ class DiffractiveZ {
   std::vector<std::vector<TH1F*> > m_hVector_TotalEnergyCastor_sector15;
   std::vector<std::vector<TH1F*> > m_hVector_TotalEnergyCastor_sector16;
 
+  std::vector<std::vector<TH1F*> > m_hVector_TotalEnergyCastor_Before_sector1;
+  std::vector<std::vector<TH1F*> > m_hVector_TotalEnergyCastor_Before_sector2;
+  std::vector<std::vector<TH1F*> > m_hVector_TotalEnergyCastor_Before_sector3;
+  std::vector<std::vector<TH1F*> > m_hVector_TotalEnergyCastor_Before_sector4;
+  std::vector<std::vector<TH1F*> > m_hVector_TotalEnergyCastor_Before_sector5;
+  std::vector<std::vector<TH1F*> > m_hVector_TotalEnergyCastor_Before_sector6;
+  std::vector<std::vector<TH1F*> > m_hVector_TotalEnergyCastor_Before_sector7;
+  std::vector<std::vector<TH1F*> > m_hVector_TotalEnergyCastor_Before_sector8;
+  std::vector<std::vector<TH1F*> > m_hVector_TotalEnergyCastor_Before_sector9;
+  std::vector<std::vector<TH1F*> > m_hVector_TotalEnergyCastor_Before_sector10;
+  std::vector<std::vector<TH1F*> > m_hVector_TotalEnergyCastor_Before_sector11;
+  std::vector<std::vector<TH1F*> > m_hVector_TotalEnergyCastor_Before_sector12;
+  std::vector<std::vector<TH1F*> > m_hVector_TotalEnergyCastor_Before_sector13;
+  std::vector<std::vector<TH1F*> > m_hVector_TotalEnergyCastor_Before_sector14;
+  std::vector<std::vector<TH1F*> > m_hVector_TotalEnergyCastor_Before_sector15;
+  std::vector<std::vector<TH1F*> > m_hVector_TotalEnergyCastor_Before_sector16;
+
+  std::vector<std::vector<TH1F*> > m_hVector_TotalEnergyCastor_After_sector1;
+  std::vector<std::vector<TH1F*> > m_hVector_TotalEnergyCastor_After_sector2;
+  std::vector<std::vector<TH1F*> > m_hVector_TotalEnergyCastor_After_sector3;
+  std::vector<std::vector<TH1F*> > m_hVector_TotalEnergyCastor_After_sector4;
+  std::vector<std::vector<TH1F*> > m_hVector_TotalEnergyCastor_After_sector5;
+  std::vector<std::vector<TH1F*> > m_hVector_TotalEnergyCastor_After_sector6;
+  std::vector<std::vector<TH1F*> > m_hVector_TotalEnergyCastor_After_sector7;
+  std::vector<std::vector<TH1F*> > m_hVector_TotalEnergyCastor_After_sector8;
+  std::vector<std::vector<TH1F*> > m_hVector_TotalEnergyCastor_After_sector9;
+  std::vector<std::vector<TH1F*> > m_hVector_TotalEnergyCastor_After_sector10;
+  std::vector<std::vector<TH1F*> > m_hVector_TotalEnergyCastor_After_sector11;
+  std::vector<std::vector<TH1F*> > m_hVector_TotalEnergyCastor_After_sector12;
+  std::vector<std::vector<TH1F*> > m_hVector_TotalEnergyCastor_After_sector13;
+  std::vector<std::vector<TH1F*> > m_hVector_TotalEnergyCastor_After_sector14;
+  std::vector<std::vector<TH1F*> > m_hVector_TotalEnergyCastor_After_sector15;
+  std::vector<std::vector<TH1F*> > m_hVector_TotalEnergyCastor_After_sector16;
+
+  std::vector<std::vector<TH1F*> > m_hVector_RunNumberHighCastorBefore;
+  std::vector<std::vector<TH1F*> > m_hVector_RunNumberZeroCastorBefore;
+  std::vector<std::vector<TH1F*> > m_hVector_RunNumberBefore;
+
+  std::vector<std::vector<TH1F*> > m_hVector_RunNumberHighCastorAfter;
+  std::vector<std::vector<TH1F*> > m_hVector_RunNumberZeroCastorAfter;
+  std::vector<std::vector<TH1F*> > m_hVector_RunNumberAfter;
+
+  std::vector<std::vector<TH1F*> > m_hVector_RunNumber;
+  std::vector<std::vector<TH1F*> > m_hVector_RunNumberZeroCastor;
+  std::vector<std::vector<TH1F*> > m_hVector_RunNumberHighCastor;
+
   std::vector<std::vector<TProfile*> > m_hVector_EnergyHFMinusVsCastorTProf;
   std::vector<std::vector<TProfile*> > m_hVector_EnergyHFPlusVsCastorTProf;
 
   std::vector<std::vector<TH1F*> > m_hVector_sumECastorAndHFMinus;
-  std::vector<std::vector<TH1I*> > m_hVector_CastorMultiplicity;
-  std::vector<std::vector<TH2D*> > m_hVector_CastorMultiplicityVsLumi;
+  std::vector<std::vector<TH1F*> > m_hVector_CastorMultiplicity;
+  std::vector<std::vector<TH1F*> > m_hVector_CastorMultiplicityAfter;
+  std::vector<std::vector<TH1F*> > m_hVector_CastorMultiplicityBefore;
+  std::vector<std::vector<TH2F*> > m_hVector_CastorMultiplicityVsLumi;
 
-  std::vector<std::vector<TH1I*> > m_hVector_RunNumber;
-  std::vector<std::vector<TH1I*> > m_hVector_RunNumberZeroCastor;
-  std::vector<std::vector<TH1I*> > m_hVector_RunNumberHighCastor;
+  std::vector<std::vector<TH2F*> > m_hVector_SectorVsTotalCastorEnergy;
+  std::vector<std::vector<TH2F*> > m_hVector_SectorVsTotalCastorEnergyBefore;
+  std::vector<std::vector<TH2F*> > m_hVector_SectorVsTotalCastorEnergyAfter;
+
+  std::vector<std::vector<TProfile*> > m_hVector_SectorVsTotalCastorEnergyTProf;
+  std::vector<std::vector<TProfile*> > m_hVector_SectorVsTotalCastorEnergyBeforeTProf;
+  std::vector<std::vector<TProfile*> > m_hVector_SectorVsTotalCastorEnergyAfterTProf;
+
+  std::vector<std::vector<TH2F*> >  m_hVector_TotalEnergyCastor_sector1VsCastorMultiplicity;
+  std::vector<std::vector<TH2F*> >  m_hVector_TotalEnergyCastor_sector2VsCastorMultiplicity;
+  std::vector<std::vector<TH2F*> >  m_hVector_TotalEnergyCastor_sector3VsCastorMultiplicity;
+  std::vector<std::vector<TH2F*> >  m_hVector_TotalEnergyCastor_sector4VsCastorMultiplicity;
+  std::vector<std::vector<TH2F*> >  m_hVector_TotalEnergyCastor_sector5VsCastorMultiplicity;
+  std::vector<std::vector<TH2F*> >  m_hVector_TotalEnergyCastor_sector6VsCastorMultiplicity;
+  std::vector<std::vector<TH2F*> >  m_hVector_TotalEnergyCastor_sector7VsCastorMultiplicity;
+  std::vector<std::vector<TH2F*> >  m_hVector_TotalEnergyCastor_sector8VsCastorMultiplicity;
+  std::vector<std::vector<TH2F*> >  m_hVector_TotalEnergyCastor_sector9VsCastorMultiplicity;
+  std::vector<std::vector<TH2F*> >  m_hVector_TotalEnergyCastor_sector10VsCastorMultiplicity;
+  std::vector<std::vector<TH2F*> >  m_hVector_TotalEnergyCastor_sector11VsCastorMultiplicity;
+  std::vector<std::vector<TH2F*> >  m_hVector_TotalEnergyCastor_sector12VsCastorMultiplicity;
+  std::vector<std::vector<TH2F*> >  m_hVector_TotalEnergyCastor_sector13VsCastorMultiplicity;
+  std::vector<std::vector<TH2F*> >  m_hVector_TotalEnergyCastor_sector14VsCastorMultiplicity;
+  std::vector<std::vector<TH2F*> >  m_hVector_TotalEnergyCastor_sector15VsCastorMultiplicity;
+  std::vector<std::vector<TH2F*> >  m_hVector_TotalEnergyCastor_sector16VsCastorMultiplicity;
+
+  std::vector<std::vector<TH2F*> >  m_hVector_TotalEnergyCastor_Before_sector1VsCastorMultiplicity;
+  std::vector<std::vector<TH2F*> >  m_hVector_TotalEnergyCastor_Before_sector2VsCastorMultiplicity;
+  std::vector<std::vector<TH2F*> >  m_hVector_TotalEnergyCastor_Before_sector3VsCastorMultiplicity;
+  std::vector<std::vector<TH2F*> >  m_hVector_TotalEnergyCastor_Before_sector4VsCastorMultiplicity;
+  std::vector<std::vector<TH2F*> >  m_hVector_TotalEnergyCastor_Before_sector5VsCastorMultiplicity;
+  std::vector<std::vector<TH2F*> >  m_hVector_TotalEnergyCastor_Before_sector6VsCastorMultiplicity;
+  std::vector<std::vector<TH2F*> >  m_hVector_TotalEnergyCastor_Before_sector7VsCastorMultiplicity;
+  std::vector<std::vector<TH2F*> >  m_hVector_TotalEnergyCastor_Before_sector8VsCastorMultiplicity;
+  std::vector<std::vector<TH2F*> >  m_hVector_TotalEnergyCastor_Before_sector9VsCastorMultiplicity;
+  std::vector<std::vector<TH2F*> >  m_hVector_TotalEnergyCastor_Before_sector10VsCastorMultiplicity;
+  std::vector<std::vector<TH2F*> >  m_hVector_TotalEnergyCastor_Before_sector11VsCastorMultiplicity;
+  std::vector<std::vector<TH2F*> >  m_hVector_TotalEnergyCastor_Before_sector12VsCastorMultiplicity;
+  std::vector<std::vector<TH2F*> >  m_hVector_TotalEnergyCastor_Before_sector13VsCastorMultiplicity;
+  std::vector<std::vector<TH2F*> >  m_hVector_TotalEnergyCastor_Before_sector14VsCastorMultiplicity;
+  std::vector<std::vector<TH2F*> >  m_hVector_TotalEnergyCastor_Before_sector15VsCastorMultiplicity;
+  std::vector<std::vector<TH2F*> >  m_hVector_TotalEnergyCastor_Before_sector16VsCastorMultiplicity;
+
+  std::vector<std::vector<TH2F*> >  m_hVector_TotalEnergyCastor_After_sector1VsCastorMultiplicity;
+  std::vector<std::vector<TH2F*> >  m_hVector_TotalEnergyCastor_After_sector2VsCastorMultiplicity;
+  std::vector<std::vector<TH2F*> >  m_hVector_TotalEnergyCastor_After_sector3VsCastorMultiplicity;
+  std::vector<std::vector<TH2F*> >  m_hVector_TotalEnergyCastor_After_sector4VsCastorMultiplicity;
+  std::vector<std::vector<TH2F*> >  m_hVector_TotalEnergyCastor_After_sector5VsCastorMultiplicity;
+  std::vector<std::vector<TH2F*> >  m_hVector_TotalEnergyCastor_After_sector6VsCastorMultiplicity;
+  std::vector<std::vector<TH2F*> >  m_hVector_TotalEnergyCastor_After_sector7VsCastorMultiplicity;
+  std::vector<std::vector<TH2F*> >  m_hVector_TotalEnergyCastor_After_sector8VsCastorMultiplicity;
+  std::vector<std::vector<TH2F*> >  m_hVector_TotalEnergyCastor_After_sector9VsCastorMultiplicity;
+  std::vector<std::vector<TH2F*> >  m_hVector_TotalEnergyCastor_After_sector10VsCastorMultiplicity;
+  std::vector<std::vector<TH2F*> >  m_hVector_TotalEnergyCastor_After_sector11VsCastorMultiplicity;
+  std::vector<std::vector<TH2F*> >  m_hVector_TotalEnergyCastor_After_sector12VsCastorMultiplicity;
+  std::vector<std::vector<TH2F*> >  m_hVector_TotalEnergyCastor_After_sector13VsCastorMultiplicity;
+  std::vector<std::vector<TH2F*> >  m_hVector_TotalEnergyCastor_After_sector14VsCastorMultiplicity;
+  std::vector<std::vector<TH2F*> >  m_hVector_TotalEnergyCastor_After_sector15VsCastorMultiplicity;
+  std::vector<std::vector<TH2F*> >  m_hVector_TotalEnergyCastor_After_sector16VsCastorMultiplicity;
+
+  std::vector<std::vector<TH1F*> >  m_hVector_sumECastorMinusBin0To4;
+  std::vector<std::vector<TH1F*> >  m_hVector_sumEHFplusBin0To4;
+  std::vector<std::vector<TH1F*> >  m_hVector_sumEHFminusBin0To4;
+  std::vector<std::vector<TH1F*> >  m_hVector_sumECastorMinusBin5To8;
+  std::vector<std::vector<TH1F*> >  m_hVector_sumEHFplusBin5To8;
+  std::vector<std::vector<TH1F*> >  m_hVector_sumEHFminusBin5To8;
+  std::vector<std::vector<TH1F*> >  m_hVector_sumECastorMinusBin9To12;
+  std::vector<std::vector<TH1F*> >  m_hVector_sumEHFplusBin9To12;
+  std::vector<std::vector<TH1F*> >  m_hVector_sumEHFminusBin9To12;
+  std::vector<std::vector<TH1F*> >  m_hVector_sumECastorMinusBin13To16;
+  std::vector<std::vector<TH1F*> >  m_hVector_sumEHFplusBin13To16;
+  std::vector<std::vector<TH1F*> >  m_hVector_sumEHFminusBin13To16;
+
+  std::vector<std::vector<TH2F*> > m_hVector_histo_castor_centroid;
 
   std::vector <std::string> Folders;
 
