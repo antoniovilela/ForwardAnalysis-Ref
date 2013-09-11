@@ -2,7 +2,7 @@
 // UNIVERSIDADE DO ESTADO DO RIO DE JANEIRO - CMS/Brasil
 //-------------------------------------------------------------------------------------------------------->>
 //
-// Twiki: https://twiki.cern.ch/twiki/bin/view/CMS/FwdPhysicsDiffractiveZsAnalysis#Macro_Analysis
+// Twiki: https://twiki.cern.ch/twiki/bin/view/CMS/FwdPhysicsCastorAnalysissAnalysis#Macro_Analysis
 //
 
 //#if !defined(__CINT__) || defined(__MAKECINT__)
@@ -22,9 +22,9 @@
 #include <iostream>
 #include <fstream>
 
-#include "DiffractiveZ.h"
+#include "CastorAnalysis.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/EventInfoEvent.h"
-#include "ForwardAnalysis/ForwardTTreeAnalysis/interface/DiffractiveZEvent.h"
+#include "ForwardAnalysis/ForwardTTreeAnalysis/interface/CastorAnalysisEvent.h"
 #include "ForwardAnalysis/ForwardTTreeAnalysis/interface/DiffractiveEvent.h"
 #include "PhysicsTools/Utilities/interface/LumiReWeighting.h"
 
@@ -66,7 +66,7 @@ static inline void loadBar(int x, int n, int r, int w)
 }
 
 
-void DiffractiveZ::LoadFile(std::string fileinput, std::string processinput){
+void CastorAnalysis::LoadFile(std::string fileinput, std::string processinput){
 
   inf = NULL;
   tr  = NULL;
@@ -74,10 +74,10 @@ void DiffractiveZ::LoadFile(std::string fileinput, std::string processinput){
   std::string fdirectory = processinput + "/ProcessedTree";
   tr = (TTree*)inf->Get(fdirectory.c_str());
   eventdiff = new DiffractiveEvent();
-  eventdiffZ = new DiffractiveZEvent();
+  eventdiffZ = new CastorAnalysisEvent();
   eventinfo = new EventInfoEvent();
   diff = tr->GetBranch("DiffractiveAnalysis");
-  diffZ = tr->GetBranch("DiffractiveZAnalysis");
+  diffZ = tr->GetBranch("CastorAnalysisAnalysis");
   info = tr->GetBranch("EventInfo");
   diff->SetAddress(&eventdiff);
   diffZ->SetAddress(&eventdiffZ);
@@ -85,7 +85,7 @@ void DiffractiveZ::LoadFile(std::string fileinput, std::string processinput){
 
 }
 
-void DiffractiveZ::CreateHistos(std::string type){
+void CastorAnalysis::CreateHistos(std::string type){
 
   double binarrayplus[18] = {0.,0.25,0.5,0.75,1.,1.25,1.5,1.75,2.,2.25,2.5,2.75,3.,3.25,3.5,3.75,4.,5.2};
   double binarrayminus[18] = {-5.2,-4.,-3.75,-3.5,-3.25,-3.,-2.75,-2.5,-2.25,-2.,-1.75,-1.5,-1.25,-1.,-0.75,-0.5,-0.25,0.};
@@ -2245,7 +2245,7 @@ void DiffractiveZ::CreateHistos(std::string type){
   }
 }
 
-void DiffractiveZ::FillHistos(int index, int pileup, double totalweight){
+void CastorAnalysis::FillHistos(int index, int pileup, double totalweight){
   m_hVector_DiElectronMass[index].at(pileup)->Fill(eventdiffZ->GetDiElectronMass(),totalweight);
   m_hVector_DiElectronEta[index].at(pileup)->Fill(eventdiffZ->GetDiElectronEta(),totalweight);
   m_hVector_DiElectronPhi[index].at(pileup)->Fill(eventdiffZ->GetDiElectronPhi(),totalweight);
@@ -3031,7 +3031,7 @@ void DiffractiveZ::FillHistos(int index, int pileup, double totalweight){
 
 }
 
-void DiffractiveZ::SaveHistos(std::string type){
+void CastorAnalysis::SaveHistos(std::string type){
 
   int ipileup;
 
@@ -3409,7 +3409,7 @@ void DiffractiveZ::SaveHistos(std::string type){
 
 }
 
-void DiffractiveZ::Run(std::string filein_, std::string processname_, std::string savehistofile_, std::string switchtrigger_, int optTrigger_, double lepton1pt_, double lepton2pt_, int nVertex_, std::string type_, std::string switchlumiweight_, double mcweight_, std::string typesel_){
+void CastorAnalysis::Run(std::string filein_, std::string processname_, std::string savehistofile_, std::string switchtrigger_, int optTrigger_, double lepton1pt_, double lepton2pt_, int nVertex_, std::string type_, std::string switchlumiweight_, double mcweight_, std::string typesel_){
 
   bool debug = false;
 
@@ -4019,7 +4019,7 @@ int main(int argc, char **argv)
       return 0;
     }
 
-    DiffractiveZ* diffZRun = new DiffractiveZ();
+    CastorAnalysis* diffZRun = new CastorAnalysis();
     diffZRun->CreateHistos(type_);
     diffZRun->Run(filein_, processname_, savehistofile_, switchtrigger_, optTrigger_, lepton1pt_, lepton2pt_, nVertex_, type_, switchlumiweight_, mcweight_, typesel_);
     return 0;
